@@ -9,8 +9,7 @@ import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.apibinding.OWLManager
 
 import grizzled.slf4j.Logging
-
-
+import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
 
 
 import scala.util.{Failure, Success, Try}
@@ -18,6 +17,9 @@ import scala.util.{Failure, Success, Try}
 class OwlApiSerializer(private val commands: SerializerCommands) extends Logging {
 
   import commands._
+
+  XMLWriterPreferences.getInstance().setUseNamespaceEntities(true)
+
 
   //
   // Get hold of an ontology manager

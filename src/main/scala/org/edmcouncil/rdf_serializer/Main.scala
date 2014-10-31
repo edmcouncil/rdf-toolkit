@@ -90,7 +90,7 @@ class MainImpl(args : Array[String]) {
     }
   }
 
-  private def showUsage : Int = {
+  private def showUsage() {
 
     val sep = "\n                           - "
     def outputFormats = OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
@@ -112,8 +112,6 @@ class MainImpl(args : Array[String]) {
 
       """.stripMargin
     )
-
-    0
   }
 
   private def showVersion : Int = {
@@ -127,7 +125,8 @@ class MainImpl(args : Array[String]) {
     if (optionShowVersion) {
       showVersion
     } else if (optionUnknown || optionUsage) {
-      showUsage
+      showUsage()
+      if (optionUnknown) 1 else 0
     } else {
       Serializer(params).run
     }

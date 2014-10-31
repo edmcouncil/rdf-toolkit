@@ -41,13 +41,13 @@ class SerializerSpec extends UnitSpec {
   "A Serializer" must {
 
     "convert the wine ontology" in {
-      //suppressOutput {
+      suppressOutput {
         MainImpl(Array(
           "--input-file", "src/test/resources/wine.rdf",
           "--output-file", "src/test/resources/test-out.rdf",
           "--force"
-        )).run should equal (0)
-      // }  should equal (0)
+        )).run
+      } should equal (0)
     }
   }
 
