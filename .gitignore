@@ -2,12 +2,13 @@
 tmp
 logs
 project/project
-project/target
 target
 dist
 .cache
 *.sublime-project
 *.sublime-workspace
 .idea
+test-out.rdf
+
 
 
