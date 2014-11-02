@@ -44,10 +44,20 @@ class SerializerSpec extends UnitSpec {
       suppressOutput {
         MainImpl(Array(
           "--input-file", "src/test/resources/wine.rdf",
-          "--output-file", "src/test/resources/test-out.rdf",
+          "--output-file", "src/test/resources/test-out-wine.rdf",
           "--force"
         )).run
       } should equal (0)
+    }
+
+    "convert the fibo contracts ontology" in {
+      //suppressOutput {
+        MainImpl(Array(
+          "--input-file", "src/test/resources/fibo-fnd-contracts.rdf",
+          "--output-file", "src/test/resources/test-out-fibo-fnd-contracts.rdf",
+          "--force"
+        )).run should equal (0)
+      //} should equal (0)
     }
   }
 

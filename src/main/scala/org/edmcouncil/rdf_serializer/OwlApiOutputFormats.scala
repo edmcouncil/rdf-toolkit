@@ -3,8 +3,8 @@ package org.edmcouncil.rdf_serializer
 import grizzled.slf4j.Logging
 import org.openrdf.rio.{RDFFormat, RDFWriterRegistry}
 import org.semanticweb.owlapi.apibinding.OWLManager
-import org.semanticweb.owlapi.formats.{OWLXMLDocumentFormatFactory, RDFXMLDocumentFormatFactory}
 import org.semanticweb.owlapi.model.OWLDocumentFormat
+
 import scala.collection.JavaConverters._
 
 object OwlApiOutputFormats extends Logging {
@@ -25,7 +25,6 @@ object OwlApiOutputFormats extends Logging {
   //
   lazy val ontologyManager = OWLManager.createOWLOntologyManager
 
-
   lazy val ontologyStorerFactories = ontologyManager.getOntologyStorers.asScala.toSet
 
   lazy val outputDocumentFormatFactories = ontologyStorerFactories.map(_.getFormatFactory)
@@ -36,6 +35,9 @@ object OwlApiOutputFormats extends Logging {
 
   lazy val defaultDocumentFormat = getOutputDocumentFormatWithName(Some("RDF/XML Syntax"))
 
-  def getOutputDocumentFormatWithName(name: Option[String]): OWLDocumentFormat = if (name.isEmpty) defaultDocumentFormat
-  else outputDocumentFormats.find(_.getKey.equalsIgnoreCase(name.get)).getOrElse(defaultDocumentFormat)
+  def getOutputDocumentFormatWithName(name: Option[String]): OWLDocumentFormat =
+    if (name.isEmpty)
+      defaultDocumentFormat
+    else
+      outputDocumentFormats.find(_.getKey.equalsIgnoreCase(name.get)).getOrElse(defaultDocumentFormat)
 }

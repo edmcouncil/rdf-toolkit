@@ -1,15 +1,20 @@
 package org.edmcouncil.rdf_serializer
 
 import java.io.File
+import javax.annotation.Nonnull
 
+import com.google.inject.{Injector, Guice}
 import org.openrdf.rio.{RDFFormat, RDFWriterRegistry}
+import org.semanticweb.owlapi.{OWLAPIServiceLoaderModule, OWLAPIParsersModule}
 import org.semanticweb.owlapi.formats.{TurtleDocumentFormatFactory, OWLXMLDocumentFormatFactory, RDFXMLDocumentFormatFactory}
-import org.semanticweb.owlapi.io.StreamDocumentSource
+import org.semanticweb.owlapi.io.{OWLOntologyLoaderMetaData, StreamDocumentSource}
 import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.apibinding.OWLManager
 
 import grizzled.slf4j.Logging
+import org.semanticweb.owlapi.oboformat.OWLAPIOBOModule
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
+import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule
 
 
 import scala.util.{Failure, Success, Try}
@@ -18,13 +23,16 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
 
   import commands._
 
+  //
+  // Ensure that the DOCTYPE rdf:RDF ENTITY section is generated
+  //
   XMLWriterPreferences.getInstance().setUseNamespaceEntities(true)
 
 
   //
   // Get hold of an ontology manager
   //
-  lazy val ontologyManager = OWLManager.createOWLOntologyManager
+  def createOntologyManager = OWLManager.createOWLOntologyManager
 
   //
   // Get Ontology Loader Configuration
@@ -37,14 +45,19 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
 
   def inputOntologyFileName = inputFileName.get
 
+  lazy val writerFormatRegistry = RDFWriterRegistry.getInstance()
+
   //
   // Load the input file stream as an ontology, and do that twice, for some reason that works better,
   // according to the example given in the OWLAPI documentation "Remove the ontology so that we can load
   // a local copy"
   //
-  lazy val ontology = {
+  private def loadOntology(ontologyManager: OWLOntologyManager): OWLOntology = {
+
     info(s"Loading ontology $inputOntologyFileName")
+
     val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(inputFileDocumentSource, loaderConfiguration))
+
     ontTry1 match {
       case Success(ont) => // Remove the ontology so that we can load a local copy.
         info(s"Successfully loaded $inputOntologyFileName")
@@ -59,59 +72,63 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
     }
   }
 
-  lazy val writerFormatRegistry = RDFWriterRegistry.getInstance()
+  private def saveOntology(
+    ontologyManager: OWLOntologyManager,
+    ontology: OWLOntology,
+    format: OWLDocumentFormat
+  ): Unit = {
 
-  lazy val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormatName)
+    info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
+    info(s"In Format: $format")
 
-  lazy val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
+    ontology.saveOntology(format, outputFileStream.get)
 
-  def load(): Unit = ontology
-
-  def save(): Unit = ontology.saveOntology(outputFormat, outputFileStream.get)
+    ontologyManager.removeOntology(ontology)
+  }
 
   private def run = {
+
+    val ontologyManager = createOntologyManager
+    val ontology = loadOntology(ontologyManager)
+    val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
 
     info(s"Ontology Document IRI: $ontologyDocumentIRI")
 
     info(s"Ontology ID: ${ontology.getOntologyID}")
 
-    load()
+    val inputFormat = ontologyManager.getOntologyFormat(ontology)
 
-    save()
+    info(s"Input Format: $inputFormat")
 
-    /*
+    val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormatName)
 
-    // We can always obtain the location where an ontology was loaded from;
-    // for this test, though, since the ontology was loaded from a string,
-    // this does not return a file
-    IRI documentIRI = manager.getOntologyDocumentIRI(localPizza);
-    // Remove the ontology again so we can reload it later
-    manager.removeOntology(pizzaOntology);
-    // In cases where a local copy of one of more ontologies is used, an
-    // ontology IRI mapper can be used to provide a redirection mechanism.
-    // This means that ontologies can be loaded as if they were located on
-    // the web. In this example, we simply redirect the loading from
-    // http://owl.cs.manchester.ac.uk/co-ode-files/ontologies/pizza.owl to
-    // our local copy
-    // above.
-    // iri and file here are used as examples
-    IRI iri = IRI
-      .create("http://owl.cs.manchester.ac.uk/co-ode-files/ontologies/pizza.owl");
-    File file = folder.newFile();
-    manager.getIRIMappers().add(new SimpleIRIMapper(iri, IRI.create(file)));
-    // Load the ontology as if we were loading it from the web (from its
-    // ontology IRI)
-    IRI pizzaOntologyIRI = IRI
-      .create("http://owl.cs.manchester.ac.uk/co-ode-files/ontologies/pizza.owl");
-    OWLOntology redirectedPizza = manager.loadOntology(pizzaOntologyIRI);
-    IRI pizza = manager.getOntologyDocumentIRI(redirectedPizza);
-    // Note that when imports are loaded an ontology manager will be
-    // searched for mappings
+    //
+    // Some ontology formats support prefix names and prefix IRIs. In our
+    // case we loaded the pizza ontology from an rdf/xml format, which
+    // supports prefixes. When we save the ontology in the new format we
+    // will copy the prefixes over so that we have nicely abbreviated IRIs
+    // in the new ontology document
+    //
+    if (inputFormat.isPrefixOWLOntologyFormat) {
+      if (outputFormat.isPrefixOWLOntologyFormat) {
+        val prefixedOutputFormat = outputFormat.asPrefixOWLOntologyFormat()
+        //
+        // For some reason the outputFormat, which is also a PrefixManager, remembers the prefixes and namespaces
+        // of the previous save operation, so we have to clear it here first before we copy the inputFormat's
+        // prefixes into it.
+        //
+        prefixedOutputFormat.clear()
+        prefixedOutputFormat.copyPrefixesFrom(inputFormat.asPrefixOWLOntologyFormat())
+      }
+    }
 
-    */
+    val inputOntologyMetadata = inputFormat.getOntologyLoaderMetaData
+    outputFormat.setOntologyLoaderMetaData(inputOntologyMetadata)
+
+    saveOntology(ontologyManager, ontology, outputFormat)
+
     0
   }
-
 }
 
 object OwlApiSerializer {
