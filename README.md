@@ -13,7 +13,8 @@ Requirements are being gathered at a [wiki page](https://github.com/edmcouncil/r
 
 This project is being build and packaged on the EDM Council Jenkins Server by [this job](http://54.210.211.22/job/rdf-serializer-build/).
 
-The current build status is: [![Build Status](http://54.210.211.22/buildStatus/icon?job=rdf-serializer-build)](http://54.210.211.22/job/rdf-serializer-build/)
+The current build status is: 
+![Build Status](http://54.210.211.22/buildStatus/icon?job=rdf-serializer-build)](http://54.210.211.22/job/rdf-serializer-build/)
 
 The RDF Serializer is packaged as one "fat jar" or "uber jar" which can be downloaded from the Jenkins server:
 
