@@ -84,3 +84,4 @@ Where:
                            - LaTeX Syntax
 ```
 
+Note: For XML output syntax, blank nodes will be handled properly.
