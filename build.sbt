@@ -10,17 +10,12 @@ scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 seq(bintrayResolverSettings:_*)
 
-val owlApiVersion = "4.0.0"
+val owlApiVersion = "4.0.1"
 
 //
 // OWLAPI Model Interfaces And Utilities
 //
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources()
-
-//
-// OWLAPI Distribution
-//
-//libraryDependencies += "net.sourceforge.owlapi" % "owlapi-distribution" % owlApiVersion withSources()
 
 //
 // OWLAPI Binding And Config
