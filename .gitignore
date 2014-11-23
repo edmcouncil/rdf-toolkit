@@ -8,7 +8,7 @@ dist
 *.sublime-project
 *.sublime-workspace
 .idea
-test-out-*.rdf
+test-out*.rdf
 catalog-v001.xml
 
 
