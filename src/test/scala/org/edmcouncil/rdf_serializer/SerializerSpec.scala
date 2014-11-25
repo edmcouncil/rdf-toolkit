@@ -59,6 +59,26 @@ class SerializerSpec extends UnitSpec {
         )).run should equal (0)
       //} should equal (0)
     }
+
+    "not generate errors int the output of test-case-001.rdf" in {
+      //suppressOutput {
+      MainImpl(Array(
+        "--input-file", "src/test/resources/test-case-001.rdf",
+        "--output-file", "src/test/resources/test-out-test-case-001.rdf",
+        "--force"
+      )).run should equal (0)
+      //} should equal (0)
+    }
+
+    "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
+      //suppressOutput {
+      MainImpl(Array(
+        "--input-file", "src/test/resources/fibo-fnd-control.rdf",
+        "--output-file", "src/test/resources/test-out-fibo-fnd-control.rdf",
+        "--force"
+      )).run should equal (0)
+      //} should equal (0)
+    }
   }
 
   def suppressOutput[T](thunk: => T): T = {

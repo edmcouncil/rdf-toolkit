@@ -1,23 +1,11 @@
 package org.edmcouncil.rdf_serializer
 
-import java.io.File
-import javax.annotation.Nonnull
-
-import com.google.inject.{Injector, Guice}
-import org.openrdf.rio.{RDFFormat, RDFWriterRegistry}
-import org.semanticweb.owlapi.{OWLAPIServiceLoaderModule, OWLAPIParsersModule}
-import org.semanticweb.owlapi.formats.{TurtleDocumentFormatFactory, OWLXMLDocumentFormatFactory, RDFXMLDocumentFormatFactory}
-import org.semanticweb.owlapi.io.{OWLOntologyLoaderMetaData, StreamDocumentSource}
-import org.semanticweb.owlapi.model._
-import org.semanticweb.owlapi.apibinding.OWLManager
-
 import grizzled.slf4j.Logging
-import org.semanticweb.owlapi.oboformat.OWLAPIOBOModule
+import org.openrdf.rio.RDFWriterRegistry
+import org.semanticweb.owlapi.apibinding.OWLManager
+import org.semanticweb.owlapi.io.StreamDocumentSource
+import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
-import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule
-
-
-import scala.util.{Failure, Success, Try}
 
 class OwlApiSerializer(private val commands: SerializerCommands) extends Logging {
 
@@ -28,49 +16,25 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
   //
   XMLWriterPreferences.getInstance().setUseNamespaceEntities(true)
 
-
   //
   // Get hold of an ontology manager
   //
-  def createOntologyManager = OWLManager.createOWLOntologyManager
+  def createOntologyManager = {
+    val manager = OWLManager.createOWLOntologyManager
+    manager
+  }
 
   //
   // Get Ontology Loader Configuration
   //
   lazy val loaderConfiguration = new OWLOntologyLoaderConfiguration()
-    .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT)
+    .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT) // Cause the listener to be called
+    .setLoadAnnotationAxioms(true)
+    .setTreatDublinCoreAsBuiltIn(true)
     .setFollowRedirects(false)
-
-  lazy val inputFileDocumentSource = new StreamDocumentSource(inputFileStream.get)
-
-  def inputOntologyFileName = inputFileName.get
 
   lazy val writerFormatRegistry = RDFWriterRegistry.getInstance()
 
-  //
-  // Load the input file stream as an ontology, and do that twice, for some reason that works better,
-  // according to the example given in the OWLAPI documentation "Remove the ontology so that we can load
-  // a local copy"
-  //
-  private def loadOntology(ontologyManager: OWLOntologyManager): OWLOntology = {
-
-    info(s"Loading ontology $inputOntologyFileName")
-
-    val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(inputFileDocumentSource, loaderConfiguration))
-
-    ontTry1 match {
-      case Success(ont) => // Remove the ontology so that we can load a local copy.
-        info(s"Successfully loaded $inputOntologyFileName")
-        ontologyManager.removeOntology(ont)
-        info(s"Loading ontology $inputOntologyFileName, second time")
-        val ontTry2 = Try(ontologyManager.loadOntologyFromOntologyDocument(inputFileDocumentSource, loaderConfiguration))
-        ontTry2 match {
-          case Success(ont2) => ont2
-          case Failure(e) => throw new IllegalStateException(s"Could not load $inputOntologyFileName: $e")
-        }
-      case Failure(e) => throw new IllegalStateException(s"Could not load $inputOntologyFileName: $e")
-    }
-  }
 
   private def saveOntology(
     ontologyManager: OWLOntologyManager,
@@ -81,7 +45,7 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
     info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
     info(s"In Format: $format")
 
-    ontology.saveOntology(format, outputFileStream.get)
+    ontology.saveOntology(format, output.outputStream.get)
 
     ontologyManager.removeOntology(ontology)
   }
@@ -89,7 +53,8 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
   private def run = {
 
     val ontologyManager = createOntologyManager
-    val ontology = loadOntology(ontologyManager)
+    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration)
+    val ontology = loader.loadOntology(input)
     val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
 
     info(s"Ontology Document IRI: $ontologyDocumentIRI")

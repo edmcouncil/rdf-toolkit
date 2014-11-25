@@ -27,6 +27,7 @@
 
 
     <owl:Ontology rdf:about="http://www.omg.org/spec/EDMC-FIBO/FND/OwnershipAndControl/Control/">
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/"/>
     </owl:Ontology>
 
     <owl:Class rdf:about="&fibo-fnd-oac-ctl;ControllingParty">
