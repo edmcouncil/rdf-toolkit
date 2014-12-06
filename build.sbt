@@ -34,6 +34,8 @@ libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test" withSources()
 
+libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
+
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
 //
