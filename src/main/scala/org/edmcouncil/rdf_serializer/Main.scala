@@ -20,7 +20,8 @@ case class CommandLineParams(
   force: Boolean = false,
   inputFileName: Option[String] = None,
   outputFileName: Option[String] = None,
-  outputFormatName: Option[String] = None
+  outputFormatName: Option[String] = None,
+  baseDir: Option[String] = None
 )
 
 
@@ -52,6 +53,10 @@ class MainImpl(args : Array[String]) {
     Some(options('outputFormatName).asInstanceOf[String])
   else None
 
+  private lazy val optionBaseDir = if (options.contains('baseDir))
+    Some(options('baseDir).asInstanceOf[String])
+  else None
+
   private lazy val optionUsage = options.contains('usage)
 
   private lazy val optionUnknown = options.contains('unknown)
@@ -62,7 +67,8 @@ class MainImpl(args : Array[String]) {
     force = optionForce,
     inputFileName = optionInputFileName,
     outputFileName = optionOutputFileName,
-    outputFormatName = optionOutputFormatName
+    outputFormatName = optionOutputFormatName,
+    baseDir = optionBaseDir
   )
 
   private def nextOption(map_ : OptionMap, list_ : List[String]) : OptionMap = {
@@ -84,6 +90,8 @@ class MainImpl(args : Array[String]) {
         nextOption(map_ ++ Map('outputFileName -> value), tail)
       case "--output-format" :: value :: tail =>
         nextOption(map_ ++ Map('outputFormatName -> value), tail)
+      case "--base-dir" :: value :: tail =>
+        nextOption(map_ ++ Map('baseDir -> value), tail)
       case option :: tail ⇒
         println(s"""ERROR: Unknown option "$option"!""")
         nextOption(map_ ++ Map('unknown -> true), tail)
@@ -109,6 +117,7 @@ class MainImpl(args : Array[String]) {
       |  --input-file <path>
       |  --output-file <path>
       |  --output-format <format> where <format> is one of (between quotes): $outputFormats
+      |  --base-dir <path>        root directory where imported ontologies can be found
 
       """.stripMargin
     )

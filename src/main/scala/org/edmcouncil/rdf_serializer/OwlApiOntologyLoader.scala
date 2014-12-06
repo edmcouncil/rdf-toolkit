@@ -1,24 +1,21 @@
 package org.edmcouncil.rdf_serializer
 
 import java.io.IOException
-import java.nio.file.{Files, Paths}
 
 import grizzled.slf4j.Logging
 import org.semanticweb.owlapi.io.{OWLOntologyCreationIOException, OWLOntologyDocumentSource}
 import org.semanticweb.owlapi.model.OWLOntologyLoaderListener.{LoadingFinishedEvent, LoadingStartedEvent}
 import org.semanticweb.owlapi.model._
 
-import scala.collection
-import scala.collection.mutable
-import scala.collection.parallel.mutable
 import scala.util.{Failure, Success, Try}
 
 /**
- * Created by jag on 11/24/14.
+ * Load an Ontology
  */
 class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
-  loaderConfiguration: OWLOntologyLoaderConfiguration
+  loaderConfiguration: OWLOntologyLoaderConfiguration,
+  baseDir: PotentialDirectory
 ) extends Logging {
 
   val importsToBeResolved: collection.mutable.Set[IRI] = new collection.mutable.HashSet[IRI]
@@ -49,12 +46,17 @@ class OwlApiOntologyLoader(
    * loading it from the web
    */
   def tryToLoadMissingImport(iri: IRI): Boolean = {
+
     val uri = iri.toURI
     val ns = iri.getNamespace
 
-    info(s"Trying to load $uri locally")
+    if (! baseDir.hasName) return false
 
-    val fileName = tryIfLocalVersionExists("~/git/fibo/fnd", iri)
+    val directoryName = baseDir.directoryName.get
+
+    info(s"Trying to load $uri locally from $directoryName")
+
+    val fileName = tryIfLocalVersionExists(directoryName, iri)
 
     if (fileName.isDefined) {
       debug(s"$fileName does exists, loading it now")

@@ -14,6 +14,7 @@ private class SerializerCommands(
 
   lazy val input = PotentialFile(params.inputFileName)
   lazy val output = PotentialFile(params.outputFileName)
+  lazy val baseDir = PotentialDirectory(params.baseDir)
 
   def validateParams = {
 
@@ -43,6 +44,10 @@ private class SerializerCommands(
       case Some(true) if ! params.force => error("Output File exists") ; rc = 1
       case Some(false) => error("Output File does not exist")
       case _ =>
+    }
+    if (baseDir.hasName && ! baseDir.directoryExists) {
+      error(s"The given base directory does not exist: ${baseDir.name.get}")
+      rc = 2
     }
 
     rc

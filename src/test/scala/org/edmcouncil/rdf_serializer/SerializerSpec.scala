@@ -36,6 +36,17 @@ class SerializerSpec extends UnitSpec {
         MainImpl(Array("--help")).run
       } should equal(0)
     }
+
+    "check the value given with the --base-dir parameter" in {
+      suppressOutput {
+        MainImpl(Array(
+          "--input-file", "src/test/resources/wine.rdf",
+          "--output-file", "src/test/resources/test-out-wine.rdf",
+          "--force",
+          "--base-dir", "~/git/fibo/fnd" // "/some-non-existent-directory"
+        )).run
+      } should equal (2)
+    }
   }
 
   "A Serializer" must {
