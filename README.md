@@ -5,20 +5,24 @@ rdf-serializer
 Code for a command-line stable serializer for RDF.  This will be used in a commit-hook to make sure that all RDF files
 in the repo are stored in the same way.
 
-
 Requirements are being gathered at a [wiki page](https://github.com/edmcouncil/rdf-serializer/wiki/Requirements)
 
+# issues
+
+The FIBO JIRA server has a separate project for the rdf-serializer: https://jira.edmcouncil.org/browse/RDFSER
+
+Please add your issues, bugs, feature requests, requirements or questions as issues on the JIRA site.
 
 # build
 
-This project is being build and packaged on the EDM Council Jenkins Server by [this job](http://54.210.211.22/job/rdf-serializer-build/).
+This project is being build and packaged on the EDM Council Jenkins Server by [this job](https://jenkins.edmcouncil.org/job/rdf-serializer-build/).
 
 The current build status is: 
-[![Build Status](http://54.210.211.22/buildStatus/icon?job=rdf-serializer-build)](http://54.210.211.22/job/rdf-serializer-build/)
+[![Build Status](https://jenkins.edmcouncil.org/buildStatus/icon?job=rdf-serializer-build)](https://jenkins.edmcouncil.org/job/rdf-serializer-build/)
 
 The RDF Serializer is packaged as one "fat jar" or "uber jar" which can be downloaded from the Jenkins server:
 
-- http://54.210.211.22/job/rdf-serializer-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-serializer.jar
+- https://jenkins.edmcouncil.org/job/rdf-serializer-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-serializer.jar
 
 # usage
 =====
@@ -51,12 +55,12 @@ C:/>java -jar rdf-serializer.jar --help
 The current "--help" option gives the following information:
 
 ```
-rdf-serializer version 1.0.0-SNAPSHOT-e6d6d9e (2014-11-01T21:29:32.877-0400)
+rdf-serializer version 1.0.0-SNAPSHOT-a0023ac (2014-12-06T13:54:27.752-0500)
 
 Usage: rdf-serializer [--verbose] [--help]
 
 Where:
-  --version                show just the version of rdf-serializer (1.0.0-SNAPSHOT-e6d6d9e)
+  --version                show just the version of rdf-serializer (1.0.0-SNAPSHOT-a0023ac)
   --verbose                switch on verbose logging (sets INFO level logging).
   --debug                  switch on debug level logging.
   --force                  force output file to be overwritten if it exists.
@@ -82,6 +86,7 @@ Where:
                            - Turtle
                            - Turtle Syntax
                            - LaTeX Syntax
+  --base-dir <path>        root directory where imported ontologies can be found
 ```
 
 Note: For XML output syntax, blank nodes will be handled properly.
