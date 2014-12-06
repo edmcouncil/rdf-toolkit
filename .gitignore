@@ -10,6 +10,8 @@ dist
 .idea
 test-out*.rdf
 catalog-v001.xml
+test1.rdf
+test.rdf
 
 
 
