@@ -15,7 +15,8 @@ import scala.util.{Failure, Success, Try}
 class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
   loaderConfiguration: OWLOntologyLoaderConfiguration,
-  baseDir: PotentialDirectory
+  baseDir: PotentialDirectory,
+  baseUrl: BaseURL
 ) extends Logging {
 
   val importsToBeResolved: collection.mutable.Set[IRI] = new collection.mutable.HashSet[IRI]
@@ -29,17 +30,6 @@ class OwlApiOntologyLoader(
   }
 
   ontologyManager.addMissingImportListener(missingImportListener)
-
-  def tryIfLocalVersionExists(baseDir: String, iri: IRI): Option[String] = {
-    val ns = iri.getNamespace
-    val uriString = iri.toURI.toString
-    var fileName = uriString.replace("http://www.omg.org/spec/EDMC-FIBO/FND", baseDir)
-    if (fileName.endsWith("/")) fileName = fileName.take(fileName.length - 1)
-    debug(s"Testing if $fileName exists...")
-    if (PotentialFile(fileName).fileExists) Some(fileName)
-    fileName += ".rdf"
-    if (PotentialFile(fileName).fileExists) Some(fileName) else None
-  }
 
   /**
    * Try to load the given import by deriving the local file name from the IRI or else by
@@ -56,14 +46,16 @@ class OwlApiOntologyLoader(
 
     info(s"Trying to load $uri locally from $directoryName")
 
-    val fileName = tryIfLocalVersionExists(directoryName, iri)
+//    val fileName = tryIfLocalVersionExists(baseDir, iri)
 
-    if (fileName.isDefined) {
-      debug(s"$fileName does exists, loading it now")
+    val resolver = ImportResolver(baseDir, baseUrl, iri.toURI.toString)
+
+    if (resolver.found) {
+      debug(s"${resolver.resource.get} does exists, loading it now")
       //
       // "Recursively" call loadOntology again but now for the imported ontology
       //
-      loadOntology(PotentialFile(fileName))
+      loadOntology(resolver.inputDocumentSource.get)
     }
 
     false
@@ -121,7 +113,7 @@ class OwlApiOntologyLoader(
 
   ontologyManager.addOntologyLoaderListener(loaderListener)
 
-  def loadOntology(input: PotentialFile): OWLOntology = loadOntology(input.inputStreamSource.get)
+  def loadOntology(input: PotentialFile): OWLOntology = loadOntology(input.inputDocumentSource.get)
 
   def loadOntology(input: OWLOntologyDocumentSource): OWLOntology = {
 
