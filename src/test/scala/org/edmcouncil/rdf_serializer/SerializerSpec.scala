@@ -4,14 +4,14 @@ import java.io.OutputStream
 
 import org.scalatest._
 
-abstract class UnitSpec
-  extends WordSpecLike with Matchers
-
-
 /**
  * Test the Serializer
  */
 class SerializerSpec extends UnitSpec {
+
+  def run(args: String*): Int = suppressOutput {
+    MainImpl(args).run
+  }
 
   "A Serializer Cli Interface" must {
 
@@ -25,81 +25,62 @@ class SerializerSpec extends UnitSpec {
 
     "return a non-zero exit code when an invalid option is passed" in {
       assert(
-        suppressOutput {
-          MainImpl(Array("--whatever")).run != 0
-        }, "did not return non zero option"
+        run("--whatever") != 0, "did not return non zero option"
       )
     }
 
     "accept the --help option" in {
-      suppressOutput {
-        MainImpl(Array("--help")).run
-      } should equal(0)
+      run("--help") should equal(0)
     }
 
-    "check the value given with the --base-dir parameter" in {
-      suppressOutput {
-        MainImpl(Array(
-          "--input-file", "src/test/resources/wine.rdf",
-          "--output-file", "src/test/resources/test-out-wine.rdf",
-          "--force",
-          "--base-dir", "~/git/fibo/fnd" // "/some-non-existent-directory"
-        )).run
-      } should equal (2)
-    }
   }
 
   "A Serializer" must {
 
     "convert the wine ontology" in {
-      suppressOutput {
-        MainImpl(Array(
-          "--input-file", "src/test/resources/wine.rdf",
-          "--output-file", "src/test/resources/test-out-wine.rdf",
-          "--force"
-        )).run
-      } should equal (0)
+      run(
+        "--input-file", "src/test/resources/wine.rdf",
+        "--output-file", "src/test/resources/test-out-wine.rdf",
+        "--force"
+      ) should equal (0)
+    }
+
+    /*
+     * The wine ontology imports the food ontology (and vice versa), so the --base-dir
+     * and --base-url options need to allow the serializer to find the food ontology
+     */
+    "serialize the wine ontology and support the import of the food ontology" in {
+      run(
+        "--input-file", "src/test/resources/wine.rdf",
+        "--output-file", "src/test/resources/test-out-wine.rdf",
+        "--force",
+        "--base-dir", "src/test/resources",
+        "--base-url", "http://www.w3.org/TR/2003/PR-owl-guide-20031209"
+      ) should equal (0)
     }
 
     "convert the fibo contracts ontology" in {
-      //suppressOutput {
-        MainImpl(Array(
-          "--input-file", "src/test/resources/fibo-fnd-contracts.rdf",
-          "--output-file", "src/test/resources/test-out-fibo-fnd-contracts.rdf",
-          "--force"
-        )).run should equal (0)
-      //} should equal (0)
+      run(
+        "--input-file", "src/test/resources/fibo-fnd-contracts.rdf",
+        "--output-file", "src/test/resources/test-out-fibo-fnd-contracts.rdf",
+        "--force"
+      ) should equal (0)
     }
 
     "not generate errors int the output of test-case-001.rdf" in {
-      //suppressOutput {
-      MainImpl(Array(
+      run(
         "--input-file", "src/test/resources/test-case-001.rdf",
         "--output-file", "src/test/resources/test-out-test-case-001.rdf",
         "--force"
-      )).run should equal (0)
-      //} should equal (0)
+      ) should equal (0)
     }
 
     "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
-      //suppressOutput {
-      MainImpl(Array(
+      run(
         "--input-file", "src/test/resources/fibo-fnd-control.rdf",
         "--output-file", "src/test/resources/test-out-fibo-fnd-control.rdf",
         "--force"
-      )).run should equal (0)
-      //} should equal (0)
-    }
-  }
-
-  def suppressOutput[T](thunk: => T): T = {
-
-    val bitBucket = new OutputStream() {
-      def write(b: Int) {}
-    }
-
-    Console.withOut(bitBucket) {
-      return thunk
+      ) should equal (0)
     }
   }
 }
