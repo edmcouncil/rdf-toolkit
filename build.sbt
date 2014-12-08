@@ -49,3 +49,8 @@ resourceGenerators in Compile <+= (
 }
 
 fork in run := true
+
+resolvers += JavaNet2Repository
+
+resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-repository"
+
