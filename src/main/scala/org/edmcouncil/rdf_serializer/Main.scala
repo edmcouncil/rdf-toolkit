@@ -11,21 +11,12 @@ object Main extends App {
   sys.exit(MainImpl(args).run)
 }
 
-/**
- * This case class represents the collection of settings that can be supplied via the command line.
- */
-case class CommandLineParams(
-  verbose: Boolean = false,
-  debug : Boolean = false,
-  force: Boolean = false,
-  inputFileName: Option[String] = None,
-  outputFileName: Option[String] = None,
-  outputFormatName: Option[String] = None,
-  baseDir: Option[String] = None
-)
+object MainImpl {
 
+  def apply(args: Seq[String]) = new MainImpl(args)
+}
 
-class MainImpl(args : Array[String]) {
+class MainImpl private (args : Seq[String]) {
 
   private type OptionMap = Map[Symbol, Any]
 
@@ -57,6 +48,10 @@ class MainImpl(args : Array[String]) {
     Some(options('baseDir).asInstanceOf[String])
   else None
 
+  private lazy val optionBaseUrl = if (options.contains('baseUrl))
+    Some(options('baseUrl).asInstanceOf[String])
+  else None
+
   private lazy val optionUsage = options.contains('usage)
 
   private lazy val optionUnknown = options.contains('unknown)
@@ -68,7 +63,8 @@ class MainImpl(args : Array[String]) {
     inputFileName = optionInputFileName,
     outputFileName = optionOutputFileName,
     outputFormatName = optionOutputFormatName,
-    baseDir = optionBaseDir
+    baseDir = optionBaseDir,
+    baseUrl = optionBaseUrl
   )
 
   private def nextOption(map_ : OptionMap, list_ : List[String]) : OptionMap = {
@@ -92,6 +88,8 @@ class MainImpl(args : Array[String]) {
         nextOption(map_ ++ Map('outputFormatName -> value), tail)
       case "--base-dir" :: value :: tail =>
         nextOption(map_ ++ Map('baseDir -> value), tail)
+      case "--base-url" :: value :: tail =>
+        nextOption(map_ ++ Map('baseUrl -> value), tail)
       case option :: tail ⇒
         println(s"""ERROR: Unknown option "$option"!""")
         nextOption(map_ ++ Map('unknown -> true), tail)
@@ -106,7 +104,9 @@ class MainImpl(args : Array[String]) {
     println(s"""
       |${BooterProperties.name} version ${BooterProperties.versionFull} (${BooterProperties.generatedAt})
       |
-      |Usage: ${BooterProperties.name.toLowerCase} [--verbose] [--help]
+      |Usage: ${BooterProperties.name.toLowerCase} [--verbose] [--help] [--debug] [--force]
+      |  [--input-file <path>] [--output-file <path>] [--output-format <format>]
+      |  [--base-dir <path> --base-url <url>]
       |
       |Where:
       |  --version                show just the version of ${BooterProperties.name} (${BooterProperties.versionFull})
@@ -118,6 +118,8 @@ class MainImpl(args : Array[String]) {
       |  --output-file <path>
       |  --output-format <format> where <format> is one of (between quotes): $outputFormats
       |  --base-dir <path>        root directory where imported ontologies can be found
+      |  --base-url <url>         the base url of imported ontologies that matches with the <path> specified with
+      |                           the --base-dir option.
 
       """.stripMargin
     )
@@ -133,7 +135,7 @@ class MainImpl(args : Array[String]) {
   def run : Int = {
     if (optionShowVersion) {
       showVersion
-    } else if (optionUnknown || optionUsage) {
+    } else if (optionUnknown || optionUsage || args.length == 0) {
       showUsage()
       if (optionUnknown) 1 else 0
     } else {
@@ -142,10 +144,4 @@ class MainImpl(args : Array[String]) {
   }
 }
 
-object MainImpl {
-
-  def apply(args: Array[String]) = {
-    new MainImpl(args)
-  }
-}
 
