@@ -77,8 +77,10 @@ class SerializerSpec extends UnitSpec {
 
     "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
       run(
-        "--input-file", "src/test/resources/fibo-fnd-control.rdf",
-        "--output-file", "src/test/resources/test-out-fibo-fnd-control.rdf",
+        "--input-file", "src/test/resources/fibo/fnd/OwnershipAndControl/Control.rdf",
+        "--output-file", "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
+        "--base-dir", "src/test/resources/fibo",
+        "--base-url", "http://www.omg.org/spec/EDMC-FIBO",
         "--force"
       ) should equal (0)
     }
