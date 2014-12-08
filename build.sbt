@@ -12,6 +12,10 @@ seq(bintrayResolverSettings:_*)
 
 val owlApiVersion = "4.0.1"
 
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
+
+libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
+
 //
 // OWLAPI Model Interfaces And Utilities
 //
@@ -21,8 +25,6 @@ libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion w
 // OWLAPI Binding And Config
 //
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
-
-libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
@@ -34,7 +36,8 @@ libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test" withSources()
 
-libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
+libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
+
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
