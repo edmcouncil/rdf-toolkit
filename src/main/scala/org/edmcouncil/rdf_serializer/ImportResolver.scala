@@ -1,10 +1,9 @@
 package org.edmcouncil.rdf_serializer
 
-import java.io.{BufferedInputStream, FileInputStream, File}
+import java.io.{BufferedInputStream, File, FileInputStream}
 import java.nio.file.Path
 
 import grizzled.slf4j.Logging
-import org.edmcouncil.rdf_serializer.PotentialFile
 import org.semanticweb.owlapi.io.StreamDocumentSource
 
 import scala.io.Source
