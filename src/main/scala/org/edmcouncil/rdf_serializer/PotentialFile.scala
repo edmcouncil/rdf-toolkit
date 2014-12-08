@@ -26,7 +26,7 @@ class PotentialFile(name: Option[String]) {
   lazy val outputStream = file.map((file: File) => new FileOutputStream(file))
 
   lazy val inputSource = inputStream.map(Source.fromInputStream(_)(codec))
-  lazy val inputStreamSource = inputStream.map(new StreamDocumentSource(_))
+  lazy val inputDocumentSource = inputStream.map(new StreamDocumentSource(_))
 }
 
 object PotentialFile {

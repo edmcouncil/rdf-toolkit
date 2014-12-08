@@ -53,7 +53,7 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
   private def run = {
 
     val ontologyManager = createOntologyManager
-    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, commands.baseDir)
+    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, commands.baseDir, commands.baseUrl)
     val ontology = loader.loadOntology(input)
     val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
 
