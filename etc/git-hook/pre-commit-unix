@@ -13,10 +13,20 @@
 #
 exec 1>&2
 
-echo "This is the rfd-serializer pre-commit hook"
+log_prefix="rdf-serializer: "
+
+echo "${log_prefix}This is the pre-commit hook"
 
 java_exe=""
 base_dir=""
+
+function log() {
+  echo "${log_prefix}$@"
+}
+
+function log_error() {
+  echo "ERROR: $@"
+}
 
 function findJava() {
 
@@ -24,13 +34,13 @@ function findJava() {
 
   if [ "${whichJava}" == "" ] ; then
     if [ "${JAVA_HOME}" == "" ] ; then
-      echo "ERROR: Could not find java on your PATH or your JAVA_HOME"
+      log_error "Could not find java on your PATH or your JAVA_HOME"
       return 1
     fi
     if [ -x "${JAVA_HOME}/bin/java" ] ; then
       whichJava="${JAVA_HOME}/bin/java"
     else
-      echo "ERROR: Could not find java in your JAVA_HOME: ${JAVA_HOME}"
+      log_error "Could not find java in your JAVA_HOME: ${JAVA_HOME}"
       return 1
     fi
   fi
@@ -45,7 +55,7 @@ function findJava() {
   if [ $java_major -eq 1 -a $java_minor -gt 7 ] ; then
   	:
   else
-    echo "ERROR: You are using Java $java_major.$java_minor whereas the rdf-serializer requires Java 1.7 or higher"
+    log_error "You are using Java $java_major.$java_minor whereas the rdf-serializer requires Java 1.7 or higher"
     return 2
   fi
 
@@ -59,11 +69,11 @@ function findSerializerJar() {
   serializer_jar="$(cd -P ~/git/rdf-serializer ; pwd)/target/scala-2.11/rdf-serializer.jar"
 
   if [ -f "${serializer_jar}" ] ; then
-  	echo "Found serializer: ${serializer_jar}"
+  	log "Found serializer: ${serializer_jar}"
   	return 0
   fi
 
-  echo "ERROR: Could not find serializer, please reinstall"
+  log_error "Could not find serializer, please reinstall"
 
   return 1
 }
@@ -76,11 +86,11 @@ function findBaseDir() {
   base_dir=$(git rev-parse --show-toplevel)
 
   if [ "${base_dir}" == "" ] ; then
-    echo ERROR: Could not find base directory"
+    log_error "Could not find base directory"
     return 1
   fi
   if [ ! -d "${base_dir}" ] ; then
-    echo ERROR: Could not find base directory"
+    log_error "Could not find base directory"
     return 1
   fi
 
@@ -102,7 +112,7 @@ function serialize() {
   	rdf|owl|nt|n3|ttl)
    	  ;;
     *)
-      echo "Skipping unsupported file $file"
+      log "Skipping unsupported file $file"
       return 0
   esac
 
@@ -121,6 +131,8 @@ class: DefaultFormatter
 format: (%l) %t
 __log_config__
 
+  log "Launching the rdf-serializer with --input-file ${file}"
+
   #set -x
   ${java_exe} -Xmx1g -Dorg.clapper.avsl.config=${logcfg} -jar ${serializer_jar}  \
   	--input-file ${file} \
@@ -135,10 +147,10 @@ __log_config__
 
 
   if [ ${rc} -eq 0 ] ; then
-    echo "Re-adding potentially modified file to git staging area: ${file}"
+    log "Re-adding potentially re-serialized file to git staging area: ${file}"
     git add --update ${file}
   else
-    echo "ERROR: rdf-serializer ended with error code ${rc}"
+    log_error "rdf-serializer ended with error code ${rc}"
   fi
 
   return ${rc}
@@ -169,6 +181,6 @@ function main() {
 main $*
 rc=$?
 if [ $rc -gt 0 ] ; then
-  echo "ERROR: Could not commit your files"
+  log_error "Could not commit your files"
 fi
 exit $rc
