@@ -6,22 +6,17 @@ Code for a command-line stable serializer for RDF.  This will be used in a commi
 
 Requirements are being gathered at a [wiki page](https://github.com/edmcouncil/rdf-serializer/wiki/Requirements)
 
+See for more information about developing rdf-serializer [this](DEVELOP.md) page.
+
 # issues
 
 The FIBO JIRA server has a separate project for the rdf-serializer: https://jira.edmcouncil.org/browse/RDFSER
 
 Please add your issues, bugs, feature requests, requirements or questions as issues on the JIRA site.
 
-# build
+# download
 
-This project is being build and packaged on the EDM Council Jenkins Server by [this job](https://jenkins.edmcouncil.org/job/rdf-serializer-build/).
-
-The current build status is: 
-[![Build Status](https://jenkins.edmcouncil.org/buildStatus/icon?job=rdf-serializer-build)](https://jenkins.edmcouncil.org/job/rdf-serializer-build/)
-
-The RDF Serializer is packaged as one "fat jar" or "uber jar" which can be downloaded from the Jenkins server:
-
-- https://jenkins.edmcouncil.org/job/rdf-serializer-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-serializer.jar
+Download the RDF Serializer [here](https://jenkins.edmcouncil.org/job/rdf-serializer-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-serializer.jar)
 
 # usage
 =====
