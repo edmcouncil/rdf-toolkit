@@ -5,6 +5,7 @@ import java.nio.file.Path
 
 import grizzled.slf4j.Logging
 import org.semanticweb.owlapi.io.StreamDocumentSource
+import org.semanticweb.owlapi.model.IRI
 
 import scala.io.Source
 
@@ -13,12 +14,13 @@ import scala.io.Source
  *
  * See https://jira.edmcouncil.org/browse/RDFSER-7
  */
-class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, importedUrl: String) extends Logging {
+class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, importedIri: IRI) extends Logging {
 
   private[this] implicit val codec = scala.io.Codec.UTF8
 
   type TryPathFunction = () => Path
 
+  val importedUrl = importedIri.toURI.toString
   val matchingBaseUrl = baseUrl.matchesWith(importedUrl)
   val baseDirExists = baseDir.directoryExists
   val baseUrlSpecified = baseUrl.isSpecified
@@ -64,12 +66,12 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
 
   def inputStream = resource.map((file: File) => new BufferedInputStream(new FileInputStream(file)))
   def inputSource = inputStream.map(Source.fromInputStream(_)(codec))
-  def inputDocumentSource = inputStream.map(new StreamDocumentSource(_))
+  def inputDocumentSource = inputStream.map(new StreamDocumentSource(_, importedIri))
 }
 
 object ImportResolver {
 
-  def apply(baseDir: PotentialDirectory, baseUrl: BaseURL, importedUrl: String) =
-    new ImportResolver(baseDir, baseUrl, importedUrl)
+  def apply(baseDir: PotentialDirectory, baseUrl: BaseURL, importedIri: IRI) =
+    new ImportResolver(baseDir, baseUrl, importedIri)
 }
 
