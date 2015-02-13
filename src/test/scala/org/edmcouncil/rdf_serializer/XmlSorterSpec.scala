@@ -10,7 +10,7 @@ class XmlSorterSpec extends UnitSpec {
     "sort an XML file" in {
 
       val file = PotentialFile("src/test/resources/wine.rdf")
-      val sorter = RdfXmlSorter(file.Paths.get)
+      val sorter = RdfXmlSorter(file.Path.get)
 
       sorter.printIt()
     }
