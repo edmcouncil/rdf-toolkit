@@ -1,0 +1,6 @@
+@prefix ericFoaf: <http://www.w3.org/People/Eric/ericP-foaf.rdf#> .
+@prefix : <http://xmlns.com/foaf/0.1/> .
+ericFoaf:ericP :givenName "Eric" ;
+              :knows <http://norman.walsh.name/knows/who/dan-brickley> ,
+                      [ :mbox <mailto:timbl@w3.org> ] ,
+                      <http://getopenid.com/amyvdh> .

@@ -1,0 +1,2 @@
+PREFIX : <http://example.org/stuff/1.0/>
+(1 [:p :q] ( 2 ) ) :p2 :q2 .

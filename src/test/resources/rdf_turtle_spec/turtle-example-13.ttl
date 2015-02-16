@@ -1,0 +1,3 @@
+@prefix : <http://example.org/stats> .
+<http://somecountry.example/census2007>
+    :isLandlocked false .           # xsd:boolean

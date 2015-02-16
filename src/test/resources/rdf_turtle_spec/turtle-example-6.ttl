@@ -1,0 +1,2 @@
+<http://example.org/#spiderman> <http://xmlns.com/foaf/0.1/name> "Spiderman" .
+<http://example.org/#spiderman> <http://xmlns.com/foaf/0.1/name> "Человек-паук"@ru .

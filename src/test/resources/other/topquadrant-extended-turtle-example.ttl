@@ -1,0 +1,29 @@
+# Based on: http://composing-the-semantic-web.blogspot.co.uk/2013/06/an-extended-turtle-format.html
+
+@prefix schema: <http://example.com/schema#> .
+@prefix ui: <http://example.com/ui#> .
+@prefix html: <http://example.com/html#> .
+@prefix swa: <http://example.com/swa#> .
+@prefix arg: <http://example.com/arg#> .
+@prefix default: <http://example.com/default#> .
+@prefix spin: <http://example.com/spin#> .
+
+schema:Person
+    a       owl:Class ;
+    rdfs:label "Person"^^xsd:string ;
+    rdfs:subClassOf owl:Thing ;
+    ui:instanceView
+        [ a       html:Div ;
+          default:subject spin:_this ;
+          ui:child
+              [ a       swa:Object ;
+                arg:predicate schema:familyName ;
+                ui:childIndex 1
+              ] ;
+          ui:child
+              [ a       swa:Object ;
+                arg:predicate schema:givenName ;
+                ui:childIndex 0
+              ]
+        ] ;
+.
