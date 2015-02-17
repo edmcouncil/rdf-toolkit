@@ -1,0 +1,2 @@
+<http://example.org/#spiderman> <http://www.perceive.net/schemas/relationship/enemyOf> <http://example.org/#green-goblin> .
+<http://example.org/#spiderman> <http://xmlns.com/foaf/0.1/name> "Spiderman" .

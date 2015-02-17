@@ -1,0 +1,1730 @@
+# baseURI: http://topbraid.org/countries
+
+@prefix countries:  <http://topbraid.org/countries#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm:      <http://topbraid.org/sparqlmotion#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+<http://topbraid.org/countries>
+      rdf:type owl:Ontology ;
+      sm:source <http://topbraid.org/examples/countries/countriesGenerator.sms.n3> ;
+      owl:versionInfo "1.0"^^xsd:string .
+
+countries:AD
+      rdf:type countries:Country ;
+      rdfs:label "Andorra"@en ;
+      countries:abbreviation
+              "AD" ;
+      owl:sameAs <http://dbpedia.org/resource/Andorra> .
+
+countries:AE
+      rdf:type countries:Country ;
+      rdfs:label "United Arab Emirates"@en ;
+      countries:abbreviation
+              "AE" ;
+      owl:sameAs <http://dbpedia.org/resource/United_Arab_Emirates> .
+
+countries:AF
+      rdf:type countries:Country ;
+      rdfs:label "Afghanistan"@en ;
+      countries:abbreviation
+              "AF" ;
+      owl:sameAs <http://dbpedia.org/resource/Afghanistan> .
+
+countries:AG
+      rdf:type countries:Country ;
+      rdfs:label "Antigua And Barbuda"@en ;
+      countries:abbreviation
+              "AG" ;
+      owl:sameAs <http://dbpedia.org/resource/Antigua_and_Barbuda> .
+
+countries:AI
+      rdf:type countries:Country ;
+      rdfs:label "Anguilla"@en ;
+      countries:abbreviation
+              "AI" ;
+      owl:sameAs <http://dbpedia.org/resource/Anguilla> .
+
+countries:AL
+      rdf:type countries:Country ;
+      rdfs:label "Albania"@en ;
+      countries:abbreviation
+              "AL" ;
+      owl:sameAs <http://dbpedia.org/resource/Albania> .
+
+countries:AM
+      rdf:type countries:Country ;
+      rdfs:label "Armenia"@en ;
+      countries:abbreviation
+              "AM" ;
+      owl:sameAs <http://dbpedia.org/resource/Armenia> .
+
+countries:AN
+      rdf:type countries:Country ;
+      rdfs:label "Netherlands Antilles"@en ;
+      countries:abbreviation
+              "AN" ;
+      owl:sameAs <http://dbpedia.org/resource/Netherlands_Antilles> .
+
+countries:AO
+      rdf:type countries:Country ;
+      rdfs:label "Angola"@en ;
+      countries:abbreviation
+              "AO" ;
+      owl:sameAs <http://dbpedia.org/resource/Angola> .
+
+countries:AQ
+      rdf:type countries:Country ;
+      rdfs:label "Antarctica"@en ;
+      countries:abbreviation
+              "AQ" ;
+      owl:sameAs <http://dbpedia.org/resource/Antarctica> .
+
+countries:AR
+      rdf:type countries:Country ;
+      rdfs:label "Argentina"@en ;
+      countries:abbreviation
+              "AR" ;
+      owl:sameAs <http://dbpedia.org/resource/Argentina> .
+
+countries:AS
+      rdf:type countries:Country ;
+      rdfs:label "American Samoa"@en ;
+      countries:abbreviation
+              "AS" ;
+      owl:sameAs <http://dbpedia.org/resource/American_Samoa> .
+
+countries:AT
+      rdf:type countries:Country ;
+      rdfs:label "Austria"@en ;
+      countries:abbreviation
+              "AT" ;
+      owl:sameAs <http://dbpedia.org/resource/Austria> .
+
+countries:AU
+      rdf:type countries:Country ;
+      rdfs:label "Australia"@en ;
+      countries:abbreviation
+              "AU" ;
+      owl:sameAs <http://dbpedia.org/resource/Australia> .
+
+countries:AW
+      rdf:type countries:Country ;
+      rdfs:label "Aruba"@en ;
+      countries:abbreviation
+              "AW" ;
+      owl:sameAs <http://dbpedia.org/resource/Aruba> .
+
+countries:AX
+      rdf:type countries:Country ;
+      rdfs:label "Ã…land Islands"@en ;
+      countries:abbreviation
+              "AX" ;
+      owl:sameAs <http://dbpedia.org/resource/%C3%85land_Islands> .
+
+countries:AZ
+      rdf:type countries:Country ;
+      rdfs:label "Azerbaijan"@en ;
+      countries:abbreviation
+              "AZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Azerbaijan> .
+
+countries:BA
+      rdf:type countries:Country ;
+      rdfs:label "Bosnia And Herzegovina"@en ;
+      countries:abbreviation
+              "BA" ;
+      owl:sameAs <http://dbpedia.org/resource/Bosnia_and_Herzegovina> .
+
+countries:BB
+      rdf:type countries:Country ;
+      rdfs:label "Barbados"@en ;
+      countries:abbreviation
+              "BB" ;
+      owl:sameAs <http://dbpedia.org/resource/Barbados> .
+
+countries:BD
+      rdf:type countries:Country ;
+      rdfs:label "Bangladesh"@en ;
+      countries:abbreviation
+              "BD" ;
+      owl:sameAs <http://dbpedia.org/resource/Bangladesh> .
+
+countries:BE
+      rdf:type countries:Country ;
+      rdfs:label "Belgium"@en ;
+      countries:abbreviation
+              "BE" ;
+      owl:sameAs <http://dbpedia.org/resource/Belgium> .
+
+countries:BF
+      rdf:type countries:Country ;
+      rdfs:label "Burkina Faso"@en ;
+      countries:abbreviation
+              "BF" ;
+      owl:sameAs <http://dbpedia.org/resource/Burkina_Faso> .
+
+countries:BG
+      rdf:type countries:Country ;
+      rdfs:label "Bulgaria"@en ;
+      countries:abbreviation
+              "BG" ;
+      owl:sameAs <http://dbpedia.org/resource/Bulgaria> .
+
+countries:BH
+      rdf:type countries:Country ;
+      rdfs:label "Bahrain"@en ;
+      countries:abbreviation
+              "BH" ;
+      owl:sameAs <http://dbpedia.org/resource/Bahrain> .
+
+countries:BI
+      rdf:type countries:Country ;
+      rdfs:label "Burundi"@en ;
+      countries:abbreviation
+              "BI" ;
+      owl:sameAs <http://dbpedia.org/resource/Burundi> .
+
+countries:BJ
+      rdf:type countries:Country ;
+      rdfs:label "Benin"@en ;
+      countries:abbreviation
+              "BJ" ;
+      owl:sameAs <http://dbpedia.org/resource/Benin> .
+
+countries:BL
+      rdf:type countries:Country ;
+      rdfs:label "Saint BarthÃ©lemy"@en ;
+      countries:abbreviation
+              "BL" ;
+      owl:sameAs <http://dbpedia.org/resource/Saint_Barth%C3%A9lemy> .
+
+countries:BM
+      rdf:type countries:Country ;
+      rdfs:label "Bermuda"@en ;
+      countries:abbreviation
+              "BM" ;
+      owl:sameAs <http://dbpedia.org/resource/Bermuda> .
+
+countries:BN
+      rdf:type countries:Country ;
+      rdfs:label "Brunei Darussalam"@en ;
+      countries:abbreviation
+              "BN" ;
+      owl:sameAs <http://dbpedia.org/resource/Brunei> .
+
+countries:BO
+      rdf:type countries:Country ;
+      rdfs:label "Bolivia"@en ;
+      countries:abbreviation
+              "BO" ;
+      owl:sameAs <http://dbpedia.org/resource/Bolivia> .
+
+countries:BR
+      rdf:type countries:Country ;
+      rdfs:label "Brazil"@en ;
+      countries:abbreviation
+              "BR" ;
+      owl:sameAs <http://dbpedia.org/resource/Brazil> .
+
+countries:BS
+      rdf:type countries:Country ;
+      rdfs:label "Bahamas"@en ;
+      countries:abbreviation
+              "BS" ;
+      owl:sameAs <http://dbpedia.org/resource/The_Bahamas> .
+
+countries:BT
+      rdf:type countries:Country ;
+      rdfs:label "Bhutan"@en ;
+      countries:abbreviation
+              "BT" ;
+      owl:sameAs <http://dbpedia.org/resource/Bhutan> .
+
+countries:BV
+      rdf:type countries:Country ;
+      rdfs:label "Bouvet Island"@en ;
+      countries:abbreviation
+              "BV" ;
+      owl:sameAs <http://dbpedia.org/resource/Bouvet_Island> .
+
+countries:BW
+      rdf:type countries:Country ;
+      rdfs:label "Botswana"@en ;
+      countries:abbreviation
+              "BW" ;
+      owl:sameAs <http://dbpedia.org/resource/Botswana> .
+
+countries:BY
+      rdf:type countries:Country ;
+      rdfs:label "Belarus"@en ;
+      countries:abbreviation
+              "BY" ;
+      owl:sameAs <http://dbpedia.org/resource/Belarus> .
+
+countries:BZ
+      rdf:type countries:Country ;
+      rdfs:label "Belize"@en ;
+      countries:abbreviation
+              "BZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Belize> .
+
+countries:CA
+      rdf:type countries:Country ;
+      rdfs:label "Canada"@en ;
+      countries:abbreviation
+              "CA" ;
+      owl:sameAs <http://dbpedia.org/resource/Canada> .
+
+countries:CC
+      rdf:type countries:Country ;
+      rdfs:label "Cocos (keeling) Islands"@en ;
+      countries:abbreviation
+              "CC" .
+
+countries:CD
+      rdf:type countries:Country ;
+      rdfs:label "Congo, The Democratic Republic Of The"@en ;
+      countries:abbreviation
+              "CD" .
+
+countries:CF
+      rdf:type countries:Country ;
+      rdfs:label "Central African Republic"@en ;
+      countries:abbreviation
+              "CF" ;
+      owl:sameAs <http://dbpedia.org/resource/Central_African_Republic> .
+
+countries:CG
+      rdf:type countries:Country ;
+      rdfs:label "Congo"@en ;
+      countries:abbreviation
+              "CG" ;
+      owl:sameAs <http://dbpedia.org/resource/Congo> .
+
+countries:CH
+      rdf:type countries:Country ;
+      rdfs:label "Switzerland"@en ;
+      countries:abbreviation
+              "CH" ;
+      owl:sameAs <http://dbpedia.org/resource/Switzerland> .
+
+countries:CI
+      rdf:type countries:Country ;
+      rdfs:label "CÃ´te D'ivoire"@en ;
+      countries:abbreviation
+              "CI" .
+
+countries:CK
+      rdf:type countries:Country ;
+      rdfs:label "Cook Islands"@en ;
+      countries:abbreviation
+              "CK" ;
+      owl:sameAs <http://dbpedia.org/resource/Cook_Islands> .
+
+countries:CL
+      rdf:type countries:Country ;
+      rdfs:label "Chile"@en ;
+      countries:abbreviation
+              "CL" ;
+      owl:sameAs <http://dbpedia.org/resource/Chile> .
+
+countries:CM
+      rdf:type countries:Country ;
+      rdfs:label "Cameroon"@en ;
+      countries:abbreviation
+              "CM" ;
+      owl:sameAs <http://dbpedia.org/resource/Cameroon> .
+
+countries:CN
+      rdf:type countries:Country ;
+      rdfs:label "China"@en ;
+      countries:abbreviation
+              "CN" ;
+      owl:sameAs <http://dbpedia.org/resource/China> .
+
+countries:CO
+      rdf:type countries:Country ;
+      rdfs:label "Colombia"@en ;
+      countries:abbreviation
+              "CO" ;
+      owl:sameAs <http://dbpedia.org/resource/Colombia> .
+
+countries:CR
+      rdf:type countries:Country ;
+      rdfs:label "Costa Rica"@en ;
+      countries:abbreviation
+              "CR" ;
+      owl:sameAs <http://dbpedia.org/resource/Costa_Rica> .
+
+countries:CU
+      rdf:type countries:Country ;
+      rdfs:label "Cuba"@en ;
+      countries:abbreviation
+              "CU" ;
+      owl:sameAs <http://dbpedia.org/resource/Cuba> .
+
+countries:CV
+      rdf:type countries:Country ;
+      rdfs:label "Cape Verde"@en ;
+      countries:abbreviation
+              "CV" ;
+      owl:sameAs <http://dbpedia.org/resource/Cape_Verde> .
+
+countries:CX
+      rdf:type countries:Country ;
+      rdfs:label "Christmas Island"@en ;
+      countries:abbreviation
+              "CX" ;
+      owl:sameAs <http://dbpedia.org/resource/Christmas_Island> .
+
+countries:CY
+      rdf:type countries:Country ;
+      rdfs:label "Cyprus"@en ;
+      countries:abbreviation
+              "CY" ;
+      owl:sameAs <http://dbpedia.org/resource/Cyprus> .
+
+countries:CZ
+      rdf:type countries:Country ;
+      rdfs:label "Czech Republic"@en ;
+      countries:abbreviation
+              "CZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Czech_Republic> .
+
+countries:Country
+      rdf:type owl:Class ;
+      rdfs:label "Country"^^xsd:string ;
+      rdfs:subClassOf
+              [ rdf:type owl:Restriction ;
+                owl:cardinality "1"^^xsd:int ;
+                owl:onProperty countries:abbreviation
+              ] .
+
+countries:DE
+      rdf:type countries:Country ;
+      rdfs:label "Germany"@en ;
+      countries:abbreviation
+              "DE" ;
+      owl:sameAs <http://dbpedia.org/resource/Germany> .
+
+countries:DJ
+      rdf:type countries:Country ;
+      rdfs:label "Djibouti"@en ;
+      countries:abbreviation
+              "DJ" ;
+      owl:sameAs <http://dbpedia.org/resource/Djibouti> .
+
+countries:DK
+      rdf:type countries:Country ;
+      rdfs:label "Denmark"@en ;
+      countries:abbreviation
+              "DK" ;
+      owl:sameAs <http://dbpedia.org/resource/Denmark> .
+
+countries:DM
+      rdf:type countries:Country ;
+      rdfs:label "Dominica"@en ;
+      countries:abbreviation
+              "DM" ;
+      owl:sameAs <http://dbpedia.org/resource/Dominica> .
+
+countries:DO
+      rdf:type countries:Country ;
+      rdfs:label "Dominican Republic"@en ;
+      countries:abbreviation
+              "DO" ;
+      owl:sameAs <http://dbpedia.org/resource/Dominican_Republic> .
+
+countries:DZ
+      rdf:type countries:Country ;
+      rdfs:label "Algeria"@en ;
+      countries:abbreviation
+              "DZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Algeria> .
+
+countries:EC
+      rdf:type countries:Country ;
+      rdfs:label "Ecuador"@en ;
+      countries:abbreviation
+              "EC" ;
+      owl:sameAs <http://dbpedia.org/resource/Ecuador> .
+
+countries:EE
+      rdf:type countries:Country ;
+      rdfs:label "Estonia"@en ;
+      countries:abbreviation
+              "EE" ;
+      owl:sameAs <http://dbpedia.org/resource/Estonia> .
+
+countries:EG
+      rdf:type countries:Country ;
+      rdfs:label "Egypt"@en ;
+      countries:abbreviation
+              "EG" ;
+      owl:sameAs <http://dbpedia.org/resource/Egypt> .
+
+countries:EH
+      rdf:type countries:Country ;
+      rdfs:label "Western Sahara"@en ;
+      countries:abbreviation
+              "EH" ;
+      owl:sameAs <http://dbpedia.org/resource/Western_Sahara> .
+
+countries:ER
+      rdf:type countries:Country ;
+      rdfs:label "Eritrea"@en ;
+      countries:abbreviation
+              "ER" ;
+      owl:sameAs <http://dbpedia.org/resource/Eritrea> .
+
+countries:ES
+      rdf:type countries:Country ;
+      rdfs:label "Spain"@en ;
+      countries:abbreviation
+              "ES" ;
+      owl:sameAs <http://dbpedia.org/resource/Spain> .
+
+countries:ET
+      rdf:type countries:Country ;
+      rdfs:label "Ethiopia"@en ;
+      countries:abbreviation
+              "ET" ;
+      owl:sameAs <http://dbpedia.org/resource/Ethiopia> .
+
+countries:FI
+      rdf:type countries:Country ;
+      rdfs:label "Finland"@en ;
+      countries:abbreviation
+              "FI" ;
+      owl:sameAs <http://dbpedia.org/resource/Finland> .
+
+countries:FJ
+      rdf:type countries:Country ;
+      rdfs:label "Fiji"@en ;
+      countries:abbreviation
+              "FJ" ;
+      owl:sameAs <http://dbpedia.org/resource/Fiji> .
+
+countries:FK
+      rdf:type countries:Country ;
+      rdfs:label "Falkland Islands (malvinas)"@en ;
+      countries:abbreviation
+              "FK" .
+
+countries:FM
+      rdf:type countries:Country ;
+      rdfs:label "Micronesia, Federated States Of"@en ;
+      countries:abbreviation
+              "FM" .
+
+countries:FO
+      rdf:type countries:Country ;
+      rdfs:label "Faroe Islands"@en ;
+      countries:abbreviation
+              "FO" ;
+      owl:sameAs <http://dbpedia.org/resource/Faroe_Islands> .
+
+countries:FR
+      rdf:type countries:Country ;
+      rdfs:label "France"@en ;
+      countries:abbreviation
+              "FR" ;
+      owl:sameAs <http://dbpedia.org/resource/France> .
+
+countries:GA
+      rdf:type countries:Country ;
+      rdfs:label "Gabon"@en ;
+      countries:abbreviation
+              "GA" ;
+      owl:sameAs <http://dbpedia.org/resource/Gabon> .
+
+countries:GB
+      rdf:type countries:Country ;
+      rdfs:label "United Kingdom"@en ;
+      countries:abbreviation
+              "GB" ;
+      owl:sameAs <http://dbpedia.org/resource/United_Kingdom> .
+
+countries:GD
+      rdf:type countries:Country ;
+      rdfs:label "Grenada"@en ;
+      countries:abbreviation
+              "GD" ;
+      owl:sameAs <http://dbpedia.org/resource/Grenada> .
+
+countries:GE
+      rdf:type countries:Country ;
+      rdfs:label "Georgia"@en ;
+      countries:abbreviation
+              "GE" ;
+      owl:sameAs <http://dbpedia.org/resource/Georgia> .
+
+countries:GF
+      rdf:type countries:Country ;
+      rdfs:label "French Guiana"@en ;
+      countries:abbreviation
+              "GF" ;
+      owl:sameAs <http://dbpedia.org/resource/French_Guiana> .
+
+countries:GG
+      rdf:type countries:Country ;
+      rdfs:label "Guernsey"@en ;
+      countries:abbreviation
+              "GG" ;
+      owl:sameAs <http://dbpedia.org/resource/Guernsey> .
+
+countries:GH
+      rdf:type countries:Country ;
+      rdfs:label "Ghana"@en ;
+      countries:abbreviation
+              "GH" ;
+      owl:sameAs <http://dbpedia.org/resource/Ghana> .
+
+countries:GI
+      rdf:type countries:Country ;
+      rdfs:label "Gibraltar"@en ;
+      countries:abbreviation
+              "GI" ;
+      owl:sameAs <http://dbpedia.org/resource/Gibraltar> .
+
+countries:GL
+      rdf:type countries:Country ;
+      rdfs:label "Greenland"@en ;
+      countries:abbreviation
+              "GL" ;
+      owl:sameAs <http://dbpedia.org/resource/Greenland> .
+
+countries:GM
+      rdf:type countries:Country ;
+      rdfs:label "Gambia"@en ;
+      countries:abbreviation
+              "GM" ;
+      owl:sameAs <http://dbpedia.org/resource/The_Gambia> .
+
+countries:GN
+      rdf:type countries:Country ;
+      rdfs:label "Guinea"@en ;
+      countries:abbreviation
+              "GN" ;
+      owl:sameAs <http://dbpedia.org/resource/Guinea> .
+
+countries:GP
+      rdf:type countries:Country ;
+      rdfs:label "Guadeloupe"@en ;
+      countries:abbreviation
+              "GP" ;
+      owl:sameAs <http://dbpedia.org/resource/Guadeloupe> .
+
+countries:GQ
+      rdf:type countries:Country ;
+      rdfs:label "Equatorial Guinea"@en ;
+      countries:abbreviation
+              "GQ" ;
+      owl:sameAs <http://dbpedia.org/resource/Equatorial_Guinea> .
+
+countries:GR
+      rdf:type countries:Country ;
+      rdfs:label "Greece"@en ;
+      countries:abbreviation
+              "GR" ;
+      owl:sameAs <http://dbpedia.org/resource/Greece> .
+
+countries:GS
+      rdf:type countries:Country ;
+      rdfs:label "South Georgia And The South Sandwich Islands"@en ;
+      countries:abbreviation
+              "GS" .
+
+countries:GT
+      rdf:type countries:Country ;
+      rdfs:label "Guatemala"@en ;
+      countries:abbreviation
+              "GT" ;
+      owl:sameAs <http://dbpedia.org/resource/Guatemala> .
+
+countries:GU
+      rdf:type countries:Country ;
+      rdfs:label "Guam"@en ;
+      countries:abbreviation
+              "GU" ;
+      owl:sameAs <http://dbpedia.org/resource/Guam> .
+
+countries:GW
+      rdf:type countries:Country ;
+      rdfs:label "Guinea-Bissau"@en ;
+      countries:abbreviation
+              "GW" ;
+      owl:sameAs <http://dbpedia.org/resource/Guinea-Bissau> .
+
+countries:GY
+      rdf:type countries:Country ;
+      rdfs:label "Guyana"@en ;
+      countries:abbreviation
+              "GY" ;
+      owl:sameAs <http://dbpedia.org/resource/Guyana> .
+
+countries:HK
+      rdf:type countries:Country ;
+      rdfs:label "Hong Kong"@en ;
+      countries:abbreviation
+              "HK" ;
+      owl:sameAs <http://dbpedia.org/resource/Hong_Kong> .
+
+countries:HM
+      rdf:type countries:Country ;
+      rdfs:label "Heard Island And Mcdonald Islands"@en ;
+      countries:abbreviation
+              "HM" .
+
+countries:HN
+      rdf:type countries:Country ;
+      rdfs:label "Honduras"@en ;
+      countries:abbreviation
+              "HN" ;
+      owl:sameAs <http://dbpedia.org/resource/Honduras> .
+
+countries:HR
+      rdf:type countries:Country ;
+      rdfs:label "Croatia"@en ;
+      countries:abbreviation
+              "HR" ;
+      owl:sameAs <http://dbpedia.org/resource/Croatia> .
+
+countries:HT
+      rdf:type countries:Country ;
+      rdfs:label "Haiti"@en ;
+      countries:abbreviation
+              "HT" ;
+      owl:sameAs <http://dbpedia.org/resource/Haiti> .
+
+countries:HU
+      rdf:type countries:Country ;
+      rdfs:label "Hungary"@en ;
+      countries:abbreviation
+              "HU" ;
+      owl:sameAs <http://dbpedia.org/resource/Hungary> .
+
+countries:ID
+      rdf:type countries:Country ;
+      rdfs:label "Indonesia"@en ;
+      countries:abbreviation
+              "ID" ;
+      owl:sameAs <http://dbpedia.org/resource/Indonesia> .
+
+countries:IE
+      rdf:type countries:Country ;
+      rdfs:label "Ireland"@en ;
+      countries:abbreviation
+              "IE" ;
+      owl:sameAs <http://dbpedia.org/resource/Ireland> .
+
+countries:IL
+      rdf:type countries:Country ;
+      rdfs:label "Israel"@en ;
+      countries:abbreviation
+              "IL" ;
+      owl:sameAs <http://dbpedia.org/resource/Israel> .
+
+countries:IM
+      rdf:type countries:Country ;
+      rdfs:label "Isle Of Man"@en ;
+      countries:abbreviation
+              "IM" ;
+      owl:sameAs <http://dbpedia.org/resource/Isle_of_Man> .
+
+countries:IN
+      rdf:type countries:Country ;
+      rdfs:label "India"@en ;
+      countries:abbreviation
+              "IN" ;
+      owl:sameAs <http://dbpedia.org/resource/India> .
+
+countries:IO
+      rdf:type countries:Country ;
+      rdfs:label "British Indian Ocean Territory"@en ;
+      countries:abbreviation
+              "IO" ;
+      owl:sameAs <http://dbpedia.org/resource/British_Indian_Ocean_Territory> .
+
+countries:IQ
+      rdf:type countries:Country ;
+      rdfs:label "Iraq"@en ;
+      countries:abbreviation
+              "IQ" ;
+      owl:sameAs <http://dbpedia.org/resource/Iraq> .
+
+countries:IR
+      rdf:type countries:Country ;
+      rdfs:label "Iran, Islamic Republic Of"@en ;
+      countries:abbreviation
+              "IR" .
+
+countries:IS
+      rdf:type countries:Country ;
+      rdfs:label "Iceland"@en ;
+      countries:abbreviation
+              "IS" ;
+      owl:sameAs <http://dbpedia.org/resource/Iceland> .
+
+countries:IT
+      rdf:type countries:Country ;
+      rdfs:label "Italy"@en ;
+      countries:abbreviation
+              "IT" ;
+      owl:sameAs <http://dbpedia.org/resource/Italy> .
+
+countries:JE
+      rdf:type countries:Country ;
+      rdfs:label "Jersey"@en ;
+      countries:abbreviation
+              "JE" ;
+      owl:sameAs <http://dbpedia.org/resource/Jersey> .
+
+countries:JM
+      rdf:type countries:Country ;
+      rdfs:label "Jamaica"@en ;
+      countries:abbreviation
+              "JM" ;
+      owl:sameAs <http://dbpedia.org/resource/Jamaica> .
+
+countries:JO
+      rdf:type countries:Country ;
+      rdfs:label "Jordan"@en ;
+      countries:abbreviation
+              "JO" ;
+      owl:sameAs <http://dbpedia.org/resource/Jordan> .
+
+countries:JP
+      rdf:type countries:Country ;
+      rdfs:label "Japan"@en ;
+      countries:abbreviation
+              "JP" ;
+      owl:sameAs <http://dbpedia.org/resource/Japan> .
+
+countries:KE
+      rdf:type countries:Country ;
+      rdfs:label "Kenya"@en ;
+      countries:abbreviation
+              "KE" ;
+      owl:sameAs <http://dbpedia.org/resource/Kenya> .
+
+countries:KG
+      rdf:type countries:Country ;
+      rdfs:label "Kyrgyzstan"@en ;
+      countries:abbreviation
+              "KG" ;
+      owl:sameAs <http://dbpedia.org/resource/Kyrgyzstan> .
+
+countries:KH
+      rdf:type countries:Country ;
+      rdfs:label "Cambodia"@en ;
+      countries:abbreviation
+              "KH" ;
+      owl:sameAs <http://dbpedia.org/resource/Cambodia> .
+
+countries:KI
+      rdf:type countries:Country ;
+      rdfs:label "Kiribati"@en ;
+      countries:abbreviation
+              "KI" ;
+      owl:sameAs <http://dbpedia.org/resource/Kiribati> .
+
+countries:KM
+      rdf:type countries:Country ;
+      rdfs:label "Comoros"@en ;
+      countries:abbreviation
+              "KM" ;
+      owl:sameAs <http://dbpedia.org/resource/Comoros> .
+
+countries:KN
+      rdf:type countries:Country ;
+      rdfs:label "Saint Kitts And Nevis"@en ;
+      countries:abbreviation
+              "KN" .
+
+countries:KP
+      rdf:type countries:Country ;
+      rdfs:label "Korea, Democratic People's Republic Of"@en ;
+      countries:abbreviation
+              "KP" .
+
+countries:KR
+      rdf:type countries:Country ;
+      rdfs:label "Korea, Republic Of"@en ;
+      countries:abbreviation
+              "KR" .
+
+countries:KW
+      rdf:type countries:Country ;
+      rdfs:label "Kuwait"@en ;
+      countries:abbreviation
+              "KW" ;
+      owl:sameAs <http://dbpedia.org/resource/Kuwait> .
+
+countries:KY
+      rdf:type countries:Country ;
+      rdfs:label "Cayman Islands"@en ;
+      countries:abbreviation
+              "KY" ;
+      owl:sameAs <http://dbpedia.org/resource/Cayman_Islands> .
+
+countries:KZ
+      rdf:type countries:Country ;
+      rdfs:label "Kazakhstan"@en ;
+      countries:abbreviation
+              "KZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Kazakhstan> .
+
+countries:LA
+      rdf:type countries:Country ;
+      rdfs:label "Lao People's Democratic Republic"@en ;
+      countries:abbreviation
+              "LA" ;
+      owl:sameAs <http://dbpedia.org/resource/Laos> .
+
+countries:LB
+      rdf:type countries:Country ;
+      rdfs:label "Lebanon"@en ;
+      countries:abbreviation
+              "LB" ;
+      owl:sameAs <http://dbpedia.org/resource/Lebanon> .
+
+countries:LC
+      rdf:type countries:Country ;
+      rdfs:label "Saint Lucia"@en ;
+      countries:abbreviation
+              "LC" ;
+      owl:sameAs <http://dbpedia.org/resource/Saint_Lucia> .
+
+countries:LI
+      rdf:type countries:Country ;
+      rdfs:label "Liechtenstein"@en ;
+      countries:abbreviation
+              "LI" ;
+      owl:sameAs <http://dbpedia.org/resource/Liechtenstein> .
+
+countries:LK
+      rdf:type countries:Country ;
+      rdfs:label "Sri Lanka"@en ;
+      countries:abbreviation
+              "LK" ;
+      owl:sameAs <http://dbpedia.org/resource/Sri_Lanka> .
+
+countries:LR
+      rdf:type countries:Country ;
+      rdfs:label "Liberia"@en ;
+      countries:abbreviation
+              "LR" ;
+      owl:sameAs <http://dbpedia.org/resource/Liberia> .
+
+countries:LS
+      rdf:type countries:Country ;
+      rdfs:label "Lesotho"@en ;
+      countries:abbreviation
+              "LS" ;
+      owl:sameAs <http://dbpedia.org/resource/Lesotho> .
+
+countries:LT
+      rdf:type countries:Country ;
+      rdfs:label "Lithuania"@en ;
+      countries:abbreviation
+              "LT" ;
+      owl:sameAs <http://dbpedia.org/resource/Lithuania> .
+
+countries:LU
+      rdf:type countries:Country ;
+      rdfs:label "Luxembourg"@en ;
+      countries:abbreviation
+              "LU" ;
+      owl:sameAs <http://dbpedia.org/resource/Luxembourg> .
+
+countries:LV
+      rdf:type countries:Country ;
+      rdfs:label "Latvia"@en ;
+      countries:abbreviation
+              "LV" ;
+      owl:sameAs <http://dbpedia.org/resource/Latvia> .
+
+countries:LY
+      rdf:type countries:Country ;
+      rdfs:label "Libyan Arab Jamahiriya"@en ;
+      countries:abbreviation
+              "LY" ;
+      owl:sameAs <http://dbpedia.org/resource/Libya> .
+
+countries:MA
+      rdf:type countries:Country ;
+      rdfs:label "Morocco"@en ;
+      countries:abbreviation
+              "MA" ;
+      owl:sameAs <http://dbpedia.org/resource/Morocco> .
+
+countries:MC
+      rdf:type countries:Country ;
+      rdfs:label "Monaco"@en ;
+      countries:abbreviation
+              "MC" ;
+      owl:sameAs <http://dbpedia.org/resource/Monaco> .
+
+countries:MD
+      rdf:type countries:Country ;
+      rdfs:label "Moldova, Republic Of"@en ;
+      countries:abbreviation
+              "MD" .
+
+countries:ME
+      rdf:type countries:Country ;
+      rdfs:label "Montenegro"@en ;
+      countries:abbreviation
+              "ME" ;
+      owl:sameAs <http://dbpedia.org/resource/Montenegro> .
+
+countries:MF
+      rdf:type countries:Country ;
+      rdfs:label "Saint Martin"@en ;
+      countries:abbreviation
+              "MF" ;
+      owl:sameAs <http://dbpedia.org/resource/Saint_Martin> .
+
+countries:MG
+      rdf:type countries:Country ;
+      rdfs:label "Madagascar"@en ;
+      countries:abbreviation
+              "MG" ;
+      owl:sameAs <http://dbpedia.org/resource/Madagascar> .
+
+countries:MH
+      rdf:type countries:Country ;
+      rdfs:label "Marshall Islands"@en ;
+      countries:abbreviation
+              "MH" ;
+      owl:sameAs <http://dbpedia.org/resource/Marshall_Islands> .
+
+countries:MK
+      rdf:type countries:Country ;
+      rdfs:label "Macedonia, The Former Yugoslav Republic Of"@en ;
+      countries:abbreviation
+              "MK" .
+
+countries:ML
+      rdf:type countries:Country ;
+      rdfs:label "Mali"@en ;
+      countries:abbreviation
+              "ML" ;
+      owl:sameAs <http://dbpedia.org/resource/Mali> .
+
+countries:MM
+      rdf:type countries:Country ;
+      rdfs:label "Myanmar"@en ;
+      countries:abbreviation
+              "MM" ;
+      owl:sameAs <http://dbpedia.org/resource/Burma> .
+
+countries:MN
+      rdf:type countries:Country ;
+      rdfs:label "Mongolia"@en ;
+      countries:abbreviation
+              "MN" ;
+      owl:sameAs <http://dbpedia.org/resource/Mongolia> .
+
+countries:MO
+      rdf:type countries:Country ;
+      rdfs:label "Macao"@en ;
+      countries:abbreviation
+              "MO" ;
+      owl:sameAs <http://dbpedia.org/resource/Macau> .
+
+countries:MP
+      rdf:type countries:Country ;
+      rdfs:label "Northern Mariana Islands"@en ;
+      countries:abbreviation
+              "MP" ;
+      owl:sameAs <http://dbpedia.org/resource/Northern_Mariana_Islands> .
+
+countries:MQ
+      rdf:type countries:Country ;
+      rdfs:label "Martinique"@en ;
+      countries:abbreviation
+              "MQ" ;
+      owl:sameAs <http://dbpedia.org/resource/Martinique> .
+
+countries:MR
+      rdf:type countries:Country ;
+      rdfs:label "Mauritania"@en ;
+      countries:abbreviation
+              "MR" ;
+      owl:sameAs <http://dbpedia.org/resource/Mauritania> .
+
+countries:MS
+      rdf:type countries:Country ;
+      rdfs:label "Montserrat"@en ;
+      countries:abbreviation
+              "MS" ;
+      owl:sameAs <http://dbpedia.org/resource/Montserrat> .
+
+countries:MT
+      rdf:type countries:Country ;
+      rdfs:label "Malta"@en ;
+      countries:abbreviation
+              "MT" ;
+      owl:sameAs <http://dbpedia.org/resource/Malta> .
+
+countries:MU
+      rdf:type countries:Country ;
+      rdfs:label "Mauritius"@en ;
+      countries:abbreviation
+              "MU" ;
+      owl:sameAs <http://dbpedia.org/resource/Mauritius> .
+
+countries:MV
+      rdf:type countries:Country ;
+      rdfs:label "Maldives"@en ;
+      countries:abbreviation
+              "MV" ;
+      owl:sameAs <http://dbpedia.org/resource/Maldives> .
+
+countries:MW
+      rdf:type countries:Country ;
+      rdfs:label "Malawi"@en ;
+      countries:abbreviation
+              "MW" ;
+      owl:sameAs <http://dbpedia.org/resource/Malawi> .
+
+countries:MX
+      rdf:type countries:Country ;
+      rdfs:label "Mexico"@en ;
+      countries:abbreviation
+              "MX" ;
+      owl:sameAs <http://dbpedia.org/resource/Mexico> .
+
+countries:MY
+      rdf:type countries:Country ;
+      rdfs:label "Malaysia"@en ;
+      countries:abbreviation
+              "MY" ;
+      owl:sameAs <http://dbpedia.org/resource/Malaysia> .
+
+countries:MZ
+      rdf:type countries:Country ;
+      rdfs:label "Mozambique"@en ;
+      countries:abbreviation
+              "MZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Mozambique> .
+
+countries:NA
+      rdf:type countries:Country ;
+      rdfs:label "Namibia"@en ;
+      countries:abbreviation
+              "NA" ;
+      owl:sameAs <http://dbpedia.org/resource/Namibia> .
+
+countries:NC
+      rdf:type countries:Country ;
+      rdfs:label "New Caledonia"@en ;
+      countries:abbreviation
+              "NC" ;
+      owl:sameAs <http://dbpedia.org/resource/New_Caledonia> .
+
+countries:NE
+      rdf:type countries:Country ;
+      rdfs:label "Niger"@en ;
+      countries:abbreviation
+              "NE" ;
+      owl:sameAs <http://dbpedia.org/resource/Niger> .
+
+countries:NF
+      rdf:type countries:Country ;
+      rdfs:label "Norfolk Island"@en ;
+      countries:abbreviation
+              "NF" ;
+      owl:sameAs <http://dbpedia.org/resource/Norfolk_Island> .
+
+countries:NG
+      rdf:type countries:Country ;
+      rdfs:label "Nigeria"@en ;
+      countries:abbreviation
+              "NG" ;
+      owl:sameAs <http://dbpedia.org/resource/Nigeria> .
+
+countries:NI
+      rdf:type countries:Country ;
+      rdfs:label "Nicaragua"@en ;
+      countries:abbreviation
+              "NI" ;
+      owl:sameAs <http://dbpedia.org/resource/Nicaragua> .
+
+countries:NL
+      rdf:type countries:Country ;
+      rdfs:label "Netherlands"@en ;
+      countries:abbreviation
+              "NL" ;
+      owl:sameAs <http://dbpedia.org/resource/Netherlands> .
+
+countries:NO
+      rdf:type countries:Country ;
+      rdfs:label "Norway"@en ;
+      countries:abbreviation
+              "NO" ;
+      owl:sameAs <http://dbpedia.org/resource/Norway> .
+
+countries:NP
+      rdf:type countries:Country ;
+      rdfs:label "Nepal"@en ;
+      countries:abbreviation
+              "NP" ;
+      owl:sameAs <http://dbpedia.org/resource/Nepal> .
+
+countries:NR
+      rdf:type countries:Country ;
+      rdfs:label "Nauru"@en ;
+      countries:abbreviation
+              "NR" ;
+      owl:sameAs <http://dbpedia.org/resource/Nauru> .
+
+countries:NU
+      rdf:type countries:Country ;
+      rdfs:label "Niue"@en ;
+      countries:abbreviation
+              "NU" ;
+      owl:sameAs <http://dbpedia.org/resource/Niue> .
+
+countries:NZ
+      rdf:type countries:Country ;
+      rdfs:label "New Zealand"@en ;
+      countries:abbreviation
+              "NZ" ;
+      owl:sameAs <http://dbpedia.org/resource/New_Zealand> .
+
+countries:OM
+      rdf:type countries:Country ;
+      rdfs:label "Oman"@en ;
+      countries:abbreviation
+              "OM" ;
+      owl:sameAs <http://dbpedia.org/resource/Oman> .
+
+countries:PA
+      rdf:type countries:Country ;
+      rdfs:label "Panama"@en ;
+      countries:abbreviation
+              "PA" ;
+      owl:sameAs <http://dbpedia.org/resource/Panama> .
+
+countries:PE
+      rdf:type countries:Country ;
+      rdfs:label "Peru"@en ;
+      countries:abbreviation
+              "PE" ;
+      owl:sameAs <http://dbpedia.org/resource/Peru> .
+
+countries:PF
+      rdf:type countries:Country ;
+      rdfs:label "French Polynesia"@en ;
+      countries:abbreviation
+              "PF" ;
+      owl:sameAs <http://dbpedia.org/resource/French_Polynesia> .
+
+countries:PG
+      rdf:type countries:Country ;
+      rdfs:label "Papua New Guinea"@en ;
+      countries:abbreviation
+              "PG" ;
+      owl:sameAs <http://dbpedia.org/resource/Papua_New_Guinea> .
+
+countries:PH
+      rdf:type countries:Country ;
+      rdfs:label "Philippines"@en ;
+      countries:abbreviation
+              "PH" ;
+      owl:sameAs <http://dbpedia.org/resource/Philippines> .
+
+countries:PK
+      rdf:type countries:Country ;
+      rdfs:label "Pakistan"@en ;
+      countries:abbreviation
+              "PK" ;
+      owl:sameAs <http://dbpedia.org/resource/Pakistan> .
+
+countries:PL
+      rdf:type countries:Country ;
+      rdfs:label "Poland"@en ;
+      countries:abbreviation
+              "PL" ;
+      owl:sameAs <http://dbpedia.org/resource/Poland> .
+
+countries:PM
+      rdf:type countries:Country ;
+      rdfs:label "Saint Pierre And Miquelon"@en ;
+      countries:abbreviation
+              "PM" .
+
+countries:PN
+      rdf:type countries:Country ;
+      rdfs:label "Pitcairn"@en ;
+      countries:abbreviation
+              "PN" ;
+      owl:sameAs <http://dbpedia.org/resource/Pitcairn_Islands> .
+
+countries:PR
+      rdf:type countries:Country ;
+      rdfs:label "Puerto Rico"@en ;
+      countries:abbreviation
+              "PR" ;
+      owl:sameAs <http://dbpedia.org/resource/Puerto_Rico> .
+
+countries:PS
+      rdf:type countries:Country ;
+      rdfs:label "Palestinian Territory, Occupied"@en ;
+      countries:abbreviation
+              "PS" ;
+      owl:sameAs <http://dbpedia.org/resource/Israeli-occupied_territories> .
+
+countries:PT
+      rdf:type countries:Country ;
+      rdfs:label "Portugal"@en ;
+      countries:abbreviation
+              "PT" ;
+      owl:sameAs <http://dbpedia.org/resource/Portugal> .
+
+countries:PW
+      rdf:type countries:Country ;
+      rdfs:label "Palau"@en ;
+      countries:abbreviation
+              "PW" ;
+      owl:sameAs <http://dbpedia.org/resource/Palau> .
+
+countries:PY
+      rdf:type countries:Country ;
+      rdfs:label "Paraguay"@en ;
+      countries:abbreviation
+              "PY" ;
+      owl:sameAs <http://dbpedia.org/resource/Paraguay> .
+
+countries:QA
+      rdf:type countries:Country ;
+      rdfs:label "Qatar"@en ;
+      countries:abbreviation
+              "QA" ;
+      owl:sameAs <http://dbpedia.org/resource/Qatar> .
+
+countries:RE
+      rdf:type countries:Country ;
+      rdfs:label "Reunion"@en ;
+      countries:abbreviation
+              "RE" ;
+      owl:sameAs <http://dbpedia.org/resource/Reunion> .
+
+countries:RO
+      rdf:type countries:Country ;
+      rdfs:label "Romania"@en ;
+      countries:abbreviation
+              "RO" ;
+      owl:sameAs <http://dbpedia.org/resource/Romania> .
+
+countries:RS
+      rdf:type countries:Country ;
+      rdfs:label "Serbia"@en ;
+      countries:abbreviation
+              "RS" ;
+      owl:sameAs <http://dbpedia.org/resource/Serbia> .
+
+countries:RU
+      rdf:type countries:Country ;
+      rdfs:label "Russian Federation"@en ;
+      countries:abbreviation
+              "RU" ;
+      owl:sameAs <http://dbpedia.org/resource/Russia> .
+
+countries:RW
+      rdf:type countries:Country ;
+      rdfs:label "Rwanda"@en ;
+      countries:abbreviation
+              "RW" ;
+      owl:sameAs <http://dbpedia.org/resource/Rwanda> .
+
+countries:SA
+      rdf:type countries:Country ;
+      rdfs:label "Saudi Arabia"@en ;
+      countries:abbreviation
+              "SA" ;
+      owl:sameAs <http://dbpedia.org/resource/Saudi_Arabia> .
+
+countries:SB
+      rdf:type countries:Country ;
+      rdfs:label "Solomon Islands"@en ;
+      countries:abbreviation
+              "SB" ;
+      owl:sameAs <http://dbpedia.org/resource/Solomon_Islands> .
+
+countries:SC
+      rdf:type countries:Country ;
+      rdfs:label "Seychelles"@en ;
+      countries:abbreviation
+              "SC" ;
+      owl:sameAs <http://dbpedia.org/resource/Seychelles> .
+
+countries:SD
+      rdf:type countries:Country ;
+      rdfs:label "Sudan"@en ;
+      countries:abbreviation
+              "SD" ;
+      owl:sameAs <http://dbpedia.org/resource/Sudan> .
+
+countries:SE
+      rdf:type countries:Country ;
+      rdfs:label "Sweden"@en ;
+      countries:abbreviation
+              "SE" ;
+      owl:sameAs <http://dbpedia.org/resource/Sweden> .
+
+countries:SG
+      rdf:type countries:Country ;
+      rdfs:label "Singapore"@en ;
+      countries:abbreviation
+              "SG" ;
+      owl:sameAs <http://dbpedia.org/resource/Singapore> .
+
+countries:SH
+      rdf:type countries:Country ;
+      rdfs:label "Saint Helena"@en ;
+      countries:abbreviation
+              "SH" ;
+      owl:sameAs <http://dbpedia.org/resource/Saint_Helena> .
+
+countries:SI
+      rdf:type countries:Country ;
+      rdfs:label "Slovenia"@en ;
+      countries:abbreviation
+              "SI" ;
+      owl:sameAs <http://dbpedia.org/resource/Slovenia> .
+
+countries:SJ
+      rdf:type countries:Country ;
+      rdfs:label "Svalbard And Jan Mayen"@en ;
+      countries:abbreviation
+              "SJ" ;
+      owl:sameAs <http://dbpedia.org/resource/Svalbard_and_Jan_Mayen> .
+
+countries:SK
+      rdf:type countries:Country ;
+      rdfs:label "Slovakia"@en ;
+      countries:abbreviation
+              "SK" ;
+      owl:sameAs <http://dbpedia.org/resource/Slovakia> .
+
+countries:SL
+      rdf:type countries:Country ;
+      rdfs:label "Sierra Leone"@en ;
+      countries:abbreviation
+              "SL" ;
+      owl:sameAs <http://dbpedia.org/resource/Sierra_Leone> .
+
+countries:SM
+      rdf:type countries:Country ;
+      rdfs:label "San Marino"@en ;
+      countries:abbreviation
+              "SM" ;
+      owl:sameAs <http://dbpedia.org/resource/San_Marino> .
+
+countries:SN
+      rdf:type countries:Country ;
+      rdfs:label "Senegal"@en ;
+      countries:abbreviation
+              "SN" ;
+      owl:sameAs <http://dbpedia.org/resource/Senegal> .
+
+countries:SO
+      rdf:type countries:Country ;
+      rdfs:label "Somalia"@en ;
+      countries:abbreviation
+              "SO" ;
+      owl:sameAs <http://dbpedia.org/resource/Somalia> .
+
+countries:SR
+      rdf:type countries:Country ;
+      rdfs:label "Suriname"@en ;
+      countries:abbreviation
+              "SR" ;
+      owl:sameAs <http://dbpedia.org/resource/Suriname> .
+
+countries:ST
+      rdf:type countries:Country ;
+      rdfs:label "Sao Tome And Principe"@en ;
+      countries:abbreviation
+              "ST" .
+
+countries:SV
+      rdf:type countries:Country ;
+      rdfs:label "El Salvador"@en ;
+      countries:abbreviation
+              "SV" ;
+      owl:sameAs <http://dbpedia.org/resource/El_Salvador> .
+
+countries:SY
+      rdf:type countries:Country ;
+      rdfs:label "Syrian Arab Republic"@en ;
+      countries:abbreviation
+              "SY" ;
+      owl:sameAs <http://dbpedia.org/resource/Syria> .
+
+countries:SZ
+      rdf:type countries:Country ;
+      rdfs:label "Swaziland"@en ;
+      countries:abbreviation
+              "SZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Swaziland> .
+
+countries:TC
+      rdf:type countries:Country ;
+      rdfs:label "Turks And Caicos Islands"@en ;
+      countries:abbreviation
+              "TC" .
+
+countries:TD
+      rdf:type countries:Country ;
+      rdfs:label "Chad"@en ;
+      countries:abbreviation
+              "TD" ;
+      owl:sameAs <http://dbpedia.org/resource/Chad> .
+
+countries:TF
+      rdf:type countries:Country ;
+      rdfs:label "French Southern Territories"@en ;
+      countries:abbreviation
+              "TF" ;
+      owl:sameAs <http://dbpedia.org/resource/French_Southern_and_Antarctic_Lands> .
+
+countries:TG
+      rdf:type countries:Country ;
+      rdfs:label "Togo"@en ;
+      countries:abbreviation
+              "TG" ;
+      owl:sameAs <http://dbpedia.org/resource/Togo> .
+
+countries:TH
+      rdf:type countries:Country ;
+      rdfs:label "Thailand"@en ;
+      countries:abbreviation
+              "TH" ;
+      owl:sameAs <http://dbpedia.org/resource/Thailand> .
+
+countries:TJ
+      rdf:type countries:Country ;
+      rdfs:label "Tajikistan"@en ;
+      countries:abbreviation
+              "TJ" ;
+      owl:sameAs <http://dbpedia.org/resource/Tajikistan> .
+
+countries:TK
+      rdf:type countries:Country ;
+      rdfs:label "Tokelau"@en ;
+      countries:abbreviation
+              "TK" ;
+      owl:sameAs <http://dbpedia.org/resource/Tokelau> .
+
+countries:TL
+      rdf:type countries:Country ;
+      rdfs:label "Timor-Leste"@en ;
+      countries:abbreviation
+              "TL" .
+
+countries:TM
+      rdf:type countries:Country ;
+      rdfs:label "Turkmenistan"@en ;
+      countries:abbreviation
+              "TM" ;
+      owl:sameAs <http://dbpedia.org/resource/Turkmenistan> .
+
+countries:TN
+      rdf:type countries:Country ;
+      rdfs:label "Tunisia"@en ;
+      countries:abbreviation
+              "TN" ;
+      owl:sameAs <http://dbpedia.org/resource/Tunisia> .
+
+countries:TO
+      rdf:type countries:Country ;
+      rdfs:label "Tonga"@en ;
+      countries:abbreviation
+              "TO" ;
+      owl:sameAs <http://dbpedia.org/resource/Tonga> .
+
+countries:TR
+      rdf:type countries:Country ;
+      rdfs:label "Turkey"@en ;
+      countries:abbreviation
+              "TR" ;
+      owl:sameAs <http://dbpedia.org/resource/Turkey> .
+
+countries:TT
+      rdf:type countries:Country ;
+      rdfs:label "Trinidad And Tobago"@en ;
+      countries:abbreviation
+              "TT" .
+
+countries:TV
+      rdf:type countries:Country ;
+      rdfs:label "Tuvalu"@en ;
+      countries:abbreviation
+              "TV" ;
+      owl:sameAs <http://dbpedia.org/resource/Tuvalu> .
+
+countries:TW
+      rdf:type countries:Country ;
+      rdfs:label "Taiwan, Province Of China"@en ;
+      countries:abbreviation
+              "TW" .
+
+countries:TZ
+      rdf:type countries:Country ;
+      rdfs:label "Tanzania, United Republic Of"@en ;
+      countries:abbreviation
+              "TZ" .
+
+countries:UA
+      rdf:type countries:Country ;
+      rdfs:label "Ukraine"@en ;
+      countries:abbreviation
+              "UA" ;
+      owl:sameAs <http://dbpedia.org/resource/Ukraine> .
+
+countries:UG
+      rdf:type countries:Country ;
+      rdfs:label "Uganda"@en ;
+      countries:abbreviation
+              "UG" ;
+      owl:sameAs <http://dbpedia.org/resource/Uganda> .
+
+countries:UM
+      rdf:type countries:Country ;
+      rdfs:label "United States Minor Outlying Islands"@en ;
+      countries:abbreviation
+              "UM" ;
+      owl:sameAs <http://dbpedia.org/resource/United_States_Minor_Outlying_Islands> .
+
+countries:US
+      rdf:type countries:Country ;
+      rdfs:label "United States"@en ;
+      countries:abbreviation
+              "US" ;
+      owl:sameAs <http://dbpedia.org/resource/United_States> .
+
+countries:UY
+      rdf:type countries:Country ;
+      rdfs:label "Uruguay"@en ;
+      countries:abbreviation
+              "UY" ;
+      owl:sameAs <http://dbpedia.org/resource/Uruguay> .
+
+countries:UZ
+      rdf:type countries:Country ;
+      rdfs:label "Uzbekistan"@en ;
+      countries:abbreviation
+              "UZ" ;
+      owl:sameAs <http://dbpedia.org/resource/Uzbekistan> .
+
+countries:VA
+      rdf:type countries:Country ;
+      rdfs:label "Holy See (vatican City State)"@en ;
+      countries:abbreviation
+              "VA" .
+
+countries:VC
+      rdf:type countries:Country ;
+      rdfs:label "Saint Vincent And The Grenadines"@en ;
+      countries:abbreviation
+              "VC" .
+
+countries:VE
+      rdf:type countries:Country ;
+      rdfs:label "Venezuela"@en ;
+      countries:abbreviation
+              "VE" ;
+      owl:sameAs <http://dbpedia.org/resource/Venezuela> .
+
+countries:VG
+      rdf:type countries:Country ;
+      rdfs:label "Virgin Islands, British"@en ;
+      countries:abbreviation
+              "VG" ;
+      owl:sameAs <http://dbpedia.org/resource/British_Virgin_Islands> .
+
+countries:VI
+      rdf:type countries:Country ;
+      rdfs:label "Virgin Islands, U.s."@en ;
+      countries:abbreviation
+              "VI" .
+
+countries:VN
+      rdf:type countries:Country ;
+      rdfs:label "Viet Nam"@en ;
+      countries:abbreviation
+              "VN" ;
+      owl:sameAs <http://dbpedia.org/resource/Vietnam> .
+
+countries:VU
+      rdf:type countries:Country ;
+      rdfs:label "Vanuatu"@en ;
+      countries:abbreviation
+              "VU" ;
+      owl:sameAs <http://dbpedia.org/resource/Vanuatu> .
+
+countries:WF
+      rdf:type countries:Country ;
+      rdfs:label "Wallis And Futuna"@en ;
+      countries:abbreviation
+              "WF" .
+
+countries:WS
+      rdf:type countries:Country ;
+      rdfs:label "Samoa"@en ;
+      countries:abbreviation
+              "WS" ;
+      owl:sameAs <http://dbpedia.org/resource/Samoa> .
+
+countries:YE
+      rdf:type countries:Country ;
+      rdfs:label "Yemen"@en ;
+      countries:abbreviation
+              "YE" ;
+      owl:sameAs <http://dbpedia.org/resource/Yemen> .
+
+countries:YT
+      rdf:type countries:Country ;
+      rdfs:label "Mayotte"@en ;
+      countries:abbreviation
+              "YT" ;
+      owl:sameAs <http://dbpedia.org/resource/Mayotte> .
+
+countries:ZA
+      rdf:type countries:Country ;
+      rdfs:label "South Africa"@en ;
+      countries:abbreviation
+              "ZA" ;
+      owl:sameAs <http://dbpedia.org/resource/South_Africa> .
+
+countries:ZM
+      rdf:type countries:Country ;
+      rdfs:label "Zambia"@en ;
+      countries:abbreviation
+              "ZM" ;
+      owl:sameAs <http://dbpedia.org/resource/Zambia> .
+
+countries:ZW
+      rdf:type countries:Country ;
+      rdfs:label "Zimbabwe"@en ;
+      countries:abbreviation
+              "ZW" ;
+      owl:sameAs <http://dbpedia.org/resource/Zimbabwe> .
+
+countries:abbreviation
+      rdf:type owl:DatatypeProperty ;
+      rdfs:label "abbreviation"^^xsd:string ;
+      rdfs:range xsd:string .
+
+sm:source
+      rdf:type owl:AnnotationProperty ;
+      rdfs:label "source"^^xsd:string ;
+      rdfs:subPropertyOf rdfs:seeAlso .

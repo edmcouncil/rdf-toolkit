@@ -1,0 +1,2 @@
+@prefix : <http://example.org/stuff/1.0/> .
+(1 2.0 3E1) :p "w" .

@@ -2,11 +2,11 @@ organization := "org.edmcouncil"
 
 name := "rdf-serializer"
 
-version := "1.0.0-SNAPSHOT"
+version := "1.0.1-SESAME-MERGE"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.5"
 
-scalacOptions ++= Seq("-deprecation", "-unchecked")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 seq(bintrayResolverSettings:_*)
 
@@ -38,6 +38,15 @@ libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test" wit
 
 libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
+//
+// Sesame 2.7 Binding And Config
+//
+libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % "2.7.14"
+
+//
+// Apache Command-line Argument Handling Library
+//
+libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties

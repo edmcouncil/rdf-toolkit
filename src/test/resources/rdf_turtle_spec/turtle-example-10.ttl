@@ -1,0 +1,5 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://example.org/#green-goblin> foaf:name "Green Goblin" .
+
+<http://example.org/#spiderman> foaf:name "Spiderman" .
