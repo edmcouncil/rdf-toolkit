@@ -26,28 +26,41 @@
  * 
  */
 
-package org.edmcouncil.main
+package org.edmcouncil.rdf_serializer
 
-/**
- * Loads booter.properties which contains some generated SBT values
- */
-object BooterProperties {
+import java.nio.file.Path
+import javax.xml.parsers.DocumentBuilderFactory
 
-  val properties = PropertiesFile("booter.properties").properties
+import org.w3c.dom.Document
 
-  val organization = properties.getOrElse("booter.organization", "unknown")
-  val name = properties.getOrElse("booter.name", "unknown")
-  val version = properties.getOrElse("booter.version", "0")
-  val systemRelease = properties.getOrElse("booter.git.hash.short", "0")
-  val systemHash = properties.getOrElse("booter.git.hash.long", "0")
-  val systemBranch = properties.getOrElse("booter.git.branch", "unknown")
-  val scalaVersion = properties.getOrElse("booter.scala.version", "0")
-  val gitHashLong = properties.getOrElse("booter.git.hash.long", "0")
-  val gitHashShort = properties.getOrElse("booter.git.hash.short", "0")
-  val gitBranch = properties.getOrElse("booter.git.branch", "0")
-  val generatedAt = properties.getOrElse("booter.generated.at", "0")
+class RdfXmlSorter private (input: Path) {
 
-  def versionFull = s"$version-$systemRelease"
 
-  def nameWithVersion = s"$name $versionFull"
+  def xmlDocument: Document = {
+
+    val file = input.toFile
+    val dbFactory = DocumentBuilderFactory.newInstance
+    val dBuilder = dbFactory.newDocumentBuilder()
+    val doc = dBuilder.parse(file)
+
+    //
+    // optional, but recommended
+    //
+    // read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+    //
+    doc.getDocumentElement.normalize()
+    doc
+  }
+
+  def sortedAsString = org.ow2.easywsdl.tooling.java2wsdl.util.XMLSorter.sort(xmlDocument)
+
+  def printIt() = {
+    print(sortedAsString)
+  }
+
+}
+
+object RdfXmlSorter {
+
+  def apply(path: Path) = new RdfXmlSorter(path)
 }

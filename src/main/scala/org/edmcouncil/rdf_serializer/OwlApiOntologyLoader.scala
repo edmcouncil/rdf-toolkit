@@ -1,3 +1,31 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Enterprise Data Management Council
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation files
+ * (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ * 
+ *
+ * The above copyright notice and this permission notice shall be
+*  included in all copies or substantial portions of the Software. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * 
+ */
+
 package org.edmcouncil.rdf_serializer
 
 import java.io.IOException
@@ -19,18 +47,6 @@ class OwlApiOntologyLoader(
   baseUrl: BaseURL
 ) extends Logging {
 
-  val importsToBeResolved: collection.mutable.Set[IRI] = new collection.mutable.HashSet[IRI]
-
-  val missingImportListener = new MissingImportListener() {
-    @Override
-    def importMissing(event: MissingImportEvent) {
-      warn(s"Missing import ${event.getImportedOntologyURI}")
-      importsToBeResolved += event.getImportedOntologyURI
-    }
-  }
-
-  ontologyManager.addMissingImportListener(missingImportListener)
-
   /**
    * Try to load the given import by deriving the local file name from the IRI or else by
    * loading it from the web
@@ -46,19 +62,15 @@ class OwlApiOntologyLoader(
 
     info(s"Trying to load $uri locally from $directoryName")
 
-//    val fileName = tryIfLocalVersionExists(baseDir, iri)
+    val resolver = ImportResolver(baseDir, baseUrl, iri)
 
-    val resolver = ImportResolver(baseDir, baseUrl, iri.toURI.toString)
-
-    if (resolver.found) {
-      debug(s"${resolver.resource.get} does exists, loading it now")
+    if (! resolver.found) false else {
       //
       // "Recursively" call loadOntology again but now for the imported ontology
       //
       loadOntology(resolver.inputDocumentSource.get)
+      true
     }
-
-    false
   }
 
   val loaderListener = new OWLOntologyLoaderListener {
@@ -66,21 +78,20 @@ class OwlApiOntologyLoader(
     override def startedLoadingOntology(event: LoadingStartedEvent): Unit = {
       val uri = event.getDocumentIRI.toURI
       // Nothing to do
-      info(s"-----------------> Started loading ontology: $uri <-------")
+      info(s"-----------------> Started loading ontology:  $uri <-------")
     }
 
     override def finishedLoadingOntology(event: LoadingFinishedEvent): Unit = {
       val iri = event.getDocumentIRI
       val uri = iri.toURI
-      info(s"-----------------> Finished Loading Ontology: $uri <-------")
-      if (! event.isSuccessful) {
+      if (event.isSuccessful) {
+        info(s"-----------------> Finished loading ontology: $uri <-------")
+      } else {
         event.getException match {
           case ex: OWLOntologyCreationIOException => ex.getCause match {
             case ioException: IOException =>
-              if (tryToLoadMissingImport(iri)) {
-                info(s"Successfully loaded $uri")
-              } else {
-                error(s"File I/O Exception: ${ioException.getMessage}")
+              if (! tryToLoadMissingImport(iri)) {
+                error(s"Could not load missing import: $uri")
               }
             case _ => throw ex
           }
@@ -88,26 +99,6 @@ class OwlApiOntologyLoader(
             error(s"Unknown exception while loading $uri: $ex")
         }
       }
-
-      //      if (event.getException() != null) {
-      //        getUnresolvedURIs().add(event.getDocumentIRI().toURI());
-      //        event.getException().printStackTrace();
-      //        return;
-      //      }
-      //      try {
-      //        if (!uris.containsKey(event.getDocumentIRI().toURI())) {
-      //          cacheOntology(event.getDocumentIRI().toURI(),
-      //            newFile(), manager.getOntology(event
-      //              .getOntologyID()));
-      //        }
-      //      } catch (UnknownOWLOntologyException e) {
-      //        e.printStackTrace();
-      //        getUnresolvedURIs().add(event.getDocumentIRI().toURI());
-      //      } catch (OWLOntologyStorageException e) {
-      //        e.printStackTrace();
-      //        getUnresolvedURIs().add(event.getDocumentIRI().toURI());
-      //      }
-
     }
   }
 

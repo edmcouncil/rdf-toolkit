@@ -1,5 +1,7 @@
 package org.edmcouncil.rdf_serializer
 
+import org.semanticweb.owlapi.model.IRI
+
 /**
  * Test the ImportResolver
  */
@@ -10,7 +12,8 @@ class ImportResolverSpec extends UnitSpec {
     val baseDir = PotentialDirectory("src/test")
     val baseUrl = BaseURL("http://whatever.com/")
     val testImportUrl = "http://whatever.com/resources/wine/"
-    val resolver = ImportResolver(baseDir, baseUrl, testImportUrl)
+    val testImportIri = IRI.create(testImportUrl)
+    val resolver = ImportResolver(baseDir, baseUrl, testImportIri)
 
     "remainder of test import url is resources/wine" in {
       assert(resolver.remainderOfImportUrl.get.equals("resources/wine/"))
