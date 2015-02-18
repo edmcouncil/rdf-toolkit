@@ -19,13 +19,10 @@ libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
 //
 // OWLAPI Model Interfaces And Utilities
 //
-libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources()
+//libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources()
 
-//
-// OWLAPI Binding And Config
-//
-libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
-
+libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion)
+                        .exclude("com.fasterxml.jackson.core", "jackson-core")
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
@@ -38,6 +35,11 @@ libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test" withSources()
 
 libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
+
+//
+// Explicit loading of jackson-core to prevent merge issue in sbt-assembly
+//
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
 // Sesame 2.7 Binding And Config
