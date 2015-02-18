@@ -26,6 +26,7 @@ libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion w
 //
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
+
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1" withSources()
