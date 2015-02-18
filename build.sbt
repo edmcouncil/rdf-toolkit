@@ -24,7 +24,7 @@ libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
 libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
                         .exclude("com.fasterxml.jackson.core", "jackson-core")
 
-libraryDependencies += "net.sourceforge.owlapi" % "owlapi-binding" % owlApiVersion withSources()
+libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
