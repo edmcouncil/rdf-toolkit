@@ -11,6 +11,7 @@ import java.io._
 import org.openrdf.model.impl.URIImpl
 import org.openrdf.rio.{RDFFormat, Rio}
 import org.scalatest.{Matchers, FlatSpec}
+import grizzled.slf4j.Logging
 
 /**
  * ScalaTest tests for the SortedTurtleWriter and SortedTurtleWriterFactory.
@@ -213,6 +214,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers {
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      info(s"sorted format: ${sourceFile.getName} => ${targetFile.getName}") // TODO: remove debugging
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
