@@ -54,10 +54,11 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) {
     case PathList("META-INF", "maven", "org.openrdf.sesame", xs @ _*) => MergeStrategy.last
     */
     case PathList("META-INF", "maven", xs @ _*) => MergeStrategy.discard
-    case PathList("com", "fasterxml", "jackson", xs @ _*) => MergeStrategy.last
-    case PathList("info", "aduna", "net", xs @ _*) => MergeStrategy.last
     case PathList("META-INF", "sun-jaxb.episode", xs @ _*) => MergeStrategy.first
     case PathList("org", "apache", "commons", "logging", xs @ _*) => MergeStrategy.first
+    case PathList("com", xs @ _*) => MergeStrategy.last
+    case PathList("info", xs @ _*) => MergeStrategy.last
+    case PathList("org", xs @ _*) => MergeStrategy.last
     case "booter.properties" => MergeStrategy.first
     case x => old(x)
   }
