@@ -1,0 +1,8 @@
+# [ABC] added "mailto:" to make this example valid.
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+[ foaf:name "Alice" ] foaf:knows [
+    foaf:name "Bob" ;
+    foaf:knows [
+        foaf:name "Eve" ] ;
+    foaf:mbox <mailto:bob@example.com> ] .

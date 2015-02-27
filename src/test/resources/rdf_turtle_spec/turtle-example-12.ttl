@@ -1,0 +1,5 @@
+@prefix : <http://example.org/elements> .                                                                              
+<http://en.wikipedia.org/wiki/Helium>                                                                                  
+    :atomicNumber 2 ;               # xsd:integer                                                                      
+    :atomicMass 4.002602 ;          # xsd:decimal                                                                      
+    :specificGravity 1.663E-4 .     # xsd:double
