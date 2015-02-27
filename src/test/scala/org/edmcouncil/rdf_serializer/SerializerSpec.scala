@@ -12,6 +12,7 @@ class SerializerSpec extends UnitSpec {
   def run(args: String*): Int = suppressOutput {
     MainImpl(args).run
   }
+  def run2(args: String*): Int = MainImpl(args).run
 
   "A Serializer Cli Interface" must {
 
@@ -79,6 +80,16 @@ class SerializerSpec extends UnitSpec {
       run(
         "--input-file", "src/test/resources/fibo/fnd/OwnershipAndControl/Control.rdf",
         "--output-file", "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
+        "--base-dir", "src/test/resources/fibo",
+        "--base-url", "http://www.omg.org/spec/EDMC-FIBO",
+        "--force"
+      ) should equal (0)
+    }
+
+    "Do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
+      run2(
+        "--input-file", "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf",
+        "--output-file", "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
         "--base-dir", "src/test/resources/fibo",
         "--base-url", "http://www.omg.org/spec/EDMC-FIBO",
         "--force"

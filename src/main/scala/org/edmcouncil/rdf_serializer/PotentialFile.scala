@@ -32,6 +32,7 @@ import java.io.{FileOutputStream, FileInputStream, BufferedInputStream, File}
 import java.nio.file.{Path, Paths, Files}
 
 import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
+import org.semanticweb.owlapi.model.IRI
 
 import scala.io.Source
 import scala.util.Properties
@@ -49,14 +50,15 @@ class PotentialFile(name: Option[String]) {
 
   lazy val file = name.map((fileName: String) => new File(fileName.asValidPathName))
   lazy val fileName = file.map(_.getAbsolutePath)
+  lazy val path = fileName.map(Paths.get(_))
   lazy val fileExists = fileName.filter((fileName: String) => Files.exists(Paths.get(fileName))).isDefined
+  lazy val uri = path.map(_.toUri)
+  lazy val iri = uri.map(IRI.create)
   lazy val inputStream = file.map((file: File) => new BufferedInputStream(new FileInputStream(file)))
   lazy val outputStream = file.map((file: File) => new FileOutputStream(file))
 
-  val path = name.map((name: String) => Paths.get(name))
-
   lazy val inputSource = inputStream.map(Source.fromInputStream(_)(codec))
-  lazy val inputDocumentSource = inputStream.map(new StreamDocumentSource(_))
+  lazy val inputDocumentSource = inputStream.map(new StreamDocumentSource(_, iri.orNull))
 }
 
 object PotentialFile {
