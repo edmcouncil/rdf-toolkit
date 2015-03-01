@@ -44,6 +44,10 @@ object MainImpl {
   def apply(args: Seq[String]) = new MainImpl(args)
 }
 
+sealed trait SerializerApi
+object SerializerApiSesame extends SerializerApi
+object SerializerApiOWLAPI extends SerializerApi
+
 class MainImpl private (args : Seq[String]) {
 
   private type OptionMap = Map[Symbol, Any]
@@ -59,6 +63,10 @@ class MainImpl private (args : Seq[String]) {
   private lazy val optionDebug = options.contains('debug)
 
   private lazy val optionForce = options.contains('force)
+
+  private lazy val optionApi = if (
+    options.contains('api) && options('api).asInstanceOf[String].equalsIgnoreCase("sesame")
+  ) SerializerApiSesame else SerializerApiOWLAPI
 
   private lazy val optionInputFileName = if (options.contains('inputFileName))
     Some(options('inputFileName).asInstanceOf[String])
@@ -88,6 +96,7 @@ class MainImpl private (args : Seq[String]) {
     verbose = optionVerbose,
     debug = optionDebug,
     force = optionForce,
+    api = optionApi,
     inputFileName = optionInputFileName,
     outputFileName = optionOutputFileName,
     outputFormatName = optionOutputFormatName,
@@ -108,6 +117,8 @@ class MainImpl private (args : Seq[String]) {
         nextOption(map_ ++ Map('force -> true), tail)
       case "--help" :: tail ⇒
         nextOption(map_ ++ Map('usage -> true), tail)
+      case "--api" :: value :: tail ⇒
+        nextOption(map_ ++ Map('api -> value), tail)
       case "--input-file" :: value :: tail =>
         nextOption(map_ ++ Map('inputFileName -> value), tail)
       case "--output-file" :: value :: tail =>
@@ -127,12 +138,16 @@ class MainImpl private (args : Seq[String]) {
   private def showUsage() {
 
     val sep = "\n                           - "
-    def outputFormats = OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
+    def outputFormats = if (optionApi == SerializerApiOWLAPI)
+      OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
+    else
+      SesameRdfFormatter.TARGET_FORMATS.split(",").map(_.trim).mkString(sep, sep, "")
 
     println(s"""
       |${BooterProperties.name} version ${BooterProperties.versionFull} (${BooterProperties.generatedAt})
       |
       |Usage: ${BooterProperties.name.toLowerCase} [--verbose] [--help] [--debug] [--force]
+      |  [--api <owlapi|sesame>]
       |  [--input-file <path>] [--output-file <path>] [--output-format <format>]
       |  [--base-dir <path> --base-url <url>]
       |
@@ -141,6 +156,9 @@ class MainImpl private (args : Seq[String]) {
       |  --verbose                switch on verbose logging (sets INFO level logging).
       |  --debug                  switch on debug level logging.
       |  --force                  force output file to be overwritten if it exists.
+      |  --api <api>              specify whether you want to use the OWLAPI or Sesame. Default is OWLAPI. Output
+      |                           formats shown below under 'output-format' will be different depending on this option,
+      |                           use '--help --api sesame' to see the formats supported by the Sesame API.
       |  --help                   this help.
       |  --input-file <path>
       |  --output-file <path>
@@ -167,7 +185,10 @@ class MainImpl private (args : Seq[String]) {
       showUsage()
       if (optionUnknown) 1 else 0
     } else {
-      Serializer(params).run
+      //
+      // Run the Serializer as if it were a function that returns an Int
+      //
+      Serializer(params)
     }
   }
 }

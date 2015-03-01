@@ -35,6 +35,7 @@ case class CommandLineParams(
   verbose: Boolean = false,
   debug : Boolean = false,
   force: Boolean = false,
+  api: SerializerApi = SerializerApiOWLAPI,
   inputFileName: Option[String] = None,
   outputFileName: Option[String] = None,
   outputFormatName: Option[String] = None,

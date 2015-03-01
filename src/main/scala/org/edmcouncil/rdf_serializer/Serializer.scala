@@ -28,24 +28,61 @@
 
 package org.edmcouncil.rdf_serializer
 
-
-class Serializer(private val commands: SerializerCommands) {
-
-
-  def run: Int = {
-
-    val rc1 = commands.validateParams
-    if (rc1 > 0) return rc1
-
-    val rc2 = OwlApiSerializer(commands)
-    if (rc2 > 0) return rc2
-
-    0
-  }
-
-}
+import scala.collection.mutable
 
 object Serializer {
 
-  def apply(params: CommandLineParams) = new Serializer(new SerializerCommands(params))
+  //
+  // For now, just do it quick & dirty by recreating a command line for the SesameRdfFormatter so that we
+  // don't have to touch Tony's code. Eventually we should create a SesameSerializer class next to the
+  // OwlApiSerializer.
+  //
+  private def runSesameRdfFormatter(params: CommandLineParams): Int = {
+
+    //
+    // usage: SesameRdfFormatter
+    // -h,--help                     print out details of the command-line
+    //                               arguments for the program
+    // -s,--source <arg>             source (input) RDF file to be formatting
+    // -sfmt,--source-format <arg>   source (input) RDF format; one of: auto
+    //                               (select by filename) [default], binary,
+    //                               json-ld (JSON-LD), n3, n-quads (N-quads),
+    //                               n-triples (N-triples), rdf-a (RDF/A),
+    //                               rdf-json (RDF/JSON), rdf-xml (RDF/XML),
+    //                               trig (TriG), trix (TriX), turtle (Turtle)
+    // -t,--target <arg>             target (output) RDF file
+    // -tfmt,--target-format <arg>   source (input) RDF format: one of: turtle
+    //                               (Turtle, sorted) [default]
+    //
+    def sesameRdfFormatterArgs: Array[String] = {
+      val ab = mutable.ArrayBuilder.make[String]
+
+      if (params.inputFileName.isDefined)
+        ab ++= Seq("-s", params.inputFileName.get)
+
+      ab ++= Seq("-sfmt", "auto")
+
+      if (params.outputFileName.isDefined)
+        ab ++= Seq("-t", params.outputFileName.get)
+
+      if (params.outputFormatName.isDefined)
+        ab ++= Seq("-tfmt", params.outputFormatName.get)
+
+      ab.result()
+    }
+
+    SesameRdfFormatter.run(sesameRdfFormatterArgs)
+
+    //
+    // The SesameRdfFormatter does not support a return code, so we're always returning zero meaning everything
+    // always is ok. Which makes it harder to embed the Serializer in scripts, so we need to build in support
+    // for return codes but for now its just zero.
+    //
+    0
+  }
+
+  def apply(params: CommandLineParams) = params.api match {
+    case SerializerApiOWLAPI => OwlApiSerializer(new SerializerCommands(params))
+    case SerializerApiSesame => runSesameRdfFormatter(params)
+  }
 }

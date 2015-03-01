@@ -78,7 +78,10 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
     ontologyManager.removeOntology(ontology)
   }
 
-  private def run = {
+  private def run: Int = {
+
+    val rc1 = commands.validate
+    if (rc1 > 0) return rc1
 
     val ontologyManager = createOntologyManager
     val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, commands.baseDir, commands.baseUrl)
@@ -126,5 +129,5 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
 
 object OwlApiSerializer {
 
-  def apply(params: SerializerCommands): Int = new OwlApiSerializer(params).run
+  def apply(commands: SerializerCommands): Int = new OwlApiSerializer(commands).run
 }

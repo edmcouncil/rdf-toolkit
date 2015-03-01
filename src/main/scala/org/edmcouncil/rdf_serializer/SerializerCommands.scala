@@ -45,7 +45,7 @@ private class SerializerCommands(
   lazy val baseDir = PotentialDirectory(params.baseDir)
   lazy val baseUrl = BaseURL(params.baseUrl)
 
-  def validateParams = {
+  def validate = {
 
     var rc = 0
 
