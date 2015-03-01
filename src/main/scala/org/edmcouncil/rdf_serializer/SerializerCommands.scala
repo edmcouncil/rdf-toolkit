@@ -45,45 +45,60 @@ private class SerializerCommands(
   lazy val baseDir = PotentialDirectory(params.baseDir)
   lazy val baseUrl = BaseURL(params.baseUrl)
 
-  def validate = {
 
-    var rc = 0
-
+  private def validateInput: Int = {
     input.fileName match {
       case Some(fileName) => info(s"Input File: $fileName")
-      case _ => error("Input File has not been specified") ; rc = 1
+      case _ => error("Input File has not been specified") ; return 1
     }
     if (input.fileExists) {
       info("Input File exists")
+      0
     } else {
       error("Input File does not exist")
-      rc = 1
+      1
     }
+  }
+
+  private def validateOutput: Int = {
     if (output.hasName) {
       info(s"Output File: ${output.fileName.get}")
     } else {
       error("Output File has not been specified")
-      rc = 1
+      return 1
     }
     if (params.force) {
       info("Force option has been given")
     }
     Option(output.fileExists) match {
       case Some(true) if params.force =>  info("Output File exists")
-      case Some(true) if ! params.force => error("Output File exists") ; rc = 1
+      case Some(true) if ! params.force => error("Output File exists") ; return 1
       case Some(false) => error("Output File does not exist")
       case _ =>
     }
+    0
+  }
+
+  private def validateBase: Int = {
     if (baseDir.hasName && baseUrl.isSpecified) {
       if (!baseDir.directoryExists) {
-        error(s"The given base directory does not exist: ${baseDir.name.get}")
-        rc = 2
+        error(s"The given base directory does not exist: ${baseDir.name.get}") ; return 2
       } else {
-
+        info(s"Found the specified base directory: ${baseDir.name}")
       }
     } else {
-      error("Specify either both the --base-dir and --base-url option or none")
+      error("Specify either both the --base-dir and --base-url option or none") ; return 2
     }
+    0
+  }
+
+  def validate = {
+
+    var rc = validateInput
+
+    rc = if (rc == 0) validateOutput else rc
+
+    rc = if (rc == 0) validateBase else rc
 
     rc
   }

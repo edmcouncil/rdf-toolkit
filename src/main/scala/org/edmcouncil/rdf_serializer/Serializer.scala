@@ -28,6 +28,8 @@
 
 package org.edmcouncil.rdf_serializer
 
+import org.edmcouncil.{SerializerApiSesame, SerializerApiOWLAPI}
+
 import scala.collection.mutable
 
 object Serializer {

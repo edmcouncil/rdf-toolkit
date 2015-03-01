@@ -28,6 +28,7 @@
 
 package org.edmcouncil.rdf_serializer
 
+import org.edmcouncil.{SerializerApiOWLAPI, SerializerApiSesame}
 import org.edmcouncil.extension.StringExtensions._
 import org.edmcouncil.main.BooterProperties
 
@@ -36,17 +37,20 @@ import org.edmcouncil.main.BooterProperties
  */
 object Main extends App {
 
+  //
+  // The whole program is a function returning an Int to the command line, which we need in order to use this
+  // program in Bash scripts or Windows scripts.
+  //
   sys.exit(MainImpl(args).run)
 }
 
+/**
+ * Allow for the MainImpl to be executed from tests bypassing Main.
+ */
 object MainImpl {
 
   def apply(args: Seq[String]) = new MainImpl(args)
 }
-
-sealed trait SerializerApi
-object SerializerApiSesame extends SerializerApi
-object SerializerApiOWLAPI extends SerializerApi
 
 class MainImpl private (args : Seq[String]) {
 
@@ -86,6 +90,10 @@ class MainImpl private (args : Seq[String]) {
 
   private lazy val optionBaseUrl = if (options.contains('baseUrl))
     Some(options('baseUrl).asInstanceOf[String])
+  else None
+
+  private lazy val optionBaseDirUrl = if (options.contains('baseDirUrl))
+    Some(options('baseDirUrl).asInstanceOf[String])
   else None
 
   private lazy val optionUsage = options.contains('usage)
@@ -129,6 +137,8 @@ class MainImpl private (args : Seq[String]) {
         nextOption(map_ ++ Map('baseDir -> value), tail)
       case "--base-url" :: value :: tail =>
         nextOption(map_ ++ Map('baseUrl -> value), tail)
+      case "--base-dir-url" :: value :: tail =>
+        nextOption(map_ ++ Map('baseDirUrl -> value), tail)
       case option :: tail ⇒
         println(s"""ERROR: Unknown option "$option"!""")
         nextOption(map_ ++ Map('unknown -> true), tail)

@@ -28,6 +28,8 @@
 
 package org.edmcouncil.rdf_serializer
 
+import org.edmcouncil.{SerializerApi, SerializerApiOWLAPI}
+
 /**
  * This case class represents the collection of settings that can be supplied via the command line.
  */

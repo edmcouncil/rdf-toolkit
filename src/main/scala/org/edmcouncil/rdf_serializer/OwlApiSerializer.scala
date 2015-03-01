@@ -35,6 +35,9 @@ import org.semanticweb.owlapi.io.StreamDocumentSource
 import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
 
+/**
+ * Serialize a given RDF or OWL file with the OWLAPI
+ */
 class OwlApiSerializer(private val commands: SerializerCommands) extends Logging {
 
   import commands._
