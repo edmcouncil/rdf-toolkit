@@ -69,3 +69,13 @@ resolvers += JavaNet2Repository
 
 resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-repository"
 
+//
+// Select the main class. Let it be the Scala main, not the Java main (SesameRdfSerializer, which can still
+// be selected on the command line seperately. This prevents the following prompt:
+//
+// Multiple main classes detected, select one to run:
+//
+// [1] org.edmcouncil.rdf_serializer.SesameRdfFormatter
+// [2] org.edmcouncil.rdf_serializer.Main
+//
+mainClass in Compile := Some("org.edmcouncil.rdf_serializer.Main")
