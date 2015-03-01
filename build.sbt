@@ -11,6 +11,7 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 seq(bintrayResolverSettings:_*)
 
 val owlApiVersion = "4.0.1"
+val sesameVersion = "2.8.0"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
 
@@ -34,7 +35,7 @@ libraryDependencies += "org.clapper" %% "avsl" % "1.0.2" withSources()
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test" withSources()
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test" withSources()
 
 libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
@@ -44,9 +45,9 @@ libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
-// Sesame 2.7 Binding And Config
+// Sesame Binding And Config
 //
-libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % "2.7.14"
+libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % sesameVersion
 
 //
 // Apache Command-line Argument Handling Library
