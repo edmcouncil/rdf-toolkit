@@ -50,9 +50,14 @@ libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % sesameVersion
 
 //
-// Apache Command-line Argument Handling Library
+// Apache Command-line Argument Handling Library used in Tony's Java code
 //
 libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
+
+//
+// Argot Command-Line Argument Handling used in the Scala code
+//
+libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
