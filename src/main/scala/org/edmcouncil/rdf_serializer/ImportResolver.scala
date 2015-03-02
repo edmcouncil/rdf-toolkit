@@ -32,6 +32,7 @@ import java.io.{BufferedInputStream, File, FileInputStream}
 import java.nio.file.Path
 
 import grizzled.slf4j.Logging
+import org.edmcouncil.util.{BaseURL, PotentialDirectory}
 import org.semanticweb.owlapi.io.StreamDocumentSource
 import org.semanticweb.owlapi.model.IRI
 
@@ -98,6 +99,9 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
 }
 
 object ImportResolver {
+
+  def apply(basePath: Path, baseUri: BaseURL, importedIri: IRI) =
+    new ImportResolver(PotentialDirectory(basePath), baseUri, importedIri)
 
   def apply(baseDir: PotentialDirectory, baseUrl: BaseURL, importedIri: IRI) =
     new ImportResolver(baseDir, baseUrl, importedIri)

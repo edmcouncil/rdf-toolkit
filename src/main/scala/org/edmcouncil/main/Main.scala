@@ -10,10 +10,10 @@
  * publish, distribute, sublicense, and/or sell copies of the Software,
  * and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
- * 
+ *
  *
  * The above copyright notice and this permission notice shall be
-*  included in all copies or substantial portions of the Software. 
+*  included in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -23,21 +23,20 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  */
 
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.main
 
 /**
- * This case class represents the collection of settings that can be supplied via the command line.
+ * The Main class of the RDF Serializer
  */
-case class CommandLineParams(
-  verbose: Boolean = false,
-  debug : Boolean = false,
-  force: Boolean = false,
-  inputFileName: Option[String] = None,
-  outputFileName: Option[String] = None,
-  outputFormatName: Option[String] = None,
-  baseDir: Option[String] = None,
-  baseUrl: Option[String] = None
-)
+object Main extends App {
+
+  //
+  // The whole program is a function returning an Int to the command line, which we need in order to use this
+  // program in Bash scripts or Windows scripts.
+  //
+  sys.exit(MainImpl(args).run)
+}
+

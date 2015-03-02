@@ -1,0 +1,5 @@
+package org.edmcouncil
+
+sealed trait SerializerApi
+object SerializerApiSesame extends SerializerApi
+object SerializerApiOWLAPI extends SerializerApi

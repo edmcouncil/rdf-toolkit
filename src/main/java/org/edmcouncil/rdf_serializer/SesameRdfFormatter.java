@@ -20,7 +20,7 @@ public class SesameRdfFormatter {
 
     // TODO: add command-line option to set base URI
 
-    private static final String SOURCE_FORMATS =
+    public static final String SOURCE_FORMATS =
             "auto (select by filename) [default], " +
             "binary, " +
             "json-ld (JSON-LD), " +
@@ -34,8 +34,8 @@ public class SesameRdfFormatter {
             "trix (TriX), " +
             "turtle (Turtle)";
 
-    private static final String TARGET_FORMATS =
-            "turtle (Turtle, sorted) [default]";
+    public static final String TARGET_FORMATS =
+            "turtle (sorted Turtle) [default]";
 
     private static Options options = null;
 
@@ -52,7 +52,7 @@ public class SesameRdfFormatter {
                 "t", "target", true, "target (output) RDF file"
         );
         options.addOption(
-                "tfmt", "target-format", true, "source (input) RDF format: one of: " + TARGET_FORMATS
+                "tfmt", "target-format", true, "target (output) RDF format: one of: " + TARGET_FORMATS
         );
         options.addOption(
                 "h", "help", false, "print out details of the command-line arguments for the program"
@@ -132,10 +132,12 @@ public class SesameRdfFormatter {
 
         // Create directory for target file, if required.
         File targetFileDir = targetFile.getParentFile();
-        targetFileDir.mkdirs();
-        if (!targetFileDir.exists()) {
-            System.err.println("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
-            return;
+        if (targetFileDir != null) {
+            targetFileDir.mkdirs();
+            if (!targetFileDir.exists()) {
+                System.err.println("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
+                return;
+            }
         }
 
         // Load RDF file.

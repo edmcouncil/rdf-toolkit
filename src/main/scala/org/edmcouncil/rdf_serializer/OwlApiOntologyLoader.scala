@@ -29,13 +29,25 @@
 package org.edmcouncil.rdf_serializer
 
 import java.io.IOException
+import java.nio.file.Path
 
 import grizzled.slf4j.Logging
+import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
 import org.semanticweb.owlapi.io.{OWLOntologyCreationIOException, OWLOntologyDocumentSource}
 import org.semanticweb.owlapi.model.OWLOntologyLoaderListener.{LoadingFinishedEvent, LoadingStartedEvent}
 import org.semanticweb.owlapi.model._
 
 import scala.util.{Failure, Success, Try}
+
+trait OnErrorAborter extends Logging {
+
+  def abortOnError: Boolean
+
+  override def error(msg: => Any) = {
+    super.error(msg)
+    if (abortOnError) throw new IllegalStateException(s"Aborted: $msg (you used --abort switch)")
+  }
+}
 
 /**
  * Load an Ontology
@@ -43,35 +55,37 @@ import scala.util.{Failure, Success, Try}
 class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
   loaderConfiguration: OWLOntologyLoaderConfiguration,
-  baseDir: PotentialDirectory,
-  baseUrl: BaseURL
-) extends Logging {
+  baseDirUrls: Seq[(Path, BaseURL)],
+  val abortOnError: Boolean
+) extends Logging with OnErrorAborter {
+
+  /**
+   * For every missing import specified by iri, try to find a corresponding base directory and if found, create an
+   * ImportResolver for it which will try to find the given import in the given base directory.
+   */
+  private def findImportResolver(iri: IRI): Option[ImportResolver] = {
+
+    def findIt(basePathUri: (Path, BaseURL)): Boolean = {
+      val (basePath, baseUri) = basePathUri
+      info(s"Does $baseUri match with ${iri.toURI.toString}?")
+      baseUri.matchesWith(iri.toURI.toString)
+    }
+
+    def mapIt(basePathUri: (Path, BaseURL)): ImportResolver = {
+      val (basePath, baseUri) = basePathUri
+      ImportResolver(PotentialDirectory(basePath), baseUri, iri)
+    }
+
+    baseDirUrls.find(findIt).map(mapIt)
+  }
 
   /**
    * Try to load the given import by deriving the local file name from the IRI or else by
-   * loading it from the web
+   * loading it from the web.
+   *
+   * "Recursively" call loadOntology again but now for the imported ontology
    */
-  def tryToLoadMissingImport(iri: IRI): Boolean = {
-
-    val uri = iri.toURI
-    val ns = iri.getNamespace
-
-    if (! baseDir.hasName) return false
-
-    val directoryName = baseDir.directoryName.get
-
-    info(s"Trying to load $uri locally from $directoryName")
-
-    val resolver = ImportResolver(baseDir, baseUrl, iri)
-
-    if (! resolver.found) false else {
-      //
-      // "Recursively" call loadOntology again but now for the imported ontology
-      //
-      loadOntology(resolver.inputDocumentSource.get)
-      true
-    }
-  }
+  private def tryToLoadMissingImport(iri: IRI): Boolean = findImportResolver(iri).map(loadOntology).isDefined
 
   val loaderListener = new OWLOntologyLoaderListener {
 
@@ -104,6 +118,8 @@ class OwlApiOntologyLoader(
 
   ontologyManager.addOntologyLoaderListener(loaderListener)
 
+  def loadOntology(resolver: ImportResolver): OWLOntology = loadOntology(resolver.inputDocumentSource.get)
+
   def loadOntology(input: PotentialFile): OWLOntology = loadOntology(input.inputDocumentSource.get)
 
   def loadOntology(input: OWLOntologyDocumentSource): OWLOntology = {
@@ -115,21 +131,16 @@ class OwlApiOntologyLoader(
     val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(input, loaderConfiguration))
 
     ontTry1 match {
-      case Success(ont) => // Remove the ontology so that we can load a local copy.
+      case Success(ont) =>
         info(s"Successfully loaded $uriString")
         ont
-      //        ontologyManager.removeOntology(ont)
-      //        info(s"Loading ontology $inputOntologyFileName, second time")
-      //        val ontTry2 = Try(ontologyManager.loadOntologyFromOntologyDocument(inputFileDocumentSource, loaderConfiguration))
-      //        ontTry2 match {
-      //          case Success(ont2) => ont2
-      //          case Failure(e) => throw new IllegalStateException(s"Could not load $inputOntologyFileName: $e")
-      //        }
       case Failure(exception) => exception match {
         case ex: UnloadableImportException =>
-          error(s"importsDeclaration=${ex.getImportsDeclaration.getIRI}")
-          throw new IllegalStateException (s"Could not import $uriString")
-        case _ => throw new IllegalStateException (s"Could not load $uriString: $exception")
+          error(s"Could not import $uriString. importsDeclaration=${ex.getImportsDeclaration.getIRI}")
+          null
+        case _ =>
+          error(s"Could not load $uriString: $exception")
+          null
       }
     }
   }

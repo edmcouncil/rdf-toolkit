@@ -8,6 +8,7 @@ dist
 *.sublime-project
 *.sublime-workspace
 .idea
+atlassian-ide-plugin.xml
 test-out*.rdf
 catalog-v001.xml
 test1.rdf
