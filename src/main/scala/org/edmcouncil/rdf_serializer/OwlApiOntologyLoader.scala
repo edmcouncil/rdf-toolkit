@@ -131,16 +131,9 @@ class OwlApiOntologyLoader(
     val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(input, loaderConfiguration))
 
     ontTry1 match {
-      case Success(ont) => // Remove the ontology so that we can load a local copy.
+      case Success(ont) =>
         info(s"Successfully loaded $uriString")
         ont
-      //        ontologyManager.removeOntology(ont)
-      //        info(s"Loading ontology $inputOntologyFileName, second time")
-      //        val ontTry2 = Try(ontologyManager.loadOntologyFromOntologyDocument(inputFileDocumentSource, loaderConfiguration))
-      //        ontTry2 match {
-      //          case Success(ont2) => ont2
-      //          case Failure(e) => throw new IllegalStateException(s"Could not load $inputOntologyFileName: $e")
-      //        }
       case Failure(exception) => exception match {
         case ex: UnloadableImportException =>
           error(s"Could not import $uriString. importsDeclaration=${ex.getImportsDeclaration.getIRI}")
