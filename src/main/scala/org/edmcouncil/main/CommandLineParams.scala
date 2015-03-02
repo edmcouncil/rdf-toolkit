@@ -56,7 +56,8 @@ class CommandLineParams private (args: Array[String]) {
     math.max(0, newValue)
   }
 
-  val noError = parser.flag[Boolean](List("n", "noerror"), "Do not abort on error. NIY")
+  private val abortOnErrorFlag = parser.flag[Boolean](List("a", "abort"), "Abort on error")
+  def abortOnError = abortOnErrorFlag.value.getOrElse(false)
 
   val forceFlag = parser.flag[Boolean](List("f", "force"), "Force output file to be overwritten if it exists")
   def force = forceFlag.value.getOrElse(false)

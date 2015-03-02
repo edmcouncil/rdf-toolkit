@@ -98,7 +98,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging {
   private def run: Int = {
 
     val ontologyManager = createOntologyManager
-    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, params.baseDirUrls.value)
+    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, params.baseDirUrls.value, params.abortOnError)
     val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormat.value)
 
     //

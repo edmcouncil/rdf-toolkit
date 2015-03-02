@@ -45,8 +45,14 @@ import scala.util.{Failure, Success, Try}
 class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
   loaderConfiguration: OWLOntologyLoaderConfiguration,
-  baseDirUrls: Seq[(Path, BaseURL)]
+  baseDirUrls: Seq[(Path, BaseURL)],
+  abortOnError: Boolean
 ) extends Logging {
+
+  override def error(msg: => Any) = {
+    super.error(msg)
+    if (abortOnError) throw new IllegalStateException(s"Aborted: $msg (you used --abort switch)")
+  }
 
   /**
    * For every missing import specified by iri, try to find a corresponding base directory and if found, create an
@@ -56,6 +62,7 @@ class OwlApiOntologyLoader(
 
     def findIt(basePathUri: (Path, BaseURL)): Boolean = {
       val (basePath, baseUri) = basePathUri
+      info(s"Does $baseUri match with ${iri.toURI.toString}?")
       baseUri.matchesWith(iri.toURI.toString)
     }
 
@@ -131,8 +138,8 @@ class OwlApiOntologyLoader(
       //        }
       case Failure(exception) => exception match {
         case ex: UnloadableImportException =>
-          error(s"importsDeclaration=${ex.getImportsDeclaration.getIRI}")
-          throw new IllegalStateException (s"Could not import $uriString")
+          error(s"Could not import $uriString. importsDeclaration=${ex.getImportsDeclaration.getIRI}")
+          null
         case _ => throw new IllegalStateException (s"Could not load $uriString: $exception")
       }
     }

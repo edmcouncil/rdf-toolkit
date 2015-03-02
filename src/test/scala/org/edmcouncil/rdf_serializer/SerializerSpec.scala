@@ -40,6 +40,7 @@ class SerializerSpec extends UnitSpec {
     "convert the wine ontology" in {
       runSilent(
         "--force",
+        "--abort",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
       ) should equal (0)
@@ -52,6 +53,7 @@ class SerializerSpec extends UnitSpec {
     "serialize the wine ontology and support the import of the food ontology" in {
       runSilent(
         "--force",
+        "--abort",
         "--base", "src/test/resources=http://www.w3.org/TR/2003/PR-owl-guide-20031209",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
@@ -61,6 +63,9 @@ class SerializerSpec extends UnitSpec {
     "Convert the fibo contracts ontology" in {
       runSilent(
         "--force",
+        "--abort",
+        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-contracts.rdf",
         "src/test/resources/fibo-fnd-contracts.rdf"
       ) should equal (0)
@@ -69,14 +74,18 @@ class SerializerSpec extends UnitSpec {
     "not generate errors int the output of test-case-001.rdf" in {
       runSilent(
         "--force",
+        "--abort",
+        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-test-case-001.rdf",
         "src/test/resources/test-case-001.rdf"
       ) should equal (0)
     }
 
     "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
-      run(
+      runSilent(
         "--force",
+        "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
@@ -87,7 +96,9 @@ class SerializerSpec extends UnitSpec {
     "Do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
       runSilent(
         "--force",
+        "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
         "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
       ) should equal (0)
