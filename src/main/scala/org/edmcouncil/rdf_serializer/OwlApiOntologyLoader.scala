@@ -29,8 +29,11 @@
 package org.edmcouncil.rdf_serializer
 
 import java.io.IOException
+import java.net.URI
+import java.nio.file.Path
 
 import grizzled.slf4j.Logging
+import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
 import org.semanticweb.owlapi.io.{OWLOntologyCreationIOException, OWLOntologyDocumentSource}
 import org.semanticweb.owlapi.model.OWLOntologyLoaderListener.{LoadingFinishedEvent, LoadingStartedEvent}
 import org.semanticweb.owlapi.model._
@@ -43,35 +46,35 @@ import scala.util.{Failure, Success, Try}
 class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
   loaderConfiguration: OWLOntologyLoaderConfiguration,
-  baseDir: PotentialDirectory,
-  baseUrl: BaseURL
+  baseDirUrls: Seq[(Path, BaseURL)]
 ) extends Logging {
 
   /**
-   * Try to load the given import by deriving the local file name from the IRI or else by
-   * loading it from the web
+   * For every missing import specified by iri, try to find a corresponding base directory and if found, create an
+   * ImportResolver for it which will try to find the given import in the given base directory.
    */
-  def tryToLoadMissingImport(iri: IRI): Boolean = {
+  private def findImportResolver(iri: IRI): Option[ImportResolver] = {
 
-    val uri = iri.toURI
-    val ns = iri.getNamespace
-
-    if (! baseDir.hasName) return false
-
-    val directoryName = baseDir.directoryName.get
-
-    info(s"Trying to load $uri locally from $directoryName")
-
-    val resolver = ImportResolver(baseDir, baseUrl, iri)
-
-    if (! resolver.found) false else {
-      //
-      // "Recursively" call loadOntology again but now for the imported ontology
-      //
-      loadOntology(resolver.inputDocumentSource.get)
-      true
+    def findIt(basePathUri: (Path, BaseURL)): Boolean = {
+      val (basePath, baseUri) = basePathUri
+      baseUri.matchesWith(iri.toURI.toString)
     }
+
+    def mapIt(basePathUri: (Path, BaseURL)): ImportResolver = {
+      val (basePath, baseUri) = basePathUri
+      ImportResolver(PotentialDirectory(basePath), baseUri, iri)
+    }
+
+    baseDirUrls.find(findIt).map(mapIt)
   }
+
+  /**
+   * Try to load the given import by deriving the local file name from the IRI or else by
+   * loading it from the web.
+   *
+   * "Recursively" call loadOntology again but now for the imported ontology
+   */
+  private def tryToLoadMissingImport(iri: IRI): Boolean = findImportResolver(iri).map(loadOntology).isDefined
 
   val loaderListener = new OWLOntologyLoaderListener {
 
@@ -103,6 +106,8 @@ class OwlApiOntologyLoader(
   }
 
   ontologyManager.addOntologyLoaderListener(loaderListener)
+
+  def loadOntology(resolver: ImportResolver): OWLOntology = loadOntology(resolver.inputDocumentSource.get)
 
   def loadOntology(input: PotentialFile): OWLOntology = loadOntology(input.inputDocumentSource.get)
 

@@ -39,7 +39,7 @@ object Serializer {
   // don't have to touch Tony's code. Eventually we should create a SesameSerializer class next to the
   // OwlApiSerializer.
   //
-  private def runSesameRdfFormatter(params: CommandLineParams): Int = {
+  private def runSesameRdfFormatter(params: CommandLineParams2): Int = {
 
     //
     // usage: SesameRdfFormatter
@@ -59,16 +59,16 @@ object Serializer {
     def sesameRdfFormatterArgs: Array[String] = {
       val ab = mutable.ArrayBuilder.make[String]
 
-      if (params.inputFileName.isDefined)
-        ab ++= Seq("-s", params.inputFileName.get)
+      if (params.inputFiles.hasValue)
+        ab ++= Seq("-s", params.inputFiles.value.head.fileName.get)
 
       ab ++= Seq("-sfmt", "auto")
 
-      if (params.outputFileName.isDefined)
-        ab ++= Seq("-t", params.outputFileName.get)
+      if (params.outputFile.hasValue)
+        ab ++= Seq("-t", params.outputFile.value.get.fileName.get)
 
-      if (params.outputFormatName.isDefined)
-        ab ++= Seq("-tfmt", params.outputFormatName.get)
+      if (params.outputFormat.hasValue)
+        ab ++= Seq("-tfmt", params.outputFormat.value.get)
 
       ab.result()
     }
@@ -83,8 +83,8 @@ object Serializer {
     0
   }
 
-  def apply(params: CommandLineParams) = params.api match {
-    case SerializerApiOWLAPI => OwlApiSerializer(new SerializerCommands(params))
+  def apply(params: CommandLineParams2) = params.api match {
+    case SerializerApiOWLAPI => OwlApiSerializer(params)
     case SerializerApiSesame => runSesameRdfFormatter(params)
   }
 }

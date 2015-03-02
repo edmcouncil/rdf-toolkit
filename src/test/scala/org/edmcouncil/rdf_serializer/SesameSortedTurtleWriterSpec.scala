@@ -16,7 +16,7 @@ import grizzled.slf4j.Logging
 /**
  * ScalaTest tests for the SortedTurtleWriter and SortedTurtleWriterFactory.
  */
-class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers {
+class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSuppressor {
 
   // Set up directories for output files.
   def mkCleanDir(dirPath: String): File = {
@@ -57,20 +57,22 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers {
   def getFileContents(file: File): String = new BufferedSource(new FileInputStream(file)).mkString
 
   "A SortedTurtleWriterFactory" should "be able to create a SortedTurtleWriter" in {
-    val outWriter = new OutputStreamWriter(System.out)
-    val factory = new SesameSortedTurtleWriterFactory()
+    suppressOutput {
+      val outWriter = new OutputStreamWriter(System.out)
+      val factory = new SesameSortedTurtleWriterFactory()
 
-    val writer1 = new SesameSortedTurtleWriter(System.out)
-    assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
+      val writer1 = new SesameSortedTurtleWriter(System.out)
+      assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
 
-    val writer2 = new SesameSortedTurtleWriter(outWriter)
-    assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
+      val writer2 = new SesameSortedTurtleWriter(outWriter)
+      assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-    val writer3 = new SesameSortedTurtleWriter(System.out, new URIImpl("http://example.com#"), "\t\t")
-    assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream wit parameters")
+      val writer3 = new SesameSortedTurtleWriter(System.out, new URIImpl("http://example.com#"), "\t\t")
+      assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream wit parameters")
 
-    val writer4 = new SesameSortedTurtleWriter(outWriter, new URIImpl("http://example.com#"), "\t\t")
-    assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
+      val writer4 = new SesameSortedTurtleWriter(outWriter, new URIImpl("http://example.com#"), "\t\t")
+      assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
+    }
   }
 
   "A TurtleWriter" should "be able to read various RDF documents and write them in sorted Turtle format" in {

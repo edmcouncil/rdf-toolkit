@@ -29,6 +29,7 @@
 package org.edmcouncil.rdf_serializer
 
 import grizzled.slf4j.Logging
+import org.edmcouncil.util.PotentialFile
 import org.openrdf.rio.RDFWriterRegistry
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.io.StreamDocumentSource
@@ -38,9 +39,7 @@ import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
 /**
  * Serialize a given RDF or OWL file with the OWLAPI
  */
-class OwlApiSerializer(private val commands: SerializerCommands) extends Logging {
-
-  import commands._
+class OwlApiSerializer(private val params: CommandLineParams2) extends Logging {
 
   //
   // Ensure that the DOCTYPE rdf:RDF ENTITY section is generated
@@ -76,30 +75,31 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
     info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
     info(s"In Format: $format")
 
-    ontology.saveOntology(format, output.outputStream.get)
+    ontology.saveOntology(format, params.outputFile.value.get.outputStream.get)
 
     ontologyManager.removeOntology(ontology)
   }
 
+  private def mergeOntology(
+    ontologyManager: OWLOntologyManager,
+    format: OWLDocumentFormat
+  ): Unit = {
+
+//    info(s"Merging and saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
+//    info(s"In Format: $format")
+//
+//    ontology.saveOntology(format, params.output.value.get.outputStream.get)
+//
+//    ontologyManager.removeOntology(ontology)
+
+    error("Merging of multiple input ontologies is not supported yet")
+  }
+
   private def run: Int = {
 
-    val rc1 = commands.validate
-    if (rc1 > 0) return rc1
-
     val ontologyManager = createOntologyManager
-    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, commands.baseDir, commands.baseUrl)
-    val ontology = loader.loadOntology(input)
-    val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
-
-    info(s"Ontology Document IRI: $ontologyDocumentIRI")
-
-    info(s"Ontology ID: ${ontology.getOntologyID}")
-
-    val inputFormat = ontologyManager.getOntologyFormat(ontology)
-
-    info(s"Input Format: $inputFormat")
-
-    val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormatName)
+    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, params.baseDirUrls.value)
+    val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormat.value)
 
     //
     // Some ontology formats support prefix names and prefix IRIs. In our
@@ -108,23 +108,50 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
     // will copy the prefixes over so that we have nicely abbreviated IRIs
     // in the new ontology document
     //
-    if (inputFormat.isPrefixOWLOntologyFormat) {
-      if (outputFormat.isPrefixOWLOntologyFormat) {
-        val prefixedOutputFormat = outputFormat.asPrefixOWLOntologyFormat()
-        //
-        // For some reason the outputFormat, which is also a PrefixManager, remembers the prefixes and namespaces
-        // of the previous save operation, so we have to clear it here first before we copy the inputFormat's
-        // prefixes into it.
-        //
-        prefixedOutputFormat.clear()
-        prefixedOutputFormat.copyPrefixesFrom(inputFormat.asPrefixOWLOntologyFormat())
+    def copyPrefixesToOutputFormat(inputFormat: OWLDocumentFormat): Unit = {
+
+      if (inputFormat.isPrefixOWLOntologyFormat) {
+        if (outputFormat.isPrefixOWLOntologyFormat) {
+          val prefixedOutputFormat = outputFormat.asPrefixOWLOntologyFormat()
+          //
+          // For some reason the outputFormat, which is also a PrefixManager, remembers the prefixes and namespaces
+          // of the previous save operation, so we have to clear it here first before we copy the inputFormat's
+          // prefixes into it.
+          //
+          prefixedOutputFormat.clear()
+          prefixedOutputFormat.copyPrefixesFrom(inputFormat.asPrefixOWLOntologyFormat())
+        }
       }
+
+      val inputOntologyMetadata = inputFormat.getOntologyLoaderMetaData
+      outputFormat.setOntologyLoaderMetaData(inputOntologyMetadata)
     }
 
-    val inputOntologyMetadata = inputFormat.getOntologyLoaderMetaData
-    outputFormat.setOntologyLoaderMetaData(inputOntologyMetadata)
+    def load(input: PotentialFile): OWLOntology = {
 
-    saveOntology(ontologyManager, ontology, outputFormat)
+      val ontology = loader.loadOntology(input)
+      val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
+
+      info(s"Ontology Document IRI: $ontologyDocumentIRI")
+
+      info(s"Ontology ID: ${ontology.getOntologyID}")
+
+      val inputFormat = ontologyManager.getOntologyFormat(ontology)
+
+      info(s"Input Format: $inputFormat")
+
+      copyPrefixesToOutputFormat(inputFormat)
+
+      ontology
+    }
+
+    if (params.inputFiles.value.length == 1) {
+      val ontology = load(params.inputFiles.value(0))
+      saveOntology(ontologyManager, ontology, outputFormat)
+    } else {
+      params.inputFiles.value.foreach(load)
+      mergeOntology(ontologyManager, outputFormat)
+    }
 
     0
   }
@@ -132,5 +159,5 @@ class OwlApiSerializer(private val commands: SerializerCommands) extends Logging
 
 object OwlApiSerializer {
 
-  def apply(commands: SerializerCommands): Int = new OwlApiSerializer(commands).run
+  def apply(params: CommandLineParams2): Int = new OwlApiSerializer(params).run
 }
