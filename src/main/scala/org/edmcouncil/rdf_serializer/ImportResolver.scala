@@ -29,11 +29,10 @@
 package org.edmcouncil.rdf_serializer
 
 import java.io.{BufferedInputStream, File, FileInputStream}
-import java.net.URI
 import java.nio.file.Path
 
 import grizzled.slf4j.Logging
-import org.edmcouncil.util.{PotentialDirectory, BaseURL}
+import org.edmcouncil.util.{BaseURL, PotentialDirectory}
 import org.semanticweb.owlapi.io.StreamDocumentSource
 import org.semanticweb.owlapi.model.IRI
 

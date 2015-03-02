@@ -83,4 +83,4 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [1] org.edmcouncil.rdf_serializer.SesameRdfFormatter
 // [2] org.edmcouncil.rdf_serializer.Main
 //
-mainClass in Compile := Some("org.edmcouncil.rdf_serializer.Main")
+mainClass in Compile := Some("org.edmcouncil.main.Main")

@@ -200,8 +200,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
-                        <owl:hasValue rdf:resource="&food;Delicate"/>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;Red"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -222,8 +222,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Light"/>
+                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
+                        <owl:hasValue rdf:resource="&food;Delicate"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -233,8 +233,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;Red"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Light"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -276,8 +276,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
-                        <owl:hasValue rdf:resource="&food;Sweet"/>
+                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
+                        <owl:hasValue rdf:resource="&food;Strong"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -298,8 +298,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
-                        <owl:hasValue rdf:resource="&food;Strong"/>
+                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
+                        <owl:hasValue rdf:resource="&food;Sweet"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -355,8 +355,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
-                        <owl:hasValue rdf:resource="&food;Dry"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Medium"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -366,8 +366,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Medium"/>
+                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
+                        <owl:hasValue rdf:resource="&food;Dry"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -497,6 +497,17 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;White"/>
+                    </owl:Restriction>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&food;hasDrink"/>
+                <owl:allValuesFrom>
+                    <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasSugar"/>
                         <owl:hasValue rdf:resource="&food;Dry"/>
                     </owl:Restriction>
@@ -510,17 +521,6 @@
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasBody"/>
                         <owl:hasValue rdf:resource="&food;Medium"/>
-                    </owl:Restriction>
-                </owl:allValuesFrom>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&food;hasDrink"/>
-                <owl:allValuesFrom>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;White"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -715,19 +715,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Medium"/>
-                    </owl:Restriction>
-                </owl:allValuesFrom>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&food;hasDrink"/>
-                <owl:allValuesFrom>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;White"/>
+                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
+                        <owl:hasValue rdf:resource="&food;Dry"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -748,8 +737,19 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
-                        <owl:hasValue rdf:resource="&food;Dry"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Medium"/>
+                    </owl:Restriction>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&food;hasDrink"/>
+                <owl:allValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;White"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -786,8 +786,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;Red"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Medium"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -808,15 +808,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
-                        <owl:allValuesFrom>
-                            <owl:Class>
-                                <owl:oneOf rdf:parseType="Collection">
-                                    <rdf:Description rdf:about="&food;Moderate"/>
-                                    <rdf:Description rdf:about="&food;Strong"/>
-                                </owl:oneOf>
-                            </owl:Class>
-                        </owl:allValuesFrom>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;Red"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -826,8 +819,15 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Medium"/>
+                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
+                        <owl:allValuesFrom>
+                            <owl:Class>
+                                <owl:oneOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="&food;Moderate"/>
+                                    <rdf:Description rdf:about="&food;Strong"/>
+                                </owl:oneOf>
+                            </owl:Class>
+                        </owl:allValuesFrom>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -914,19 +914,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;Red"/>
-                    </owl:Restriction>
-                </owl:allValuesFrom>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&food;hasDrink"/>
-                <owl:allValuesFrom>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
-                        <owl:hasValue rdf:resource="&food;Moderate"/>
+                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
+                        <owl:hasValue rdf:resource="&food;Dry"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -947,8 +936,19 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasSugar"/>
-                        <owl:hasValue rdf:resource="&food;Dry"/>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;Red"/>
+                    </owl:Restriction>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&food;hasDrink"/>
+                <owl:allValuesFrom>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
+                        <owl:hasValue rdf:resource="&food;Moderate"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1022,6 +1022,17 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Medium"/>
+                    </owl:Restriction>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&food;hasDrink"/>
+                <owl:allValuesFrom>
+                    <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasFlavor"/>
                         <owl:hasValue rdf:resource="&food;Moderate"/>
                     </owl:Restriction>
@@ -1035,17 +1046,6 @@
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasColor"/>
                         <owl:hasValue rdf:resource="&food;White"/>
-                    </owl:Restriction>
-                </owl:allValuesFrom>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&food;hasDrink"/>
-                <owl:allValuesFrom>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Medium"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1183,8 +1183,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasColor"/>
-                        <owl:hasValue rdf:resource="&food;Red"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Medium"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1205,8 +1205,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Medium"/>
+                        <owl:onProperty rdf:resource="&vin;hasColor"/>
+                        <owl:hasValue rdf:resource="&food;Red"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1262,8 +1262,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
-                        <owl:hasValue rdf:resource="&food;Strong"/>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Full"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1284,8 +1284,8 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Full"/>
+                        <owl:onProperty rdf:resource="&vin;hasFlavor"/>
+                        <owl:hasValue rdf:resource="&food;Strong"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>
@@ -1466,6 +1466,17 @@
                 <owl:onProperty rdf:resource="&food;hasDrink"/>
                 <owl:allValuesFrom>
                     <owl:Restriction>
+                        <owl:onProperty rdf:resource="&vin;hasBody"/>
+                        <owl:hasValue rdf:resource="&food;Full"/>
+                    </owl:Restriction>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&food;hasDrink"/>
+                <owl:allValuesFrom>
+                    <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasFlavor"/>
                         <owl:hasValue rdf:resource="&food;Moderate"/>
                     </owl:Restriction>
@@ -1490,17 +1501,6 @@
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="&vin;hasSugar"/>
                         <owl:hasValue rdf:resource="&food;Dry"/>
-                    </owl:Restriction>
-                </owl:allValuesFrom>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&food;hasDrink"/>
-                <owl:allValuesFrom>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="&vin;hasBody"/>
-                        <owl:hasValue rdf:resource="&food;Full"/>
                     </owl:Restriction>
                 </owl:allValuesFrom>
             </owl:Restriction>

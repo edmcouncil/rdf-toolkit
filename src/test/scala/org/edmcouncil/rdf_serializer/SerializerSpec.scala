@@ -2,7 +2,7 @@ package org.edmcouncil.rdf_serializer
 
 import java.io.OutputStream
 
-import org.scalatest._
+import org.edmcouncil.main.MainImpl
 
 /**
  * Test the Serializer
@@ -12,9 +12,9 @@ class SerializerSpec extends UnitSpec {
   def runSilent(args: String*): Int = suppressOutput {
     run(args: _*)
   }
-  def run(args: String*): Int = MainImplNew(args).run
+  def run(args: String*): Int = MainImpl(args).run
 
-  "A Serializer Cli Interface" ignore {
+  "A Serializer Cli Interface" must {
 
     Console.withOut(new OutputStream() {
       def write(b: Int) {

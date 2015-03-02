@@ -1,23 +1,23 @@
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.main
 
-import org.edmcouncil.main.BooterProperties
+import org.edmcouncil.rdf_serializer.Serializer
 
 /**
  * Allow for the MainImpl to be executed from tests bypassing Main.
  */
-object MainImplNew {
+object MainImpl {
 
-  def apply(args: Array[String]) = new MainImplNew(args)
+  def apply(args: Array[String]) = new MainImpl(args)
 
-  def apply(args: Seq[String]) = new MainImplNew(args.toArray)
+  def apply(args: Seq[String]) = new MainImpl(args.toArray)
 }
 
 /**
  * The "real" Main of the RDF Serializer.
  */
-class MainImplNew(args: Array[String]) {
+class MainImpl(args: Array[String]) {
 
-  val params = CommandLineParams2(args)
+  val params = CommandLineParams(args)
 
   private def run2 : Int = if (params.shouldShowVersion) {
     println(BooterProperties.versionFull)

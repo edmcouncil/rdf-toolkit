@@ -1,16 +1,15 @@
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.main
 
-import java.net.URI
 import java.nio.file.Path
 
-import org.clapper.argot.{ArgotConversionException, ArgotConverters, ArgotParser, ArgotUsageException}
+import org.clapper.argot.{ArgotConversionException, ArgotParser, ArgotUsageException}
+import org.edmcouncil.rdf_serializer.{OwlApiOutputFormats, SesameRdfFormatter}
 import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
-import org.edmcouncil.{SerializerApiOWLAPI, SerializerApiSesame, SerializerApi}
-import org.edmcouncil.main.BooterProperties
+import org.edmcouncil.{SerializerApi, SerializerApiOWLAPI, SerializerApiSesame}
 
 import scala.util.Try
 
-object CommandLineParams2 {
+object CommandLineParams {
 
   private val sep = "\n- "
   private def outputFormatsOwlApi = OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
@@ -18,13 +17,13 @@ object CommandLineParams2 {
 
   private def preUsageText = s"${BooterProperties.name} version ${BooterProperties.versionFull} (${BooterProperties.generatedAt})"
 
-  def apply(args: Array[String]) = new CommandLineParams2(args)
+  def apply(args: Array[String]) = new CommandLineParams(args)
 }
 
-class CommandLineParams2 private (args: Array[String]) {
+class CommandLineParams private (args: Array[String]) {
 
-  import ArgotConverters._
-  import CommandLineParams2._
+  import CommandLineParams._
+  import org.clapper.argot.ArgotConverters._
 
   private val parser = new ArgotParser(
     programName = BooterProperties.name.toLowerCase,
@@ -51,8 +50,6 @@ class CommandLineParams2 private (args: Array[String]) {
     List("q", "quiet"),
     "Increment (-v, --verbose) or decrement (-q, --quiet) the verbosity level."
   ) { (onOff, opt) =>
-
-    import scala.math
 
     val currentValue = opt.value.getOrElse(0)
     val newValue = if (onOff) currentValue + 1 else currentValue - 1

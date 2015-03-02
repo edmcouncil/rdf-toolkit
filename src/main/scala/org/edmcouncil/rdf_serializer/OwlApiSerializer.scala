@@ -29,17 +29,17 @@
 package org.edmcouncil.rdf_serializer
 
 import grizzled.slf4j.Logging
+import org.edmcouncil.main.CommandLineParams
 import org.edmcouncil.util.PotentialFile
 import org.openrdf.rio.RDFWriterRegistry
 import org.semanticweb.owlapi.apibinding.OWLManager
-import org.semanticweb.owlapi.io.StreamDocumentSource
 import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
 
 /**
  * Serialize a given RDF or OWL file with the OWLAPI
  */
-class OwlApiSerializer(private val params: CommandLineParams2) extends Logging {
+class OwlApiSerializer(private val params: CommandLineParams) extends Logging {
 
   //
   // Ensure that the DOCTYPE rdf:RDF ENTITY section is generated
@@ -159,5 +159,5 @@ class OwlApiSerializer(private val params: CommandLineParams2) extends Logging {
 
 object OwlApiSerializer {
 
-  def apply(params: CommandLineParams2): Int = new OwlApiSerializer(params).run
+  def apply(params: CommandLineParams): Int = new OwlApiSerializer(params).run
 }

@@ -28,7 +28,8 @@
 
 package org.edmcouncil.rdf_serializer
 
-import org.edmcouncil.{SerializerApiSesame, SerializerApiOWLAPI}
+import org.edmcouncil.main.CommandLineParams
+import org.edmcouncil.{SerializerApiOWLAPI, SerializerApiSesame}
 
 import scala.collection.mutable
 
@@ -39,7 +40,7 @@ object Serializer {
   // don't have to touch Tony's code. Eventually we should create a SesameSerializer class next to the
   // OwlApiSerializer.
   //
-  private def runSesameRdfFormatter(params: CommandLineParams2): Int = {
+  private def runSesameRdfFormatter(params: CommandLineParams): Int = {
 
     //
     // usage: SesameRdfFormatter
@@ -83,7 +84,7 @@ object Serializer {
     0
   }
 
-  def apply(params: CommandLineParams2) = params.api match {
+  def apply(params: CommandLineParams) = params.api match {
     case SerializerApiOWLAPI => OwlApiSerializer(params)
     case SerializerApiSesame => runSesameRdfFormatter(params)
   }
