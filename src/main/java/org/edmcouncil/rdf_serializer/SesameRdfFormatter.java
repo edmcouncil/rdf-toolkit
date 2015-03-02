@@ -35,7 +35,7 @@ public class SesameRdfFormatter {
             "turtle (Turtle)";
 
     public static final String TARGET_FORMATS =
-            "turtle (Turtle, sorted) [default]";
+            "turtle (sorted Turtle) [default]";
 
     private static Options options = null;
 

@@ -10,9 +10,9 @@ import org.scalatest._
 class SerializerSpec extends UnitSpec {
 
   def run(args: String*): Int = suppressOutput {
-    MainImpl(args).run
+    MainImplOld(args).run
   }
-  def run2(args: String*): Int = MainImpl(args).run
+  def run2(args: String*): Int = MainImplOld(args).run
 
   "A Serializer Cli Interface" must {
 

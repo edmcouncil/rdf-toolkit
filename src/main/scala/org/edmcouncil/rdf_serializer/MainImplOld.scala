@@ -1,5 +1,8 @@
 package org.edmcouncil.rdf_serializer
 
+import org.edmcouncil.main.BooterProperties
+import org.edmcouncil.{SerializerApiOWLAPI, SerializerApiSesame}
+
 /**
  * Allow for the MainImpl to be executed from tests bypassing Main.
  */
