@@ -6,6 +6,8 @@ import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.helpers.RDFWriterBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
@@ -19,6 +21,155 @@ import java.util.*;
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
 public class SesameSortedTurtleWriter extends RDFWriterBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(SesameSortedTurtleWriter.class);
+
+    public enum ShortUriPreferences {
+        prefix("prefix"),
+        base_uri("base-uri");
+
+        private static final ShortUriPreferences defaultEnum = prefix;
+
+        private String optionValue = null;
+
+        ShortUriPreferences(String optionValue) {
+            this.optionValue = optionValue;
+        }
+
+        public String getOptionValue() { return optionValue; }
+
+        public static ShortUriPreferences getByOptionValue(String optionValue) {
+            if (optionValue == null) { return null; }
+            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+                if (optionValue.equals(sup.optionValue)) {
+                    return sup;
+                }
+            }
+            return null;
+        }
+
+        public static String summarise() {
+            ArrayList<String> result = new ArrayList<String>();
+            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+                String value = sup.optionValue;
+                if (defaultEnum.equals(sup)) {
+                    value += " [default]";
+                }
+                result.add(value);
+            }
+            return String.join(", ", result);
+        }
+    }
+
+    public enum SourceFormats {
+        auto("auto", "(select by filename)"),
+        binary("binary", null),
+        json_ld("json-ld", "(JSON-LD)"),
+        n3("n3", null),
+        n_quads("n-quads", "(N-quads)"),
+        n_triples("n-triples", "(N-triples)"),
+        rdf_a("rdf-a", "(RDF/A)"),
+        rdf_json("rdf-json", "(RDF/JSON)"),
+        rdf_xml("rdf-xml", "(RDF/XML)"),
+        trig("trig", "(TriG)"),
+        trix("trix", "(TriX)"),
+        turtle("turtle", "(Turtle)");
+
+        private static final SourceFormats defaultEnum = auto;
+
+        private String optionValue = null;
+        private String optionComment = null;
+
+        SourceFormats(String optionValue, String optionComment) {
+            this.optionValue = optionValue;
+            this.optionComment = optionComment;
+        }
+
+        public String getOptionValue() { return optionValue; }
+
+        public static SourceFormats getByOptionValue(String optionValue) {
+            if (optionValue == null) { return null; }
+            for (SourceFormats sfmt : SourceFormats.values()) {
+                if (optionValue.equals(sfmt.optionValue)) {
+                    return sfmt;
+                }
+            }
+            return null;
+        }
+
+        public static String summarise() {
+            ArrayList<String> result = new ArrayList<String>();
+            for (SourceFormats sfmt : SourceFormats.values()) {
+                String value = sfmt.optionValue;
+                if (sfmt.optionComment != null) {
+                    value += " " + sfmt.optionComment;
+                }
+                if (defaultEnum.equals(sfmt)) {
+                    value += " [default]";
+                }
+                result.add(value);
+            }
+            return String.join(", ", result);
+        }
+
+        public static RDFFormat getSesameFormat(SourceFormats format) {
+            switch(format) {
+                case binary: return RDFFormat.BINARY;
+                case json_ld: return RDFFormat.JSONLD;
+                case n3: return RDFFormat.N3;
+                case n_quads: return  RDFFormat.NQUADS;
+                case n_triples: return RDFFormat.NTRIPLES;
+                case rdf_a: return RDFFormat.RDFA;
+                case rdf_json: return RDFFormat.RDFJSON;
+                case rdf_xml: return RDFFormat.RDFXML;
+                case trig: return RDFFormat.TRIG;
+                case trix: return RDFFormat.TRIX;
+                case turtle: return RDFFormat.TURTLE;
+            }
+            return null;
+        }
+    }
+
+    public enum TargetFormats {
+        turtle("turtle", "(Turtle)");
+
+        private static final TargetFormats defaultEnum = turtle;
+
+        private String optionValue = null;
+        private String optionComment = null;
+
+        TargetFormats(String optionValue, String optionComment) {
+            this.optionValue = optionValue;
+            this.optionComment = optionComment;
+        }
+
+        public String getOptionValue() { return optionValue; }
+
+        public static TargetFormats getByOptionValue(String optionValue) {
+            if (optionValue == null) { return null; }
+            for (TargetFormats tfmt : TargetFormats.values()) {
+                if (optionValue.equals(tfmt.optionValue)) {
+                    return tfmt;
+                }
+            }
+            return null;
+        }
+
+        public static String summarise() {
+            ArrayList<String> result = new ArrayList<String>();
+            for (TargetFormats tfmt : TargetFormats.values()) {
+                String value = tfmt.optionValue;
+                if (tfmt.optionComment != null) {
+                    value += " " + tfmt.optionComment;
+                }
+                if (defaultEnum.equals(tfmt)) {
+                    value += " [default]";
+                }
+                result.add(value);
+            }
+            return String.join(", ", result);
+        }
+    }
 
     /** XML Schema namespace URI. */
     public static final String XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema#";
@@ -531,6 +682,9 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     /** Base URI for the Turtle output document. */
     private URI baseUri = null;
 
+    /** Preference for prefix or base-URI based URI shortening. */
+    private ShortUriPreferences shortUriPreference = ShortUriPreferences.prefix;
+
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     private UnsortedTurtleResourceList unsortedOntologies = null;
 
@@ -605,12 +759,14 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
      * @param out The OutputStream to write the Turtle to.
      * @param baseUri The base URI for the Turtel, or null.
      * @param indent The indentation string to use when formatting the Turtle output.
+     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
      */
-    public SesameSortedTurtleWriter(OutputStream out, URI baseUri, String indent) {
+    public SesameSortedTurtleWriter(OutputStream out, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
         assert out != null : "output stream cannot be null";
         this.output = new IndentingWriter(new OutputStreamWriter(out));
         if (indent != null) { this.output.setIndentationString(indent); }
         this.baseUri = baseUri;
+        if (shortUriPref != null) { this.shortUriPreference = shortUriPref; }
     }
 
     /**
@@ -619,12 +775,14 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
      * @param writer The Writer to write the Turtle to.
      * @param baseUri The base URI for the Turtel, or null.
      * @param indent The indentation string to use when formatting the Turtle output, or null.
+     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
      */
-    public SesameSortedTurtleWriter(Writer writer, URI baseUri, String indent) {
+    public SesameSortedTurtleWriter(Writer writer, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
         assert writer != null : "output writer cannot be null";
         this.output = new IndentingWriter(writer);
         if (indent != null) { this.output.setIndentationString(indent); }
         this.baseUri = baseUri;
+        if (shortUriPref != null) { this.shortUriPreference = shortUriPref; }
     }
 
     /**
@@ -805,16 +963,10 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
 
     private void writeSubjectTriples(IndentingWriter out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
-        QName qname = null; // try to write the subject out as a QName if possible.
-        if (subject instanceof URI) {
-            qname = convertUriToQName((URI)subject);
-        }
-        if (qname != null) {
-            writeQName(out, qname);
-        } else if (subject instanceof BNode) {
+        if (subject instanceof BNode) {
             out.write("_:" + blankNodeNameMap.get((BNode)subject));
         } else {
-            out.write("<" + subject.stringValue() + ">");
+            writeUri(out, (URI)subject);
         }
         out.writeEOL();
         out.increaseIndentation();
@@ -845,8 +997,9 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     private void writePredicateAndObjectValues(IndentingWriter out, URI predicate, SortedTurtleObjectList values) throws Exception {
         writePredicate(out, predicate);
         if (values.size() == 1) {
+            out.write(" ");
             writeObject(out, values.first());
-            out.write(";");
+            out.write(" ;");
             out.writeEOL();
         } else if (values.size() > 1) {
             out.writeEOL();
@@ -856,7 +1009,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
             for (Value value : values) {
                 valueIndex += 1;
                 writeObject(out, value);
-                if (valueIndex < numValues) { out.write(","); }
+                if (valueIndex < numValues) { out.write(" ,"); }
                 out.writeEOL();
             }
             out.write(";");
@@ -890,26 +1043,57 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
         return null;
     }
 
+    private String convertUriToRelativeUri(URI uri) {
+        // Note: does not check that the baseUri doesn't terminate in the middle of some URI of which it really isn't the base.
+        if (baseUri != null) {
+            String uriString = uri.stringValue();
+            String baseUriString = baseUri.stringValue();
+            if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
+                String result = uriString.substring(baseUriString.length());
+                if ("http://topbraid.org/countries#AD".equals(uri)) { // TODO: remove debugging
+                    logger.debug("URI = " + uri + " ; sup = " + shortUriPreference + " ; result = " + result);
+                }
+                return result;
+            }
+        }
+        // Failed to find a match, return null.
+        return null;
+    }
+
     private void writeUri(IndentingWriter out, URI uri) throws Exception {
         if(rdfType.equals(uri)) {
-            out.write("a ");
-        } else {
+            out.write("a");
+            return;
+        }
+        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
             QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
             if (qname != null) {
                 writeQName(out, qname);
-                out.write(" ");
             } else { // write out the URI relative to the base URI, if possible.
-                String uriString = uri.stringValue();
-                if (baseUri != null) {
-                    String baseUriString = baseUri.stringValue();
-                    if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
-                        out.write("#" + uriString.substring(baseUriString.length()) + " ");
-                        return;
-                    }
+                String relativeUri = convertUriToRelativeUri(uri);
+                if (relativeUri != null) {
+                    out.write(relativeUri);
+                } else { // write the absolute URI
+                    out.write("<" + uri.stringValue() + ">");
                 }
-                out.write("<" + uri.stringValue() + "> ");
             }
+            return;
         }
+        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
+            String relativeUri = convertUriToRelativeUri(uri); // write out the URI relative to the base URI, if possible.
+            if (relativeUri != null) {
+                out.write(relativeUri);
+            } else {
+                QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
+                if (qname != null) {
+                    writeQName(out, qname);
+                } else { // write the absolute URI
+                    out.write("<" + uri.stringValue() + ">");
+                }
+            }
+            return;
+        }
+        out.write("<" + uri.stringValue() + ">"); // if nothing else, do this
     }
 
     private void writeObject(IndentingWriter out, Value value) throws Exception {
@@ -927,9 +1111,9 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
 
     private void writeObject(IndentingWriter out, BNode bnode) throws Exception {
         if (unsortedTripleMap.containsKey(bnode)) {
-            out.write("_:" + blankNodeNameMap.get(bnode) + " ");
+            out.write("_:" + blankNodeNameMap.get(bnode));
         } else {
-            out.write("[] ");
+            out.write("[]");
         }
     }
 
@@ -939,10 +1123,10 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
 
     private void writeObject(IndentingWriter out, Literal literal) throws Exception {
         if (literal == null) {
-            out.write("null<Literal> ");
+            out.write("null<Literal>");
         } else if (literal.getLanguage() != null) {
             writeString(out, literal.stringValue());
-            out.write("@" + literal.getLanguage() + " ");
+            out.write("@" + literal.getLanguage());
         } else if (literal.getDatatype() != null) {
             writeString(out, literal.stringValue());
             out.write("^^");

@@ -46,9 +46,10 @@ public class SesameSortedTurtleWriterFactory implements RDFWriterFactory {
      * @param out The OutputStream to write the RDF to.
      * @param baseUri The base URI for the Turtel, or null.
      * @param indent The indentation string to use when formatting the Turtle output.
+     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
      */
-    public RDFWriter getWriter(OutputStream out, URI baseUri, String indent) {
-        return new SesameSortedTurtleWriter(out, baseUri, indent);
+    public RDFWriter getWriter(OutputStream out, URI baseUri, String indent, SesameSortedTurtleWriter.ShortUriPreferences shortUriPref) {
+        return new SesameSortedTurtleWriter(out, baseUri, indent, shortUriPref);
     }
 
     /**
@@ -57,8 +58,9 @@ public class SesameSortedTurtleWriterFactory implements RDFWriterFactory {
      * @param writer The Writer to write the RDF to.
      * @param baseUri The base URI for the Turtel, or null.
      * @param indent The indentation string to use when formatting the Turtle output.
+     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
      */
-    public RDFWriter getWriter(Writer writer, URI baseUri, String indent) {
-        return new SesameSortedTurtleWriter(writer, baseUri, indent);
+    public RDFWriter getWriter(Writer writer, URI baseUri, String indent, SesameSortedTurtleWriter.ShortUriPreferences shortUriPref) {
+        return new SesameSortedTurtleWriter(writer, baseUri, indent, shortUriPref);
     }
 }
