@@ -39,7 +39,9 @@ import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences
 /**
  * Serialize a given RDF or OWL file with the OWLAPI
  */
-class OwlApiSerializer(private val params: CommandLineParams) extends Logging {
+class OwlApiSerializer(private val params: CommandLineParams) extends Logging with OnErrorAborter {
+
+  def abortOnError = params.abortOnError
 
   //
   // Ensure that the DOCTYPE rdf:RDF ENTITY section is generated
@@ -128,6 +130,8 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging {
     }
 
     def load(input: PotentialFile): OWLOntology = {
+
+      if (! input.fileExists) error(s"Input file does not exist: $input")
 
       val ontology = loader.loadOntology(input)
       val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)

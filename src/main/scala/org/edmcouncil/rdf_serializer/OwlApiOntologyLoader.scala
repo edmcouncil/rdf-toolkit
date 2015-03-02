@@ -39,6 +39,16 @@ import org.semanticweb.owlapi.model._
 
 import scala.util.{Failure, Success, Try}
 
+trait OnErrorAborter extends Logging {
+
+  def abortOnError: Boolean
+
+  override def error(msg: => Any) = {
+    super.error(msg)
+    if (abortOnError) throw new IllegalStateException(s"Aborted: $msg (you used --abort switch)")
+  }
+}
+
 /**
  * Load an Ontology
  */
@@ -46,13 +56,8 @@ class OwlApiOntologyLoader(
   ontologyManager: OWLOntologyManager,
   loaderConfiguration: OWLOntologyLoaderConfiguration,
   baseDirUrls: Seq[(Path, BaseURL)],
-  abortOnError: Boolean
-) extends Logging {
-
-  override def error(msg: => Any) = {
-    super.error(msg)
-    if (abortOnError) throw new IllegalStateException(s"Aborted: $msg (you used --abort switch)")
-  }
+  val abortOnError: Boolean
+) extends Logging with OnErrorAborter {
 
   /**
    * For every missing import specified by iri, try to find a corresponding base directory and if found, create an
@@ -140,7 +145,9 @@ class OwlApiOntologyLoader(
         case ex: UnloadableImportException =>
           error(s"Could not import $uriString. importsDeclaration=${ex.getImportsDeclaration.getIRI}")
           null
-        case _ => throw new IllegalStateException (s"Could not load $uriString: $exception")
+        case _ =>
+          error(s"Could not load $uriString: $exception")
+          null
       }
     }
   }
