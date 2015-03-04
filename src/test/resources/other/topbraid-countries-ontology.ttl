@@ -119,7 +119,7 @@ countries:AW
 
 countries:AX
       rdf:type countries:Country ;
-      rdfs:label "Ã…land Islands"@en ;
+      rdfs:label "Åland Islands"@en ;
       countries:abbreviation
               "AX" ;
       owl:sameAs <http://dbpedia.org/resource/%C3%85land_Islands> .
@@ -313,7 +313,7 @@ countries:CH
 
 countries:CI
       rdf:type countries:Country ;
-      rdfs:label "CÃ´te D'ivoire"@en ;
+      rdfs:label "Côte D'ivoire"@en ;
       countries:abbreviation
               "CI" .
 

@@ -8,10 +8,8 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -192,12 +190,12 @@ public class SesameRdfFormatter {
             return;
         }
         // Note: only 'turtle' is supported as an output format, at present
-        OutputStream targetStream = new FileOutputStream(targetFile);
+        Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
         SesameSortedTurtleWriterFactory factory = new SesameSortedTurtleWriterFactory();
-        RDFWriter turtleWriter = factory.getWriter(targetStream, baseUri, indent, shortUriPref);
+        RDFWriter turtleWriter = factory.getWriter(targetWriter, baseUri, indent, shortUriPref);
         Rio.write(sourceModel, turtleWriter);
-        targetStream.flush();
-        targetStream.close();
+        targetWriter.flush();
+        targetWriter.close();
     }
 
     public static void usage(Options options) {

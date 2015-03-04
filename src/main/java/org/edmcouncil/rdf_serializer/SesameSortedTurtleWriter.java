@@ -1049,7 +1049,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
             String uriString = uri.stringValue();
             String baseUriString = baseUri.stringValue();
             if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
-                String result = uriString.substring(baseUriString.length());
+                String result = "<" + uriString.substring(baseUriString.length()) + ">";
                 if ("http://topbraid.org/countries#AD".equals(uri)) { // TODO: remove debugging
                     logger.debug("URI = " + uri + " ; sup = " + shortUriPreference + " ; result = " + result);
                 }
