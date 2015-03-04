@@ -19,7 +19,7 @@ import org.scalatest.{Matchers, FlatSpec}
 /**
  * ScalaTest tests for the SortedTurtleWriter and SortedTurtleWriterFactory.
  */
-class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSuppressor {
+class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputSuppressor*/ {
 
   private val logger = LoggerFactory.getLogger(classOf[SesameSortedTurtleWriterSpec])
 
