@@ -223,6 +223,11 @@ public class SesameRdfFormatter {
                 replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(uriPattern, uriReplacement));
             }
             sourceModel = replacedModel;
+            // This is also the right time to do URI replacement in the base URI, if appropriate
+            if (baseUri != null) {
+                baseUriString = baseUriString.replaceFirst(uriPattern, uriReplacement);
+                baseUri = new URIImpl(baseUriString);
+            }
         }
 
         // Write sorted RDF file.
