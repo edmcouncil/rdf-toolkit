@@ -17,4 +17,9 @@
  -t,--target <arg>                 target (output) RDF file
  -tfmt,--target-format <arg>       source (input) RDF format: one of:
                                    turtle (Turtle) [default]
+ -up,--uri-pattern <arg>           set a pattern to replace in all URIs
+                                   (used together with --uri-replacement)
+ -ur,--uri-replacement <arg>       set replacement text used to replace a
+                                   matching pattern in all URIs (used
+                                   together with --uri-pattern)
 ```

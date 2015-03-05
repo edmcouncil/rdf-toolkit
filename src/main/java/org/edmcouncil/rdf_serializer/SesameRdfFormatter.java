@@ -1,17 +1,18 @@
 package org.edmcouncil.rdf_serializer;
 
 import org.apache.commons.cli.*;
-import org.openrdf.model.Model;
-import org.openrdf.model.URI;
+import org.openrdf.model.*;
+import org.openrdf.model.impl.NamespaceImpl;
+import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.TreeModel;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,12 @@ public class SesameRdfFormatter {
         options.addOption(
                 "sup", "short-uri-priority", true, "set what takes priority when shortening URIs: " + SesameSortedTurtleWriter.ShortUriPreferences.summarise()
         );
+        options.addOption(
+                "up", "uri-pattern", true, "set a pattern to replace in all URIs (used together with --uri-replacement)"
+        );
+        options.addOption(
+                "ur", "uri-replacement", true, "set replacement text used to replace a matching pattern in all URIs (used together with --uri-pattern)"
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -73,6 +80,8 @@ public class SesameRdfFormatter {
 
         URI baseUri = null;
         String baseUriString = "";
+        String uriPattern = null;
+        String uriReplacement = null;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -146,6 +155,26 @@ public class SesameRdfFormatter {
             baseUriString = "";
         }
 
+        // Check if there is a valid URI pattern/replacement pair
+        if (line.hasOption("up")) {
+            if(line.hasOption("ur")) {
+                if (line.getOptionValue("up").length() < 1) {
+                    logger.error("A URI pattern cannot be an empty string.  Use --help for help.");
+                    return;
+                }
+                uriPattern = line.getOptionValue("up");
+                uriReplacement = line.getOptionValue("ur");
+            } else {
+                logger.error("If a URI pattern is specified, a URI replacement must also be specified.  Use --help for help.");
+                return;
+            }
+        } else {
+            if (line.hasOption("ur")) {
+                logger.error("If a URI replacement is specified, a URI pattern must also be specified.  Use --help for help.");
+                return;
+            }
+        }
+
         // Load RDF file.
         SesameSortedTurtleWriter.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
@@ -167,6 +196,34 @@ public class SesameRdfFormatter {
             logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);
         }
         Model sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUriString, sesameSourceFormat);
+
+        // Do any URI replacements
+        if ((uriPattern != null) && (uriReplacement != null)) {
+            Model replacedModel = new TreeModel();
+            for (Statement st : sourceModel) {
+                Resource replacedSubject = st.getSubject();
+                if (replacedSubject instanceof URI) {
+                    replacedSubject = new URIImpl(replacedSubject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                }
+
+                URI replacedPredicate = st.getPredicate();
+                replacedPredicate = new URIImpl(replacedPredicate.stringValue().replaceFirst(uriPattern, uriReplacement));
+
+                Value replacedObject = st.getObject();
+                if (replacedObject instanceof URI) {
+                    replacedObject = new URIImpl(replacedObject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                }
+
+                Statement replacedStatement = new StatementImpl(replacedSubject, replacedPredicate, replacedObject);
+                replacedModel.add(replacedStatement);
+            }
+            // Do URI replacements in namespaces as well.
+            Set<Namespace> namespaces = sourceModel.getNamespaces();
+            for (Namespace nmsp : namespaces) {
+                replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(uriPattern, uriReplacement));
+            }
+            sourceModel = replacedModel;
+        }
 
         // Write sorted RDF file.
         SesameSortedTurtleWriter.TargetFormats targetFormat = null;

@@ -432,4 +432,17 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     }
   }
 
+  "A SesameRdfFormatter" should "be able to do pattern-based URI replacements" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_replaced.ttl")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-up", "^http://topbraid.org/countries",
+      "-ur", "http://replaced.example.org/countries"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("@prefix countries: <http://replaced.example.org/countries#> ."), "URI replacement seems to have failed")
+  }
+
 }
