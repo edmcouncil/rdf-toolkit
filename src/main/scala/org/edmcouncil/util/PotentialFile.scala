@@ -58,6 +58,18 @@ class PotentialFile private (name: Option[String]) {
 
   lazy val inputSource = inputStream.map(Source.fromInputStream(_)(codec))
   lazy val inputDocumentSource: Option[OWLOntologyDocumentSource] = inputStream.map(new StreamDocumentSource(_, iri.orNull))
+
+  override def toString: String = {
+    if (hasName) {
+      name.get + (
+        if (fileName.isDefined) {
+          s"==${fileName.get}" + (
+            if (fileExists) "->(exists)" else "->(does not exist)"
+          )
+        } else s"==no absolute path"
+      )
+    } else "no name"
+  }
 }
 
 object PotentialFile {

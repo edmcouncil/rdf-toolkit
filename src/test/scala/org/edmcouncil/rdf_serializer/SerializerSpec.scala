@@ -38,7 +38,7 @@ class SerializerSpec extends UnitSpec {
   "A Serializer" must {
 
     "convert the wine ontology" in {
-      runSilent(
+      run(
         "--force",
         "--abort",
         "src/test/resources/test-out-wine.rdf",

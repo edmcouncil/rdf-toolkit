@@ -120,7 +120,10 @@ class OwlApiOntologyLoader(
 
   def loadOntology(resolver: ImportResolver): OWLOntology = loadOntology(resolver.inputDocumentSource)
 
-  def loadOntology(input: PotentialFile): OWLOntology = loadOntology(input.inputDocumentSource)
+  def loadOntology(input: PotentialFile): OWLOntology = {
+    println (s"loadOntology(input = ${input})")
+    loadOntology(input.inputDocumentSource)
+  }
 
   def loadOntology(input: Option[OWLOntologyDocumentSource]): OWLOntology = {
 
