@@ -118,22 +118,30 @@ class OwlApiOntologyLoader(
 
   ontologyManager.addOntologyLoaderListener(loaderListener)
 
-  def loadOntology(resolver: ImportResolver): OWLOntology = loadOntology(resolver.inputDocumentSource)
+  def loadOntology(resolver: ImportResolver): OWLOntology =
+    loadOntology(resolver.inputDocumentSource, resolver.resource.map(_.toString))
 
-  def loadOntology(input: PotentialFile): OWLOntology = {
-    println (s"loadOntology(input = ${input})")
-    loadOntology(input.inputDocumentSource)
-  }
+  def loadOntology(input: PotentialFile): OWLOntology =
+    loadOntology(input.inputDocumentSource, input.fileName)
 
-  def loadOntology(input: Option[OWLOntologyDocumentSource]): OWLOntology = {
+  def loadOntology(input: Option[OWLOntologyDocumentSource], sourceHint: Option[String] = None): OWLOntology = {
 
     require(input.isDefined, "Could not load undefined input")
 
     val uriString = input.get.getDocumentIRI.toURI.toString
 
-    info(s"Loading ontology $uriString")
+    loadOntologyImpl(input.get, uriString, sourceHint)
+  }
 
-    val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(input.get, loaderConfiguration))
+  private[this] def loadOntologyImpl(
+     input: OWLOntologyDocumentSource,
+     uriString: String,
+     sourceHint: Option[String] = None
+  ): OWLOntology = {
+
+    info(s"""Loading ontology $uriString ${sourceHint.mkString("(source: ", "", ")")}""")
+
+    val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(input, loaderConfiguration))
 
     ontTry1 match {
       case Success(ont) =>

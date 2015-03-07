@@ -58,28 +58,32 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
 
   val firstPath = baseDir.directoryPath.get.resolve(remainderOfImportUrl.get)
 
-  val pathsToBeTried: Seq[Path] = Seq (
-    firstPath,
-    firstPath.resolveSibling(firstPath.getFileName.toString + ".rdf"),
-    firstPath.resolveSibling(firstPath.getFileName.toString + ".owl"),
-    firstPath.resolveSibling(firstPath.getFileName.toString + ".ttl"),
-    firstPath.resolveSibling(firstPath.getFileName.toString + ".nt"),
-    firstPath.resolveSibling(firstPath.getFileName.toString + ".n3")
-  )
+  private[this] val checkFileExtensions = Seq("rdf", "owl", "ttl", "nt", "n3") // TODO: Get this list from either OWLAPI or Sesame
 
+  private[this] val pathsToBeTried: Seq[Path] =
+    Seq(firstPath) ++ checkFileExtensions.map((ext) => firstPath.resolveSibling(s"${firstPath.getFileName}.$ext"))
+
+  /**
+   * tryPath is called for each Path entry in the pathsToBeTried collection. The first one that matches is going
+   * to be imported.
+   */
   private[this] val tryPath = new PartialFunction[Path, File] {
 
     var file: Option[File] = None
 
     def apply(path: Path): File = file.get
 
-    def isDefinedAt(path: Path) = {
-      info(s"Trying $path")
-      val triedFile = path.normalize().toFile
+    def isDefinedAt(path: Path): Boolean = {
+      val normalizedPath = path.normalize()
+      val triedFile = normalizedPath.toFile
       file = if (triedFile.isFile) {
-        info(s"Found $path")
-        Some(triedFile)
-      } else None
+        val realFile = normalizedPath.toRealPath().toFile
+        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
+        Some(realFile)
+      } else {
+        info(s"Tried $normalizedPath, no match")
+        None
+      }
       file.isDefined
     }
   }
