@@ -38,7 +38,7 @@ class SerializerSpec extends UnitSpec {
   "A Serializer" must {
 
     "convert the wine ontology" in {
-      run(
+      runSilent(
         "--force",
         "--abort",
         "src/test/resources/test-out-wine.rdf",
@@ -60,8 +60,8 @@ class SerializerSpec extends UnitSpec {
       ) should equal (0)
     }
 
-    "Convert the fibo contracts ontology" in {
-      runSilent(
+    "convert the fibo contracts ontology" in {
+      run(
         "--force",
         "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
@@ -93,7 +93,7 @@ class SerializerSpec extends UnitSpec {
       ) should equal (0)
     }
 
-    "Do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
+    "do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
       runSilent(
         "--force",
         "--abort",
