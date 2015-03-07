@@ -5,6 +5,7 @@ The rdf-serializer works with the following major libraries:
 # [OWLAPI](https://github.com/owlcs/owlapi)
 # [Sesame](https://bitbucket.org/openrdf/sesame)
 
+| ------- | ---- |
 | Sources | https://bitbucket.org/openrdf/sesame or https://github.com/owlcs/owlapi |
 | Docs | http://rdf4j.org/documentation.docbook?view |
 
