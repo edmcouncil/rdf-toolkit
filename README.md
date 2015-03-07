@@ -4,8 +4,6 @@
 
 Code for a command-line stable serializer for RDF.  This will be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
 
-Requirements are being gathered at a [wiki page](https://github.com/edmcouncil/rdf-serializer/wiki/Requirements)
-
 See for more information about developing rdf-serializer [this](docs/develop.md) page or [this page](docs/dependencies.md) for information about dependencies.
 
 # issues
