@@ -61,7 +61,7 @@ class SerializerSpec extends UnitSpec {
     }
 
     "Convert the fibo contracts ontology" in {
-      run(
+      runSilent(
         "--force",
         "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",

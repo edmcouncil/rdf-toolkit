@@ -2,15 +2,16 @@ organization := "org.edmcouncil"
 
 name := "rdf-serializer"
 
-version := "1.0.2"
+version := "1.0.3-SNAPSHOT"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-seq(bintrayResolverSettings:_*)
+bintrayResolverSettings
 
 val owlApiVersion = "4.0.1"
+
 val sesameVersion = "2.8.0"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
