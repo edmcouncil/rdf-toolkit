@@ -3,8 +3,7 @@ package org.edmcouncil.main
 import java.nio.file.Path
 
 import org.clapper.argot.{ArgotConversionException, ArgotParser, ArgotUsageException}
-import org.edmcouncil.rdf_serializer.SesameSortedTurtleWriter.TargetFormats
-import org.edmcouncil.rdf_serializer.{SesameSortedTurtleWriter, OwlApiOutputFormats, SesameRdfFormatter}
+import org.edmcouncil.rdf_serializer.{SesameSortedRDFWriterFactory, OwlApiOutputFormats}
 import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
 import org.edmcouncil.{SerializerApi, SerializerApiOWLAPI, SerializerApiSesame}
 
@@ -14,7 +13,7 @@ object CommandLineParams {
 
   private val sep = "\n- "
   private def outputFormatsOwlApi = OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
-  private def outputFormatsSesame = SesameSortedTurtleWriter.TargetFormats.values().map(_.getOptionValue).mkString(sep, sep, "")
+  private def outputFormatsSesame = SesameSortedRDFWriterFactory.TargetFormats.values().map(_.getOptionValue).mkString(sep, sep, "")
 
   private def preUsageText = s"${BooterProperties.name} version ${BooterProperties.versionFull} (${BooterProperties.generatedAt})"
 

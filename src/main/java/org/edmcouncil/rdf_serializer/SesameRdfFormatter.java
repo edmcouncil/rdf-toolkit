@@ -2,7 +2,6 @@ package org.edmcouncil.rdf_serializer;
 
 import org.apache.commons.cli.*;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.NamespaceImpl;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.TreeModel;
 import org.openrdf.model.impl.URIImpl;
@@ -11,7 +10,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -35,13 +33,13 @@ public class SesameRdfFormatter {
                 "s", "source", true, "source (input) RDF file to format"
         );
         options.addOption(
-                "sfmt", "source-format", true, "source (input) RDF format; one of: " + SesameSortedTurtleWriter.SourceFormats.summarise()
+                "sfmt", "source-format", true, "source (input) RDF format; one of: " + SesameSortedRDFWriterFactory.SourceFormats.summarise()
         );
         options.addOption(
                 "t", "target", true, "target (output) RDF file"
         );
         options.addOption(
-                "tfmt", "target-format", true, "source (input) RDF format: one of: " + SesameSortedTurtleWriter.TargetFormats.summarise()
+                "tfmt", "target-format", true, "source (input) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
         );
         options.addOption(
                 "h", "help", false, "print out details of the command-line arguments for the program"
@@ -50,7 +48,7 @@ public class SesameRdfFormatter {
                 "bu", "base-uri", true, "set URI to use as base URI"
         );
         options.addOption(
-                "sup", "short-uri-priority", true, "set what takes priority when shortening URIs: " + SesameSortedTurtleWriter.ShortUriPreferences.summarise()
+                "sup", "short-uri-priority", true, "set what takes priority when shortening URIs: " + SesameSortedRDFWriter.ShortUriPreferences.summarise()
         );
         options.addOption(
                 "up", "uri-pattern", true, "set a pattern to replace in all URIs (used together with --uri-replacement)"
@@ -176,21 +174,21 @@ public class SesameRdfFormatter {
         }
 
         // Load RDF file.
-        SesameSortedTurtleWriter.SourceFormats sourceFormat = null;
+        SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
-            sourceFormat = SesameSortedTurtleWriter.SourceFormats.getByOptionValue(line.getOptionValue("sfmt"));
+            sourceFormat = SesameSortedRDFWriterFactory.SourceFormats.getByOptionValue(line.getOptionValue("sfmt"));
         } else {
-            sourceFormat = SesameSortedTurtleWriter.SourceFormats.auto;
+            sourceFormat = SesameSortedRDFWriterFactory.SourceFormats.auto;
         }
         if (sourceFormat == null) {
             logger.error("Unsupported or unrecognised source format: " + line.getOptionValue("sfmt"));
             return;
         }
         RDFFormat sesameSourceFormat = null;
-        if (SesameSortedTurtleWriter.SourceFormats.auto.equals(sourceFormat)) {
+        if (SesameSortedRDFWriterFactory.SourceFormats.auto.equals(sourceFormat)) {
             sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath, RDFFormat.TURTLE);
         } else {
-            sesameSourceFormat = SesameSortedTurtleWriter.SourceFormats.getSesameFormat(sourceFormat);
+            sesameSourceFormat = sourceFormat.getRDFFormat();
         }
         if (sesameSourceFormat == null) {
             logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);
@@ -231,21 +229,21 @@ public class SesameRdfFormatter {
         }
 
         // Write sorted RDF file.
-        SesameSortedTurtleWriter.TargetFormats targetFormat = null;
+        SesameSortedRDFWriterFactory.TargetFormats targetFormat = null;
         if (line.hasOption("tfmt")) {
-            targetFormat = SesameSortedTurtleWriter.TargetFormats.getByOptionValue(line.getOptionValue("tfmt"));
+            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.getByOptionValue(line.getOptionValue("tfmt"));
         } else {
-            targetFormat = SesameSortedTurtleWriter.TargetFormats.turtle;
+            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.turtle;
         }
         if (targetFormat == null) {
             logger.error("Unsupported or unrecognised target format: " + line.getOptionValue("tfmt"));
             return;
         }
-        SesameSortedTurtleWriter.ShortUriPreferences shortUriPref = null;
+        SesameSortedRDFWriter.ShortUriPreferences shortUriPref = null;
         if (line.hasOption("sup")) {
-            shortUriPref = SesameSortedTurtleWriter.ShortUriPreferences.getByOptionValue(line.getOptionValue("sup"));
+            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.getByOptionValue(line.getOptionValue("sup"));
         } else {
-            shortUriPref = SesameSortedTurtleWriter.ShortUriPreferences.prefix;
+            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.prefix;
         }
         if (shortUriPref == null) {
             logger.error("Unsupported or unrecognised short URI preference: " + line.getOptionValue("sup"));
@@ -253,7 +251,7 @@ public class SesameRdfFormatter {
         }
         // Note: only 'turtle' is supported as an output format, at present
         Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
-        SesameSortedTurtleWriterFactory factory = new SesameSortedTurtleWriterFactory();
+        SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory();
         RDFWriter turtleWriter = factory.getWriter(targetWriter, baseUri, indent, shortUriPref);
         Rio.write(sourceModel, turtleWriter);
         targetWriter.flush();

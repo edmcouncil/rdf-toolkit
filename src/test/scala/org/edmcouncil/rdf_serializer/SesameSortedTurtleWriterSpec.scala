@@ -2,9 +2,9 @@ package org.edmcouncil.rdf_serializer
 
 import java.nio.charset.Charset
 
-import org.edmcouncil.rdf_serializer.SesameSortedTurtleWriter.ShortUriPreferences
+import org.edmcouncil.rdf_serializer.SesameSortedRDFWriter.ShortUriPreferences
 import org.openrdf.rio.turtle.{TurtleWriterFactory, TurtleWriter}
-import org.slf4j.{LoggerFactory, Logger}
+import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ListBuffer
 import scala.io.{Codec, BufferedSource}
@@ -122,7 +122,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
 
   "A SortedTurtleWriterFactory" should "be able to create a SortedTurtleWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
 
     val writer1 = new SesameSortedTurtleWriter(System.out)
     assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
@@ -163,7 +163,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val baseUri = new URIImpl("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter (outWriter, baseUri, null, null)
 
     val inputModel = Rio parse (new FileReader(inputFile), baseUri stringValue, RDFFormat.TURTLE)
@@ -185,7 +185,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
 
     val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
@@ -207,7 +207,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-17.ttl")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter (outWriter)
 
     val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
@@ -229,7 +229,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
 
     val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
@@ -251,7 +251,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
 
     val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
@@ -274,7 +274,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val baseUri = new URIImpl("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter (outWriter, baseUri, null, ShortUriPreferences.prefix)
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
@@ -305,7 +305,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val baseUri = new URIImpl("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_uri.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedTurtleWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter (outWriter, baseUri, null, ShortUriPreferences.base_uri)
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
