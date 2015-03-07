@@ -1,5 +1,10 @@
 # Developing the rdf-serializer
 
+## develop
+
+The primary development IDE used for this project is [IntelliJ IDEA EAP 14.1](https://confluence.jetbrains.com/display/IDEADEV/IDEA+14.1+EAP).
+Also install their [Scala plugin, the EAP version](https://confluence.jetbrains.com/display/SCA/Scala+plugin+EAP)
+
 ## build
 
 This project is being build and packaged on the EDM Council Jenkins Server by [this job](https://jenkins.edmcouncil.org/job/rdf-serializer-build/).
