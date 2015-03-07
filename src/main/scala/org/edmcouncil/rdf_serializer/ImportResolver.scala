@@ -33,7 +33,7 @@ import java.nio.file.Path
 
 import grizzled.slf4j.Logging
 import org.edmcouncil.util.{BaseURL, PotentialDirectory}
-import org.semanticweb.owlapi.io.StreamDocumentSource
+import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
 import org.semanticweb.owlapi.model.IRI
 
 import scala.io.Source
@@ -95,7 +95,7 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
 
   def inputStream = resource.map((file: File) => new BufferedInputStream(new FileInputStream(file)))
   def inputSource = inputStream.map(Source.fromInputStream(_)(codec))
-  def inputDocumentSource = inputStream.map(new StreamDocumentSource(_, importedIri))
+  def inputDocumentSource: Option[OWLOntologyDocumentSource] = inputStream.map(new StreamDocumentSource(_, importedIri))
 }
 
 object ImportResolver {

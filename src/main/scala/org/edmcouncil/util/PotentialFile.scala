@@ -31,7 +31,7 @@ package org.edmcouncil.util
 import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
 import java.nio.file.{Files, Paths}
 
-import org.semanticweb.owlapi.io.StreamDocumentSource
+import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
 import org.semanticweb.owlapi.model.IRI
 
 import scala.io.Source
@@ -57,7 +57,7 @@ class PotentialFile private (name: Option[String]) {
   lazy val outputStream = file.map((file: File) => new FileOutputStream(file))
 
   lazy val inputSource = inputStream.map(Source.fromInputStream(_)(codec))
-  lazy val inputDocumentSource = inputStream.map(new StreamDocumentSource(_, iri.orNull))
+  lazy val inputDocumentSource: Option[OWLOntologyDocumentSource] = inputStream.map(new StreamDocumentSource(_, iri.orNull))
 }
 
 object PotentialFile {
