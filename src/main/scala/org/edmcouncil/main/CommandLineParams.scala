@@ -90,10 +90,10 @@ class CommandLineParams private (args: Array[String]) {
 
     val path = {
       val potentialDirectory = PotentialDirectory(pathString)
-      if (! potentialDirectory.directoryExists) throw new ArgotConversionException(
+      if (! potentialDirectory.exists) throw new ArgotConversionException(
         s"Option $opt: Cannot parse $pathString to an existing directory."
       )
-      potentialDirectory.directoryPath.get
+      potentialDirectory.path.get
     }
 
     val uri = BaseURL(uriString)

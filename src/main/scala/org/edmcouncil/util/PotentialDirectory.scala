@@ -16,19 +16,17 @@ sealed trait PotentialDirectory {
 
   def name: Option[String]
   def hasName = name.isDefined
-  def directoryPath: Option[Path]
-  def directoryName: Option[String] = directoryPath.map(_.normalize().toString)
-  def directoryExists = directoryPath.filter(
-    (path: Path) => Files.exists(path)
-  ).isDefined
+  def path: Option[Path]
+  def directoryName: Option[String] = path.map(_.normalize().toString)
+  def exists = path.exists((path: Path) => Files.exists(path))
 }
 
 class PotentialDirectoryByName private[util] (val name: Option[String]) extends PotentialDirectory {
 
-  val directoryPath = name.map((name: String) => Paths.get(name))
+  val path = name.map((name: String) => Paths.get(name))
 }
 
-class PotentialDirectoryByPath private[util] (val directoryPath: Option[Path]) extends PotentialDirectory {
+class PotentialDirectoryByPath private[util] (val path: Option[Path]) extends PotentialDirectory {
 
-  def name = Some(directoryPath.toString)
+  def name = Some(path.toString)
 }

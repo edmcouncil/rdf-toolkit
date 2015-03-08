@@ -28,11 +28,12 @@
 
 package org.edmcouncil.rdf_serializer
 
-import java.io.{BufferedInputStream, File, FileInputStream}
-import java.nio.file.Path
+import java.io.{IOException, BufferedInputStream, File, FileInputStream}
+import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file._
 
 import grizzled.slf4j.Logging
-import org.edmcouncil.util.{BaseURL, PotentialDirectory}
+import org.edmcouncil.util.{PotentialFile, BaseURL, PotentialDirectory}
 import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
 import org.semanticweb.owlapi.model.IRI
 
@@ -45,46 +46,75 @@ import scala.io.Source
  */
 class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, importedIri: IRI) extends Logging {
 
+  import ImportResolver._
+
   private[this] implicit val codec = scala.io.Codec.UTF8
 
   type TryPathFunction = () => Path
 
-  val importedUrl = importedIri.toURI.toString
+  val importedUrl = {
+    val x = importedIri.toURI.toString
+    info(s"importedUrl=$x")
+    x
+  }
   val matchingBaseUrl = baseUrl.matchesWith(importedUrl)
-  val baseDirExists = baseDir.directoryExists
+  val baseDirExists = baseDir.exists
   val baseUrlSpecified = baseUrl.isSpecified
-  val remainderOfImportUrl = baseUrl.strip(importedUrl)
-  val shouldBeFound = matchingBaseUrl && baseDirExists && baseUrlSpecified && remainderOfImportUrl.isDefined
+  val remainderOfImportUrl = {
+    val x = baseUrl.strip(importedUrl)
+    info(s"remainderOfImportUrl=$x")
+    x
+  }
+  val shouldBeFound = {
+    val x = matchingBaseUrl && baseDirExists && baseUrlSpecified && remainderOfImportUrl.isDefined
+    info(s"shouldBeFound=$x")
+    x
+  }
 
-  val firstPath = baseDir.directoryPath.get.resolve(remainderOfImportUrl.get)
+  val firstPath = {
+    val x = baseDir.path.get.resolve(remainderOfImportUrl.get)
+    info(s"firstPath=$x")
+    x
+  }
 
-  private[this] val checkFileExtensions = Seq("rdf", "owl", "ttl", "nt", "n3") // TODO: Get this list from either OWLAPI or Sesame
+  //private val pathsToBeTried: Seq[Path] = Seq(firstPath)
+  private val pathsToBeTried: Seq[Path] = Seq(baseDir.path.get)
 
-  private[this] val pathsToBeTried: Seq[Path] =
-    Seq(firstPath) ++ checkFileExtensions.map((ext) => firstPath.resolveSibling(s"${firstPath.getFileName}.$ext"))
+  private val rdfFileMatcherPattern = {
+    val x = ("**/" + remainderOfImportUrl.get + checkFileExtensions.mkString(".{", ",", "}")).replace("/.", ".").toLowerCase
+    info(s"rdfFileMatcherPattern=$x")
+    x
+  }
+
+  private val rdfFileMatcher = pathMatcher(s"glob:$rdfFileMatcherPattern")
 
   /**
-   * tryPath is called for each Path entry in the pathsToBeTried collection. The first one that matches is going
+   * tryPath is called for each Path entry in a Seq[Path] collection. The first one that matches is going
    * to be imported.
    */
-  private[this] val tryPath = new PartialFunction[Path, File] {
+  private val tryPath = new PartialFunction[Path, File] {
 
     var file: Option[File] = None
 
     def apply(path: Path): File = file.get
 
     def isDefinedAt(path: Path): Boolean = {
-      val normalizedPath = path.normalize()
-      val triedFile = normalizedPath.toFile
-      file = if (triedFile.isFile) {
-        val realFile = normalizedPath.toRealPath().toFile
-        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
-        Some(realFile)
-      } else {
-        info(s"Tried $normalizedPath, no match")
-        None
-      }
+      info(s"isDefinedAt: $path")
+      val walker = new DirectoryWalker(rdfFileMatcher)
+      Files.walkFileTree(path, walker)
+      file = walker.result
       file.isDefined
+      //      val normalizedPath = path.normalize()
+      //      val triedFile = normalizedPath.toFile
+      //      file = if (triedFile.isFile) {
+      //        val realFile = normalizedPath.toRealPath().toFile
+      //        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
+      //        Some(realFile)
+      //      } else {
+      //        info(s"Tried $normalizedPath, no match")
+      //        None
+      //      }
+      //      file.isDefined
     }
   }
 
@@ -102,7 +132,12 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
   def inputDocumentSource: Option[OWLOntologyDocumentSource] = inputStream.map(new StreamDocumentSource(_, importedIri))
 }
 
-object ImportResolver {
+object ImportResolver extends Logging {
+
+  private val fileSystem = FileSystems.getDefault
+  private def pathMatcher(syntaxAndPattern: String) = fileSystem.getPathMatcher(syntaxAndPattern)
+  private val checkFileExtensions = Seq("rdf", "owl", "ttl", "nt", "n3") // TODO: Get this list from either OWLAPI or Sesame
+
 
   def apply(basePath: Path, baseUri: BaseURL, importedIri: IRI) =
     new ImportResolver(PotentialDirectory(basePath), baseUri, importedIri)
@@ -111,3 +146,58 @@ object ImportResolver {
     new ImportResolver(baseDir, baseUrl, importedIri)
 }
 
+class DirectoryWalker(matcher: PathMatcher) extends SimpleFileVisitor[Path] with Logging {
+
+  var result: Option[File] = None
+
+  /**
+   * Compares the pattern against the file or directory name and returns true if we found a valid RDF file
+   */
+  private def checkFile(path: Path): Boolean = {
+    val normalizedPath = path.normalize()
+    val potentialFile = PotentialFile(Some(normalizedPath.toString.toLowerCase))
+    if (! matcher.matches(potentialFile.path.get)) {
+      info(s"Tried $normalizedPath, no match ${potentialFile}")
+      return false
+    }
+    info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
+    result = Some(path.toFile)
+    true
+
+//    val name: Path = path.getFileName
+//    if (name != null && matcher.matches(name)) {
+//      result = Some(name)
+//      println("Found file: " + result.get.toAbsolutePath.toString)
+//      true
+//    } else false
+
+    //      val normalizedPath = path.normalize()
+    //      val triedFile = normalizedPath.toFile
+    //      file = if (triedFile.isFile) {
+    //        val realFile = normalizedPath.toRealPath().toFile
+    //        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
+    //        Some(realFile)
+    //      } else {
+    //        info(s"Tried $normalizedPath, no match")
+    //        None
+    //      }
+    //      file.isDefined
+
+  }
+
+  /**
+   * Invoke the pattern matching method on each file.
+   */
+  override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult =
+    if (attrs.isRegularFile && checkFile(file)) FileVisitResult.TERMINATE else FileVisitResult.CONTINUE
+
+  /**
+   * Invoke the pattern matching method on each directory.
+   */
+  override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult = FileVisitResult.CONTINUE
+
+  override def visitFileFailed(file: Path, exc: IOException): FileVisitResult = {
+    println(exc)
+    FileVisitResult.CONTINUE
+  }
+}
