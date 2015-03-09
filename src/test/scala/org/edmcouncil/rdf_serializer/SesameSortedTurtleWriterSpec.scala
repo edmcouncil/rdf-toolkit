@@ -223,7 +223,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
     }
   }
 
-  it should "be able to sort RDF triples consistently when writing in Turtle format" in {
+  it should "be able to sort RDF triples consistently when writing in Turtle format" ignore {
     val rawTurtleDirectory = new File("src/test/resources")
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
