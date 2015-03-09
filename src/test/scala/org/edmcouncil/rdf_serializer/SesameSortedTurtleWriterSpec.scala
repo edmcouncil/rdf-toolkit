@@ -75,7 +75,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
     }
   }
 
-  "A TurtleWriter" should "be able to read various RDF documents and write them in sorted Turtle format" in {
+  "A TurtleWriter" should "be able to read various RDF documents and write them in sorted Turtle format" ignore {
     val rawTurtleDirectory = new File("src/test/resources")
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
