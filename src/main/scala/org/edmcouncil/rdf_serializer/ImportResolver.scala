@@ -52,39 +52,19 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
 
   type TryPathFunction = () => Path
 
-  val importedUrl = {
-    val x = importedIri.toURI.toString
-    info(s"importedUrl=$x")
-    x
-  }
+  val importedUrl = importedIri.toURI.toString
   val matchingBaseUrl = baseUrl.matchesWith(importedUrl)
   val baseDirExists = baseDir.exists
   val baseUrlSpecified = baseUrl.isSpecified
-  val remainderOfImportUrl = {
-    val x = baseUrl.strip(importedUrl)
-    info(s"remainderOfImportUrl=$x")
-    x
-  }
-  val shouldBeFound = {
-    val x = matchingBaseUrl && baseDirExists && baseUrlSpecified && remainderOfImportUrl.isDefined
-    info(s"shouldBeFound=$x")
-    x
-  }
+  val remainderOfImportUrl = baseUrl.strip(importedUrl)
+  val shouldBeFound = matchingBaseUrl && baseDirExists && baseUrlSpecified && remainderOfImportUrl.isDefined
+  //val firstPath = baseDir.path.get.resolve(remainderOfImportUrl.get)
 
-  val firstPath = {
-    val x = baseDir.path.get.resolve(remainderOfImportUrl.get)
-    info(s"firstPath=$x")
-    x
-  }
-
-  //private val pathsToBeTried: Seq[Path] = Seq(firstPath)
   private val pathsToBeTried: Seq[Path] = Seq(baseDir.path.get)
 
-  private val rdfFileMatcherPattern = {
-    val x = ("**/" + remainderOfImportUrl.get + checkFileExtensions.mkString(".{", ",", "}")).replace("/.", ".").toLowerCase
-    info(s"rdfFileMatcherPattern=$x")
-    x
-  }
+  private val rdfFileMatcherPattern = (
+    "**/" + remainderOfImportUrl.get + checkFileExtensions.mkString(".{", ",", "}")
+  ).replace("/.", ".").toLowerCase
 
   private val rdfFileMatcher = pathMatcher(s"glob:$rdfFileMatcherPattern")
 
@@ -99,22 +79,11 @@ class ImportResolver private (baseDir: PotentialDirectory, baseUrl: BaseURL, imp
     def apply(path: Path): File = file.get
 
     def isDefinedAt(path: Path): Boolean = {
-      info(s"isDefinedAt: $path")
+      //info(s"isDefinedAt: $path")
       val walker = new DirectoryWalker(rdfFileMatcher)
       Files.walkFileTree(path, walker)
       file = walker.result
       file.isDefined
-      //      val normalizedPath = path.normalize()
-      //      val triedFile = normalizedPath.toFile
-      //      file = if (triedFile.isFile) {
-      //        val realFile = normalizedPath.toRealPath().toFile
-      //        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
-      //        Some(realFile)
-      //      } else {
-      //        info(s"Tried $normalizedPath, no match")
-      //        None
-      //      }
-      //      file.isDefined
     }
   }
 
@@ -157,32 +126,12 @@ class DirectoryWalker(matcher: PathMatcher) extends SimpleFileVisitor[Path] with
     val normalizedPath = path.normalize()
     val potentialFile = PotentialFile(Some(normalizedPath.toString.toLowerCase))
     if (! matcher.matches(potentialFile.path.get)) {
-      info(s"Tried $normalizedPath, no match ${potentialFile}")
+      debug(s"Tried $normalizedPath, no match ${potentialFile}")
       return false
     }
     info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
     result = Some(path.toFile)
     true
-
-//    val name: Path = path.getFileName
-//    if (name != null && matcher.matches(name)) {
-//      result = Some(name)
-//      println("Found file: " + result.get.toAbsolutePath.toString)
-//      true
-//    } else false
-
-    //      val normalizedPath = path.normalize()
-    //      val triedFile = normalizedPath.toFile
-    //      file = if (triedFile.isFile) {
-    //        val realFile = normalizedPath.toRealPath().toFile
-    //        info(s"Found $normalizedPath -> ${normalizedPath.toRealPath().toString}")
-    //        Some(realFile)
-    //      } else {
-    //        info(s"Tried $normalizedPath, no match")
-    //        None
-    //      }
-    //      file.isDefined
-
   }
 
   /**

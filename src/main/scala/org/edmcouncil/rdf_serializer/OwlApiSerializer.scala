@@ -150,7 +150,6 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
     }
 
     if (params.inputFiles.value.length == 1) {
-      println ("XXXXXX" + params.inputFiles.value.head)
       val ontology = load(params.inputFiles.value.head)
       saveOntology(ontologyManager, ontology, outputFormat)
     } else {
