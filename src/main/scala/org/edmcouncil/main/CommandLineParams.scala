@@ -8,6 +8,7 @@ import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
 import org.edmcouncil.{SerializerApi, SerializerApiOWLAPI, SerializerApiSesame}
 
 import scala.util.Try
+import scala.util.matching.Regex
 
 object CommandLineParams {
 
@@ -84,7 +85,7 @@ class CommandLineParams private (args: Array[String]) {
     "..."
   ) { (s, opt) =>
 
-    val splitted = s.split('=')
+    val splitted = s.split('=')         // TODO: More error checking here
     val pathString = splitted(0)
     val uriString = splitted(1)
 
@@ -99,6 +100,20 @@ class CommandLineParams private (args: Array[String]) {
     val uri = BaseURL(uriString)
 
     (path, uri)
+  }
+
+  val urlReplacePattern = parser.multiOption[Tuple2[Regex, String]](
+    List("url-replace"),
+    "<pattern>=<replacement string>",
+    "Replace any part of a Subject, Predicate or Object URI that matches with the given <pattern> with the given <replacement string>"
+  ) { (s, opt) =>
+
+    val splitted = s.split('=')           // TODO: More error checking here
+    val patternString = splitted(0)
+    val pattern = s"$patternString".r
+    val replacementString = splitted(1)
+
+    (pattern, replacementString)
   }
 
   val outputFile = parser.parameter[PotentialFile](
