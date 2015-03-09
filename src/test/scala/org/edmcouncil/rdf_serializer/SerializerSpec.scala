@@ -41,6 +41,7 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
+        "--url-replace", "http://www.w3.org/TR/2003/PR-owl-guide-20031209/=http://whatever/",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
       ) should equal (0)
@@ -61,11 +62,12 @@ class SerializerSpec extends UnitSpec {
     }
 
     "convert the fibo contracts ontology" in {
-      runSilent(
+      run(
         "--force",
         "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
+        "--url-replace", "http://www.omg.org/spec/EDMC-FIBO/=http://spec.edmcouncil.org/fibo/",
         "src/test/resources/test-out-fibo-fnd-contracts.rdf",
         "src/test/resources/fibo-fnd-contracts.rdf"
       ) should equal (0)

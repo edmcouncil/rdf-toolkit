@@ -67,6 +67,17 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
   lazy val writerFormatRegistry = RDFWriterRegistry.getInstance()
 
+  private def renameURIs(
+    ontologyManager: OWLOntologyManager,
+    ontologies: Set[OWLOntology],
+    format: OWLDocumentFormat
+  ) {
+    if (! params.urlReplacePattern.hasValue) return
+
+    for ((regex, replacement) <- params.urlReplacePattern.value) {
+      new OwlApiUriRenamer(regex, replacement, ontologyManager, ontologies, format)
+    }
+  }
 
   private def saveOntology(
     ontologyManager: OWLOntologyManager,
@@ -74,8 +85,14 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
     format: OWLDocumentFormat
   ): Unit = {
 
+    //
+    // Before saving let's first see if we need to rename stuff
+    //
+    renameURIs(ontologyManager, Set(ontology), format)
+
     info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
     info(s"In Format: $format")
+    info(s"To File: ${params.outputFile.value.get.toString}")
 
     ontology.saveOntology(format, params.outputFile.value.get.outputStream.get)
 
@@ -94,7 +111,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 //
 //    ontologyManager.removeOntology(ontology)
 
-    error("Merging of multiple input ontologies is not supported yet")
+    error("Merging of multiple input ontologies is not supported yet") // TODO: Implement merging of ontologies
   }
 
   private def run: Int = {
