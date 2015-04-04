@@ -85,3 +85,5 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [2] org.edmcouncil.rdf_serializer.Main
 //
 mainClass in Compile := Some("org.edmcouncil.main.Main")
+
+val `rdf-serializer` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)
