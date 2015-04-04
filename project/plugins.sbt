@@ -24,3 +24,9 @@ addSbtPlugin("me.lessis" % "bintray-sbt" % "0.1.1")
 //
 addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.4.0")
 
+//
+// sbt-scalariform is an sbt plugin adding support for source code formatting using Scalariform.
+//
+// https://github.com/sbt/sbt-scalariform
+//
+addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")

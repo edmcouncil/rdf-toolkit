@@ -30,7 +30,7 @@ package org.edmcouncil.util
  * TODO: Rename to URI, I think we need to also support URNs not just URLs (JG)
  */
 class BaseURL private (val url: Option[String]) {
-  
+
   val isSpecified = url.isDefined
 
   /**

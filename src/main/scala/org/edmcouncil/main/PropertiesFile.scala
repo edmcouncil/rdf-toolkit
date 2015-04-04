@@ -33,7 +33,7 @@ class PropertiesFile(private val inputStream: java.io.InputStream) extends Loggi
 
     require(s != null)
 
-    for (line <- s.getLines())
+    for (line ← s.getLines())
       println(line)
 
     s
@@ -51,7 +51,7 @@ class PropertiesFile(private val inputStream: java.io.InputStream) extends Loggi
     try {
       props.load(is)
     } catch {
-      case ex: Throwable => {
+      case ex: Throwable ⇒ {
         error(s"Some exception: ${ex.getMessage} class=${ex.getClass.getName}")
       }
     }

@@ -30,7 +30,6 @@ import org.w3c.dom.Document
 
 class RdfXmlSorter private (input: Path) {
 
-
   def xmlDocument: Document = {
 
     val file = input.toFile

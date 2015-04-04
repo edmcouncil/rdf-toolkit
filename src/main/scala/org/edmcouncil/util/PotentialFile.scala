@@ -23,10 +23,10 @@
  */
 package org.edmcouncil.util
 
-import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
-import java.nio.file.{Files, Paths}
+import java.io.{ BufferedInputStream, File, FileInputStream, FileOutputStream }
+import java.nio.file.{ Files, Paths }
 
-import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
+import org.semanticweb.owlapi.io.{ OWLOntologyDocumentSource, StreamDocumentSource }
 import org.semanticweb.owlapi.model.IRI
 
 import scala.io.Source
@@ -42,14 +42,14 @@ class PotentialFile private (name: Option[String]) {
 
   def hasName = name.isDefined
 
-  lazy val file = name.map((fileName: String) => new File(fileName.asValidPathName))
+  lazy val file = name.map((fileName: String) ⇒ new File(fileName.asValidPathName))
   lazy val fileName = file.map(_.getAbsolutePath)
   lazy val path = fileName.map(Paths.get(_))
-  lazy val fileExists = fileName.filter((fileName: String) => Files.exists(Paths.get(fileName))).isDefined
+  lazy val fileExists = fileName.filter((fileName: String) ⇒ Files.exists(Paths.get(fileName))).isDefined
   lazy val uri = path.map(_.toUri)
   lazy val iri = uri.map(IRI.create)
-  lazy val inputStream = file.map((file: File) => new BufferedInputStream(new FileInputStream(file)))
-  lazy val outputStream = file.map((file: File) => new FileOutputStream(file))
+  lazy val inputStream = file.map((file: File) ⇒ new BufferedInputStream(new FileInputStream(file)))
+  lazy val outputStream = file.map((file: File) ⇒ new FileOutputStream(file))
 
   lazy val inputSource = inputStream.map(Source.fromInputStream(_)(codec))
   lazy val inputDocumentSource: Option[OWLOntologyDocumentSource] = inputStream.map(new StreamDocumentSource(_, iri.orNull))

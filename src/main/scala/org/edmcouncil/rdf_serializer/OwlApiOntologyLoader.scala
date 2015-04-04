@@ -27,18 +27,18 @@ import java.io.IOException
 import java.nio.file.Path
 
 import grizzled.slf4j.Logging
-import org.edmcouncil.util.{BaseURL, PotentialDirectory, PotentialFile}
-import org.semanticweb.owlapi.io.{OWLOntologyCreationIOException, OWLOntologyDocumentSource}
-import org.semanticweb.owlapi.model.OWLOntologyLoaderListener.{LoadingFinishedEvent, LoadingStartedEvent}
+import org.edmcouncil.util.{ BaseURL, PotentialDirectory, PotentialFile }
+import org.semanticweb.owlapi.io.{ OWLOntologyCreationIOException, OWLOntologyDocumentSource }
+import org.semanticweb.owlapi.model.OWLOntologyLoaderListener.{ LoadingFinishedEvent, LoadingStartedEvent }
 import org.semanticweb.owlapi.model._
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 trait OnErrorAborter extends Logging {
 
   def abortOnError: Boolean
 
-  override def error(msg: => Any) = {
+  override def error(msg: ⇒ Any) = {
     super.error(msg)
     if (abortOnError) throw new IllegalStateException(s"Aborted: $msg (you used --abort switch)")
   }
@@ -48,11 +48,10 @@ trait OnErrorAborter extends Logging {
  * Load an Ontology
  */
 class OwlApiOntologyLoader(
-  ontologyManager: OWLOntologyManager,
-  loaderConfiguration: OWLOntologyLoaderConfiguration,
-  baseDirUrls: Seq[(Path, BaseURL)],
-  val abortOnError: Boolean
-) extends Logging with OnErrorAborter {
+    ontologyManager: OWLOntologyManager,
+    loaderConfiguration: OWLOntologyLoaderConfiguration,
+    baseDirUrls: Seq[(Path, BaseURL)],
+    val abortOnError: Boolean) extends Logging with OnErrorAborter {
 
   /**
    * For every missing import specified by iri, try to find a corresponding base directory and if found, create an
@@ -97,14 +96,14 @@ class OwlApiOntologyLoader(
         info(s"-----------------> Finished loading ontology: $uri <-------")
       } else {
         event.getException match {
-          case ex: OWLOntologyCreationIOException => ex.getCause match {
-            case ioException: IOException =>
-              if (! tryToLoadMissingImport(iri)) {
+          case ex: OWLOntologyCreationIOException ⇒ ex.getCause match {
+            case ioException: IOException ⇒
+              if (!tryToLoadMissingImport(iri)) {
                 error(s"Could not load missing import: $uri")
               }
-            case _ => throw ex
+            case _ ⇒ throw ex
           }
-          case ex @ _ =>
+          case ex @ _ ⇒
             error(s"Unknown exception while loading $uri: $ex")
         }
       }
@@ -129,24 +128,23 @@ class OwlApiOntologyLoader(
   }
 
   private[this] def loadOntologyImpl(
-     input: OWLOntologyDocumentSource,
-     uriString: String,
-     sourceHint: Option[String] = None
-  ): OWLOntology = {
+    input: OWLOntologyDocumentSource,
+    uriString: String,
+    sourceHint: Option[String] = None): OWLOntology = {
 
     info(s"""Loading ontology $uriString ${sourceHint.mkString("(source: ", "", ")")}""")
 
     val ontTry1 = Try(ontologyManager.loadOntologyFromOntologyDocument(input, loaderConfiguration))
 
     ontTry1 match {
-      case Success(ont) =>
+      case Success(ont) ⇒
         info(s"Successfully loaded $uriString")
         ont
-      case Failure(exception) => exception match {
-        case ex: UnloadableImportException =>
+      case Failure(exception) ⇒ exception match {
+        case ex: UnloadableImportException ⇒
           error(s"Could not import $uriString. importsDeclaration=${ex.getImportsDeclaration.getIRI}")
           null
-        case _ =>
+        case _ ⇒
           error(s"Could not load $uriString: $exception")
           null
       }

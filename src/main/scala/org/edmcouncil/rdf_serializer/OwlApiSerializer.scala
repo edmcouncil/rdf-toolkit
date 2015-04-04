@@ -65,11 +65,10 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   private def renameURIs(
     ontologyManager: OWLOntologyManager,
     ontologies: Set[OWLOntology],
-    format: OWLDocumentFormat
-  ) {
-    if (! params.urlReplacePattern.hasValue) return
+    format: OWLDocumentFormat) {
+    if (!params.urlReplacePattern.hasValue) return
 
-    for ((regex, replacement) <- params.urlReplacePattern.value) {
+    for ((regex, replacement) ← params.urlReplacePattern.value) {
       new OwlApiUriRenamer(regex, replacement, ontologyManager, ontologies, format)
     }
   }
@@ -77,8 +76,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   private def saveOntology(
     ontologyManager: OWLOntologyManager,
     ontology: OWLOntology,
-    format: OWLDocumentFormat
-  ): Unit = {
+    format: OWLDocumentFormat): Unit = {
 
     //
     // Before saving let's first see if we need to rename stuff
@@ -96,15 +94,14 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
   private def mergeOntology(
     ontologyManager: OWLOntologyManager,
-    format: OWLDocumentFormat
-  ): Unit = {
+    format: OWLDocumentFormat): Unit = {
 
-//    info(s"Merging and saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
-//    info(s"In Format: $format")
-//
-//    ontology.saveOntology(format, params.output.value.get.outputStream.get)
-//
-//    ontologyManager.removeOntology(ontology)
+    //    info(s"Merging and saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
+    //    info(s"In Format: $format")
+    //
+    //    ontology.saveOntology(format, params.output.value.get.outputStream.get)
+    //
+    //    ontologyManager.removeOntology(ontology)
 
     error("Merging of multiple input ontologies is not supported yet") // TODO: Implement merging of ontologies
   }
@@ -143,7 +140,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
     def load(input: PotentialFile): OWLOntology = {
 
-      if (! input.fileExists) error(s"Input file does not exist: $input")
+      if (!input.fileExists) error(s"Input file does not exist: $input")
 
       val ontology = loader.loadOntology(input)
       val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)

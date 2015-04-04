@@ -23,7 +23,7 @@
  */
 package org.edmcouncil.util
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{ Files, Path, Paths }
 
 object PotentialDirectory {
 
@@ -41,12 +41,12 @@ sealed trait PotentialDirectory {
   def hasName = name.isDefined
   def path: Option[Path]
   def directoryName: Option[String] = path.map(_.normalize().toString)
-  def exists = path.exists((path: Path) => Files.exists(path))
+  def exists = path.exists((path: Path) ⇒ Files.exists(path))
 }
 
 class PotentialDirectoryByName private[util] (val name: Option[String]) extends PotentialDirectory {
 
-  val path = name.map((name: String) => Paths.get(name))
+  val path = name.map((name: String) ⇒ Paths.get(name))
 }
 
 class PotentialDirectoryByPath private[util] (val path: Option[Path]) extends PotentialDirectory {
