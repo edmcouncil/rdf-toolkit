@@ -14,14 +14,11 @@
 // - https://github.com/sbt/sbt-onejar
 // - https://github.com/nuttycom/sbt-proguard-plugin
 //
-import AssemblyKeys._ // put this at the top of the file
-
-assemblySettings
 
 //
 // The name of the uber-jar
 //
-jarName in assembly := "rdf-serializer.jar"
+assemblyJarName in assembly := "rdf-serializer.jar"
 
 //
 // To skip the test during assembly:
@@ -39,12 +36,14 @@ mainClass in assembly := Some("org.edmcouncil.rdf_serializer.Main")
 // #!/usr/bin/env sh
 // exec java -jar "$0" "$@"
 //
-assemblyOption in assembly ~= { _.copy(prependShellScript = Some(defaultShellScript)) }
+val shellScript: Seq[String] = Seq("#!/usr/bin/env sh", """exec java -Xmx1G -jar "$0" "$@"""") // "
+assemblyOption in assembly ~= { _.copy(prependShellScript = Some(shellScript)) }
+
 
 //
 // Set the merge strategy for duplicates:
 //
-mergeStrategy in assembly <<= (mergeStrategy in assembly) {
+assemblyMergeStrategy in assembly <<= (assemblyMergeStrategy in assembly) {
   (old) => {
     case PathList("javax", "servlet", xs @ _*)         	=> MergeStrategy.first
     /*
