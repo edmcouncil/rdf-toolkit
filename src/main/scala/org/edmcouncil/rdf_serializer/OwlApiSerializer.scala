@@ -1,31 +1,26 @@
-/**
+/*
  * The MIT License (MIT)
- *
- * Copyright (c) 2014 Enterprise Data Management Council
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation files
- * (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
  * 
- *
- * The above copyright notice and this permission notice shall be
-*  included in all copies or substantial portions of the Software. 
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * Copyright (c) 2015 Enterprise Data Management Council
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
  */
-
 package org.edmcouncil.rdf_serializer
 
 import grizzled.slf4j.Logging
@@ -70,11 +65,10 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   private def renameURIs(
     ontologyManager: OWLOntologyManager,
     ontologies: Set[OWLOntology],
-    format: OWLDocumentFormat
-  ) {
-    if (! params.urlReplacePattern.hasValue) return
+    format: OWLDocumentFormat) {
+    if (!params.urlReplacePattern.hasValue) return
 
-    for ((regex, replacement) <- params.urlReplacePattern.value) {
+    for ((regex, replacement) ← params.urlReplacePattern.value) {
       new OwlApiUriRenamer(regex, replacement, ontologyManager, ontologies, format)
     }
   }
@@ -82,8 +76,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   private def saveOntology(
     ontologyManager: OWLOntologyManager,
     ontology: OWLOntology,
-    format: OWLDocumentFormat
-  ): Unit = {
+    format: OWLDocumentFormat): Unit = {
 
     //
     // Before saving let's first see if we need to rename stuff
@@ -101,15 +94,14 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
   private def mergeOntology(
     ontologyManager: OWLOntologyManager,
-    format: OWLDocumentFormat
-  ): Unit = {
+    format: OWLDocumentFormat): Unit = {
 
-//    info(s"Merging and saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
-//    info(s"In Format: $format")
-//
-//    ontology.saveOntology(format, params.output.value.get.outputStream.get)
-//
-//    ontologyManager.removeOntology(ontology)
+    //    info(s"Merging and saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
+    //    info(s"In Format: $format")
+    //
+    //    ontology.saveOntology(format, params.output.value.get.outputStream.get)
+    //
+    //    ontologyManager.removeOntology(ontology)
 
     error("Merging of multiple input ontologies is not supported yet") // TODO: Implement merging of ontologies
   }
@@ -148,7 +140,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
     def load(input: PotentialFile): OWLOntology = {
 
-      if (! input.fileExists) error(s"Input file does not exist: $input")
+      if (!input.fileExists) error(s"Input file does not exist: $input")
 
       val ontology = loader.loadOntology(input)
       val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
