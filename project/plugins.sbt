@@ -5,7 +5,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.13.0")
 //
 // https://github.com/orrsella/sbt-sublime
 //
-addSbtPlugin("com.orrsella" % "sbt-sublime" % "1.0.9")
+addSbtPlugin("com.orrsella" % "sbt-sublime" % "1.0.11")
 
 //
 // http://software.clapper.org/grizzled-slf4j/
