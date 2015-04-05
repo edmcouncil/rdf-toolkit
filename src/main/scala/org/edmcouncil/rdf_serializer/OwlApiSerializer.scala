@@ -54,7 +54,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   //
   // Get Ontology Loader Configuration
   //
-  lazy val loaderConfiguration = new OWLOntologyLoaderConfiguration()
+  private lazy val loaderConfiguration = new OWLOntologyLoaderConfiguration()
     .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT) // Cause the listener to be called
     .setLoadAnnotationAxioms(true)
     .setTreatDublinCoreAsBuiltIn(true)
