@@ -61,6 +61,12 @@ libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
 libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
 
 //
+// Java library JGit used to read git log for the input file and determine what default versionIRI to use when
+// publishing.
+//
+libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "3.7.0.201502260915-r"
+
+//
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
 //
 resourceGenerators in Compile <+= (
