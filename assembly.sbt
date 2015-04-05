@@ -28,7 +28,7 @@ test in assembly := {}
 //
 // To set an explicit main class:
 //
-mainClass in assembly := Some("org.edmcouncil.rdf_serializer.Main")
+mainClass in assembly := Some("org.edmcouncil.main.Main")
 
 //
 // Prepend the following shell script to the jar:
