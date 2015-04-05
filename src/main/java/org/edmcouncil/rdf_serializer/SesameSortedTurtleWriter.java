@@ -50,30 +50,30 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
      * Creates an RDFWriter instance that will write sorted Turtle to the supplied output stream.
      *
      * @param out The OutputStream to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param options options for the Turtle writer.
      */
-    public SesameSortedTurtleWriter(OutputStream out, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
-        super(out, baseUri, indent, shortUriPref);
+    public SesameSortedTurtleWriter(OutputStream out, Map<String, Object> options) {
+        super(out, options);
         this.output = new IndentingWriter(new OutputStreamWriter(out));
         this.out = this.output;
-        if (indent != null) { this.output.setIndentationString(indent); }
+        if (options.containsKey("indent")) {
+            this.output.setIndentationString((String) options.get("indent"));
+        }
     }
 
     /**
      * Creates an RDFWriter instance that will write sorted Turtle to the supplied writer.
      *
      * @param writer The Writer to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output, or null.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param options options for the Turtle writer.
      */
-    public SesameSortedTurtleWriter(Writer writer, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
-        super(writer, baseUri, indent, shortUriPref);
+    public SesameSortedTurtleWriter(Writer writer, Map<String, Object> options) {
+        super(writer, options);
         this.output = new IndentingWriter(writer);
         this.out = this.output;
-        if (indent != null) { this.output.setIndentationString(indent); }
+        if (options.containsKey("indent")) {
+            this.output.setIndentationString((String) options.get("indent"));
+        }
     }
 
     /**
@@ -209,49 +209,11 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeQName(Writer out, QName qname) throws Exception {
-        if (qname == null) {
-            out.write("null<QName>");
-        } else if (qname.getPrefix() != null) {
-            out.write(qname.getPrefix() + ":" + qname.getLocalPart());
-        } else {
-            out.write("<" + qname.getNamespaceURI() + qname.getLocalPart() + ">");
-        }
+        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true, /*useEntityPrefix*/false));
     }
 
     protected void writeUri(Writer out, URI uri) throws Exception {
-        if(rdfType.equals(uri)) {
-            out.write("a");
-            return;
-        }
-        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
-            QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
-            if (qname != null) {
-                writeQName(out, qname);
-            } else { // write out the URI relative to the base URI, if possible.
-                String relativeUri = convertUriToRelativeUri(uri);
-                if (relativeUri != null) {
-                    out.write(relativeUri);
-                } else { // write the absolute URI
-                    out.write("<" + uri.stringValue() + ">");
-                }
-            }
-            return;
-        }
-        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
-            String relativeUri = convertUriToRelativeUri(uri); // write out the URI relative to the base URI, if possible.
-            if (relativeUri != null) {
-                out.write(relativeUri);
-            } else {
-                QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
-                if (qname != null) {
-                    writeQName(out, qname);
-                } else { // write the absolute URI
-                    out.write("<" + uri.stringValue() + ">");
-                }
-            }
-            return;
-        }
-        out.write("<" + uri.stringValue() + ">"); // if nothing else, do this
+        out.write(convertUriToString(uri, /*useTurtleQuoting*/true, /*useEntityPrefix*/false));
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {

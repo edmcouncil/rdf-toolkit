@@ -10,6 +10,8 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -56,6 +58,9 @@ public class SesameRdfFormatter {
         options.addOption(
                 "ur", "uri-replacement", true, "set replacement text used to replace a matching pattern in all URIs (used together with --uri-pattern)"
         );
+        options.addOption(
+                "dtd", "use-dtd-subset", true, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -80,6 +85,7 @@ public class SesameRdfFormatter {
         String baseUriString = "";
         String uriPattern = null;
         String uriReplacement = null;
+        boolean useDtdSubset = false;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -173,6 +179,11 @@ public class SesameRdfFormatter {
             }
         }
 
+        // Check if a DTD subset should be used for namespace shortening in XML
+        if (line.hasOption("dtd")) {
+            useDtdSubset = true;
+        }
+
         // Load RDF file.
         SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
@@ -252,7 +263,12 @@ public class SesameRdfFormatter {
         // Note: only 'turtle' is supported as an output format, at present
         Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
         SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory();
-        RDFWriter turtleWriter = factory.getWriter(targetWriter, baseUri, indent, shortUriPref);
+        Map<String, Object> writerOptions = new HashMap<String, Object>();
+        if (baseUri != null) { writerOptions.put("baseUri", baseUri); }
+        if (indent != null) { writerOptions.put("indent", indent); }
+        if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
+        writerOptions.put("useDtdSubset", useDtdSubset);
+        RDFWriter turtleWriter = factory.getWriter(targetWriter, writerOptions);
         Rio.write(sourceModel, turtleWriter);
         targetWriter.flush();
         targetWriter.close();

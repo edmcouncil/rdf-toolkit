@@ -6,6 +6,7 @@ import org.edmcouncil.rdf_serializer.SesameSortedRDFWriter.ShortUriPreferences
 import org.openrdf.rio.turtle.{TurtleWriterFactory, TurtleWriter}
 import org.slf4j.LoggerFactory
 
+import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 import scala.io.{Codec, BufferedSource}
 import scala.language.postfixOps
@@ -17,110 +18,17 @@ import org.openrdf.rio.{RDFFormat, Rio}
 import org.scalatest.{Matchers, FlatSpec}
 
 /**
- * ScalaTest tests for the SortedTurtleWriter and SortedTurtleWriterFactory.
+ * ScalaTest tests for the SesameSortedTurtleWriter and SesameSortedRDFWriterFactory.
  */
-class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputSuppressor*/ {
+class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSortedWriterSpecSupport /*with OutputSuppressor*/ {
 
-  private val logger = LoggerFactory.getLogger(classOf[SesameSortedTurtleWriterSpec])
+  override val logger = LoggerFactory.getLogger(classOf[SesameSortedTurtleWriterSpec])
 
-  // Set up directories for output files.
-  def mkCleanDir(dirPath: String): File = {
-    val newDir = new File(dirPath)
-    if (newDir exists) { newDir delete () }
-    newDir mkdirs ()
-    newDir
-  }
   val outputDir0 = mkCleanDir(s"target//temp//${classOf[TurtleWriter].getName}")
   val outputDir1 = mkCleanDir(s"target//temp//${this.getClass.getName}")
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
 
-  /** Collects all of the files in a directory tree. */
-  def listDirTreeFiles(dir : File): Seq[File] = {
-    val result = new ListBuffer[File]();
-    if (dir.exists()) {
-      if (dir isDirectory) {
-        for (file <- dir.listFiles()) {
-          result ++= listDirTreeFiles(file)
-        }
-      } else {
-        result += dir // 'dir' is actually a file
-      }
-    }
-    result
-  }
-
-  /** Sets the extension part of a filename path, e.g. "ttl". */
-  def setFilePathExtension(filePath: String, fileExtension: String): String = {
-    if (filePath.contains(".")) {
-      s"${filePath.substring(0, filePath.lastIndexOf("."))}.$fileExtension"
-    } else {
-      s"$filePath.$fileExtension"
-    }
-  }
-
-  /** Reads the contents of a file into a String. */
-  def getFileContents(file: File): String = new BufferedSource(new FileInputStream(file)).mkString
-
-  def getFileContents(file: File, encoding: String): String = new BufferedSource(new FileInputStream(file))(new Codec(Charset.forName(encoding))).mkString
-
-  def compareFiles(file1: File, file2: File, encoding: String): Boolean = {
-    logger.debug("CompareFiles:")
-    logger.debug(s"   left = ${file1.getAbsolutePath}")
-    logger.debug(s"  right = ${file2.getAbsolutePath}")
-    val source1Lines = new BufferedSource(new FileInputStream(file1))(new Codec(Charset.forName(encoding))).getLines()
-    val source2Lines = new BufferedSource(new FileInputStream(file2))(new Codec(Charset.forName(encoding))).getLines()
-    compareStringIterators(source1Lines, source2Lines)
-    logger.debug("CompareFiles: done")
-    true
-  }
-
-  def compareStringIterators(iter1: Iterator[String], iter2: Iterator[String]): Boolean = {
-    var lineCount = 0
-    while (iter1.hasNext || iter2.hasNext) {
-      lineCount += 1
-      if (!iter2.hasNext) {
-        logger.error(s"left file has more lines than right ($lineCount+): ${iter1.next()}")
-        return false
-      }
-      if (!iter1.hasNext) {
-        logger.error(s"right file has more lines than left ($lineCount+): ${iter2.next()}")
-        return false
-      }
-      val line1 = iter1.next()
-      val line2 = iter2.next()
-      if (!compareStrings(line1, line2, lineCount)) {
-        return false
-      }
-    }
-    true
-  }
-
-  def compareStrings(str1: String, str2: String, lineCount: Int): Boolean = {
-    if ((str1.length >= 1) || (str2.length >= 1)) {
-      var index = 0
-      while ((str1.length > index) || (str2.length > index)) {
-        if (str2.length <= index) {
-          logger.error(s"left line ($lineCount) is longer than (${index+1}+) than right: tail = ${str1.substring(index)}")
-          return false
-        }
-        if (str1.length <= index) {
-          logger.error(s"right line ($lineCount) is longer than (${index+1}+) than left: tail = ${str2.substring(index)}")
-          return false
-        }
-        var leftCh = str1.charAt(index)
-        var rightCh = str2.charAt(index)
-        if (leftCh != rightCh) {
-          logger.error(s"char mismatch at $lineCount:${index+1} => $leftCh [#${leftCh.toShort}] != $rightCh [#${rightCh.toShort}]")
-        }
-        index += 1
-      }
-      true
-    } else {
-      true
-    }
-  }
-
-  "A SortedTurtleWriterFactory" should "be able to create a SortedTurtleWriter" in {
+  "A SortedRDFWriterFactory" should "be able to create a SortedTurtleWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
     val factory = new SesameSortedRDFWriterFactory()
 
@@ -130,14 +38,16 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val writer2 = new SesameSortedTurtleWriter(outWriter)
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-    val writer3 = new SesameSortedTurtleWriter(System.out, new URIImpl("http://example.com#"), "\t\t", ShortUriPreferences.prefix)
+    val writer3Options = Map("baseUri" -> new URIImpl("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.prefix)
+    val writer3 = new SesameSortedTurtleWriter(System.out, writer3Options)
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
-    val writer4 = new SesameSortedTurtleWriter(outWriter, new URIImpl("http://example.com#"), "\t\t", ShortUriPreferences.base_uri)
+    val writer4Options = Map("baseUri" -> new URIImpl("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.base_uri)
+    val writer4 = new SesameSortedTurtleWriter(outWriter, writer4Options)
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
 
-  "A TurtleWriter" should "be able to read various RDF documents and write them in sorted Turtle format" in {
+  "A TurtleWriter" should "be able to read various RDF documents and write them in Turtle format" in {
     val rawTurtleDirectory = new File("src/test/resources")
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
@@ -164,7 +74,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
-    val turtleWriter = factory getWriter (outWriter, baseUri, null, null)
+    val turtleWriterOptions = Map("baseUri" -> baseUri)
+    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
 
     val inputModel = Rio parse (new FileReader(inputFile), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -173,7 +84,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
 
     val outputFile2 = new File(outputDir2, outputFile getName)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-    val turtleWriter2 = factory getWriter (outWriter2, baseUri, null, null)
+    val turtleWriter2Options = Map("baseUri" -> baseUri)
+    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
 
     val inputModel2 = Rio parse (new FileReader(outputFile), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)
@@ -275,7 +187,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
-    val turtleWriter = factory getWriter (outWriter, baseUri, null, ShortUriPreferences.prefix)
+    val turtleWriterOptions = Map("baseUri" -> baseUri, "shortUriPref" -> ShortUriPreferences.prefix)
+    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -288,7 +201,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
 
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.ttl")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-    val turtleWriter2 = factory getWriter (outWriter2, baseUri, null, ShortUriPreferences.prefix)
+    val turtleWriter2Options = Map("baseUri" -> baseUri, "shortUriPref" -> ShortUriPreferences.prefix)
+    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)
@@ -306,7 +220,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_uri.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
-    val turtleWriter = factory getWriter (outWriter, baseUri, null, ShortUriPreferences.base_uri)
+    val turtleWriterOptions = Map("baseUri" -> baseUri, "shortUriPref" -> ShortUriPreferences.base_uri)
+    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -319,7 +234,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers /*with OutputS
 
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_uri.ttl")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-    val turtleWriter2 = factory getWriter (outWriter2, baseUri, null, ShortUriPreferences.base_uri)
+    val turtleWriter2Options = Map("baseUri" -> baseUri, "shortUriPref" -> ShortUriPreferences.base_uri)
+    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)

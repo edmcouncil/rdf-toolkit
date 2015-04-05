@@ -2,6 +2,8 @@
 
 ```
  -bu,--base-uri <arg>              set URI to use as base URI
+ -dtd,--use-dtd-subset <arg>       for XML, use a DTD subset in order to
+                                   allow prefix-based URI shortening
  -h,--help                         print out details of the command-line
                                    arguments for the program
  -s,--source <arg>                 source (input) RDF file to format
@@ -16,7 +18,8 @@
                                    URIs: prefix [default], base-uri
  -t,--target <arg>                 target (output) RDF file
  -tfmt,--target-format <arg>       source (input) RDF format: one of:
-                                   turtle (Turtle) [default]
+                                   rdf-xml (RDF/XML), turtle (Turtle)
+                                   [default]
  -up,--uri-pattern <arg>           set a pattern to replace in all URIs
                                    (used together with --uri-replacement)
  -ur,--uri-replacement <arg>       set replacement text used to replace a

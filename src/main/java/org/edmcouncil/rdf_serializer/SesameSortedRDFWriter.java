@@ -115,6 +115,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
+    /** XML namespace URI. */
+    public static final String XML_NS_URI = "http://www.w3.org/XML/1998/namespace";
+
     /** XML Schema namespace URI. */
     public static final String XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema#";
 
@@ -129,6 +132,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** rdf:type ('a') URL */
     protected static final URI rdfType = new URIImpl(RDF_NS_URI + "type");
+
+    /** rdf:Description URL */
+    protected static final URI rdfDescription = new URIImpl(RDF_NS_URI + "Description");
 
     /** rdfs:label URL */
     protected static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
@@ -620,11 +626,14 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         public SortedTurtleBNodeList() { super(new BNodeComparator()); }
     }
 
-    /** Base URI for the Turtle output document. */
+    /** Base URI for the RDF output document. */
     protected URI baseUri = null;
 
     /** Preference for prefix or base-URI based URI shortening. */
     protected ShortUriPreferences shortUriPreference = ShortUriPreferences.prefix;
+
+    /** Whether to use a DTD subset to allow URI shortening in RDF/XML */
+    protected boolean useDtdSubset = false;
 
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     protected UnsortedTurtleResourceList unsortedOntologies = null;
@@ -678,9 +687,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected Writer out = null;
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied output stream.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied output stream.
      *
-     * @param out The OutputStream to write the Turtle to.
+     * @param out The OutputStream to write the RDF to.
      */
     public SesameSortedRDFWriter(OutputStream out) {
         assert out != null : "output stream cannot be null";
@@ -688,9 +697,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied writer.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied writer.
      *
-     * @param writer The Writer to write the Turtle to.
+     * @param writer The Writer to write the RDF to.
      */
     public SesameSortedRDFWriter(Writer writer) {
         assert writer != null : "output writer cannot be null";
@@ -698,33 +707,43 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied output stream.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied output stream.
      *
-     * @param out The OutputStream to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param out The OutputStream to write the RDF to.
+     * @param options options for the RDF writer.
      */
-    public SesameSortedRDFWriter(OutputStream out, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
+    public SesameSortedRDFWriter(OutputStream out, Map<String, Object> options) {
         assert out != null : "output stream cannot be null";
         this.out = new OutputStreamWriter(out);
-        this.baseUri = baseUri;
-        if (shortUriPref != null) { this.shortUriPreference = shortUriPref; }
+        if (options.containsKey("baseUri")) {
+            this.baseUri = (URI) options.get("baseUri");
+        }
+        if (options.containsKey("shortUriPref")) {
+            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        }
+        if (options.containsKey("useDtdSubset")) {
+            this.useDtdSubset = (Boolean) options.get("useDtdSubset");
+        }
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied writer.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied writer.
      *
-     * @param writer The Writer to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output, or null.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param writer The Writer to write the RDF to.
+     * @param options options for the RDF writer.
      */
-    public SesameSortedRDFWriter(Writer writer, URI baseUri, String indent, ShortUriPreferences shortUriPref) {
+    public SesameSortedRDFWriter(Writer writer, Map<String, Object> options) {
         assert writer != null : "output writer cannot be null";
         this.out = writer;
-        this.baseUri = baseUri;
-        if (shortUriPref != null) { this.shortUriPreference = shortUriPref; }
+        if (options.containsKey("baseUri")) {
+            this.baseUri = (URI) options.get("baseUri");
+        }
+        if (options.containsKey("shortUriPref")) {
+            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        }
+        if (options.containsKey("useDtdSubset")) {
+            this.useDtdSubset = (Boolean) options.get("useDtdSubset");
+        }
     }
 
     /**
@@ -756,16 +775,15 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         return null;
     }
 
-    protected String convertUriToRelativeUri(URI uri) {
+    protected String convertUriToRelativeUri(URI uri, boolean useTurtleQuoting) {
         // Note: does not check that the baseUri doesn't terminate in the middle of some URI of which it really isn't the base.
         if (baseUri != null) {
             String uriString = uri.stringValue();
             String baseUriString = baseUri.stringValue();
             if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
-                String result = "<" + uriString.substring(baseUriString.length()) + ">";
-                if ("http://topbraid.org/countries#AD".equals(uri)) { // TODO: remove debugging
-                    logger.debug("URI = " + uri + " ; sup = " + shortUriPreference + " ; result = " + result);
-                }
+                String result = (useTurtleQuoting ? "<" : "") +
+                        uriString.substring(baseUriString.length()) +
+                        (useTurtleQuoting ? ">" : "");
                 return result;
             }
         }
@@ -903,7 +921,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
             out.flush();
         } catch (Throwable t) {
-            throw new RDFHandlerException("unable to generate/write Turtle output", t);
+            throw new RDFHandlerException("unable to generate/write RDF output", t);
         } finally {
         }
     }
@@ -960,6 +978,60 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     @Override
     public void handleComment(String comment) throws RDFHandlerException {
         // NOTE: comments are suppressed, as it isn't clear how to sort them sensibly with triples.
+    }
+
+    protected String convertQNameToString(QName qname, boolean useTurtleQuoting, boolean useEntityPrefix) {
+        if (qname == null) {
+            return "null<QName>";
+        } else if (qname.getPrefix() != null) {
+            return (useEntityPrefix ? "&" : "") +
+                    qname.getPrefix() +
+                    (useEntityPrefix ? ";" : ":") +
+                    qname.getLocalPart();
+        } else {
+            return (useTurtleQuoting ? "<" : "") +
+                    qname.getNamespaceURI() + qname.getLocalPart() +
+                    (useTurtleQuoting ? ">" : "");
+        }
+    }
+
+    protected String convertUriToString(URI uri, boolean useTurtleQuoting, boolean useEntityPrefix) {
+        if(rdfType.equals(uri)) {
+            return "a";
+        }
+        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
+            QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
+            if (qname != null) {
+                return convertQNameToString(qname, useTurtleQuoting, useEntityPrefix);
+            } else { // return the URI relative to the base URI, if possible.
+                String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting);
+                if (relativeUri != null) {
+                    return relativeUri;
+                } else { // return the absolute URI
+                    return (useTurtleQuoting ? "<" : "") +
+                            uri.stringValue() +
+                            (useTurtleQuoting ? ">" : "");
+                }
+            }
+        }
+        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
+            String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting); // return the URI relative to the base URI, if possible.
+            if (relativeUri != null) {
+                return relativeUri;
+            } else {
+                QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
+                if (qname != null) {
+                    return convertQNameToString(qname, useTurtleQuoting, useEntityPrefix);
+                } else { // return the absolute URI
+                    return (useTurtleQuoting ? "<" : "") +
+                            uri.stringValue() +
+                            (useTurtleQuoting ? ">" : "");
+                }
+            }
+        }
+        return (useTurtleQuoting ? "<" : "") +
+                uri.stringValue() +
+                (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
 
     abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList) throws Exception;

@@ -8,6 +8,7 @@ import org.openrdf.rio.RDFWriterFactory;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Factory class for creating Sesame writers which generate sorted RDF.
@@ -74,6 +75,7 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
     }
 
     public enum TargetFormats {
+        rdf_xml("rdf-xml", "(RDF/XML)", RDFFormat.RDFXML),
         turtle("turtle", "(Turtle)", RDFFormat.TURTLE);
 
         private static final TargetFormats defaultEnum = turtle;
@@ -155,10 +157,17 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
      */
     @Override
     public RDFWriter getWriter(OutputStream out) {
-        switch (targetFormat) {
-            case turtle: return new SesameSortedTurtleWriter(out);
+        try {
+            switch (targetFormat) {
+                case rdf_xml:
+                    return new SesameSortedRdfXmlWriter(out);
+                case turtle:
+                    return new SesameSortedTurtleWriter(out);
+            }
+            return new SesameSortedTurtleWriter(out); // Turtle by default
+        } catch (Throwable t) {
+            return null; // Sesame API doesn't allow us to throw an exception
         }
-        return new SesameSortedTurtleWriter(out); // Turtle by default
     }
 
     /**
@@ -168,39 +177,42 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
      */
     @Override
     public RDFWriter getWriter(Writer writer) {
-        switch (targetFormat) {
-            case turtle: return new SesameSortedTurtleWriter(writer);
+        try {
+            switch (targetFormat) {
+                case rdf_xml: return new SesameSortedRdfXmlWriter(writer);
+                case turtle: return new SesameSortedTurtleWriter(writer);
+            }
+            return new SesameSortedTurtleWriter(writer); // Turtle by default
+        } catch (Throwable t) {
+            return null; // Sesame API doesn't allow us to throw an exception
         }
-        return new SesameSortedTurtleWriter(writer); // Turtle by default
     }
 
     /**
      * Returns an RDFWriter instance that will write to the supplied output stream.
      *
      * @param out The OutputStream to write the RDF to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param options options for the RDF writer.
      */
-    public RDFWriter getWriter(OutputStream out, URI baseUri, String indent, SesameSortedRDFWriter.ShortUriPreferences shortUriPref) {
+    public RDFWriter getWriter(OutputStream out, Map<String, Object> options) throws Exception {
         switch (targetFormat) {
-            case turtle: return new SesameSortedTurtleWriter(out, baseUri, indent, shortUriPref);
+            case rdf_xml: return new SesameSortedRdfXmlWriter(out, options);
+            case turtle: return new SesameSortedTurtleWriter(out, options);
         }
-        return new SesameSortedTurtleWriter(out, baseUri, indent, shortUriPref); // Turtle by default
+        return new SesameSortedTurtleWriter(out, options); // Turtle by default
     }
 
     /**
      * Returns an RDFWriter instance that will write to the supplied writer.
      *
      * @param writer The Writer to write the RDF to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output.
-     * @param shortUriPref The preference for whether a prefix or base URI is the preferred way to shorten URIs.
+     * @param options options for the RDF writer.
      */
-    public RDFWriter getWriter(Writer writer, URI baseUri, String indent, SesameSortedRDFWriter.ShortUriPreferences shortUriPref) {
+    public RDFWriter getWriter(Writer writer, Map<String, Object> options) throws Exception {
         switch (targetFormat) {
-            case turtle: return new SesameSortedTurtleWriter(writer, baseUri, indent, shortUriPref);
+            case rdf_xml: return new SesameSortedRdfXmlWriter(writer, options);
+            case turtle: return new SesameSortedTurtleWriter(writer, options);
         }
-        return new SesameSortedTurtleWriter(writer, baseUri, indent, shortUriPref); // Turtle by default
+        return new SesameSortedTurtleWriter(writer, options); // Turtle by default
     }
 }
