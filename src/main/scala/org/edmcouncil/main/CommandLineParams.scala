@@ -44,6 +44,11 @@ object CommandLineParams {
   def apply(args: Array[String]) = new CommandLineParams(args)
 }
 
+/**
+ * Configure the ArgotParser with all the right options to deal with the CLI of the rdf-serializer.
+ *
+ * @param args the arguments as passed on the command line to the Main object.
+ */
 class CommandLineParams private (args: Array[String]) {
 
   import CommandLineParams._
@@ -94,7 +99,12 @@ class CommandLineParams private (args: Array[String]) {
     }
   def api = apiOption.value.getOrElse(SerializerApiOWLAPI)
 
+  private val publishFlag = parser.flag[Boolean](List("p", "publish"), "Publish all OWL files in the given base directories")
+  def performPublish = publishFlag.value.getOrElse(false)
+
+  //
   // --output-format <format> where <format> is one of (between quotes): $outputFormats
+  //
   val outputFormat = parser.option[String](
     List("ofmt", "output-format"),
     "<output-format>",
