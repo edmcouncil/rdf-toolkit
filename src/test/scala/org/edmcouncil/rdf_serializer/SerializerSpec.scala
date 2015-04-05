@@ -62,7 +62,7 @@ class SerializerSpec extends UnitSpec {
     }
 
     "convert the fibo contracts ontology" in {
-      run(
+      runSilent(
         "--force",
         "--abort",
         "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
@@ -104,6 +104,18 @@ class SerializerSpec extends UnitSpec {
         "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
         "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
       ) should equal (0)
+    }
+
+    "publish a FIBO ontology with all the right annotations and versionIRI" in {
+      run(
+        "--force",
+        "--abort",
+        "--publish",
+        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
+        "src/test/resources/test-out-fibo-fnd-accounting-equity-published.rdf",
+        "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
+      )
     }
   }
 }
