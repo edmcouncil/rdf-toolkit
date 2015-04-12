@@ -13,6 +13,14 @@ class SerializerSpec extends UnitSpec {
     run(args: _*)
   }
   def run(args: String*): Int = MainImpl(args).run
+  
+  val resourceDir = "src/test/resources"
+  val fiboDir = s"$resourceDir/fibo"
+  val fiboNewDir = s"$fiboDir-with-placeholder-iri"
+  val specMetaDir = s"$fiboNewDir/etc/testing/data"
+
+  val edmcBaseIRI = "https://spec.edmcouncil.org/fibo"
+  val omgBaseIRI = "http://www.omg.org/spec/EDMC-FIBO"
 
   "A Serializer Cli Interface" must {
 
@@ -42,8 +50,8 @@ class SerializerSpec extends UnitSpec {
         "--force",
         "--abort",
         "--url-replace", "http://www.w3.org/TR/2003/PR-owl-guide-20031209/=http://whatever/",
-        "src/test/resources/test-out-wine.rdf",
-        "src/test/resources/wine.rdf"
+        s"$resourceDir/test-out-wine.rdf",
+        s"$resourceDir/wine.rdf"
       ) should equal (0)
     }
 
@@ -55,9 +63,9 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", "src/test/resources=http://www.w3.org/TR/2003/PR-owl-guide-20031209",
-        "src/test/resources/test-out-wine.rdf",
-        "src/test/resources/wine.rdf"
+        "--base", s"$fiboDir=http://www.w3.org/TR/2003/PR-owl-guide-20031209",
+        s"$resourceDir/test-out-wine.rdf",
+        s"$resourceDir/wine.rdf"
       ) should equal (0)
     }
 
@@ -65,11 +73,11 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
-        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
-        "--url-replace", "http://www.omg.org/spec/EDMC-FIBO/=http://spec.edmcouncil.org/fibo/",
-        "src/test/resources/test-out-fibo-fnd-contracts.rdf",
-        "src/test/resources/fibo-fnd-contracts.rdf"
+        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
+        "--url-replace", s"$omgBaseIRI/=$edmcBaseIRI/",
+        s"$resourceDir/test-out-fibo-fnd-contracts.rdf",
+        s"$fiboDir-fnd-contracts.rdf"
       ) should equal (0)
     }
 
@@ -77,10 +85,10 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
-        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
-        "src/test/resources/test-out-test-case-001.rdf",
-        "src/test/resources/test-case-001.rdf"
+        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
+        s"$resourceDir/test-out-test-case-001.rdf",
+        s"$resourceDir/test-case-001.rdf"
       ) should equal (0)
     }
 
@@ -88,10 +96,10 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
-        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
-        "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
-        "src/test/resources/fibo/fnd/OwnershipAndControl/Control.rdf"
+        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
+        s"$resourceDir/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
+        s"$fiboDir/fnd/OwnershipAndControl/Control.rdf"
       ) should equal (0)
     }
 
@@ -99,10 +107,10 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
-        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
-        "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
-        "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
+        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
+        s"$resourceDir/test-out-fibo-fnd-accounting-equity.rdf",
+        s"$fiboDir/fnd/Accounting/AccountingEquity.rdf"
       ) should equal (0)
     }
 
@@ -111,11 +119,11 @@ class SerializerSpec extends UnitSpec {
         "--force",
         "--abort",
         "--publish",
-        "--base", "src/test/resources/fibo=http://www.omg.org/spec/EDMC-FIBO",
-        "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
-        "src/test/resources/test-out-fibo-fnd-accounting-equity-published.rdf",
-        "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
-      )
+        "--base", s"$fiboNewDir=$edmcBaseIRI",
+        "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
+        s"$resourceDir/test-out-fibo-fnd-accounting-equity-published.rdf",
+        s"$fiboNewDir/fnd/Accounting/AccountingEquity.rdf"
+      ) should equal (0)
     }
   }
 }
