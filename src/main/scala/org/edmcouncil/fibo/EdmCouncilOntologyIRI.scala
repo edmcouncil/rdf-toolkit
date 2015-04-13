@@ -87,6 +87,10 @@ class EdmCouncilVersionIRI private (val iri: IRI) extends EdmCouncilAbstractVers
 
   val version = splittedIRI.drop(2).head
 
+  def withVersion(version: String) = EdmCouncilVersionIRI(
+    s"${baseIRI.toString}$family/$domainUC/$version/${modules.mkString("/")}/$ontology"
+  )
+
   val domainUC = domain.toUpperCase
 
   val ontology = splittedIRI.takeRight(1).head

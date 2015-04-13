@@ -30,6 +30,15 @@ class EdmCouncilOntologyIRISpec extends UnitSpec {
     assert(fiboIri.domainUC == "FND")
     assert(fiboIri.ontology == "AboutAccounting")
     assert(fiboIri.firstModule == "Accounting")
+
+    val fiboNewIri = fiboIri.withVersion("yellow")
+
+    assert(fiboNewIri.family == "fibo")
+    assert(fiboNewIri.version == "yellow")
+    assert(fiboNewIri.domain == "fnd")
+    assert(fiboNewIri.domainUC == "FND")
+    assert(fiboNewIri.ontology == "AboutAccounting")
+    assert(fiboNewIri.firstModule == "Accounting")
   }
 
 }
