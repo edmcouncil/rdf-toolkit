@@ -23,17 +23,15 @@
  */
 package org.edmcouncil.util
 
-import java.io.{ BufferedInputStream, File, FileInputStream, FileOutputStream }
-import java.nio.file.{Path, Files, Paths}
+import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
+import java.nio.file.{Files, Paths}
 
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.lib.{Repository, Ref, ReflogEntry, Constants}
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-import org.semanticweb.owlapi.io.{ OWLOntologyDocumentSource, StreamDocumentSource }
+import org.eclipse.jgit.lib.{Ref, Repository}
+import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
 import org.semanticweb.owlapi.model.IRI
 
 import scala.collection.JavaConverters._
-
 import scala.io.Source
 
 /**
@@ -108,7 +106,7 @@ class PotentialFile private (name: Option[String]) {
   def printLog(): Unit = {
     if (gitRepo.isDefined) {
       val call = gitRepo.get.git.tagList().call().asScala
-      for (ref <- call) {
+      for (ref ← call) {
         println(s"Tag: $ref ${ref.getName} ${ref.getObjectId.getName}")
 
         PotentialFile.listReflog(gitRepo.get.repository, ref)
@@ -142,7 +140,7 @@ object PotentialFile {
      */
     val call = new Git(repository).reflog().setRef(ref.getName).call().asScala
 
-    for (reflog <- call) {
+    for (reflog ← call) {
       println(s"Reflog: $reflog")
     }
   }

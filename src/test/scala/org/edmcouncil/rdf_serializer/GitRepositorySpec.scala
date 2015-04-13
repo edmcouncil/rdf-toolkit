@@ -10,11 +10,14 @@ import org.edmcouncil.util.GitRepository
  */
 class GitRepositorySpec extends UnitSpec {
 
-  "A GitRepository" must {
-    "be found and opened with any given sub-directory of the repository" in {
-      val someDir = Paths.get(new File("src/test/resources").getAbsolutePath)
+  val resourcesDir = "src/test/resources"
+  val someDir = Paths.get(new File(resourcesDir).getAbsolutePath)
 
-      val repo = GitRepository(someDir)
+  "A GitRepository" must {
+
+    val repo = GitRepository(someDir)
+
+    "be found and opened with any given sub-directory of the repository" in {
 
       assert(repo.isDefined, s"Could not find git repo for directory $someDir")
 
@@ -23,7 +26,19 @@ class GitRepositorySpec extends UnitSpec {
         info(s"Git url is ${repo.url}")
       }
 
-      repo.foreach(_.close())
     }
+
+    "return the short SHA of the current HEAD" in {
+
+      assert(repo.isDefined, s"Could not find git repo for directory $someDir")
+
+      val shortSha = repo.get.shortSha
+
+      //info(s"shortSha: $shortSha")
+
+      assert(shortSha.length == 7)
+    }
+
+    repo.foreach(_.close())
   }
 }

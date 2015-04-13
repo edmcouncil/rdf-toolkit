@@ -25,7 +25,7 @@ package org.edmcouncil.rdf_serializer
 
 import grizzled.slf4j.Logging
 import org.edmcouncil.main.CommandLineParams
-import org.edmcouncil.util.PotentialFile
+import org.edmcouncil.util.{GitRepository, PotentialFile}
 import org.openrdf.rio.RDFWriterRegistry
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model._
@@ -62,6 +62,9 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
   lazy val writerFormatRegistry = RDFWriterRegistry.getInstance()
 
+  /**
+   * Perform the IRI rename if the urlReplacePattern has been specified
+   */
   private def renameURIs(
     ontologyManager: OWLOntologyManager,
     ontologies: Set[OWLOntology],
@@ -73,17 +76,44 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
     }
   }
 
+  /**
+   * Prepare for publishing the Ontology.
+   */
+  private def prepareForPublication(
+    ontologyManager: OWLOntologyManager,
+    ontologies: Set[OWLOntology],
+    format: OWLDocumentFormat,
+    gitRepo: Option[GitRepository]
+  ) {
+
+    if (!params.performPublish) return
+
+    for (ontology ← ontologies) {
+      new OwlApiOntologyPublisher(ontology, format, gitRepo)
+    }
+  }
+
   private def saveOntology(
     ontologyManager: OWLOntologyManager,
     ontology: OWLOntology,
-    format: OWLDocumentFormat): Unit = {
+    format: OWLDocumentFormat,
+    gitRepo: Option[GitRepository]
+  ): Unit = {
 
     //
     // Before saving let's first see if we need to rename stuff
     //
     renameURIs(ontologyManager, Set(ontology), format)
 
+    //
+    // Before saving let's first see if we need to publish stuff
+    //
+    prepareForPublication(ontologyManager, Set(ontology), format, gitRepo)
+
     info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
+    if (ontology.getOntologyID.getVersionIRI.isPresent) {
+      info(s"with versionIRI: ${ontology.getOntologyID.getVersionIRI.get}")
+    }
     info(s"In Format: $format")
     info(s"To File: ${params.outputFile.value.get.toString}")
 
@@ -119,7 +149,7 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
     // will copy the prefixes over so that we have nicely abbreviated IRIs
     // in the new ontology document
     //
-    def copyPrefixesToOutputFormat(inputFormat: OWLDocumentFormat): Unit = {
+    def copyPrefixesToOutputFormat(inputFormat: OWLDocumentFormat, ontology: OWLOntology): Unit = {
 
       if (inputFormat.isPrefixOWLOntologyFormat) {
         if (outputFormat.isPrefixOWLOntologyFormat) {
@@ -131,6 +161,9 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
           //
           prefixedOutputFormat.clear()
           prefixedOutputFormat.copyPrefixesFrom(inputFormat.asPrefixOWLOntologyFormat())
+          OwlApiSetupRenderer(prefixedOutputFormat, ontology)
+        } else {
+          OwlApiSetupRenderer(inputFormat, ontology)
         }
       }
 
@@ -138,9 +171,13 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
       outputFormat.setOntologyLoaderMetaData(inputOntologyMetadata)
     }
 
-    def load(input: PotentialFile): OWLOntology = {
+    def load(input: PotentialFile): (OWLOntology, Option[GitRepository]) = {
 
       if (!input.fileExists) error(s"Input file does not exist: $input")
+
+      val gitRepo = input.directory.flatMap(GitRepository(_))
+
+      info(s"git repo is $gitRepo")
 
       val ontology = loader.loadOntology(input)
       val ontologyDocumentIRI = ontologyManager.getOntologyDocumentIRI(ontology)
@@ -153,14 +190,14 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
       info(s"Input Format: $inputFormat")
 
-      copyPrefixesToOutputFormat(inputFormat)
+      copyPrefixesToOutputFormat(inputFormat, ontology)
 
-      ontology
+      (ontology, gitRepo)
     }
 
     if (params.inputFiles.value.length == 1) {
-      val ontology = load(params.inputFiles.value.head)
-      saveOntology(ontologyManager, ontology, outputFormat)
+      val (ontology, gitRepo) = load(params.inputFiles.value.head)
+      saveOntology(ontologyManager, ontology, outputFormat, gitRepo)
     } else {
       params.inputFiles.value.foreach(load)
       mergeOntology(ontologyManager, outputFormat)

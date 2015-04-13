@@ -67,6 +67,13 @@ libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
 libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "3.7.0.201502260915-r"
 
 //
+// Scala ARM library
+//
+// https://github.com/jsuereth/scala-arm
+//
+libraryDependencies += "com.jsuereth" %% "scala-arm" % "1.4"
+
+//
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
 //
 resourceGenerators in Compile <+= (

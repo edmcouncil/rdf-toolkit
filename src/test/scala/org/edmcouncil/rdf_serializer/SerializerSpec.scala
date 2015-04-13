@@ -9,6 +9,8 @@ import org.edmcouncil.main.MainImpl
  */
 class SerializerSpec extends UnitSpec {
 
+  import org.edmcouncil._
+
   def runSilent(args: String*): Int = suppressOutput {
     run(args: _*)
   }
@@ -18,9 +20,6 @@ class SerializerSpec extends UnitSpec {
   val fiboDir = s"$resourceDir/fibo"
   val fiboNewDir = s"$fiboDir-with-placeholder-iri"
   val specMetaDir = s"$fiboNewDir/etc/testing/data"
-
-  val edmcBaseIRI = "https://spec.edmcouncil.org/fibo"
-  val omgBaseIRI = "http://www.omg.org/spec/EDMC-FIBO"
 
   "A Serializer Cli Interface" must {
 
@@ -73,9 +72,9 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$fiboDir=$omgFiboNamespaceIRI",
         "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
-        "--url-replace", s"$omgBaseIRI/=$edmcBaseIRI/",
+        "--url-replace", s"$omgFiboNamespaceIRI=$edmcFiboNamespaceIRI",
         s"$resourceDir/test-out-fibo-fnd-contracts.rdf",
         s"$fiboDir-fnd-contracts.rdf"
       ) should equal (0)
@@ -85,7 +84,7 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$fiboDir=$omgFiboNamespaceIRI",
         "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
         s"$resourceDir/test-out-test-case-001.rdf",
         s"$resourceDir/test-case-001.rdf"
@@ -96,7 +95,7 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$fiboDir=$omgFiboNamespaceIRI",
         "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
         s"$resourceDir/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
         s"$fiboDir/fnd/OwnershipAndControl/Control.rdf"
@@ -107,7 +106,7 @@ class SerializerSpec extends UnitSpec {
       runSilent(
         "--force",
         "--abort",
-        "--base", s"$fiboDir=http://www.omg.org/spec/EDMC-FIBO",
+        "--base", s"$fiboDir=$omgFiboNamespaceIRI",
         "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
         s"$resourceDir/test-out-fibo-fnd-accounting-equity.rdf",
         s"$fiboDir/fnd/Accounting/AccountingEquity.rdf"
@@ -119,7 +118,7 @@ class SerializerSpec extends UnitSpec {
         "--force",
         "--abort",
         "--publish",
-        "--base", s"$fiboNewDir=$edmcBaseIRI",
+        "--base", s"$fiboNewDir=$edmcFiboNamespaceIRI",
         "--base", s"$specMetaDir=http://www.omg.org/techprocess/ab/",
         s"$resourceDir/test-out-fibo-fnd-accounting-equity-published.rdf",
         s"$fiboNewDir/fnd/Accounting/AccountingEquity.rdf"

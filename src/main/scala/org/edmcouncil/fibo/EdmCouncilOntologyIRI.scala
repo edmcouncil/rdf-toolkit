@@ -13,6 +13,10 @@ trait EdmCouncilAbstractOntologyIRI {
 
   def baseIRI: IRI
 
+  def ontologyIRI: IRI
+
+  def versionIRI(version: String) = EdmCouncilVersionIRI(ontologyIRI, version).iri
+
   def family: String
 
   def domain: String
@@ -52,6 +56,8 @@ class EdmCouncilOntologyIRI private (val iri: IRI) extends EdmCouncilAbstractOnt
   assert(splittedIRI.length >= 4, s"splitted IRI is ${splittedIRI.mkString(",")}")
 
   val baseIRI = edmcBaseIRI
+
+  val ontologyIRI = iri
 
   val family = splittedIRI.head
 
@@ -96,6 +102,10 @@ class EdmCouncilVersionIRI private (val iri: IRI) extends EdmCouncilAbstractVers
   val ontology = splittedIRI.takeRight(1).head
 
   val modules = splittedIRI.drop(3).dropRight(1).toSeq
+
+  val ontologyIRI = IRI.create(
+    s"${baseIRI.toString}$family/$domainUC/${modules.mkString("/")}/$ontology"
+  )
 }
 
 object EdmCouncilVersionIRI {
@@ -103,4 +113,11 @@ object EdmCouncilVersionIRI {
   def apply(iri: IRI): EdmCouncilVersionIRI = new EdmCouncilVersionIRI(iri)
 
   def apply(iri: String): EdmCouncilVersionIRI = apply(IRI.create(iri))
+
+  def apply(ontologyIRI: IRI, version: String): EdmCouncilVersionIRI = {
+    val iri = EdmCouncilOntologyIRI(ontologyIRI)
+    EdmCouncilVersionIRI(
+      s"${iri.baseIRI.toString}${iri.family}/${iri.domainUC}/$version/${iri.modules.mkString("/")}/${iri.ontology}"
+    )
+  }
 }
