@@ -980,14 +980,11 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         // NOTE: comments are suppressed, as it isn't clear how to sort them sensibly with triples.
     }
 
-    protected String convertQNameToString(QName qname, boolean useTurtleQuoting, boolean useEntityPrefix) {
+    protected String convertQNameToString(QName qname, boolean useTurtleQuoting) {
         if (qname == null) {
             return "null<QName>";
         } else if (qname.getPrefix() != null) {
-            return (useEntityPrefix ? "&" : "") +
-                    qname.getPrefix() +
-                    (useEntityPrefix ? ";" : ":") +
-                    qname.getLocalPart();
+            return qname.getPrefix() + ":" + qname.getLocalPart();
         } else {
             return (useTurtleQuoting ? "<" : "") +
                     qname.getNamespaceURI() + qname.getLocalPart() +
@@ -995,14 +992,14 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
-    protected String convertUriToString(URI uri, boolean useTurtleQuoting, boolean useEntityPrefix) {
-        if(rdfType.equals(uri)) {
+    protected String convertUriToString(URI uri, boolean useTurtleQuoting) {
+        if (rdfType.equals(uri)) {
             return "a";
         }
         if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
             QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
             if (qname != null) {
-                return convertQNameToString(qname, useTurtleQuoting, useEntityPrefix);
+                return convertQNameToString(qname, useTurtleQuoting);
             } else { // return the URI relative to the base URI, if possible.
                 String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting);
                 if (relativeUri != null) {
@@ -1021,7 +1018,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             } else {
                 QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
                 if (qname != null) {
-                    return convertQNameToString(qname, useTurtleQuoting, useEntityPrefix);
+                    return convertQNameToString(qname, useTurtleQuoting);
                 } else { // return the absolute URI
                     return (useTurtleQuoting ? "<" : "") +
                             uri.stringValue() +

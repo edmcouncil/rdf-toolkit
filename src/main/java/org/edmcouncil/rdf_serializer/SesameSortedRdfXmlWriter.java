@@ -149,7 +149,15 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         if (subject instanceof BNode) {
             output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) subject));
         } else if (subject instanceof URI) {
-            output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about", convertUriToString((URI) subject, /*useTurtleQuoting*/false, /*useEntityPrefix*/useDtdSubset));
+            output.startAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about");
+            QName subjectQName = convertUriToQName((URI)subject);
+            if ((subjectQName != null) && (subjectQName.getPrefix() != null)) { // if a prefix is defined, write out the subject QName using an entity reference
+                output.writeAttributeEntityRef(subjectQName.getPrefix());
+                output.writeAttributeCharacters(((URI) subject).getLocalName());
+            } else { // just write the whole subject URI
+                output.writeAttributeCharacters(subject.toString());
+            }
+            output.endAttribute();
         } else {
             output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about", subject.stringValue()); // this shouldn't occur, but ...
         }

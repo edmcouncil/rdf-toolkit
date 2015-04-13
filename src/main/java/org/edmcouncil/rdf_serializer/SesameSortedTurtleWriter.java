@@ -209,11 +209,11 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeQName(Writer out, QName qname) throws Exception {
-        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true, /*useEntityPrefix*/false));
+        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true));
     }
 
     protected void writeUri(Writer out, URI uri) throws Exception {
-        out.write(convertUriToString(uri, /*useTurtleQuoting*/true, /*useEntityPrefix*/false));
+        out.write(convertUriToString(uri, /*useTurtleQuoting*/true));
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {
