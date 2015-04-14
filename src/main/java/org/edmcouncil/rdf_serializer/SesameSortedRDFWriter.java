@@ -870,6 +870,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             addDefaultNamespacePrefixIfMissing(RDFS_NS_URI, "rdfs");
             addDefaultNamespacePrefixIfMissing(OWL_NS_URI, "owl");
             addDefaultNamespacePrefixIfMissing(XML_SCHEMA_NS_URI, "xs");
+            addDefaultNamespacePrefixIfMissing(XML_NS_URI, "xml");
 
             // Create reverse namespace table.
             reverseNamespaceTable = new ReverseNamespaceTable();

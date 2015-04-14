@@ -88,6 +88,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private IndentingWriter output = null;
 
     private boolean inStartElement = false;
+    private boolean inEmptyStartElement = false;
     private boolean isAfterText = false;
     private Stack<String> elementNameStack = new Stack<String>();
     private NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
@@ -160,6 +161,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         try {
             finishStartElement();
             inStartElement = true;
+            inEmptyStartElement = false;
             String elementName = localName;
             elementNameStack.push(elementName);
             writeEOL();
@@ -177,6 +179,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         try {
             finishStartElement();
             inStartElement = true;
+            inEmptyStartElement = false;
             String elementName = localName;
             elementNameStack.push(elementName);
             writeEOL();
@@ -194,6 +197,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         try {
             finishStartElement();
             inStartElement = true;
+            inEmptyStartElement = false;
             String elementName = prefix + ":" + localName;
             elementNameStack.push(elementName);
             writeEOL();
@@ -209,7 +213,12 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private void finishStartElement() throws XMLStreamException {
         try {
             if (inStartElement) {
-                output.write(">");
+                if (inEmptyStartElement) {
+                    output.write("/>");
+                    inEmptyStartElement = false;
+                } else {
+                    output.write(">");
+                }
                 inStartElement = false;
             }
         } catch (Throwable t) {
@@ -219,65 +228,35 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     @Override
     public void writeEmptyElement(String localName) throws XMLStreamException {
-        try {
-            finishStartElement();
-            inStartElement = true;
-            String elementName = localName;
-            elementNameStack.push(elementName);
-            writeEOL();
-            output.write("<");
-            output.write(elementName);
-            output.write("/>");
-            isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
-        }
+        writeStartElement(localName);
+        inEmptyStartElement = true;
     }
 
     @Override
     public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException {
-        try {
-            finishStartElement();
-            inStartElement = true;
-            String elementName = localName;
-            elementNameStack.push(elementName);
-            writeEOL();
-            output.write("<");
-            output.write(elementName);
-            output.write("/>");
-            isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
-        }
+        writeStartElement(namespaceURI, localName);
+        inEmptyStartElement = true;
     }
 
     @Override
     public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException {
-        try {
-            finishStartElement();
-            inStartElement = true;
-            String elementName = prefix + ":" + localName;
-            elementNameStack.push(elementName);
-            writeEOL();
-            output.write("<");
-            output.write(elementName);
-            output.write("/>");
-            isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
-        }
+        writeStartElement(prefix, localName, namespaceURI);
+        inEmptyStartElement = true;
     }
 
     @Override
     public void writeEndElement() throws XMLStreamException {
         try {
+            boolean isEmpty = inEmptyStartElement; // check if the current element is an empty element
             finishStartElement();
             decreaseIndentation();
             String elementName = elementNameStack.pop();
-            if (!isAfterText) { writeEOL(); }
-            output.write("</");
-            output.write(elementName);
-            output.write(">");
+            if (!isEmpty) {
+                if (!isAfterText) { writeEOL(); }
+                output.write("</");
+                output.write(elementName);
+                output.write(">");
+            }
         } catch (Throwable t) {
             throw new XMLStreamException(t);
         }
@@ -287,6 +266,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     public void writeEndDocument() throws XMLStreamException {
         try {
             output.flush();
+            inEmptyStartElement = false;
             inStartElement = false;
             isAfterText = false;
             assert(elementNameStack.empty());
@@ -428,6 +408,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeComment(String data) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write("<!-- ");
             output.write(data);
             output.write(" -->");
@@ -439,6 +420,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeProcessingInstruction(String target) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write("<?");
             output.write(target);
             output.write("?>");
@@ -463,6 +445,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeCData(String data) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write("<[CDATA[");
             output.write(data);
             output.write("]]>");
@@ -518,6 +501,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeEntityRef(String name) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write("&");
             output.write(name);
             output.write(";");
@@ -552,6 +536,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeCharacters(String text) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write(StringEscapeUtils.escapeXml10(text));
             isAfterText = true;
         } catch (Throwable t) {
@@ -562,6 +547,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     @Override
     public void writeCharacters(char[] text, int start, int len) throws XMLStreamException {
         try {
+            finishStartElement();
             output.write(StringEscapeUtils.escapeXml10(String.copyValueOf(text, start, len)));
             isAfterText = true;
         } catch (Throwable t) {

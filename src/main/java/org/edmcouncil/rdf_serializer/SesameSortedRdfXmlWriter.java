@@ -17,6 +17,7 @@ import java.util.*;
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
 public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
+    // TODO: the 'out' parameter in 'write...' methods is not used, and should be refactored out of the code
 
     private static final Logger logger = LoggerFactory.getLogger(SesameSortedRdfXmlWriter.class);
 
@@ -26,6 +27,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
 
     /** Namespace prefix for the RDF namespace. */
     private String rdfPrefix = "rdf";
+    private String xmlPrefix = "xml";
 
     /**
      * Creates an RDFWriter instance that will write sorted RDF/XML to the supplied output stream.
@@ -115,7 +117,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         // Write the namespace declarations into the root element.
         if (namespaceTable.size() > 0) {
             for (String prefix : prefixes) {
-                output.writeNamespace(prefix, namespaceTable.get(prefix));
+                if (!"xml".equals(prefix)) {
+                    output.writeNamespace(prefix, namespaceTable.get(prefix));
+                }
             }
         } else { // create RDF namespace at a minimum
             output.writeNamespace(rdfPrefix, RDF_NS_URI);
@@ -126,7 +130,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
 
-        // Try to determine whether to use <rdf:Document> or an element based on rdf:type value.
+        // Try to determine whether to use <rdf:Description> or an element based on rdf:type value.
         SortedTurtleObjectList subjectRdfTypes = poMap.get(rdfType); // needed to determine if a type can be used as the XML element name
         URI enclosingElementURI = rdfDescription; // default value
         QName enclosingElementQName = convertUriToQName(enclosingElementURI);
@@ -162,32 +166,21 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
             output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about", subject.stringValue()); // this shouldn't occur, but ...
         }
 
-//        // Write predicate/object pairs rendered first.
-//        for (URI predicate : firstPredicates) {
-//            if (poMap.containsKey(predicate)) {
-//                SortedTurtleObjectList values = poMap.get(predicate);
-//                writePredicateAndObjectValues(out, predicate, values);
-//            }
-//        }
-//
-//        // Write other predicate/object pairs.
-//        for (URI predicate : poMap.keySet()) {
-//            if (!firstPredicates.contains(predicate)) {
-//                SortedTurtleObjectList values = poMap.get(predicate);
-//                writePredicateAndObjectValues(out, predicate, values);
-//            }
-//        }
+        // Write predicate/object pairs rendered first.
+        for (URI predicate : firstPredicates) {
+            if (poMap.containsKey(predicate)) {
+                SortedTurtleObjectList values = poMap.get(predicate);
+                writePredicateAndObjectValues(out, predicate, values);
+            }
+        }
 
-//        // Close statement
-//        out.write(".");
-//        if (out instanceof IndentingWriter) {
-//            IndentingWriter output = (IndentingWriter)out;
-//            output.writeEOL();
-//            output.decreaseIndentation();
-//            output.writeEOL(); // blank line
-//        } else {
-//            out.write("\n\n");
-//        }
+        // Write other predicate/object pairs.
+        for (URI predicate : poMap.keySet()) {
+            if (!firstPredicates.contains(predicate)) {
+                SortedTurtleObjectList values = poMap.get(predicate);
+                writePredicateAndObjectValues(out, predicate, values);
+            }
+        }
 
         // Close enclosing element.
         output.writeEndElement();
@@ -195,6 +188,50 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     }
 
     protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception {
+        // Get prefixes used for the XML
+        rdfPrefix = reverseNamespaceTable.get(RDF_NS_URI);
+        xmlPrefix = reverseNamespaceTable.get(XML_NS_URI);
+
+        QName predicateQName = convertUriToQName(predicate);
+        for (Value value : values) {
+            if ((value instanceof BNode) || (value instanceof URI)) {
+                output.writeEmptyElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
+            } else {
+                output.writeStartElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
+            }
+            if (value instanceof BNode) {
+                output.writeAttribute(rdfPrefix, RDF_NS_URI, "nodeID", ((BNode)value).getID());
+            } else if (value instanceof URI) {
+                output.startAttribute(rdfPrefix, RDF_NS_URI, "resource");
+                QName uriQName = convertUriToQName((URI) value);
+                if (uriQName == null) {
+                    output.writeAttributeCharacters(((URI) value).stringValue());
+                } else {
+                    output.writeAttributeEntityRef(uriQName.getPrefix());
+                    output.writeAttributeCharacters(uriQName.getLocalPart());
+                }
+                output.endAttribute();
+            } else if (value instanceof Literal) {
+                if (((Literal)value).getDatatype() != null) {
+                    output.startAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+                    QName datatypeQName = convertUriToQName(((Literal)value).getDatatype());
+                    if (datatypeQName == null) {
+                        output.writeAttributeCharacters(((Literal)value).getDatatype().stringValue());
+                    } else {
+                        output.writeAttributeEntityRef(datatypeQName.getPrefix());
+                        output.writeAttributeCharacters(datatypeQName.getLocalPart());
+                    }
+                    output.endAttribute();
+                }
+                if (((Literal)value).getLanguage() != null) {
+                    output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)value).getLanguage());
+                }
+                output.writeCharacters(value.stringValue());
+            } else {
+                output.writeCharacters(value.stringValue());
+            }
+            output.writeEndElement();
+        }
 //        writePredicate(out, predicate);
 //        if (values.size() == 1) {
 //            out.write(" ");
