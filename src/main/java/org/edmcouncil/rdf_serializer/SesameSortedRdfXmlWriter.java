@@ -18,6 +18,7 @@ import java.util.*;
  */
 public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     // TODO: the 'out' parameter in 'write...' methods is not used, and should be refactored out of the code
+    // TODO: many mehtods are not used, this means that SesameSortedRDFWriter should be refactored
 
     private static final Logger logger = LoggerFactory.getLogger(SesameSortedRdfXmlWriter.class);
 
@@ -124,6 +125,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         } else { // create RDF namespace at a minimum
             output.writeNamespace(rdfPrefix, RDF_NS_URI);
         }
+
+        output.writeCharacters(""); // force writing of closing angle bracket in root element open tag
+        output.writeEOL(); // add extra EOL after root element
 
     }
 
@@ -232,184 +236,43 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
             }
             output.writeEndElement();
         }
-//        writePredicate(out, predicate);
-//        if (values.size() == 1) {
-//            out.write(" ");
-//            writeObject(out, values.first());
-//            out.write(" ;");
-//            if (out instanceof IndentingWriter) {
-//                IndentingWriter output = (IndentingWriter)out;
-//                output.writeEOL();
-//            } else {
-//                out.write("\n");
-//            }
-//        } else if (values.size() > 1) {
-//            if (out instanceof IndentingWriter) {
-//                IndentingWriter output = (IndentingWriter)out;
-//                output.writeEOL();
-//                output.increaseIndentation();
-//            } else {
-//                out.write("\n");
-//            }
-//            int numValues = values.size();
-//            int valueIndex = 0;
-//            for (Value value : values) {
-//                valueIndex += 1;
-//                writeObject(out, value);
-//                if (valueIndex < numValues) { out.write(" ,"); }
-//                if (out instanceof IndentingWriter) {
-//                    IndentingWriter output = (IndentingWriter)out;
-//                    output.writeEOL();
-//                } else {
-//                    out.write("\n");
-//                }
-//            }
-//            out.write(";");
-//            if (out instanceof IndentingWriter) {
-//                IndentingWriter output = (IndentingWriter)out;
-//                output.writeEOL();
-//                output.decreaseIndentation();
-//            } else {
-//                out.write("\n");
-//            }
-//        }
     }
 
     protected void writePredicate(Writer out, URI predicate) throws Exception {
-//        writeUri(out, predicate);
+        // TODO: not used
     }
 
     protected void writeQName(Writer out, QName qname) throws Exception {
-//        if (qname == null) {
-//            out.write("null<QName>");
-//        } else if (qname.getPrefix() != null) {
-//            out.write(qname.getPrefix() + ":" + qname.getLocalPart());
-//        } else {
-//            out.write("<" + qname.getNamespaceURI() + qname.getLocalPart() + ">");
-//        }
+        // TODO: not used
     }
 
     protected void writeUri(Writer out, URI uri) throws Exception {
-//        if(rdfType.equals(uri)) {
-//            out.write("a");
-//            return;
-//        }
-//        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
-//            QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
-//            if (qname != null) {
-//                writeQName(out, qname);
-//            } else { // write out the URI relative to the base URI, if possible.
-//                String relativeUri = convertUriToRelativeUri(uri);
-//                if (relativeUri != null) {
-//                    out.write(relativeUri);
-//                } else { // write the absolute URI
-//                    out.write("<" + uri.stringValue() + ">");
-//                }
-//            }
-//            return;
-//        }
-//        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
-//            String relativeUri = convertUriToRelativeUri(uri); // write out the URI relative to the base URI, if possible.
-//            if (relativeUri != null) {
-//                out.write(relativeUri);
-//            } else {
-//                QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
-//                if (qname != null) {
-//                    writeQName(out, qname);
-//                } else { // write the absolute URI
-//                    out.write("<" + uri.stringValue() + ">");
-//                }
-//            }
-//            return;
-//        }
-//        out.write("<" + uri.stringValue() + ">"); // if nothing else, do this
+        // TODO: not used
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {
-//        if (value instanceof BNode) {
-//            writeObject(out, (BNode) value);
-//        } else if (value instanceof URI) {
-//            writeObject(out, (URI)value);
-//        } else if (value instanceof Literal) {
-//            writeObject(out, (Literal)value);
-//        } else {
-//            out.write("\"" + value.stringValue() + "\"");
-//            out.write(" ");
-//        }
+        // TODO: not used
     }
 
     protected void writeObject(Writer out, BNode bnode) throws Exception {
-//        if (unsortedTripleMap.containsKey(bnode)) {
-//            out.write("_:" + blankNodeNameMap.get(bnode));
-//        } else {
-//            out.write("[]");
-//        }
+        // TODO: not used
     }
 
     protected void writeObject(Writer out, URI uri) throws Exception {
-//        writeUri(out, uri);
+        // TODO: not used
     }
 
     protected void writeObject(Writer out, Literal literal) throws Exception {
-//        if (literal == null) {
-//            out.write("null<Literal>");
-//        } else if (literal.getLanguage() != null) {
-//            writeString(out, literal.stringValue());
-//            out.write("@" + literal.getLanguage());
-//        } else if (literal.getDatatype() != null) {
-//            writeString(out, literal.stringValue());
-//            out.write("^^");
-//            writeUri(out, literal.getDatatype());
-//        } else {
-//            writeString(out, literal.stringValue());
-//        }
+        // TODO: not used
     }
 
     protected void writeString(Writer out, String str) throws Exception {
-//        if (str == null) { return; }
-//        if (isMultilineString(str)) { // multi-line string
-//            if (str.contains("\"")) { // string contains double quote chars
-//                if (str.contains("'")) { // string contains both single and double quote chars
-//                    out.write("\"\"\"");
-//                    out.write(escapeString(str).replaceAll("\"", "\\\\\""));
-//                    out.write("\"\"\"");
-//                } else { // string contains double quote chars but no single quote chars
-//                    out.write("'''");
-//                    out.write(escapeString(str));
-//                    out.write("'''");
-//                }
-//            } else { // string has no double quote chars
-//                out.write("\"\"\"");
-//                out.write(escapeString(str));
-//                out.write("\"\"\"");
-//            }
-//        } else { // single-line string
-//            if (str.contains("\"")) { // string contains double quote chars
-//                if (str.contains("'")) { // string contains both single and double quote chars
-//                    out.write("\"");
-//                    out.write(escapeString(str).replaceAll("\"", "\\\\\""));
-//                    out.write("\"");
-//                } else { // string contains double quote chars but no single quote chars
-//                    out.write("'");
-//                    out.write(escapeString(str));
-//                    out.write("'");
-//                }
-//            } else { // string has no double quote chars
-//                out.write("\"");
-//                out.write(escapeString(str));
-//                out.write("\"");
-//            }
-//        }
+        // TODO: not used
     }
 
     protected void writeFooter(Writer out) throws Exception {
         output.writeEndElement(); // </rdf:RDF>
         output.writeEndDocument();
     }
-
-//    private String escapeString(String str) {
-//        if (str == null) { return null; }
-//        return str.replaceAll("\\\\", "\\\\\\\\");
-//    }
 
 }

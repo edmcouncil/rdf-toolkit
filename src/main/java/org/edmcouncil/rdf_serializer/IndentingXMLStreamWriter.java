@@ -257,6 +257,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 output.write(elementName);
                 output.write(">");
             }
+            isAfterText = false;
         } catch (Throwable t) {
             throw new XMLStreamException(t);
         }
