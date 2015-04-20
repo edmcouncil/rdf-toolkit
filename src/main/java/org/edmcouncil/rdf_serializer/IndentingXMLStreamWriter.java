@@ -1,6 +1,5 @@
 package org.edmcouncil.rdf_serializer;
 
-import com.sun.xml.bind.v2.runtime.output.NamespaceContextImpl;
 import info.aduna.io.IndentingWriter;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -16,7 +15,6 @@ import java.util.*;
 /**
  * Adds indenting support to Java's built-in XMLStreamWriter
  */
-// TODO: add all necessary indenting
 public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     private class NamespaceContextImpl implements NamespaceContext {
@@ -198,7 +196,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             finishStartElement();
             inStartElement = true;
             inEmptyStartElement = false;
-            String elementName = prefix + ":" + localName;
+            String elementName = (((prefix != null) && (prefix.length() >= 1)) ? (prefix + ":") : "") + localName;
             elementNameStack.push(elementName);
             writeEOL();
             output.write("<");
@@ -298,7 +296,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         }
     }
 
-    public void startAttribute(String localName) throws XMLStreamException {
+    public void writeStartAttribute(String localName) throws XMLStreamException {
         try {
             writeEOL();
             output.write(localName);
@@ -308,7 +306,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         }
     }
 
-    public void startAttribute(String namespaceURI, String localName) throws XMLStreamException {
+    public void writeStartAttribute(String namespaceURI, String localName) throws XMLStreamException {
         try {
             writeEOL();
             output.write(localName);
@@ -318,11 +316,13 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         }
     }
 
-    public void startAttribute(String prefix, String namespaceURI, String localName) throws XMLStreamException {
+    public void writeStartAttribute(String prefix, String namespaceURI, String localName) throws XMLStreamException {
         try {
             writeEOL();
-            output.write(prefix);
-            output.write(":");
+            if ((prefix != null) && (prefix.length() >= 1)) {
+                output.write(prefix);
+                output.write(":");
+            }
             output.write(localName);
             output.write("=\"");
         } catch (Throwable t) {
@@ -332,7 +332,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     public void writeAttributeCharacters(String text) throws XMLStreamException {
         try {
-            String escapedText = StringEscapeUtils.escapeXml10(text); // TODO: check if this escapes everything correctly, particularly double quotes.
+            String escapedText = StringEscapeUtils.escapeXml10(text);
             output.write(escapedText.replaceAll("\\s+"," ").trim()); // do attribute whitespace normalisation
         } catch (Throwable t) {
             throw new XMLStreamException(t);
@@ -341,9 +341,11 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     public void writeAttributeEntityRef(String entityName) throws XMLStreamException {
         try {
-            output.write("&");
-            output.write(entityName);
-            output.write(";");
+            if ((entityName != null) && (entityName.length() >= 1)) {
+                output.write("&");
+                output.write(entityName);
+                output.write(";");
+            }
         } catch (Throwable t) {
             throw new XMLStreamException(t);
         }
@@ -359,21 +361,21 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     @Override
     public void writeAttribute(String localName, String value) throws XMLStreamException {
-        startAttribute(localName);
+        writeStartAttribute(localName);
         writeAttributeCharacters(value);
         endAttribute();
     }
 
     @Override
     public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
-        startAttribute(namespaceURI, localName);
+        writeStartAttribute(namespaceURI, localName);
         writeAttributeCharacters(value);
         endAttribute();
     }
 
     @Override
     public void writeAttribute(String prefix, String namespaceURI, String localName, String value) throws XMLStreamException {
-        startAttribute(prefix, namespaceURI, localName);
+        writeStartAttribute(prefix, namespaceURI, localName);
         writeAttributeCharacters(value);
         endAttribute();
     }
@@ -503,9 +505,11 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     public void writeEntityRef(String name) throws XMLStreamException {
         try {
             finishStartElement();
-            output.write("&");
-            output.write(name);
-            output.write(";");
+            if ((name != null) && (name.length() >= 1)) {
+                output.write("&");
+                output.write(name);
+                output.write(";");
+            }
             isAfterText = true;
         } catch (Throwable t) {
             throw new XMLStreamException(t);

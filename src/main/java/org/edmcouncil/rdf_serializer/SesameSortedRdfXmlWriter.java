@@ -1,7 +1,6 @@
 package org.edmcouncil.rdf_serializer;
 
 import org.openrdf.model.*;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import java.util.*;
  */
 public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     // TODO: the 'out' parameter in 'write...' methods is not used, and should be refactored out of the code
-    // TODO: many mehtods are not used, this means that SesameSortedRDFWriter should be refactored
+    // TODO: many methods are not used, this means that SesameSortedRDFWriter should be refactored
 
     private static final Logger logger = LoggerFactory.getLogger(SesameSortedRdfXmlWriter.class);
 
@@ -101,7 +100,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
             output.startDTD("rdf:RDF");
             if (namespaceTable.size() > 0) {
                 for (String prefix : prefixes) {
-                    output.writeDtdEntity(prefix, namespaceTable.get(prefix));
+                    if (prefix.length() >= 1) {
+                        output.writeDtdEntity(prefix, namespaceTable.get(prefix));
+                    }
                 }
             }
             output.endDTD();
@@ -119,12 +120,21 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         if (namespaceTable.size() > 0) {
             for (String prefix : prefixes) {
                 if (!"xml".equals(prefix)) {
-                    output.writeNamespace(prefix, namespaceTable.get(prefix));
+                    if (prefix.length() >= 1) {
+                        output.writeNamespace(prefix, namespaceTable.get(prefix));
+                    } else {
+                        output.writeDefaultNamespace(namespaceTable.get(prefix));
+                    }
                 }
             }
         } else { // create RDF namespace at a minimum
             output.writeNamespace(rdfPrefix, RDF_NS_URI);
         }
+
+        addDefaultNamespacePrefixIfMissing(XML_NS_URI, "xml"); // RDF/XML sometimes uses the 'xml' prefix, e.g. xml:lang.  This prefix is never declared explicitly.
+        reverseNamespaceTable.put(XML_NS_URI, "xml"); // need to update reverse namespace table manually
+
+        output.writeAttribute("xml", XML_NS_URI, "space", "preserve"); // make sure whitespace is preserved, for consistency of formatting
 
         output.writeCharacters(""); // force writing of closing angle bracket in root element open tag
         output.writeEOL(); // add extra EOL after root element
@@ -139,7 +149,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         URI enclosingElementURI = rdfDescription; // default value
         QName enclosingElementQName = convertUriToQName(enclosingElementURI);
         boolean enclosingElementIsRdfType = false;
-        if (subjectRdfTypes.size() == 1) {
+        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
             Value subjectRdfTypeValue = (Value) subjectRdfTypes.first();
             if (subjectRdfTypeValue instanceof URI) {
                 QName subjectRdfTypeQName = convertUriToQName((URI) subjectRdfTypeValue);
@@ -157,9 +167,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         if (subject instanceof BNode) {
             output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) subject));
         } else if (subject instanceof URI) {
-            output.startAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about");
+            output.writeStartAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about");
             QName subjectQName = convertUriToQName((URI)subject);
-            if ((subjectQName != null) && (subjectQName.getPrefix() != null)) { // if a prefix is defined, write out the subject QName using an entity reference
+            if ((subjectQName != null) && (subjectQName.getPrefix() != null) && (subjectQName.getPrefix().length() >= 1)) { // if a prefix is defined, write out the subject QName using an entity reference
                 output.writeAttributeEntityRef(subjectQName.getPrefix());
                 output.writeAttributeCharacters(((URI) subject).getLocalName());
             } else { // just write the whole subject URI
@@ -204,22 +214,26 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                 output.writeStartElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
             }
             if (value instanceof BNode) {
-                output.writeAttribute(rdfPrefix, RDF_NS_URI, "nodeID", ((BNode)value).getID());
+                output.writeAttribute(rdfPrefix, RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) value));
             } else if (value instanceof URI) {
-                output.startAttribute(rdfPrefix, RDF_NS_URI, "resource");
+                output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "resource");
                 QName uriQName = convertUriToQName((URI) value);
                 if (uriQName == null) {
                     output.writeAttributeCharacters(((URI) value).stringValue());
                 } else {
-                    output.writeAttributeEntityRef(uriQName.getPrefix());
-                    output.writeAttributeCharacters(uriQName.getLocalPart());
+                    if ((uriQName.getPrefix() != null) && (uriQName.getPrefix().length() >= 1)) {
+                        output.writeAttributeEntityRef(uriQName.getPrefix());
+                        output.writeAttributeCharacters(uriQName.getLocalPart());
+                    } else {
+                        output.writeAttributeCharacters(((URI)value).stringValue());
+                    }
                 }
                 output.endAttribute();
             } else if (value instanceof Literal) {
                 if (((Literal)value).getDatatype() != null) {
-                    output.startAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+                    output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
                     QName datatypeQName = convertUriToQName(((Literal)value).getDatatype());
-                    if (datatypeQName == null) {
+                    if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length() < 1)) {
                         output.writeAttributeCharacters(((Literal)value).getDatatype().stringValue());
                     } else {
                         output.writeAttributeEntityRef(datatypeQName.getPrefix());

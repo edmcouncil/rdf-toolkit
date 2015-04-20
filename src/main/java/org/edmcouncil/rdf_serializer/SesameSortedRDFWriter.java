@@ -811,7 +811,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
      * @param namespaceUri The namespace URI.  Cannot be null.
      * @param defaultPrefix The default prefix to use, if no prefix is yet assigned.  Cannot be null.
      */
-    private void addDefaultNamespacePrefixIfMissing(String namespaceUri, String defaultPrefix) {
+    protected void addDefaultNamespacePrefixIfMissing(String namespaceUri, String defaultPrefix) {
         if ((namespaceUri != null) && (defaultPrefix != null)) {
             if (!namespaceTable.containsValue(namespaceUri)) {
                 namespaceTable.put(defaultPrefix, namespaceUri);
@@ -870,7 +870,6 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             addDefaultNamespacePrefixIfMissing(RDFS_NS_URI, "rdfs");
             addDefaultNamespacePrefixIfMissing(OWL_NS_URI, "owl");
             addDefaultNamespacePrefixIfMissing(XML_SCHEMA_NS_URI, "xs");
-            addDefaultNamespacePrefixIfMissing(XML_NS_URI, "xml");
 
             // Create reverse namespace table.
             reverseNamespaceTable = new ReverseNamespaceTable();

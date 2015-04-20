@@ -2,7 +2,7 @@
 
 ```
  -bu,--base-uri <arg>              set URI to use as base URI
- -dtd,--use-dtd-subset <arg>       for XML, use a DTD subset in order to
+ -dtd,--use-dtd-subset             for XML, use a DTD subset in order to
                                    allow prefix-based URI shortening
  -h,--help                         print out details of the command-line
                                    arguments for the program

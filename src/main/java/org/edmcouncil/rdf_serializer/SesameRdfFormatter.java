@@ -59,7 +59,7 @@ public class SesameRdfFormatter {
                 "ur", "uri-replacement", true, "set replacement text used to replace a matching pattern in all URIs (used together with --uri-pattern)"
         );
         options.addOption(
-                "dtd", "use-dtd-subset", true, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
+                "dtd", "use-dtd-subset", false, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
         );
     }
 
@@ -260,16 +260,16 @@ public class SesameRdfFormatter {
             logger.error("Unsupported or unrecognised short URI preference: " + line.getOptionValue("sup"));
             return;
         }
-        // Note: only 'turtle' is supported as an output format, at present
+
         Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
-        SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory();
+        SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory(targetFormat);
         Map<String, Object> writerOptions = new HashMap<String, Object>();
         if (baseUri != null) { writerOptions.put("baseUri", baseUri); }
         if (indent != null) { writerOptions.put("indent", indent); }
         if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
         writerOptions.put("useDtdSubset", useDtdSubset);
-        RDFWriter turtleWriter = factory.getWriter(targetWriter, writerOptions);
-        Rio.write(sourceModel, turtleWriter);
+        RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
+        Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();
         targetWriter.close();
     }
