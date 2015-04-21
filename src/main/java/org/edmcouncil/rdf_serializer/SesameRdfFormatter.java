@@ -41,7 +41,7 @@ public class SesameRdfFormatter {
                 "t", "target", true, "target (output) RDF file"
         );
         options.addOption(
-                "tfmt", "target-format", true, "source (input) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
+                "tfmt", "target-format", true, "target (output) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
         );
         options.addOption(
                 "h", "help", false, "print out details of the command-line arguments for the program"

@@ -1,4 +1,4 @@
-# usage: SesameRdfFormatter
+# usage: org.edmcouncil.rdf_serializer.SesameRdfFormatter
 
 ```
  -bu,--base-uri <arg>              set URI to use as base URI
@@ -17,7 +17,7 @@
  -sup,--short-uri-priority <arg>   set what takes priority when shortening
                                    URIs: prefix [default], base-uri
  -t,--target <arg>                 target (output) RDF file
- -tfmt,--target-format <arg>       source (input) RDF format: one of:
+ -tfmt,--target-format <arg>       target (output) RDF format: one of:
                                    rdf-xml (RDF/XML), turtle (Turtle)
                                    [default]
  -up,--uri-pattern <arg>           set a pattern to replace in all URIs
