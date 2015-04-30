@@ -13,8 +13,6 @@ Seq(bintrayResolverSettings:_*)
 val owlApiVersion = "4.0.1"
 val sesameVersion = "2.8.0"
 
-libraryDependencies += "net.sf.saxon" % "Saxon-HE" % "9.6.0-4"
-
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
 
 libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
