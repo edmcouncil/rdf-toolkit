@@ -152,8 +152,8 @@ public class SesameRdfFormatter {
             if (line.hasOption("bu")) {
                 baseUriString = line.getOptionValue("bu");
                 baseUri = new URIImpl(baseUriString);
-                if (!(baseUriString.endsWith("#") || baseUriString.endsWith("/"))) {
-                    logger.warn("base URI does not end in '#' nor '/': " + baseUriString);
+                if (baseUriString.endsWith("#")) {
+                    logger.warn("base URI ends in '#', which is unusual: " + baseUriString);
                 }
             }
         } catch (Throwable t) {

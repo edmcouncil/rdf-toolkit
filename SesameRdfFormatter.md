@@ -26,3 +26,22 @@
                                    matching pattern in all URIs (used
                                    together with --uri-pattern)
 ```
+
+# Examples:
+
+1. Print out command-line help
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --help`
+2. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`)
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --source-format turtle --target output.ttl --target-format turtle`
+3. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both)
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl`
+4. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the given base URI for the output Turtle
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --base-uri http://www.example.com/my-base-uri`
+5. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the given base URI for the output Turtle, and use the base URI in preference to prefixes for URL shortening
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --base-uri http://www.example.com/my-base-uri --short-uri-priority base-uri`
+6. Format a Turtle file (`input.ttl`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --source-format turtle --target output.rdf --target-format rdf-xml --use-dtd-subset`
+7. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset`
+8. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both), and replacing 'www.example.com' in URIs with 'www.example.org'
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --uri-pattern www.example.com --uri-replacement www.example.org`
