@@ -635,6 +635,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Whether to use a DTD subset to allow URI shortening in RDF/XML */
     protected boolean useDtdSubset = false;
 
+    /** Whether to inline blank nodes */
+    protected boolean inlineBlankNodes = false;
+
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     protected UnsortedTurtleResourceList unsortedOntologies = null;
 
@@ -724,6 +727,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         if (options.containsKey("useDtdSubset")) {
             this.useDtdSubset = (Boolean) options.get("useDtdSubset");
         }
+        if (options.containsKey("inlineBlankNodes")) {
+            this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
+        }
     }
 
     /**
@@ -743,6 +749,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
         if (options.containsKey("useDtdSubset")) {
             this.useDtdSubset = (Boolean) options.get("useDtdSubset");
+        }
+        if (options.containsKey("inlineBlankNodes")) {
+            this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
         }
     }
 
@@ -909,11 +918,13 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 }
             }
 
-            // Write out blank nodes that are subjects.
-            for (Resource resource : sortedBlankNodes) {
-                BNode bnode = (BNode)resource;
-                if (unsortedTripleMap.containsKey(bnode)) {
-                    writeSubjectTriples(out, bnode);
+            // Write out blank nodes that are subjects, if blank nodes are not being inlined.
+            if (!inlineBlankNodes) {
+                for (Resource resource : sortedBlankNodes) {
+                    BNode bnode = (BNode)resource;
+                    if (unsortedTripleMap.containsKey(bnode)) {
+                        writeSubjectTriples(out, bnode);
+                    }
                 }
             }
 

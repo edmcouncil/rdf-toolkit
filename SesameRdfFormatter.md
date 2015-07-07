@@ -6,6 +6,14 @@
                                    allow prefix-based URI shortening
  -h,--help                         print out details of the command-line
                                    arguments for the program
+ -ibn,--inline-blank-nodes         use inline representation for blank
+                                   nodes.  NOTE: this will fail if there
+                                   are any recursive relationships
+                                   involving blank nodes.  Usually OWL has
+                                   no such recursion involving blank
+                                   nodes.  It also will fail if any blank
+                                   nodes are a triple subject but not a
+                                   triple object.
  -s,--source <arg>                 source (input) RDF file to format
  -sfmt,--source-format <arg>       source (input) RDF format; one of: auto
                                    (select by filename) [default], binary,

@@ -230,10 +230,49 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeObject(Writer out, BNode bnode) throws Exception {
-        if (unsortedTripleMap.containsKey(bnode)) {
-            out.write("_:" + blankNodeNameMap.get(bnode));
-        } else {
-            out.write("[]");
+        if (inlineBlankNodes) {
+            SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(bnode);
+
+            // Open brackets
+            out.write("[");
+            if (out instanceof IndentingWriter) {
+                IndentingWriter output = (IndentingWriter)out;
+                output.writeEOL();
+                output.increaseIndentation();
+            } else {
+                out.write("\n");
+            }
+
+            // Write predicate/object pairs rendered first.
+            for (URI predicate : firstPredicates) {
+                if (poMap.containsKey(predicate)) {
+                    SortedTurtleObjectList values = poMap.get(predicate);
+                    writePredicateAndObjectValues(out, predicate, values);
+                }
+            }
+
+            // Write other predicate/object pairs.
+            for (URI predicate : poMap.keySet()) {
+                if (!firstPredicates.contains(predicate)) {
+                    SortedTurtleObjectList values = poMap.get(predicate);
+                    writePredicateAndObjectValues(out, predicate, values);
+                }
+            }
+
+            // Close brackets
+            if (out instanceof IndentingWriter) {
+                IndentingWriter output = (IndentingWriter)out;
+                output.decreaseIndentation();
+                out.write("]");
+            } else {
+                out.write("]");
+            }
+        } else { // no inlining of blank nodes
+            if (unsortedTripleMap.containsKey(bnode)) {
+                out.write("_:" + blankNodeNameMap.get(bnode));
+            } else {
+                out.write("[]"); // last resort - this should never happen
+            }
         }
     }
 

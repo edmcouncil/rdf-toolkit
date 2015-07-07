@@ -61,6 +61,9 @@ public class SesameRdfFormatter {
         options.addOption(
                 "dtd", "use-dtd-subset", false, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
         );
+        options.addOption(
+                "ibn", "inline-blank-nodes", false, "use inline representation for blank nodes.  NOTE: this will fail if there are any recursive relationships involving blank nodes.  Usually OWL has no such recursion involving blank nodes.  It also will fail if any blank nodes are a triple subject but not a triple object."
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -88,6 +91,7 @@ public class SesameRdfFormatter {
         String uriPattern = null;
         String uriReplacement = null;
         boolean useDtdSubset = false;
+        boolean inlineBlankNodes = false;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -186,6 +190,11 @@ public class SesameRdfFormatter {
             useDtdSubset = true;
         }
 
+        // Check if blank nodes should be rendered inline
+        if (line.hasOption("ibn")) {
+            inlineBlankNodes = true;
+        }
+
         // Load RDF file.
         SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
@@ -270,6 +279,7 @@ public class SesameRdfFormatter {
         if (indent != null) { writerOptions.put("indent", indent); }
         if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
         writerOptions.put("useDtdSubset", useDtdSubset);
+        writerOptions.put("inlineBlankNodes", inlineBlankNodes);
         RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
         Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();

@@ -348,6 +348,70 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
+  it should "be able to produce a sorted Turtle file with inline blank nodes" in {
+    val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
+    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.ttl")
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory()
+    val turtleWriterOptions = Map[String, AnyRef]("baseUri" -> baseUri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
+    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
+
+    val inputModel = Rio parse (new FileReader(inputFile), baseUri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel, turtleWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = new File(outputDir2, "AccountingEquity_inline_blank_nodes.ttl")
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val turtleWriter2Options = Map[String, AnyRef]("baseUri" -> baseUri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
+    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
+
+    val inputModel2 = Rio parse (new FileReader(outputFile), baseUri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel2, turtleWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to sort RDF triples consistently when writing in Turtle format with inline blank nodes" in {
+    val rawTurtleDirectory = new File("src/test/resources")
+    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
+    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+
+    // Serialise sample files as sorted Turtle.
+    var fileCount = 0
+    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+      fileCount += 1
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-ibn"
+      )
+    }
+
+    // Re-serialise the sorted files, again as sorted Turtle.
+    fileCount = 0
+    for (sourceFile <- listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri") && !sourceFile.getName.contains("_inline_blank_nodes")) {
+      fileCount += 1
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-ibn"
+      )
+    }
+
+    // Check that re-serialising the Turtle files has changed nothing.
+    fileCount = 0
+    for (file1 <- listDirTreeFiles(outputDir1)) {
+      fileCount += 1
+      val file2 = new File(outputDir2, file1 getName)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+  }
+
   "A SesameRdfFormatter" should "be able to do pattern-based URI replacements" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_replaced.ttl")
