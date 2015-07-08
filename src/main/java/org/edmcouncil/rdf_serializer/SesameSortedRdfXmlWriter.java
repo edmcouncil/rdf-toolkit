@@ -165,7 +165,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         // The variation used for "rdf:about", or "rdf:nodeID", depends on settings and also whether the subject is a blank node or not.
         output.writeStartElement(enclosingElementQName.getPrefix(), enclosingElementQName.getLocalPart(), enclosingElementQName.getNamespaceURI());
         if (subject instanceof BNode) {
-            output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) subject));
+            if (!inlineBlankNodes) {
+                output.writeAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) subject));
+            }
         } else if (subject instanceof URI) {
             output.writeStartAttribute(reverseNamespaceTable.get(RDF_NS_URI), RDF_NS_URI, "about");
             QName subjectQName = convertUriToQName((URI)subject);
@@ -184,7 +186,12 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         for (URI predicate : firstPredicates) {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
-                writePredicateAndObjectValues(out, predicate, values);
+                if (predicate == rdfType) { // assumes that rdfType is one of the firstPredicates
+                    values.remove(enclosingElementURI); // no need to state type explicitly if it has been used as an enclosing element name
+                }
+                if (values.size() >= 1) {
+                    writePredicateAndObjectValues(out, predicate, values);
+                }
             }
         }
 
@@ -198,57 +205,66 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
 
         // Close enclosing element.
         output.writeEndElement();
-        output.writeEOL();
+        if (!inlineBlankNodes || !(subject instanceof BNode)) {
+            output.writeEOL();
+        }
     }
 
     protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception {
+        // TODO: finish updating this for inline blank nodes
         // Get prefixes used for the XML
         rdfPrefix = reverseNamespaceTable.get(RDF_NS_URI);
         xmlPrefix = reverseNamespaceTable.get(XML_NS_URI);
 
         QName predicateQName = convertUriToQName(predicate);
         for (Value value : values) {
-            if ((value instanceof BNode) || (value instanceof URI)) {
-                output.writeEmptyElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
-            } else {
+            if (inlineBlankNodes && (value instanceof BNode)) {
                 output.writeStartElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
-            }
-            if (value instanceof BNode) {
-                output.writeAttribute(rdfPrefix, RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) value));
-            } else if (value instanceof URI) {
-                output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "resource");
-                QName uriQName = convertUriToQName((URI) value);
-                if (uriQName == null) {
-                    output.writeAttributeCharacters(((URI) value).stringValue());
+                writeSubjectTriples(out, (Resource)value);
+                output.writeEndElement();
+            } else { // not an inline blank node`
+                if ((value instanceof BNode) || (value instanceof URI)) {
+                    output.writeEmptyElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
                 } else {
-                    if ((uriQName.getPrefix() != null) && (uriQName.getPrefix().length() >= 1)) {
-                        output.writeAttributeEntityRef(uriQName.getPrefix());
-                        output.writeAttributeCharacters(uriQName.getLocalPart());
-                    } else {
-                        output.writeAttributeCharacters(((URI)value).stringValue());
-                    }
+                    output.writeStartElement(predicateQName.getPrefix(), predicateQName.getLocalPart(), predicateQName.getNamespaceURI());
                 }
-                output.endAttribute();
-            } else if (value instanceof Literal) {
-                if (((Literal)value).getDatatype() != null) {
-                    output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
-                    QName datatypeQName = convertUriToQName(((Literal)value).getDatatype());
-                    if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length() < 1)) {
-                        output.writeAttributeCharacters(((Literal)value).getDatatype().stringValue());
+                if (value instanceof BNode) {
+                    output.writeAttribute(rdfPrefix, RDF_NS_URI, "nodeID", blankNodeNameMap.get((BNode) value));
+                } else if (value instanceof URI) {
+                    output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "resource");
+                    QName uriQName = convertUriToQName((URI) value);
+                    if (uriQName == null) {
+                        output.writeAttributeCharacters(((URI) value).stringValue());
                     } else {
-                        output.writeAttributeEntityRef(datatypeQName.getPrefix());
-                        output.writeAttributeCharacters(datatypeQName.getLocalPart());
+                        if ((uriQName.getPrefix() != null) && (uriQName.getPrefix().length() >= 1)) {
+                            output.writeAttributeEntityRef(uriQName.getPrefix());
+                            output.writeAttributeCharacters(uriQName.getLocalPart());
+                        } else {
+                            output.writeAttributeCharacters(((URI)value).stringValue());
+                        }
                     }
                     output.endAttribute();
+                } else if (value instanceof Literal) {
+                    if (((Literal)value).getDatatype() != null) {
+                        output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+                        QName datatypeQName = convertUriToQName(((Literal)value).getDatatype());
+                        if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length() < 1)) {
+                            output.writeAttributeCharacters(((Literal)value).getDatatype().stringValue());
+                        } else {
+                            output.writeAttributeEntityRef(datatypeQName.getPrefix());
+                            output.writeAttributeCharacters(datatypeQName.getLocalPart());
+                        }
+                        output.endAttribute();
+                    }
+                    if (((Literal)value).getLanguage() != null) {
+                        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)value).getLanguage());
+                    }
+                    output.writeCharacters(value.stringValue());
+                } else {
+                    output.writeCharacters(value.stringValue());
                 }
-                if (((Literal)value).getLanguage() != null) {
-                    output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)value).getLanguage());
-                }
-                output.writeCharacters(value.stringValue());
-            } else {
-                output.writeCharacters(value.stringValue());
+                output.writeEndElement();
             }
-            output.writeEndElement();
         }
     }
 

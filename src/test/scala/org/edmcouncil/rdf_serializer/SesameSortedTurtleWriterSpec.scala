@@ -350,7 +350,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with inline blank nodes" in {
     val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = new URIImpl("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
     val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
@@ -382,7 +382,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName + "_ibn", "ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -392,7 +392,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
-    for (sourceFile <- listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri") && !sourceFile.getName.contains("_inline_blank_nodes")) {
+    for (sourceFile <- listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -404,7 +404,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Check that re-serialising the Turtle files has changed nothing.
     fileCount = 0
-    for (file1 <- listDirTreeFiles(outputDir1)) {
+    for (file1 <- listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn")) {
       fileCount += 1
       val file2 = new File(outputDir2, file1 getName)
       assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
