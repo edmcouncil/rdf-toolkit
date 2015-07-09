@@ -10,9 +10,7 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +62,9 @@ public class SesameRdfFormatter {
         options.addOption(
                 "ibn", "inline-blank-nodes", false, "use inline representation for blank nodes.  NOTE: this will fail if there are any recursive relationships involving blank nodes.  Usually OWL has no such recursion involving blank nodes.  It also will fail if any blank nodes are a triple subject but not a triple object."
         );
+        options.addOption(
+                "ibu", "infer-base-uri", false, "use the OWL ontology URI as the base URI.  Ignored if an explicit base URI has been set"
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -92,6 +93,8 @@ public class SesameRdfFormatter {
         String uriReplacement = null;
         boolean useDtdSubset = false;
         boolean inlineBlankNodes = false;
+        boolean inferBaseUri = false;
+        URI inferredBaseUri = null;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -195,6 +198,11 @@ public class SesameRdfFormatter {
             inlineBlankNodes = true;
         }
 
+        // Check if the base URI should be set to be the same as the OWL ontology URI
+        if (line.hasOption("ibu")) {
+            inferBaseUri = true;
+        }
+
         // Load RDF file.
         SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
@@ -250,6 +258,26 @@ public class SesameRdfFormatter {
             }
         }
 
+        // Infer the base URI, if requested
+        if (inferBaseUri) {
+            LinkedList<URI> owlOntologyUris = new LinkedList<URI>();
+            for (Statement st : sourceModel) {
+                if ((SesameSortedRDFWriter.rdfType.equals(st.getPredicate())) && (SesameSortedRDFWriter.owlOntology.equals(st.getObject())) && (st.getSubject() instanceof URI)) {
+                    owlOntologyUris.add((URI)st.getSubject());
+                }
+            }
+            if (owlOntologyUris.size() >= 1) {
+                Comparator<URI> uriComparator = new Comparator<URI>() {
+                    @Override
+                    public int compare(URI uri1, URI uri2) {
+                        return uri1.toString().compareTo(uri2.toString());
+                    }
+                };
+                owlOntologyUris.sort(uriComparator);
+                inferredBaseUri = owlOntologyUris.getFirst();
+            }
+        }
+
         // Write sorted RDF file.
         SesameSortedRDFWriterFactory.TargetFormats targetFormat = null;
         if (line.hasOption("tfmt")) {
@@ -275,7 +303,11 @@ public class SesameRdfFormatter {
         Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
         SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory(targetFormat);
         Map<String, Object> writerOptions = new HashMap<String, Object>();
-        if (baseUri != null) { writerOptions.put("baseUri", baseUri); }
+        if (baseUri != null) {
+            writerOptions.put("baseUri", baseUri);
+        } else if (inferBaseUri && (inferredBaseUri != null)) {
+            writerOptions.put("baseUri", inferredBaseUri);
+        }
         if (indent != null) { writerOptions.put("indent", indent); }
         if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
         writerOptions.put("useDtdSubset", useDtdSubset);

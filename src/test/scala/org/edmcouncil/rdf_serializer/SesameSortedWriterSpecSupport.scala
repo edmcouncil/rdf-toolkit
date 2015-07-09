@@ -49,12 +49,12 @@ trait SesameSortedWriterSpecSupport {
     result
   }
 
-  /** Sets the extension part of a filename path, e.g. "ttl". */
+  /** Sets the extension part of a filename path, e.g. ".ttl" or "_modified.ttl". */
   def setFilePathExtension(filePath: String, fileExtension: String): String = {
     if (filePath.contains(".")) {
-      s"${filePath.substring(0, filePath.lastIndexOf("."))}.$fileExtension"
+      s"${filePath.substring(0, filePath.lastIndexOf("."))}$fileExtension"
     } else {
-      s"$filePath.$fileExtension"
+      s"$filePath$fileExtension"
     }
   }
 

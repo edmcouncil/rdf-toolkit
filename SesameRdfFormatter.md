@@ -14,6 +14,9 @@
                                    nodes.  It also will fail if any blank
                                    nodes are a triple subject but not a
                                    triple object.
+ -ibu,--infer-base-uri             use the OWL ontology URI as the base
+                                   URI.  Ignored if an explicit base URI
+                                   has been set
  -s,--source <arg>                 source (input) RDF file to format
  -sfmt,--source-format <arg>       source (input) RDF format; one of: auto
                                    (select by filename) [default], binary,
@@ -47,9 +50,13 @@
   * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --base-uri http://www.example.com/my-base-uri`
 5. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the given base URI for the output Turtle, and use the base URI in preference to prefixes for URL shortening
   * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --base-uri http://www.example.com/my-base-uri --short-uri-priority base-uri`
-6. Format a Turtle file (`input.ttl`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
+6. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), with inline blank nodes (note: assumes no recursive relationships between blank nodes; this is usually the case for OWL)
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --inline-blank-nodes`
+7. Format a Turtle file (`input.ttl`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
   * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --source-format turtle --target output.rdf --target-format rdf-xml --use-dtd-subset`
-7. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
+8. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
   * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset`
-8. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both), and replacing 'www.example.com' in URIs with 'www.example.org'
+9. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and inline blank nodes (note: assumes no recursive relationships between blank nodes; this is usually the case for OWL)
+  * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --inline-blank-nodes`
+10. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both), and replacing 'www.example.com' in URIs with 'www.example.org'
   * `java -cp rdf-serializer.jar org.edmcouncil.rdf_serializer.SesameRdfFormatter --source input.ttl --target output.ttl --uri-pattern www.example.com --uri-replacement www.example.org`

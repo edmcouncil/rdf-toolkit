@@ -55,7 +55,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir0, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir0, setFilePathExtension(sourceFile getName, ".ttl"))
       val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
       val factory = new TurtleWriterFactory()
       val turtleWriter = factory getWriter (outWriter)
@@ -71,7 +71,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
   "A SortedTurtleWriter" should "be able to produce a sorted Turtle file" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val baseUri = new URIImpl("http://topbraid.org/countries")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriterOptions = Map("baseUri" -> baseUri)
@@ -95,7 +95,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with blank object nodes" in {
     val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
@@ -117,7 +117,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with blank subject nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-17.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter (outWriter)
@@ -139,7 +139,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with directly recursive blank object nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
@@ -161,7 +161,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with indirectly recursive blank object nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, "ttl"))
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriter = factory getWriter outWriter
@@ -255,7 +255,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
@@ -272,7 +272,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
@@ -283,7 +283,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile <- listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
@@ -309,7 +309,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
@@ -320,7 +320,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile <- listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
@@ -340,7 +340,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".ttl"))
       val rdfFormat1 = Rio getParserFormatForFileName(sourceFile getName, RDFFormat.TURTLE)
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.TURTLE)
@@ -382,7 +382,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName + "_ibn", "ttl"))
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibn.ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -394,7 +394,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile <- listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -409,6 +409,63 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
       val file2 = new File(outputDir2, file1 getName)
       assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
       assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+  }
+
+  it should "be able to read various RDF documents and write them in sorted Turtle format with an inferred base URI" in {
+    val rawTurtleDirectory = new File("src/test/resources")
+    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
+    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+
+    var fileCount = 0
+    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory) if sourceFile.getName.endsWith(".ttl")) {
+      fileCount += 1
+
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseLine1: String = null
+      var unfinished = true
+      var hasOntologyUri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyUri = true
+        } else if (baseLine1 == null) {
+          if (line.startsWith("# baseURI:")) {
+            baseLine1 = line
+          } else if (line.startsWith("@base")) {
+            baseLine1 = line
+          }
+        }
+      }
+
+      if (hasOntologyUri && (baseLine1 != null)) {
+        val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibu.ttl"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-ibu"
+        )
+
+        val targetReader = new BufferedReader(new FileReader(targetFile))
+        var baseLine2: String = null
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseLine2 == null) {
+            if (line.startsWith("# baseURI:")) {
+              baseLine2 = line
+            } else if (line.startsWith("@base")) {
+              baseLine2 = line
+            }
+          }
+        }
+
+        assert(baseLine1 === baseLine2, "base URI changed - was ontology URI different to the base URI?")
+      }
     }
   }
 
