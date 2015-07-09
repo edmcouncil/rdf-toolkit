@@ -148,10 +148,12 @@ public class SesameRdfFormatter {
 
         // Create directory for target file, if required.
         File targetFileDir = targetFile.getParentFile();
-        targetFileDir.mkdirs();
-        if (!targetFileDir.exists()) {
-            logger.error("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
-            return;
+        if (targetFileDir != null) {
+            targetFileDir.mkdirs();
+            if (!targetFileDir.exists()) {
+                logger.error("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
+                return;
+            }
         }
 
         // Check if a base URI was provided
