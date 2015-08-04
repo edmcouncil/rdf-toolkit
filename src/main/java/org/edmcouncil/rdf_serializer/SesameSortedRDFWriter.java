@@ -1,13 +1,12 @@
 package org.edmcouncil.rdf_serializer;
 
-import info.aduna.io.IndentingWriter;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.helpers.RDFWriterBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
@@ -22,7 +21,7 @@ import java.util.*;
  */
 public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(SesameSortedRDFWriter.class);
+//    private static final Logger logger = LoggerFactory.getLogger(SesameSortedRDFWriter.class);
 
     /** Whether the character is a "name character", as defined in the XML namespaces spec.  Characters above Unicode FFFF are included. */
     public static boolean isNameChar(char ch) {
@@ -933,7 +932,6 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             out.flush();
         } catch (Throwable t) {
             throw new RDFHandlerException("unable to generate/write RDF output", t);
-        } finally {
         }
     }
 
@@ -973,7 +971,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
         // Note subjects & objects which are blank nodes.
         if (st.getSubject() instanceof BNode) {
-            unsortedBlankNodes.add((BNode)st.getSubject());
+            unsortedBlankNodes.add(st.getSubject());
         }
         if (st.getObject() instanceof BNode) {
             unsortedBlankNodes.add((BNode)st.getObject());
@@ -1047,22 +1045,6 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
 
     abstract protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception;
-
-    abstract protected void writePredicate(Writer out, URI predicate) throws Exception;
-
-    abstract protected void writeQName(Writer out, QName qname) throws Exception;
-
-    abstract protected void writeUri(Writer out, URI uri) throws Exception;
-
-    abstract protected void writeObject(Writer out, Value value) throws Exception;
-
-    abstract protected void writeObject(Writer out, BNode bnode) throws Exception;
-
-    abstract protected void writeObject(Writer out, URI uri) throws Exception;
-
-    abstract protected void writeObject(Writer out, Literal literal) throws Exception;
-
-    abstract protected void writeString(Writer out, String str) throws Exception;
 
     abstract protected void writeFooter(Writer out) throws Exception;
 

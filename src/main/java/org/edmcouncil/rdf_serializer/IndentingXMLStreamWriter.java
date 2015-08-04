@@ -160,11 +160,10 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             finishStartElement();
             inStartElement = true;
             inEmptyStartElement = false;
-            String elementName = localName;
-            elementNameStack.push(elementName);
+            elementNameStack.push(localName);
             writeEOL();
             output.write("<");
-            output.write(elementName);
+            output.write(localName);
             increaseIndentation();
             isAfterText = false;
         } catch (Throwable t) {
@@ -178,11 +177,10 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             finishStartElement();
             inStartElement = true;
             inEmptyStartElement = false;
-            String elementName = localName;
-            elementNameStack.push(elementName);
+            elementNameStack.push(localName);
             writeEOL();
             output.write("<");
-            output.write(elementName);
+            output.write(localName);
             increaseIndentation();
             isAfterText = false;
         } catch (Throwable t) {

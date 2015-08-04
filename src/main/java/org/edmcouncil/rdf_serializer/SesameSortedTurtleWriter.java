@@ -3,10 +3,10 @@ package org.edmcouncil.rdf_serializer;
 import info.aduna.io.IndentingWriter;
 import org.openrdf.model.*;
 import org.openrdf.rio.RDFHandlerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
-import javax.xml.namespace.QName;
+// import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
 
-    private static final Logger logger = LoggerFactory.getLogger(SesameSortedTurtleWriter.class);
+    // private static final Logger logger = LoggerFactory.getLogger(SesameSortedTurtleWriter.class);
 
     /** Output stream for this Turtle writer. */
     private IndentingWriter output = null;
@@ -120,7 +120,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
         if (subject instanceof BNode) {
-            out.write("_:" + blankNodeNameMap.get((BNode)subject));
+            out.write("_:" + blankNodeNameMap.get(subject));
         } else {
             writeUri(out, (URI) subject);
         }
@@ -208,9 +208,9 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         writeUri(out, predicate);
     }
 
-    protected void writeQName(Writer out, QName qname) throws Exception {
-        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true));
-    }
+//    protected void writeQName(Writer out, QName qname) throws Exception {
+//        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true));
+//    }
 
     protected void writeUri(Writer out, URI uri) throws Exception {
         out.write(convertUriToString(uri, /*useTurtleQuoting*/true));

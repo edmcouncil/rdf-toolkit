@@ -1,6 +1,5 @@
 package org.edmcouncil.rdf_serializer;
 
-import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterFactory;

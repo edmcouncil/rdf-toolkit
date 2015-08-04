@@ -2,7 +2,7 @@ organization := "org.edmcouncil"
 
 name := "rdf-serializer"
 
-version := "1.1.0"
+version := "1.0.0-beta"
 
 scalaVersion := "2.11.5"
 
