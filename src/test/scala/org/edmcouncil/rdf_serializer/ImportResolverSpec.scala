@@ -1,6 +1,6 @@
 package org.edmcouncil.rdf_serializer
 
-import org.edmcouncil.util.{PotentialDirectory, BaseURL}
+import org.edmcouncil.util.{ PotentialDirectory, BaseURL }
 import org.semanticweb.owlapi.model.IRI
 
 /**

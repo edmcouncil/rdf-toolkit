@@ -24,15 +24,19 @@
 package org.edmcouncil.rdf_serializer;
 
 import org.apache.commons.cli.*;
-import org.openrdf.model.Model;
+import org.openrdf.model.*;
+import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.TreeModel;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * RDF formatter that formats in a consistent order, friendly for version control systems.
@@ -41,24 +45,7 @@ import java.io.OutputStream;
  */
 public class SesameRdfFormatter {
 
-    // TODO: add command-line option to set base URI
-
-    public static final String SOURCE_FORMATS =
-            "auto (select by filename) [default], " +
-            "binary, " +
-            "json-ld (JSON-LD), " +
-            "n3, " +
-            "n-quads (N-quads), " +
-            "n-triples (N-triples), " +
-            "rdf-a (RDF/A), " +
-            "rdf-json (RDF/JSON), " +
-            "rdf-xml (RDF/XML), " +
-            "trig (TriG), " +
-            "trix (TriX), " +
-            "turtle (Turtle)";
-
-    public static final String TARGET_FORMATS =
-            "turtle (sorted Turtle) [default]";
+    private static final Logger logger = LoggerFactory.getLogger(SesameRdfFormatter.class);
 
     private static Options options = null;
 
@@ -66,19 +53,40 @@ public class SesameRdfFormatter {
         // Create list of program options, using Apache Commons CLI library.
         options = new Options();
         options.addOption(
-                "s", "source", true, "source (input) RDF file to be formatting"
+                "s", "source", true, "source (input) RDF file to format"
         );
         options.addOption(
-                "sfmt", "source-format", true, "source (input) RDF format; one of: " + SOURCE_FORMATS
+                "sfmt", "source-format", true, "source (input) RDF format; one of: " + SesameSortedRDFWriterFactory.SourceFormats.summarise()
         );
         options.addOption(
                 "t", "target", true, "target (output) RDF file"
         );
         options.addOption(
-                "tfmt", "target-format", true, "target (output) RDF format: one of: " + TARGET_FORMATS
+                "tfmt", "target-format", true, "target (output) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
         );
         options.addOption(
                 "h", "help", false, "print out details of the command-line arguments for the program"
+        );
+        options.addOption(
+                "bu", "base-uri", true, "set URI to use as base URI"
+        );
+        options.addOption(
+                "sup", "short-uri-priority", true, "set what takes priority when shortening URIs: " + SesameSortedRDFWriter.ShortUriPreferences.summarise()
+        );
+        options.addOption(
+                "up", "uri-pattern", true, "set a pattern to replace in all URIs (used together with --uri-replacement)"
+        );
+        options.addOption(
+                "ur", "uri-replacement", true, "set replacement text used to replace a matching pattern in all URIs (used together with --uri-pattern)"
+        );
+        options.addOption(
+                "dtd", "use-dtd-subset", false, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
+        );
+        options.addOption(
+                "ibn", "inline-blank-nodes", false, "use inline representation for blank nodes.  NOTE: this will fail if there are any recursive relationships involving blank nodes.  Usually OWL has no such recursion involving blank nodes.  It also will fail if any blank nodes are a triple subject but not a triple object."
+        );
+        options.addOption(
+                "ibu", "infer-base-uri", false, "use the OWL ontology URI as the base URI.  Ignored if an explicit base URI has been set"
         );
     }
 
@@ -88,10 +96,11 @@ public class SesameRdfFormatter {
         try {
             run(args);
         } catch (Throwable t) {
-            System.err.println(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
-            System.err.println(t.getClass().getSimpleName() + ": " + t.getMessage());
-            System.err.println(t.getStackTrace());
-            System.err.println();
+            logger.error(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
+            logger.error(t.getClass().getSimpleName() + ": " + t.getMessage());
+            StringWriter stackTraceWriter = new StringWriter();
+            t.printStackTrace(new PrintWriter(stackTraceWriter));
+            logger.error(stackTraceWriter.toString());
             usage(options);
         }
 
@@ -99,9 +108,16 @@ public class SesameRdfFormatter {
 
     /** Main method, but throws exceptions for use from inside other Java code. */
     public static void run(String[] args) throws Exception {
-        final String baseUri = "";
-
         final String indent = "\t\t";
+
+        URI baseUri = null;
+        String baseUriString = "";
+        String uriPattern = null;
+        String uriReplacement = null;
+        boolean useDtdSubset = false;
+        boolean inlineBlankNodes = false;
+        boolean inferBaseUri = false;
+        URI inferredBaseUri = null;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -115,11 +131,11 @@ public class SesameRdfFormatter {
 
         // Check if required arguments provided.
         if (!line.hasOption("s")) {
-            System.err.println("No source (input) file specified, nothing to format.  Use --help for help.");
+            logger.error("No source (input) file specified, nothing to format.  Use --help for help.");
             return;
         }
         if (!line.hasOption("t")) {
-            System.err.println("No target (target) file specified, cannot format source.  Use --help for help.");
+            logger.error("No target (target) file specified, cannot format source.  Use --help for help.");
             return;
         }
 
@@ -127,15 +143,15 @@ public class SesameRdfFormatter {
         String sourceFilePath = line.getOptionValue("s");
         File sourceFile = new File(sourceFilePath);
         if (!sourceFile.exists()) {
-            System.err.println("Source file does not exist: " + sourceFilePath);
+            logger.error("Source file does not exist: " + sourceFilePath);
             return;
         }
         if (!sourceFile.isFile()) {
-            System.err.println("Source file is not a file: " + sourceFilePath);
+            logger.error("Source file is not a file: " + sourceFilePath);
             return;
         }
         if (!sourceFile.canRead()) {
-            System.err.println("Source file is not readable: " + sourceFilePath);
+            logger.error("Source file is not readable: " + sourceFilePath);
             return;
         }
 
@@ -144,11 +160,11 @@ public class SesameRdfFormatter {
         File targetFile = new File(targetFilePath);
         if (targetFile.exists()) {
             if (!targetFile.isFile()) {
-                System.err.println("Target file is not a file: " + targetFilePath);
+                logger.error("Target file is not a file: " + targetFilePath);
                 return;
             }
             if (!targetFile.canWrite()) {
-                System.err.println("Target file is not writable: " + targetFilePath);
+                logger.error("Target file is not writable: " + targetFilePath);
                 return;
             }
         }
@@ -158,64 +174,178 @@ public class SesameRdfFormatter {
         if (targetFileDir != null) {
             targetFileDir.mkdirs();
             if (!targetFileDir.exists()) {
-                System.err.println("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
+                logger.error("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
                 return;
             }
         }
 
-        // Load RDF file.
-        String sourceFormat = "auto";
-        if (line.hasOption("sfmt")) {
-            sourceFormat = line.getOptionValue("sfmt");
+        // Check if a base URI was provided
+        try {
+            if (line.hasOption("bu")) {
+                baseUriString = line.getOptionValue("bu");
+                baseUri = new URIImpl(baseUriString);
+                if (baseUriString.endsWith("#")) {
+                    logger.warn("base URI ends in '#', which is unusual: " + baseUriString);
+                }
+            }
+        } catch (Throwable t) {
+            baseUri = null;
+            baseUriString = "";
         }
-        RDFFormat sesameSourceFormat = null;
-        if ("auto".equals(sourceFormat)) {
-            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath, RDFFormat.TURTLE);
-        } else {
-            sesameSourceFormat = parseFormat(sourceFormat);
-        }
-        if (sesameSourceFormat == null) {
-            System.err.println("Unsupported or unrecognised source format: " + sourceFormat);
-        }
-        Model sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUri, sesameSourceFormat);
 
-        // Write sorted RDF file.
-        if (line.hasOption("tfmt")) {
-            // Check target format, but currently only "turtle" is supported.
-            String targetFormat = line.getOptionValue("tfmt");
-            if (!"turtle".equals(targetFormat)) {
-                System.err.println("Unsupported or unrecognised target format: " + targetFormat);
+        // Check if there is a valid URI pattern/replacement pair
+        if (line.hasOption("up")) {
+            if(line.hasOption("ur")) {
+                if (line.getOptionValue("up").length() < 1) {
+                    logger.error("A URI pattern cannot be an empty string.  Use --help for help.");
+                    return;
+                }
+                uriPattern = line.getOptionValue("up");
+                uriReplacement = line.getOptionValue("ur");
+            } else {
+                logger.error("If a URI pattern is specified, a URI replacement must also be specified.  Use --help for help.");
+                return;
+            }
+        } else {
+            if (line.hasOption("ur")) {
+                logger.error("If a URI replacement is specified, a URI pattern must also be specified.  Use --help for help.");
+                return;
             }
         }
-        OutputStream targetStream = new FileOutputStream(targetFile);
-        SesameSortedTurtleWriterFactory factory = new SesameSortedTurtleWriterFactory();
-        RDFWriter turtleWriter = factory.getWriter(targetStream, /*baseUri*/ null, indent);
-        Rio.write(sourceModel, turtleWriter);
-        targetStream.flush();
-        targetStream.close();
+
+        // Check if a DTD subset should be used for namespace shortening in XML
+        if (line.hasOption("dtd")) {
+            useDtdSubset = true;
+        }
+
+        // Check if blank nodes should be rendered inline
+        if (line.hasOption("ibn")) {
+            inlineBlankNodes = true;
+        }
+
+        // Check if the base URI should be set to be the same as the OWL ontology URI
+        if (line.hasOption("ibu")) {
+            inferBaseUri = true;
+        }
+
+        // Load RDF file.
+        SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
+        if (line.hasOption("sfmt")) {
+            sourceFormat = SesameSortedRDFWriterFactory.SourceFormats.getByOptionValue(line.getOptionValue("sfmt"));
+        } else {
+            sourceFormat = SesameSortedRDFWriterFactory.SourceFormats.auto;
+        }
+        if (sourceFormat == null) {
+            logger.error("Unsupported or unrecognised source format: " + line.getOptionValue("sfmt"));
+            return;
+        }
+        RDFFormat sesameSourceFormat = null;
+        if (SesameSortedRDFWriterFactory.SourceFormats.auto.equals(sourceFormat)) {
+            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath, RDFFormat.TURTLE);
+        } else {
+            sesameSourceFormat = sourceFormat.getRDFFormat();
+        }
+        if (sesameSourceFormat == null) {
+            logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);
+        }
+        Model sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUriString, sesameSourceFormat);
+
+        // Do any URI replacements
+        if ((uriPattern != null) && (uriReplacement != null)) {
+            Model replacedModel = new TreeModel();
+            for (Statement st : sourceModel) {
+                Resource replacedSubject = st.getSubject();
+                if (replacedSubject instanceof URI) {
+                    replacedSubject = new URIImpl(replacedSubject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                }
+
+                URI replacedPredicate = st.getPredicate();
+                replacedPredicate = new URIImpl(replacedPredicate.stringValue().replaceFirst(uriPattern, uriReplacement));
+
+                Value replacedObject = st.getObject();
+                if (replacedObject instanceof URI) {
+                    replacedObject = new URIImpl(replacedObject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                }
+
+                Statement replacedStatement = new StatementImpl(replacedSubject, replacedPredicate, replacedObject);
+                replacedModel.add(replacedStatement);
+            }
+            // Do URI replacements in namespaces as well.
+            Set<Namespace> namespaces = sourceModel.getNamespaces();
+            for (Namespace nmsp : namespaces) {
+                replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(uriPattern, uriReplacement));
+            }
+            sourceModel = replacedModel;
+            // This is also the right time to do URI replacement in the base URI, if appropriate
+            if (baseUri != null) {
+                baseUriString = baseUriString.replaceFirst(uriPattern, uriReplacement);
+                baseUri = new URIImpl(baseUriString);
+            }
+        }
+
+        // Infer the base URI, if requested
+        if (inferBaseUri) {
+            LinkedList<URI> owlOntologyUris = new LinkedList<URI>();
+            for (Statement st : sourceModel) {
+                if ((SesameSortedRDFWriter.rdfType.equals(st.getPredicate())) && (SesameSortedRDFWriter.owlOntology.equals(st.getObject())) && (st.getSubject() instanceof URI)) {
+                    owlOntologyUris.add((URI)st.getSubject());
+                }
+            }
+            if (owlOntologyUris.size() >= 1) {
+                Comparator<URI> uriComparator = new Comparator<URI>() {
+                    @Override
+                    public int compare(URI uri1, URI uri2) {
+                        return uri1.toString().compareTo(uri2.toString());
+                    }
+                };
+                owlOntologyUris.sort(uriComparator);
+                inferredBaseUri = owlOntologyUris.getFirst();
+            }
+        }
+
+        // Write sorted RDF file.
+        SesameSortedRDFWriterFactory.TargetFormats targetFormat = null;
+        if (line.hasOption("tfmt")) {
+            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.getByOptionValue(line.getOptionValue("tfmt"));
+        } else {
+            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.turtle;
+        }
+        if (targetFormat == null) {
+            logger.error("Unsupported or unrecognised target format: " + line.getOptionValue("tfmt"));
+            return;
+        }
+        SesameSortedRDFWriter.ShortUriPreferences shortUriPref = null;
+        if (line.hasOption("sup")) {
+            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.getByOptionValue(line.getOptionValue("sup"));
+        } else {
+            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.prefix;
+        }
+        if (shortUriPref == null) {
+            logger.error("Unsupported or unrecognised short URI preference: " + line.getOptionValue("sup"));
+            return;
+        }
+
+        Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
+        SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory(targetFormat);
+        Map<String, Object> writerOptions = new HashMap<String, Object>();
+        if (baseUri != null) {
+            writerOptions.put("baseUri", baseUri);
+        } else if (inferBaseUri && (inferredBaseUri != null)) {
+            writerOptions.put("baseUri", inferredBaseUri);
+        }
+        if (indent != null) { writerOptions.put("indent", indent); }
+        if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
+        writerOptions.put("useDtdSubset", useDtdSubset);
+        writerOptions.put("inlineBlankNodes", inlineBlankNodes);
+        RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
+        Rio.write(sourceModel, rdfWriter);
+        targetWriter.flush();
+        targetWriter.close();
     }
 
     public static void usage(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp( "SesameRdfFormatter", options );
-    }
-
-    /** Converts a command-line RDF type name into the appropriate Sesame type value. */
-    private static RDFFormat parseFormat(String format) {
-        switch(format) {
-            case "binary": return RDFFormat.BINARY;
-            case "json-ld": return RDFFormat.JSONLD;
-            case "n3": return RDFFormat.N3;
-            case "n-quads": return  RDFFormat.NQUADS;
-            case "n-triples": return RDFFormat.NTRIPLES;
-            case "rdf-a": return RDFFormat.RDFA;
-            case "rdf-json": return RDFFormat.RDFJSON;
-            case "rdf-xml": return RDFFormat.RDFXML;
-            case "trig": return RDFFormat.TRIG;
-            case "trix": return RDFFormat.TRIX;
-            case "turtle": return RDFFormat.TURTLE;
-        }
-        return null;
     }
 
 }

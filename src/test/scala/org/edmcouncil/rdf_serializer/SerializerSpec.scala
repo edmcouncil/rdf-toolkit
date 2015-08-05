@@ -44,7 +44,7 @@ class SerializerSpec extends UnitSpec {
         "--url-replace", "http://www.w3.org/TR/2003/PR-owl-guide-20031209/=http://whatever/",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     /*
@@ -58,7 +58,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources=http://www.w3.org/TR/2003/PR-owl-guide-20031209",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "convert the fibo contracts ontology" in {
@@ -70,7 +70,7 @@ class SerializerSpec extends UnitSpec {
         "--url-replace", "http://www.omg.org/spec/EDMC-FIBO/=http://spec.edmcouncil.org/fibo/",
         "src/test/resources/test-out-fibo-fnd-contracts.rdf",
         "src/test/resources/fibo-fnd-contracts.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "not generate errors int the output of test-case-001.rdf" in {
@@ -81,7 +81,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-test-case-001.rdf",
         "src/test/resources/test-case-001.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
@@ -92,7 +92,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
         "src/test/resources/fibo/fnd/OwnershipAndControl/Control.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
@@ -103,7 +103,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
         "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
   }
 }

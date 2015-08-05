@@ -2,16 +2,15 @@ organization := "org.edmcouncil"
 
 name := "rdf-serializer"
 
-version := "1.0.3-SNAPSHOT"
+version := "1.0.0-beta"
 
 scalaVersion := "2.11.6"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-bintrayResolverSettings
+Seq(bintrayResolverSettings:_*)
 
 val owlApiVersion = "4.0.1"
-
 val sesameVersion = "2.8.0"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
@@ -85,5 +84,3 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [2] org.edmcouncil.rdf_serializer.Main
 //
 mainClass in Compile := Some("org.edmcouncil.main.Main")
-
-val `rdf-serializer` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)

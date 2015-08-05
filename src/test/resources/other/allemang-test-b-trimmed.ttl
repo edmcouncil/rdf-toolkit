@@ -1,0 +1,191 @@
+@prefix fibo-fnd-org-fm: <http://www.omg.org/spec/EDMC-FIBO/FND/Organizations/FormalOrganizations/> .
+@prefix fibo-fnd-plc-adr: <http://www.omg.org/spec/EDMC-FIBO/FND/Places/Addresses/> .
+@prefix fibo-fnd-rel-rel: <http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix fibo-fnd-acc-cur: <http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/CurrencyAmount/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fibo-be-le-fbo: <http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/FormalBusinessOrganizations/> .
+@prefix fibo-fnd-aap-ppl: <http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/People/> .
+@prefix fibo-fnd-plc-cty: <http://www.omg.org/spec/EDMC-FIBO/FND/Places/Countries/> .
+@prefix fibo-fnd-acc-aeq: <http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix fibo-fnd-pty-rl: <http://www.omg.org/spec/EDMC-FIBO/FND/Parties/Roles/> .
+@prefix fibo-fnd-pty-pty: <http://www.omg.org/spec/EDMC-FIBO/FND/Parties/Parties/> .
+@prefix fibo-fnd-utl-av: <http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/AnnotationVocabulary/> .
+@prefix sm:    <http://www.omg.org/techprocess/ab/SpecificationMetadata/> .
+@prefix fibo-fnd-agr-ctr: <http://www.omg.org/spec/EDMC-FIBO/FND/Agreements/Contracts/> .
+@prefix fibo-be-le-lp: <http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/LegalPersons/> .
+@prefix fibo-fnd-org-org: <http://www.omg.org/spec/EDMC-FIBO/FND/Organizations/Organizations/> .
+@prefix fibo-fnd-gao-gl: <http://www.omg.org/spec/EDMC-FIBO/FND/GoalsAndObjectives/Goals/> .
+@prefix afn:   <http://jena.hpl.hp.com/ARQ/function#> .
+@prefix fibo-fnd-aap-agt: <http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/Agents/> .
+@prefix fibo-fnd-law-lcap: <http://www.omg.org/spec/EDMC-FIBO/FND/Law/LegalCapacity/> .
+@prefix fibo-fnd-oac-own: <http://www.omg.org/spec/EDMC-FIBO/FND/OwnershipAndControl/Ownership/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix fibo-fnd-agr-agr: <http://www.omg.org/spec/EDMC-FIBO/FND/Agreements/Agreements/> .
+@prefix fibo-be-le-cb: <http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/CorporateBodies/> .
+@prefix fibo-fnd-plc-loc: <http://www.omg.org/spec/EDMC-FIBO/FND/Places/Locations/> .
+@prefix fibo-fnd-law-jur: <http://www.omg.org/spec/EDMC-FIBO/FND/Law/Jurisdiction/> .
+@prefix fibo-fnd-utl-bt: <http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/BusinessFacingTypes/> .
+@prefix fibo-fnd-law-cor: <http://www.omg.org/spec/EDMC-FIBO/FND/Law/LegalCore/> .
+@prefix fibo-be-corp-corp: <http://www.omg.org/spec/EDMC-FIBO/BE/Corporations/Corporations/> .
+
+fibo-be-corp-corp:hasDateOfIncorporation
+        a                owl:DatatypeProperty ;
+        rdfs:label       "has date of incorporation" ;
+        rdfs:range       xsd:dateTime ;
+        skos:definition  "The date of formation of the company. This is identified as the formal date of registration in company registration documents. Further Notes: Generally known as Date of Incorporation." .
+
+fibo-be-corp-corp:hasIssuedCapital
+        a                        owl:ObjectProperty ;
+        rdfs:label               "has issued capital" ;
+        rdfs:range               fibo-fnd-acc-cur:MonetaryAmount ;
+        rdfs:subPropertyOf       fibo-be-corp-corp:hasNominalCapital ;
+        fibo-fnd-utl-av:definitionOrigin
+                "http://www.businessdictionary.com/definition/issued-share-capital.html" ;
+        fibo-fnd-utl-av:synonym  "has subscribed share capital" , "has subscribed capital" ;
+        skos:definition          "The total of a companys shares that are held by shareholders. A company can, at any time, issue new shares up to the full amount of authorized share capital." .
+
+fibo-be-corp-corp:BoardAgreement
+        a                owl:Class ;
+        rdfs:label       "board agreement" ;
+        skos:definition  "The agreement between members of the Board of the Company." .
+
+fibo-be-corp-corp:  a                  owl:Ontology ;
+        rdfs:label                     "Financial Industry Business Ontology (FIBO) Corporations Ontology" ;
+        dct:license                    "The MIT License:  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE\nAND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."^^xsd:string , "http://opensource.org/licenses/mit-license.php"^^xsd:anyURI ;
+        sm:addressForComments          "http://www.omg.org/issues/"^^xsd:anyURI ;
+        sm:contentLanguage             "http://www.omg.org/spec/ODM/"^^xsd:anyURI , "http://www.w3.org/standards/techs/owl#w3c_all"^^xsd:anyURI ;
+        sm:contributor                 "Thematix Partners LLC"^^xsd:string , "Adaptive, Inc."^^xsd:string ;
+        sm:copyright                   "Copyright (c) 2013 EDM Council, Inc.\nCopyright (c) 2013 Object Management Group, Inc."^^xsd:string ;
+        sm:dependsOn                   "http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/LegalPersons/"^^xsd:anyURI , "http://www.omg.org/spec/EDMC-FIBO/FND/"^^xsd:anyURI , "http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/FormalBusinessOrganizations/"^^xsd:anyURI , "http://www.omg.org/techprocess/ab/SpecificationMetadata/"^^xsd:anyURI , "http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/CorporateBodies/"^^xsd:anyURI ;
+        sm:familyAbbreviation          "FIBO"^^xsd:string ;
+        sm:familyAbstract              "The content that comprises the Financial Industry Business Ontology (FIBO) is documentation, interpretable in formal logic, of the concepts represented by finance industry terms as used in official financial organization documents such as contracts, product/service specifications and governance and regulatory compliance documents."^^xsd:string ;
+        sm:familyTitle                 "Financial Industry Business Ontology (FIBO)"^^xsd:string ;
+        sm:familyURL                   "http://www.omg.org/spec/EDMC-FIBO/"^^xsd:anyURI ;
+        sm:fileAbbreviation            "fibo-be-corp-corp"^^xsd:string ;
+        sm:fileAbstract                "This ontology defines the fundamental concepts for companies incorporated by the issuance of shares. Terms defined in this ontology are those which are applicable to all such entities. Many of these concepts form the basis of the relationships of ownership and control which obtain between entities of this type."^^xsd:string ;
+        sm:filename                    "Corporations Ontology"^^xsd:string ;
+        sm:keyword                     "legal entities"^^xsd:string , "vocabulary"^^xsd:string , "FIBO"^^xsd:string , "LEI"^^xsd:string , "business entities"^^xsd:string , "Financial Industry Business Ontology"^^xsd:string , "ontology"^^xsd:string ;
+        sm:moduleAbbreviation          "FIBO-BE-CORP"^^xsd:string ;
+        sm:moduleAbstract              "This module includes ontologies describing the essential features of companies incorporated by the issuance of shares. The terms in these ontologies build on terms about incorporated bodies more generally, and include terms about shareholding, which form the basis of relationships of ownership and control of or among these kinds of entities."^^xsd:string ;
+        sm:moduleName                  "Corporations"^^xsd:string ;
+        sm:moduleVersion               "1.0"^^xsd:string ;
+        sm:publicationDate             "2013-11-11T18:00:00"^^xsd:dateTime ;
+        sm:responsibleTaskForce        "http://fdtf.omg.org/"^^xsd:anyURI ;
+        sm:specificationAbbreviation   "FIBO-BE"^^xsd:string ;
+        sm:specificationAbstract       "The business scope of this specification is all terms relating to and descriptive and/or definitive of a range of business entities and legal entities that are considered by financial industry firms, regulators and other industry participants to be of relevance in financial and other activities.\n\nThe scope of the terms in this specification is those common to legal entities, formal organizations, terms definitive of or descriptive of companies incorporated by the issuance of shares and other forms of incorporated entity, terms which define the existence of other kinds of legal entity, terms specific to trusts, and terms defining the relationships both of ownership and control between and among the kinds of organization listed above. Also in scope are entities defined according to their role or function, including but not limited to banks, non-profit entities, government bodies, non-government and quasi-non government organizations, international bodies and the like."^^xsd:string ;
+        sm:specificationTitle          "Financial Industry Business Ontology (FIBO) Business Entities Specification"^^xsd:string ;
+        sm:specificationURL            "http://www.omg.org/spec/EDMC-FIBO/BE/"^^xsd:anyURI ;
+        sm:specificationVersionStatus  "Request For Comments (RFC)"^^xsd:string ;
+        sm:specificationVersionURL     "http://www.omg.org/spec/EDMC-FIBO/BE/1.0/"^^xsd:anyURI ;
+        sm:submitter                   "EDM Council, Inc."^^xsd:string ;
+        sm:technologyArea              "formal semantics"^^xsd:string ;
+        sm:thisVersion                 "1.0"^^xsd:string ;
+        sm:topicArea                   "finance"^^xsd:string ;
+        owl:imports                    fibo-fnd-rel-rel: , fibo-be-le-lp: , fibo-be-le-fbo: , fibo-fnd-aap-ppl: , fibo-be-le-cb: , fibo-fnd-utl-bt: , fibo-fnd-org-fm: , fibo-fnd-aap-agt: , fibo-fnd-plc-adr: , fibo-fnd-utl-av: , fibo-fnd-acc-cur: , fibo-fnd-pty-pty: , fibo-fnd-acc-aeq: , fibo-fnd-plc-loc: , fibo-fnd-org-org: , fibo-fnd-gao-gl: , fibo-fnd-agr-ctr: , fibo-fnd-law-jur: , fibo-fnd-oac-own: , fibo-fnd-law-cor: , sm: , fibo-fnd-pty-rl: , fibo-fnd-agr-agr: , fibo-fnd-law-lcap: , fibo-fnd-plc-cty: ;
+        owl:versionIRI                 "http://www.omg.org/spec/EDMC-FIBO/BE/20131101/Corporations/Corporations/"^^xsd:anyURI ;
+        skos:historyNote               "This version of the FIBO Business Entities Specification represents an initial submission to the December 2013 OMG Technical Meeting in Santa Clara, CA. \n\nRevisions to FIBO Business Entities (BE) are managed per the process outlined in the Policies and Procedures for OMG standards, with the intent to maintain backwards compatibility in the ontologies to the degree possible.\n  \nThe RDF/XML serialized OWL for the BE ODM/OWL ontologies have been checked for syntactic errors and logical consistency with Protege 4 (http://protege.stanford.edu/), HermiT 1.3.7 (http://www.hermit-reasoner.com/) and Pellet 2.2 (http://clarkparsia.com/pellet/)."^^xsd:string .
+
+fibo-be-corp-corp:IncorporatedCompany
+        a                owl:Class ;
+        rdfs:label       "incorporated company" ;
+        rdfs:subClassOf
+                [ a                         owl:Restriction ;
+                  owl:onDataRange           xsd:dateTime ;
+                  owl:onProperty            fibo-be-corp-corp:hasDateOfIncorporation ;
+                  owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                ] ;
+        rdfs:subClassOf
+                [ a                            owl:Restriction ;
+                  owl:minQualifiedCardinality  "0"^^xsd:nonNegativeInteger ;
+                  owl:onDataRange              xsd:dateTime ;
+                  owl:onProperty               fibo-be-corp-corp:hasDateOfRegistration
+                ] ;
+        rdfs:subClassOf
+                [ a                         owl:Restriction ;
+                  owl:onClass               fibo-fnd-acc-cur:MonetaryAmount ;
+                  owl:onProperty            fibo-be-corp-corp:hasIssuedCapital ;
+                  owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                ] ;
+        rdfs:subClassOf
+                [ a                   owl:Restriction ;
+                  owl:minCardinality  "0"^^xsd:nonNegativeInteger ;
+                  owl:onProperty      fibo-be-corp-corp:hasLegalFormAbbreviation
+                ] ;
+        rdfs:subClassOf
+                [ a                         owl:Restriction ;
+                  owl:onClass               fibo-fnd-acc-cur:MonetaryAmount ;
+                  owl:onProperty            fibo-be-corp-corp:hasNominalCapital ;
+                  owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                ] ;
+        rdfs:subClassOf
+                [ a                            owl:Restriction ;
+                  owl:minQualifiedCardinality  "1"^^xsd:nonNegativeInteger ;
+                  owl:onClass                  fibo-be-corp-corp:BoardAgreement ;
+                  owl:onProperty               fibo-fnd-rel-rel:isGovernedBy
+                ] ;
+        rdfs:subClassOf
+                [ a                         owl:Restriction ;
+                  owl:onClass               fibo-be-corp-corp:CompanyRegistrationCode ;
+                  owl:onProperty            fibo-fnd-rel-rel:isIdentifiedBy ;
+                  owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                ] ;
+        skos:definition  "a company incorporated by the issuance of shares" .
+
+fibo-be-corp-corp:PrivatelyHeldCompany
+        a                        owl:Class ;
+        rdfs:label               "privately held company" ;
+        fibo-fnd-utl-av:definitionOrigin
+                "http://www.businessdictionary.com/definition/closed-corporation.html" ;
+        fibo-fnd-utl-av:synonym  "privately held corporation" , "closed corporation" ;
+        skos:definition          "A firm whose issued shares are all held by a family or a small group of investors and, therefore, cannot be bought by the public." ;
+        skos:editorialNote       "Wikipedia: definition for British or Commonwealth version: A private company limited by shares is a type of company incorporated under the laws of England and Wales, Scotland, that of certain Commonwealth countries and the Republic of Ireland. It has shareholders with limited liability and its shares may not be offered to the general public, unlike those of public limited companies. Additional notes from Wikipedia: Limited by shares means that the company has shareholders, and that the liability of the shareholders to creditors of the company is limited to the capital originally invested, i.e. the nominal value of the shares and any premium paid in return for the issue of the shares by the company. A shareholders personal assets are thereby protected in the event of the companys insolvency, but money invested in the company will be lost. A limited company may be private or public. A private limited companys disclosure requirements are lighter, but for this reason its shares may not be offered to the general public (and therefore cannot be traded on a public stock exchange). This is the major distinguishing feature between a private limited company and a public limited company. Most companies, particularly small companies, are private. Private companies limited by shares are required to have the suffix Limited (often written Ltd or Ltd.) or Incorporated (Inc.) as part of their name, though the latter cannot be used in the UK or the Republic of Ireland. In the Republic of Ireland, Teoranta (Teo.) may be used instead, largely by Gaeltacht companies. Cyfyngedig (Cyf.) may be used by Welsh companies in a similar fashion." .
+
+fibo-be-corp-corp:hasNominalCapital
+        a                        owl:ObjectProperty ;
+        rdfs:label               "has nominal capital" ;
+        rdfs:range               fibo-fnd-acc-cur:MonetaryAmount ;
+        rdfs:subPropertyOf       fibo-fnd-rel-rel:has ;
+        fibo-fnd-utl-av:definitionOrigin
+                "http://www.businessdictionary.com/definition/authorized-share-capital.html" ;
+        fibo-fnd-utl-av:synonym  "has authorized stock" , "has authorized capital" , "has registered capital" , "has nominal share capital" ;
+        skos:definition          "Nominal capital is an alternate term for authorized share capital. The maximum value of securities that a company can legally issue. This number is specified in the memorandum of association (or articles of incorporation in the US) when a company is incorporated, but can be changed later with shareholders approval.  Authorized share capital may be divided into (1) Issued capital - par value of the shares actually issued, (2) Paid up capital - money received from the shareholders in exchange for shares, and (3) Uncalled capital - money remaining unpaid by the shareholders for the shares they have bought." .
+
+fibo-be-corp-corp:hasLegalFormAbbreviation
+        a                owl:DatatypeProperty ;
+        rdfs:label       "has legal form abbreviation" ;
+        rdfs:range       fibo-fnd-utl-bt:text ;
+        skos:definition  "The precise form of the incorporated company abbreviation as defined in the jurisdiction in which it is registered, for example LLC, LLP, Ltd, PLC, Corp." .
+
+fibo-be-corp-corp:hasDateOfRegistration
+        a                owl:DatatypeProperty ;
+        rdfs:label       "has date of incorporation" ;
+        rdfs:range       xsd:dateTime ;
+        skos:definition  "Date at which the corporation is registered in some jurisdiction for regulatory and / or for tax purposes. Further Notes: This is analogous to a person registering for paying taxes somewhere, regardless of their birth, citizenship and so on." .
+
+fibo-be-corp-corp:CompanyRegistrationCode
+        a                owl:Class ;
+        rdfs:label       "company registration code" ;
+        rdfs:subClassOf
+                [ a                         owl:Restriction ;
+                  owl:onClass               fibo-fnd-law-jur:Jurisdiction ;
+                  owl:onProperty            fibo-fnd-rel-rel:isGovernedBy ;
+                  owl:qualifiedCardinality  "1"^^xsd:nonNegativeInteger
+                ] ;
+        skos:definition  "A code which is officially allocated under a jurisdiction in which a company is incorporated, and which is used within that jurisdiction to identify the company. This usually has to be included in official stationary and must always be publicly available." .
+
+fibo-be-corp-corp:PubliclyHeldCompany
+        a                owl:Class ;
+        rdfs:label       "publicly held company" ;
+        skos:definition  "a company whose shares are traded and held publicly." .
+
+fibo-be-corp-corp:JointStockCompany
+        a                   owl:Class ;
+        rdfs:label          "joint stock company" ;
+        fibo-fnd-utl-av:definitionOrigin
+                "http://www.businessdictionary.com/definition/joint-stock-company.html" ;
+        skos:definition     "1. In the UK, the original (17th century) name for a corporation in which the liability of the owners is limited to the nominal value of the stock (shares) held by them.\n2. In the US, a corporation with unlimited liability for the shareholders. Investors in a US joint stock company receive stock (shares) which can be transferred, and can elect a board of directors, but are jointly-and-severally liable for companys debts and obligations. A US joint stock company cannot hold title to a real property." ;
+        skos:editorialNote  "There are two kinds of joint stock company. The private company kind and the open market. The shares are usually only held by the directors and Company Secretary." .
