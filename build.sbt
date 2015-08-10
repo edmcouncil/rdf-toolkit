@@ -10,7 +10,7 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 Seq(bintrayResolverSettings:_*)
 
-val owlApiVersion = "4.0.1"
+//val owlApiVersion = "4.0.1"
 val sesameVersion = "2.8.0"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
@@ -22,10 +22,10 @@ libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
 //
 //libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources()
 
-libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
-                        .exclude("com.fasterxml.jackson.core", "jackson-core")
+//libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
+//                        .exclude("com.fasterxml.jackson.core", "jackson-core")
 
-libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
+//libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
@@ -37,12 +37,12 @@ libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test" withSources()
 
-libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
+//libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
 //
 // Explicit loading of jackson-core to prevent merge issue in sbt-assembly
 //
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
+//libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
 // Sesame Binding And Config
@@ -83,4 +83,4 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [1] org.edmcouncil.rdf_serializer.SesameRdfFormatter
 // [2] org.edmcouncil.rdf_serializer.Main
 //
-mainClass in Compile := Some("org.edmcouncil.main.Main")
+mainClass in Compile := Some("org.edmcouncil.rdf_serializer.SesameRdfFormatter")
