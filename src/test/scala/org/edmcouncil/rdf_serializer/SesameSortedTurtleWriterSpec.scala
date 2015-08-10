@@ -259,8 +259,6 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".ttl"))
-      println(s"**** sourceFile = ${sourceFile getAbsolutePath}") // TODO: remove debugging
-      println(s"**** targetFile = ${targetFile getAbsolutePath}") // TODO: remove debugging
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath
