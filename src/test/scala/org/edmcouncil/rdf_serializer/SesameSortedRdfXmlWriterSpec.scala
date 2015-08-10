@@ -27,7 +27,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
 
   /** Exclusion list of examples that can't be represented directly in RDF/XML. */
-  val rdfXmlExclusionList = List("allemang-test-a.ttl", "allemang-test-b.ttl", "turtle-example-2.ttl", "turtle-example-3.ttl", "turtle-example-4.ttl", "turtle-example-5.ttl", "turtle-example-6.ttl", "turtle-example-9.ttl", "turtle-example-17.ttl")
+  val rdfXmlExclusionList = List("allemang-test-a.ttl", "allemang-test-b.ttl", "turtle-example-2.ttl", "turtle-example-3.ttl", "turtle-example-4.ttl", "turtle-example-5.ttl", "turtle-example-6.ttl", "turtle-example-9.ttl", "turtle-example-17.ttl", "turtle-example-22.ttl")
   // Note: the 'allemang' test files are in this list because they contain strings that end with a whitespace.
   // It seems that the Sesame RDF/XML parser strips that trailing whitespace away; the Sesame Turtle parser does not.
   // This stops the Sesame formatter from being able to treat the 'allemang' examples in RDF/XML format
