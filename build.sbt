@@ -1,6 +1,6 @@
 organization := "org.edmcouncil"
 
-name := "rdf-serializer"
+name := "rdf-toolkit"
 
 version := "1.0.0-beta"
 
@@ -80,7 +80,7 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 //
 // Multiple main classes detected, select one to run:
 //
-// [1] org.edmcouncil.rdf_serializer.SesameRdfFormatter
-// [2] org.edmcouncil.rdf_serializer.Main
+// [1] org.edmcouncil.rdf_toolkit.SesameRdfFormatter
+// [2] org.edmcouncil.rdf_toolkit.Main
 //
-mainClass in Compile := Some("org.edmcouncil.rdf_serializer.SesameRdfFormatter")
+mainClass in Compile := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")

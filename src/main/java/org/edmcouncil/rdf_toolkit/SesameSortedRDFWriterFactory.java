@@ -1,4 +1,4 @@
-package org.edmcouncil.rdf_serializer;
+package org.edmcouncil.rdf_toolkit;
 
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
