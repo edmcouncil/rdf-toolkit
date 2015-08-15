@@ -2,8 +2,8 @@
 
 ## develop
 
-The primary development IDE used for this project is [IntelliJ IDEA EAP 14.1](https://confluence.jetbrains.com/display/IDEADEV/IDEA+14.1+EAP).
-Also install their [Scala plugin, the EAP version](https://confluence.jetbrains.com/display/SCA/Scala+plugin+EAP)
+The primary development IDE used for this project is [IntelliJ IDEA 14.1](http://www.jetbrains.com/idea/).
+Also install their [Scala plugin](https://confluence.jetbrains.com/display/SCA/Scala+Plugin+for+IntelliJ+IDEA).
 
 ## build
 
