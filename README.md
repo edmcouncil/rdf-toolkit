@@ -42,7 +42,7 @@ For use in Git we need a format that:
 
 The FIBO JIRA server has a separate project for the Sesame serializer: https://jira.edmcouncil.org/browse/RDFSER
 
-Please add your issues, bugs, feature requests, requirements or questions as issues on the JIRA site.
+Please add your issues, bugs, feature requests, requirements or questions as issues on the JIRA site.  You will need to sign up for an account, if you haven't already.
 
 # download
 
