@@ -1,4 +1,4 @@
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.rdf_toolkit
 
 import scala.language.postfixOps
 
@@ -6,8 +6,8 @@ import java.io._
 import java.nio.charset.Charset
 import java.util
 
-import org.edmcouncil.rdf_serializer.SesameSortedRDFWriter.ShortUriPreferences
-import org.edmcouncil.rdf_serializer.SesameSortedRDFWriterFactory.TargetFormats
+import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
+import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
 import org.openrdf.model.impl.URIImpl
 import org.openrdf.rio.{ RDFWriter, RDFFormat, Rio }
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriterFactory

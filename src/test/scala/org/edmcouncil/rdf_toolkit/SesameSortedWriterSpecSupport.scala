@@ -1,4 +1,4 @@
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.rdf_toolkit
 
 import java.io.{ FileInputStream, File }
 import java.nio.charset.Charset

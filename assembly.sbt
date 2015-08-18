@@ -1,8 +1,8 @@
 //
-// The sbt-assembly specific commands which can be used to construct an "uber-jar" (rdf-serializer.jar) that contains
+// The sbt-assembly specific commands which can be used to construct an "uber-jar" (rdf-toolkit.jar) that contains
 // everything to run the RDF serializer from the command line like this:
 //
-// java -jar rdf-serializer.jar
+// java -jar rdf-toolkit.jar
 //
 // https://github.com/sbt/sbt-assembly
 //
@@ -18,7 +18,7 @@
 //
 // The name of the uber-jar
 //
-assemblyJarName in assembly := "rdf-serializer.jar"
+assemblyJarName in assembly := "rdf-toolkit.jar"
 
 //
 // To skip the test during assembly:
@@ -28,7 +28,7 @@ test in assembly := {}
 //
 // To set an explicit main class:
 //
-mainClass in assembly := Some("org.edmcouncil.rdf_serializer.SesameRdfFormatter")
+mainClass in assembly := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
 
 //
 // Prepend the following shell script to the jar:

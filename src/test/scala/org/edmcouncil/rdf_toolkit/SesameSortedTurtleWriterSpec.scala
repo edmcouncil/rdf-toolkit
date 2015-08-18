@@ -1,8 +1,8 @@
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.rdf_toolkit
 
 import java.nio.charset.Charset
 
-import org.edmcouncil.rdf_serializer.SesameSortedRDFWriter.ShortUriPreferences
+import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
 import org.openrdf.rio.turtle.{ TurtleWriterFactory, TurtleWriter }
 import org.slf4j.LoggerFactory
 

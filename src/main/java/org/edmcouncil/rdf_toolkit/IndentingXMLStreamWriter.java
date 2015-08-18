@@ -1,4 +1,4 @@
-package org.edmcouncil.rdf_serializer;
+package org.edmcouncil.rdf_toolkit;
 
 import info.aduna.io.IndentingWriter;
 import org.apache.commons.lang3.StringEscapeUtils;
