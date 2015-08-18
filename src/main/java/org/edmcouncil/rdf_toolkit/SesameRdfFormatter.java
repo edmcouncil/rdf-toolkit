@@ -95,6 +95,7 @@ public class SesameRdfFormatter {
         // Main program block.
         try {
             run(args);
+            System.exit(0);
         } catch (Throwable t) {
             logger.error(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
             logger.error(t.getClass().getSimpleName() + ": " + t.getMessage());
@@ -102,6 +103,7 @@ public class SesameRdfFormatter {
             t.printStackTrace(new PrintWriter(stackTraceWriter));
             logger.error(stackTraceWriter.toString());
             usage(options);
+            System.exit(1);
         }
 
     }
