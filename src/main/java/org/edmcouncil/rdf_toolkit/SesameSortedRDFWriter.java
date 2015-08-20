@@ -1,34 +1,12 @@
-/*
- * The MIT License (MIT)
- * 
- * Copyright (c) 2015 Enterprise Data Management Council
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-package org.edmcouncil.rdf_serializer;
+package org.edmcouncil.rdf_toolkit;
 
-import info.aduna.io.IndentingWriter;
 import org.openrdf.model.*;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.helpers.RDFWriterBase;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
@@ -37,11 +15,107 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * Equivalent to Sesame's built-in Turtle writer, but the triples are sorted into a consistent order.
+ * Equivalent to Sesame's built-in RDF writer, but the triples are sorted into a consistent order.
  * In order to do the sorting, it must be possible to load all of the RDF statements into memory.
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
-public class SesameSortedTurtleWriter extends RDFWriterBase {
+public abstract class SesameSortedRDFWriter extends RDFWriterBase {
+
+//    private static final Logger logger = LoggerFactory.getLogger(SesameSortedRDFWriter.class);
+
+    /** Whether the character is a "name character", as defined in the XML namespaces spec.  Characters above Unicode FFFF are included. */
+    public static boolean isNameChar(char ch) {
+        if ('-' == ch) return true;
+        if ('.' == ch) return true;
+        if ('_' == ch) return true;
+        if ('\\' == ch) return true;
+        if (':' == ch) return true;
+        if (('0' <= ch) && (ch <= '9')) return true;
+        if (('A' <= ch) && (ch <= 'Z')) return true;
+        if (('a' <= ch) && (ch <= 'z')) return true;
+        if (('\u00C0' <= ch) && (ch <= '\u00D6')) return true;
+        if (('\u00D8' <= ch) && (ch <= '\u00F6')) return true;
+        if (('\u00F8' <= ch) && (ch <= '\u02FF')) return true;
+        if (('\u0370' <= ch) && (ch <= '\u037D')) return true;
+        if (('\u037F' <= ch) && (ch <= '\u1FFF')) return true;
+        if (('\u200C' <= ch) && (ch <= '\u200D')) return true;
+        if (('\u2070' <= ch) && (ch <= '\u218F')) return true;
+        if (('\u2C00' <= ch) && (ch <= '\u2FEF')) return true;
+        if (('\u3001' <= ch) && (ch <= '\uD7FF')) return true;
+        if (('\uF900' <= ch) && (ch <= '\uFDCF')) return true;
+        if (('\uFDF0' <= ch) && (ch <= '\uFFFD')) return true;
+        if ('\u00B7' == ch) return true;
+        if (('\u0300' <= ch) && (ch <= '\u036F')) return true;
+        if (('\u203F' <= ch) && (ch <= '\u2040')) return true;
+        return false;
+    }
+
+    public static boolean isMultilineString(String str) {
+        if (str == null) { return false; }
+        for (int idx = 0; idx < str.length(); idx++) {
+            switch (str.charAt(idx)) {
+                case 0xA: return true;
+                case 0xB: return true;
+                case 0xC: return true;
+                case 0xD: return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether the string is valid as the local part of a prefixed name, as defined in the RDF 1.1 Turtle spec.
+     * Doesn't check that backslash escape sequences in the name are correctly formed.
+     */
+    public static boolean isPrefixedNameLocalPart(String str) {
+        if (str == null) return false;
+        if (str.length() < 1) return false;
+        if ((':' != str.charAt(0)) && !isNameChar(str.charAt(0))) return false; // cannot start with a colon
+        for (int idx = 2; idx < str.length(); idx++) {
+            if (!isNameChar(str.charAt(idx))) return false;
+        }
+        return true;
+    }
+
+    public enum ShortUriPreferences {
+        prefix("prefix"),
+        base_uri("base-uri");
+
+        private static final ShortUriPreferences defaultEnum = prefix;
+
+        private String optionValue = null;
+
+        ShortUriPreferences(String optionValue) {
+            this.optionValue = optionValue;
+        }
+
+        public String getOptionValue() { return optionValue; }
+
+        public static ShortUriPreferences getByOptionValue(String optionValue) {
+            if (optionValue == null) { return null; }
+            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+                if (optionValue.equals(sup.optionValue)) {
+                    return sup;
+                }
+            }
+            return null;
+        }
+
+        public static String summarise() {
+            ArrayList<String> result = new ArrayList<String>();
+            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+                String value = sup.optionValue;
+                if (defaultEnum.equals(sup)) {
+                    value += " [default]";
+                }
+                result.add(value);
+            }
+            return String.join(", ", result);
+        }
+    }
+
+    /** XML namespace URI. */
+    public static final String XML_NS_URI = "http://www.w3.org/XML/1998/namespace";
 
     /** XML Schema namespace URI. */
     public static final String XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema#";
@@ -56,34 +130,37 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     public static final String OWL_NS_URI = "http://www.w3.org/2002/07/owl#";
 
     /** rdf:type ('a') URL */
-    private static final URI rdfType = new URIImpl(RDF_NS_URI + "type");
+    protected static final URI rdfType = new URIImpl(RDF_NS_URI + "type");
+
+    /** rdf:Description URL */
+    protected static final URI rdfDescription = new URIImpl(RDF_NS_URI + "Description");
 
     /** rdfs:label URL */
-    private static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
+    protected static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
 
     /** rdfs:comment URL */
-    private static final URI rdfsComment = new URIImpl(RDFS_NS_URI + "comment");
+    protected static final URI rdfsComment = new URIImpl(RDFS_NS_URI + "comment");
 
     /** rdfs:subClassOf URL */
-    private static final URI rdfsSubClassOf = new URIImpl(RDFS_NS_URI + "subClassOf");
+    protected static final URI rdfsSubClassOf = new URIImpl(RDFS_NS_URI + "subClassOf");
 
     /** rdfs:subPropertyOf URL */
-    private static final URI rdfsSubPropertyOf = new URIImpl(RDFS_NS_URI + "subPropertyOf");
+    protected static final URI rdfsSubPropertyOf = new URIImpl(RDFS_NS_URI + "subPropertyOf");
 
     /** owl:Ontology URL */
-    private static final URI owlOntology = new URIImpl(OWL_NS_URI + "Ontology");
+    protected static final URI owlOntology = new URIImpl(OWL_NS_URI + "Ontology");
 
     /** owl:imports URL */
-    private static final URI owlImports = new URIImpl(OWL_NS_URI + "imports");
+    protected static final URI owlImports = new URIImpl(OWL_NS_URI + "imports");
 
     /** owl:sameAs URL */
-    private static final URI owlSameAs = new URIImpl(OWL_NS_URI + "sameAs");
+    protected static final URI owlSameAs = new URIImpl(OWL_NS_URI + "sameAs");
 
     /** xs:string URL */
-    private static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
+    protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
 
     /** Comparator for TurtleObjectList objects. */
-    private class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
+    protected class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
         private ValueComparator valc = null;
 
         @Override
@@ -141,7 +218,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** Comparator for TurtlePredicateObjectMap objects. */
-    private class TurtlePredicateObjectMapComparator implements Comparator<SortedTurtlePredicateObjectMap> {
+    protected class TurtlePredicateObjectMapComparator implements Comparator<SortedTurtlePredicateObjectMap> {
         private URIComparator uric = null;
         private TurtleObjectListComparator tolc = null;
 
@@ -221,7 +298,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** Comparator for Sesame BNode objects. */
-    private class BNodeComparator implements Comparator<BNode> {
+    protected class BNodeComparator implements Comparator<BNode> {
         private TurtlePredicateObjectMapComparator tpomc = null;
 
         @Override
@@ -262,7 +339,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** Comparator for Sesame Value objects. */
-    private class ValueComparator implements Comparator<Value> {
+    protected class ValueComparator implements Comparator<Value> {
         private BNodeComparator bnc = null;
 
         @Override
@@ -310,7 +387,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
         }
     }
 
-    private int compareSimpleValue(Literal literal1, Literal literal2) {
+    protected int compareSimpleValue(Literal literal1, Literal literal2) {
         int cmp = literal1.stringValue().compareTo(literal2.stringValue());
         if (cmp != 0) {
             return cmp;
@@ -353,13 +430,13 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
         }
     }
 
-    private int compareSimpleValue(Value value1, Value value2) {
+    protected int compareSimpleValue(Value value1, Value value2) {
         // Use string comparison as the last option.
         return value1.stringValue().compareTo(value2.stringValue());
     }
 
     /** An unsorted list of RDF object values. */
-    private class UnsortedTurtleObjectList extends HashSet<Value> {
+    protected class UnsortedTurtleObjectList extends HashSet<Value> {
         public SortedTurtleObjectList toSorted() {
             SortedTurtleObjectList sortedOList = new SortedTurtleObjectList();
             for (Value value : this) {
@@ -370,12 +447,12 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted list of RDF object values. */
-    private class SortedTurtleObjectList extends TreeSet<Value> {
+    protected class SortedTurtleObjectList extends TreeSet<Value> {
         public SortedTurtleObjectList() { super(new ValueComparator()); }
     }
 
     /** Comparator for Sesame URI objects. */
-    private class URIComparator implements Comparator<URI> {
+    protected class URIComparator implements Comparator<URI> {
         @Override
         public int compare(URI uri1, URI uri2) {
             return compare(uri1, uri2, new ArrayList<Object>());
@@ -403,7 +480,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** An unsorted map from predicate URIs to lists of object values. */
-    private class UnsortedTurtlePredicateObjectMap extends HashMap<URI, UnsortedTurtleObjectList> {
+    protected class UnsortedTurtlePredicateObjectMap extends HashMap<URI, UnsortedTurtleObjectList> {
         public SortedTurtleObjectList getSorted(URI predicate) {
             if (containsKey(predicate)) {
                 return get(predicate).toSorted();
@@ -422,12 +499,12 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted map from predicate URIs to lists of object values. */
-    private class SortedTurtlePredicateObjectMap extends TreeMap<URI, SortedTurtleObjectList> {
+    protected class SortedTurtlePredicateObjectMap extends TreeMap<URI, SortedTurtleObjectList> {
         public SortedTurtlePredicateObjectMap() { super(new URIComparator()); }
     }
 
     /** An unsorted list of RDF URI values. */
-    private class UnsortedTurtlePredicateList extends HashSet<URI> {
+    protected class UnsortedTurtlePredicateList extends HashSet<URI> {
         public SortedTurtlePredicateList toSorted() {
             SortedTurtlePredicateList sortedPList = new SortedTurtlePredicateList();
             for (URI predicate : this) {
@@ -438,12 +515,12 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted list of RDF URI values. */
-    private class SortedTurtlePredicateList extends TreeSet<URI> {
+    protected class SortedTurtlePredicateList extends TreeSet<URI> {
         public SortedTurtlePredicateList() { super(new URIComparator()); }
     }
 
     /** Comparator for Sesame Resource objects. */
-    private class ResourceComparator implements Comparator<Resource> {
+    protected class ResourceComparator implements Comparator<Resource> {
         private BNodeComparator bnc = null;
         private URIComparator uric = null;
 
@@ -493,7 +570,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** An unsorted map from subject resources to predicate/object pairs. */
-    private class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
+    protected class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
         public SortedTurtlePredicateObjectMap getSorted(Resource subject) {
             if (containsKey(subject)) {
                 return get(subject).toSorted();
@@ -512,12 +589,12 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted map from subject resources to predicate/object pairs. */
-    private class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
+    protected class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
         public SortedTurtleSubjectPredicateObjectMap() { super(new ResourceComparator()); }
     }
 
     /** An unsorted list of RDF resource values. */
-    private class UnsortedTurtleResourceList extends HashSet<Resource> {
+    protected class UnsortedTurtleResourceList extends HashSet<Resource> {
         public SortedTurtleResourceList toSorted() {
             SortedTurtleResourceList sortedRList = new SortedTurtleResourceList();
             for (Resource resource : this) {
@@ -528,12 +605,12 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted list of RDF resource values. */
-    private class SortedTurtleResourceList extends TreeSet<Resource> {
+    protected class SortedTurtleResourceList extends TreeSet<Resource> {
         public SortedTurtleResourceList() { super(new ResourceComparator()); }
     }
 
     /** An unsorted list of RDF blank nodes. */
-    private class UnsortedTurtleBNodeList extends HashSet<BNode> {
+    protected class UnsortedTurtleBNodeList extends HashSet<BNode> {
         public SortedTurtleBNodeList toSorted() {
             SortedTurtleBNodeList sortedBNList = new SortedTurtleBNodeList();
             for (BNode bnode : this) {
@@ -544,42 +621,48 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A sorted list of RDF blank nodes. */
-    private class SortedTurtleBNodeList extends TreeSet<BNode> {
+    protected class SortedTurtleBNodeList extends TreeSet<BNode> {
         public SortedTurtleBNodeList() { super(new BNodeComparator()); }
     }
 
-    /** Output stream for this Turtle writer. */
-    private IndentingWriter output = null;
+    /** Base URI for the RDF output document. */
+    protected URI baseUri = null;
 
-    /** Base URI for the Turtle output document. */
-    private URI baseUri = null;
+    /** Preference for prefix or base-URI based URI shortening. */
+    protected ShortUriPreferences shortUriPreference = ShortUriPreferences.prefix;
+
+    /** Whether to use a DTD subset to allow URI shortening in RDF/XML */
+    protected boolean useDtdSubset = false;
+
+    /** Whether to inline blank nodes */
+    protected boolean inlineBlankNodes = false;
 
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
-    private UnsortedTurtleResourceList unsortedOntologies = null;
+    protected UnsortedTurtleResourceList unsortedOntologies = null;
 
     /** Sorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
-    private SortedTurtleResourceList sortedOntologies = null;
+    protected SortedTurtleResourceList sortedOntologies = null;
 
     /** Unsorted list of blank nodes, as they are rendered separately from other nodes. */
-    private UnsortedTurtleResourceList unsortedBlankNodes = null;
+    protected UnsortedTurtleResourceList unsortedBlankNodes = null;
 
     /** Sorted list of blank nodes, as they are rendered separately from other nodes. */
-    private SortedTurtleResourceList sortedBlankNodes = null;
+    protected SortedTurtleResourceList sortedBlankNodes = null;
 
     /** Map of serialisation names for blank nodes. */
-    private HashMap<BNode, String> blankNodeNameMap = null;
+    protected HashMap<BNode, String> blankNodeNameMap = null;
 
     /** Unsorted hash map containing triple data. */
-    private UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap = null;
+    protected UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap = null;
 
     /** Sorted hash map containing triple data. */
-    private SortedTurtleSubjectPredicateObjectMap sortedTripleMap = null;
+    protected SortedTurtleSubjectPredicateObjectMap sortedTripleMap = null;
 
     /** Predicates that are specially rendered before all others. */
-    private ArrayList<URI> firstPredicates = null;
+    protected ArrayList<URI> firstPredicates = null;
 
     /** Comparator for Strings that shorts longer strings first. */
-    private class StringLengthComparator implements Comparator<String> {
+    protected class StringLengthComparator implements Comparator<String> {
         @Override
         public int compare(String str1, String str2) {
             if (str1 == null) { throw new NullPointerException("cannot compare null to String"); }
@@ -595,59 +678,80 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /** A reverse namespace table with which returns the longest namespace URIs first.  Key is URI string, value is prefix string. */
-    private class ReverseNamespaceTable extends TreeMap<String,String> {
+    protected class ReverseNamespaceTable extends TreeMap<String,String> {
         public ReverseNamespaceTable() { super(new StringLengthComparator()); }
     }
 
     /** Reverse namespace table used to map URIs to prefixes.  Key is URI string, value is prefix string. */
-    private ReverseNamespaceTable reverseNamespaceTable = null;
+    protected ReverseNamespaceTable reverseNamespaceTable = null;
+
+    /** Output stream for this RDF writer. */
+    protected Writer out = null;
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied output stream.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied output stream.
      *
-     * @param out The OutputStream to write the Turtle to.
+     * @param out The OutputStream to write the RDF to.
      */
-    public SesameSortedTurtleWriter(OutputStream out) {
+    public SesameSortedRDFWriter(OutputStream out) {
         assert out != null : "output stream cannot be null";
-        this.output = new IndentingWriter(new OutputStreamWriter(out));
+        this.out = new OutputStreamWriter(out);
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied writer.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied writer.
      *
-     * @param writer The Writer to write the Turtle to.
+     * @param writer The Writer to write the RDF to.
      */
-    public SesameSortedTurtleWriter(Writer writer) {
+    public SesameSortedRDFWriter(Writer writer) {
         assert writer != null : "output writer cannot be null";
-        this.output = new IndentingWriter(writer);
+        this.out = writer;
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied output stream.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied output stream.
      *
-     * @param out The OutputStream to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output.
+     * @param out The OutputStream to write the RDF to.
+     * @param options options for the RDF writer.
      */
-    public SesameSortedTurtleWriter(OutputStream out, URI baseUri, String indent) {
+    public SesameSortedRDFWriter(OutputStream out, Map<String, Object> options) {
         assert out != null : "output stream cannot be null";
-        this.output = new IndentingWriter(new OutputStreamWriter(out));
-        if (indent != null) { this.output.setIndentationString(indent); }
-        this.baseUri = baseUri;
+        this.out = new OutputStreamWriter(out);
+        if (options.containsKey("baseUri")) {
+            this.baseUri = (URI) options.get("baseUri");
+        }
+        if (options.containsKey("shortUriPref")) {
+            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        }
+        if (options.containsKey("useDtdSubset")) {
+            this.useDtdSubset = (Boolean) options.get("useDtdSubset");
+        }
+        if (options.containsKey("inlineBlankNodes")) {
+            this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
+        }
     }
 
     /**
-     * Creates an RDFWriter instance that will write sorted Turtle to the supplied writer.
+     * Creates an RDFWriter instance that will write sorted RDF to the supplied writer.
      *
-     * @param writer The Writer to write the Turtle to.
-     * @param baseUri The base URI for the Turtel, or null.
-     * @param indent The indentation string to use when formatting the Turtle output, or null.
+     * @param writer The Writer to write the RDF to.
+     * @param options options for the RDF writer.
      */
-    public SesameSortedTurtleWriter(Writer writer, URI baseUri, String indent) {
+    public SesameSortedRDFWriter(Writer writer, Map<String, Object> options) {
         assert writer != null : "output writer cannot be null";
-        this.output = new IndentingWriter(writer);
-        if (indent != null) { this.output.setIndentationString(indent); }
-        this.baseUri = baseUri;
+        this.out = writer;
+        if (options.containsKey("baseUri")) {
+            this.baseUri = (URI) options.get("baseUri");
+        }
+        if (options.containsKey("shortUriPref")) {
+            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        }
+        if (options.containsKey("useDtdSubset")) {
+            this.useDtdSubset = (Boolean) options.get("useDtdSubset");
+        }
+        if (options.containsKey("inlineBlankNodes")) {
+            this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
+        }
     }
 
     /**
@@ -659,6 +763,43 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
     }
 
     /**
+     * Converts a URI to a QName, if possible, given the available namespace prefixes.  Returns null if there is no match to a prefix.
+     * @param uri The URI to convert to a QName, if possible.
+     * @return The equivalent QName for the URI, or null if no equivalent.
+     */
+    protected QName convertUriToQName(URI uri) {
+        String uriString = uri.stringValue();
+        for (String uriStem : reverseNamespaceTable.keySet()) {
+            if ((uriString.length() > uriStem.length()) && uriString.startsWith(uriStem)) {
+                String localPart = uriString.substring(uriStem.length());
+                if (isPrefixedNameLocalPart(localPart)) { // to be a value QName, the 'local part' has to be valid
+                    return new QName(uriStem, localPart, reverseNamespaceTable.get(uriStem));
+                } else {
+                    return null;
+                }
+            }
+        }
+        // Failed to find a match, return null.
+        return null;
+    }
+
+    protected String convertUriToRelativeUri(URI uri, boolean useTurtleQuoting) {
+        // Note: does not check that the baseUri doesn't terminate in the middle of some URI of which it really isn't the base.
+        if (baseUri != null) {
+            String uriString = uri.stringValue();
+            String baseUriString = baseUri.stringValue();
+            if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
+                String result = (useTurtleQuoting ? "<" : "") +
+                        uriString.substring(baseUriString.length()) +
+                        (useTurtleQuoting ? ">" : "");
+                return result;
+            }
+        }
+        // Failed to find a match, return null.
+        return null;
+    }
+
+    /**
      * Signals the start of the RDF data. This method is called before any data
      * is reported.
      *
@@ -666,7 +807,6 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
      */
     @Override
     public void startRDF() throws RDFHandlerException {
-        output.setIndentationLevel(0);
         namespaceTable = new TreeMap<String, String>();
         unsortedOntologies = new UnsortedTurtleResourceList();
         unsortedBlankNodes = new UnsortedTurtleResourceList();
@@ -679,7 +819,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
      * @param namespaceUri The namespace URI.  Cannot be null.
      * @param defaultPrefix The default prefix to use, if no prefix is yet assigned.  Cannot be null.
      */
-    private void addDefaultNamespacePrefixIfMissing(String namespaceUri, String defaultPrefix) {
+    protected void addDefaultNamespacePrefixIfMissing(String namespaceUri, String defaultPrefix) {
         if ((namespaceUri != null) && (defaultPrefix != null)) {
             if (!namespaceTable.containsValue(namespaceUri)) {
                 namespaceTable.put(defaultPrefix, namespaceUri);
@@ -760,273 +900,38 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
                 }
             }
 
-            // Write TopBraid-specific special comments, if any.
-            if ((baseUri != null) || (importList.size() >= 1)) {
-                // Write the baseURI, if any.
-                if (baseUri != null) {
-                    output.write("# baseURI: " + baseUri); output.writeEOL();
-                }
-                // Write ontology imports, if any.
-                for (Value anImport : importList) {
-                    output.write("# imports: " + anImport.stringValue()); output.writeEOL();
-                }
-                output.writeEOL();
-            }
-
-            // Write the baseURI, if any.
-            if (baseUri != null) {
-                output.write("@base <" + baseUri + "> ."); output.writeEOL();
-            }
-
-            // Write out prefixes and namespaces URIs.
-            if (namespaceTable.size() > 0) {
-                TreeSet<String> prefixes = new TreeSet<String>(namespaceTable.keySet());
-                for (String prefix : prefixes) {
-                    output.write("@prefix " + prefix + ": <" + namespaceTable.get(prefix) + "> ."); output.writeEOL();
-                }
-                output.writeEOL();
-            }
+            // Write header information
+            writeHeader(out, importList);
 
             // Write out subjects which are unsortedOntologies.
             for (Resource subject : sortedOntologies) {
                 if (!(subject instanceof BNode)) {
-                    writeSubjectTriples(output, subject);
+                    writeSubjectTriples(out, subject);
                 }
             }
 
             // Write out all other subjects (not unsortedOntologies; also not blank nodes).
             for (Resource subject : sortedTripleMap.keySet()) {
                 if (!sortedOntologies.contains(subject) && !(subject instanceof BNode)) {
-                    writeSubjectTriples(output, subject);
+                    writeSubjectTriples(out, subject);
                 }
             }
 
-            // Write out blank nodes that are subjects.
-            for (Resource resource : sortedBlankNodes) {
-                BNode bnode = (BNode)resource;
-                if (unsortedTripleMap.containsKey(bnode)) {
-                    writeSubjectTriples(output, bnode);
-                }
-            }
-
-            output.flush();
-        } catch (Throwable t) {
-            throw new RDFHandlerException("unable to generate/write Turtle output", t);
-        } finally {
-        }
-    }
-
-    private void writeQName(IndentingWriter out, QName qname) throws Exception {
-        if (qname == null) {
-            out.write("null<QName>");
-        } else if (qname.getPrefix() != null) {
-            out.write(qname.getPrefix() + ":" + qname.getLocalPart());
-        } else {
-            out.write("<" + qname.getNamespaceURI() + qname.getLocalPart() + ">");
-        }
-    }
-
-    private void writeSubjectTriples(IndentingWriter out, Resource subject) throws Exception {
-        SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
-        QName qname = null; // try to write the subject out as a QName if possible.
-        if (subject instanceof URI) {
-            qname = convertUriToQName((URI)subject);
-        }
-        if (qname != null) {
-            writeQName(out, qname);
-        } else if (subject instanceof BNode) {
-            out.write("_:" + blankNodeNameMap.get((BNode)subject));
-        } else {
-            out.write("<" + subject.stringValue() + ">");
-        }
-        out.writeEOL();
-        out.increaseIndentation();
-
-        // Write predicate/object pairs rendered first.
-        for (URI predicate : firstPredicates) {
-            if (poMap.containsKey(predicate)) {
-                SortedTurtleObjectList values = poMap.get(predicate);
-                writePredicateAndObjectValues(out, predicate, values);
-            }
-        }
-
-        // Write other predicate/object pairs.
-        for (URI predicate : poMap.keySet()) {
-            if (!firstPredicates.contains(predicate)) {
-                SortedTurtleObjectList values = poMap.get(predicate);
-                writePredicateAndObjectValues(out, predicate, values);
-            }
-        }
-
-        // Close statement
-        out.write("."); out.writeEOL();
-
-        out.decreaseIndentation();
-        out.writeEOL(); // blank line
-    }
-
-    private void writePredicateAndObjectValues(IndentingWriter out, URI predicate, SortedTurtleObjectList values) throws Exception {
-        writePredicate(out, predicate);
-        if (values.size() == 1) {
-            writeObject(out, values.first());
-            out.write(";");
-            out.writeEOL();
-        } else if (values.size() > 1) {
-            out.writeEOL();
-            out.increaseIndentation();
-            int numValues = values.size();
-            int valueIndex = 0;
-            for (Value value : values) {
-                valueIndex += 1;
-                writeObject(out, value);
-                if (valueIndex < numValues) { out.write(","); }
-                out.writeEOL();
-            }
-            out.write(";");
-            out.writeEOL();
-            out.decreaseIndentation();
-        }
-    }
-
-    private void writePredicate(IndentingWriter out, URI predicate) throws Exception {
-        writeUri(out, predicate);
-    }
-
-    /**
-     * Converts a URI to a QName, if possible, given the available namespace prefixes.  Returns null if there is no match to a prefix.
-     * @param uri The URI to convert to a QName, if possible.
-     * @return The equivalent QName for the URI, or null if no equivalent.
-     */
-    private QName convertUriToQName(URI uri) {
-        String uriString = uri.stringValue();
-        for (String uriStem : reverseNamespaceTable.keySet()) {
-            if ((uriString.length() > uriStem.length()) && uriString.startsWith(uriStem)) {
-                String localPart = uriString.substring(uriStem.length());
-                if (isPrefixedNameLocalPart(localPart)) { // to be a value QName, the 'local part' has to be valid
-                    return new QName(uriStem, localPart, reverseNamespaceTable.get(uriStem));
-                } else {
-                    return null;
-                }
-            }
-        }
-        // Failed to find a match, return null.
-        return null;
-    }
-
-    private void writeUri(IndentingWriter out, URI uri) throws Exception {
-        if(rdfType.equals(uri)) {
-            out.write("a ");
-        } else {
-            QName qname = convertUriToQName(uri); // write the URI out as a QName if possible.
-            if (qname != null) {
-                writeQName(out, qname);
-                out.write(" ");
-            } else { // write out the URI relative to the base URI, if possible.
-                String uriString = uri.stringValue();
-                if (baseUri != null) {
-                    String baseUriString = baseUri.stringValue();
-                    if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
-                        out.write("#" + uriString.substring(baseUriString.length()) + " ");
-                        return;
+            // Write out blank nodes that are subjects, if blank nodes are not being inlined.
+            if (!inlineBlankNodes) {
+                for (Resource resource : sortedBlankNodes) {
+                    BNode bnode = (BNode)resource;
+                    if (unsortedTripleMap.containsKey(bnode)) {
+                        writeSubjectTriples(out, bnode);
                     }
                 }
-                out.write("<" + uri.stringValue() + "> ");
             }
-        }
-    }
 
-    private void writeObject(IndentingWriter out, Value value) throws Exception {
-        if (value instanceof BNode) {
-            writeObject(out, (BNode) value);
-        } else if (value instanceof URI) {
-            writeObject(out, (URI)value);
-        } else if (value instanceof Literal) {
-            writeObject(out, (Literal)value);
-        } else {
-            out.write("\"" + value.stringValue() + "\"");
-            out.write(" ");
-        }
-    }
+            writeFooter(out);
 
-    private void writeObject(IndentingWriter out, BNode bnode) throws Exception {
-        if (unsortedTripleMap.containsKey(bnode)) {
-            out.write("_:" + blankNodeNameMap.get(bnode) + " ");
-        } else {
-            out.write("[] ");
-        }
-    }
-
-    private void writeObject(IndentingWriter out, URI uri) throws Exception {
-        writeUri(out, uri);
-    }
-
-    private void writeObject(IndentingWriter out, Literal literal) throws Exception {
-        if (literal == null) {
-            out.write("null<Literal> ");
-        } else if (literal.getLanguage() != null) {
-            writeString(out, literal.stringValue());
-            out.write("@" + literal.getLanguage() + " ");
-        } else if (literal.getDatatype() != null) {
-            writeString(out, literal.stringValue());
-            out.write("^^");
-            writeUri(out, literal.getDatatype());
-        } else {
-            writeString(out, literal.stringValue());
-        }
-    }
-
-    private String escapeString(String str) {
-        if (str == null) { return null; }
-        return str.replaceAll("\\\\", "\\\\\\\\");
-    }
-
-    private boolean isMultilineString(String str) {
-        if (str == null) { return false; }
-        for (int idx = 0; idx < str.length(); idx++) {
-            switch (str.charAt(idx)) {
-                case 0xA: return true;
-                case 0xB: return true;
-                case 0xC: return true;
-                case 0xD: return true;
-            }
-        }
-        return false;
-    }
-
-    private void writeString(IndentingWriter out, String str) throws Exception {
-        if (str == null) { return; }
-        if (isMultilineString(str)) { // multi-line string
-            if (str.contains("\"")) { // string contains double quote chars
-                if (str.contains("'")) { // string contains both single and double quote chars
-                    out.write("\"\"\"");
-                    out.write(escapeString(str).replaceAll("\"", "\\\\\""));
-                    out.write("\"\"\"");
-                } else { // string contains double quote chars but no single quote chars
-                    out.write("'''");
-                    out.write(escapeString(str));
-                    out.write("'''");
-                }
-            } else { // string has no double quote chars
-                out.write("\"\"\"");
-                out.write(escapeString(str));
-                out.write("\"\"\"");
-            }
-        } else { // single-line string
-            if (str.contains("\"")) { // string contains double quote chars
-                if (str.contains("'")) { // string contains both single and double quote chars
-                    out.write("\"");
-                    out.write(escapeString(str).replaceAll("\"", "\\\\\""));
-                    out.write("\"");
-                } else { // string contains double quote chars but no single quote chars
-                    out.write("'");
-                    out.write(escapeString(str));
-                    out.write("'");
-                }
-            } else { // string has no double quote chars
-                out.write("\"");
-                out.write(escapeString(str));
-                out.write("\"");
-            }
+            out.flush();
+        } catch (Throwable t) {
+            throw new RDFHandlerException("unable to generate/write RDF output", t);
         }
     }
 
@@ -1066,7 +971,7 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
 
         // Note subjects & objects which are blank nodes.
         if (st.getSubject() instanceof BNode) {
-            unsortedBlankNodes.add((BNode)st.getSubject());
+            unsortedBlankNodes.add(st.getSubject());
         }
         if (st.getObject() instanceof BNode) {
             unsortedBlankNodes.add((BNode)st.getObject());
@@ -1084,45 +989,63 @@ public class SesameSortedTurtleWriter extends RDFWriterBase {
         // NOTE: comments are suppressed, as it isn't clear how to sort them sensibly with triples.
     }
 
-    /** Whether the character is a "name character", as defined in the XML namespaces spec.  Characters above Unicode FFFF are included. */
-    public boolean isNameChar(char ch) {
-        if ('-' == ch) return true;
-        if ('.' == ch) return true;
-        if ('_' == ch) return true;
-        if ('\\' == ch) return true;
-        if (':' == ch) return true;
-        if (('0' <= ch) && (ch <= '9')) return true;
-        if (('A' <= ch) && (ch <= 'Z')) return true;
-        if (('a' <= ch) && (ch <= 'z')) return true;
-        if (('\u00C0' <= ch) && (ch <= '\u00D6')) return true;
-        if (('\u00D8' <= ch) && (ch <= '\u00F6')) return true;
-        if (('\u00F8' <= ch) && (ch <= '\u02FF')) return true;
-        if (('\u0370' <= ch) && (ch <= '\u037D')) return true;
-        if (('\u037F' <= ch) && (ch <= '\u1FFF')) return true;
-        if (('\u200C' <= ch) && (ch <= '\u200D')) return true;
-        if (('\u2070' <= ch) && (ch <= '\u218F')) return true;
-        if (('\u2C00' <= ch) && (ch <= '\u2FEF')) return true;
-        if (('\u3001' <= ch) && (ch <= '\uD7FF')) return true;
-        if (('\uF900' <= ch) && (ch <= '\uFDCF')) return true;
-        if (('\uFDF0' <= ch) && (ch <= '\uFFFD')) return true;
-        if ('\u00B7' == ch) return true;
-        if (('\u0300' <= ch) && (ch <= '\u036F')) return true;
-        if (('\u203F' <= ch) && (ch <= '\u2040')) return true;
-        return false;
+    protected String convertQNameToString(QName qname, boolean useTurtleQuoting) {
+        if (qname == null) {
+            return "null<QName>";
+        } else if (qname.getPrefix() != null) {
+            return qname.getPrefix() + ":" + qname.getLocalPart();
+        } else {
+            return (useTurtleQuoting ? "<" : "") +
+                    qname.getNamespaceURI() + qname.getLocalPart() +
+                    (useTurtleQuoting ? ">" : "");
+        }
     }
 
-    /**
-     * Whether the string is valid as the local part of a prefixed name, as defined in the RDF 1.1 Turtle spec.
-     * Doesn't check that backslash escape sequences in the name are correctly formed.
-     */
-    public boolean isPrefixedNameLocalPart(String str) {
-        if (str == null) return false;
-        if (str.length() < 1) return false;
-        if ((':' != str.charAt(0)) && !isNameChar(str.charAt(0))) return false; // cannot start with a colon
-        for (int idx = 2; idx < str.length(); idx++) {
-            if (!isNameChar(str.charAt(idx))) return false;
+    protected String convertUriToString(URI uri, boolean useTurtleQuoting) {
+        if (rdfType.equals(uri)) {
+            return "a";
         }
-        return true;
+        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
+            QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
+            if (qname != null) {
+                return convertQNameToString(qname, useTurtleQuoting);
+            } else { // return the URI relative to the base URI, if possible.
+                String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting);
+                if (relativeUri != null) {
+                    return relativeUri;
+                } else { // return the absolute URI
+                    return (useTurtleQuoting ? "<" : "") +
+                            uri.stringValue() +
+                            (useTurtleQuoting ? ">" : "");
+                }
+            }
+        }
+        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
+            String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting); // return the URI relative to the base URI, if possible.
+            if (relativeUri != null) {
+                return relativeUri;
+            } else {
+                QName qname = convertUriToQName(uri); // return the URI out as a QName if possible.
+                if (qname != null) {
+                    return convertQNameToString(qname, useTurtleQuoting);
+                } else { // return the absolute URI
+                    return (useTurtleQuoting ? "<" : "") +
+                            uri.stringValue() +
+                            (useTurtleQuoting ? ">" : "");
+                }
+            }
+        }
+        return (useTurtleQuoting ? "<" : "") +
+                uri.stringValue() +
+                (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
+
+    abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList) throws Exception;
+
+    abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
+
+    abstract protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception;
+
+    abstract protected void writeFooter(Writer out) throws Exception;
 
 }
