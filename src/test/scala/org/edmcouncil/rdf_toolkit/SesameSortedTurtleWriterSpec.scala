@@ -535,4 +535,42 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(content.contains("@prefix countries: <http://replaced.example.org/countries#> ."), "URI replacement seems to have failed")
   }
 
+  it should "be able to add single-line leading and trailing comments" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_single-comments.ttl")
+    val linePrefix = "## "
+    val leadingComment = "Start of: My New Ontology."
+    val trailingComment = "End of: My New Ontology."
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-lc", leadingComment,
+      "-tc", trailingComment
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains(linePrefix + leadingComment), "leading comment insertion seems to have failed")
+    assert(content.contains(linePrefix + trailingComment), "trailing comment insertion seems to have failed")
+  }
+
+  it should "be able to add multi-line leading and trailing comments" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_multiple-comments.ttl")
+    val linePrefix = "## "
+    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
+    val trailingComments = List("End of: My New Ontology.", "Version 1.")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-lc", leadingComments(0), "-lc", leadingComments(1),
+      "-tc", trailingComments(0), "-tc", trailingComments(1)
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    for (comment ← leadingComments) {
+      assert(content.contains(linePrefix + comment), "leading comment insertion seems to have failed")
+    }
+    for (comment ← trailingComments) {
+      assert(content.contains(linePrefix + comment), "trailing comment insertion seems to have failed")
+    }
+  }
+
 }

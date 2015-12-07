@@ -637,6 +637,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Whether to inline blank nodes */
     protected boolean inlineBlankNodes = false;
 
+    /** Leading comment lines */
+    protected String[] leadingComments = null;
+
+    /** Trailing comment lines */
+    protected String[] trailingComments = null;
+
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     protected UnsortedTurtleResourceList unsortedOntologies = null;
 
@@ -729,6 +735,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         if (options.containsKey("inlineBlankNodes")) {
             this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
         }
+        if (options.containsKey("leadingComments")) {
+            this.leadingComments = (String[]) options.get("leadingComments");
+        }
+        if (options.containsKey("trailingComments")) {
+            this.trailingComments = (String[]) options.get("trailingComments");
+        }
     }
 
     /**
@@ -751,6 +763,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
         if (options.containsKey("inlineBlankNodes")) {
             this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
+        }
+        if (options.containsKey("leadingComments")) {
+            this.leadingComments = (String[]) options.get("leadingComments");
+        }
+        if (options.containsKey("trailingComments")) {
+            this.trailingComments = (String[]) options.get("trailingComments");
         }
     }
 
@@ -900,8 +918,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 }
             }
 
-            // Write header information
-            writeHeader(out, importList);
+            // Write header information, including leading comments.
+            writeHeader(out, importList, leadingComments);
 
             // Write out subjects which are unsortedOntologies.
             for (Resource subject : sortedOntologies) {
@@ -927,7 +945,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 }
             }
 
-            writeFooter(out);
+            // Write footer information, including any trailing comments.
+            writeFooter(out, trailingComments);
 
             out.flush();
         } catch (Throwable t) {
@@ -1040,12 +1059,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
 
-    abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList) throws Exception;
+    abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception;
 
     abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
 
     abstract protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception;
 
-    abstract protected void writeFooter(Writer out) throws Exception;
+    abstract protected void writeFooter(Writer out, String[] trailingComments) throws Exception;
 
 }

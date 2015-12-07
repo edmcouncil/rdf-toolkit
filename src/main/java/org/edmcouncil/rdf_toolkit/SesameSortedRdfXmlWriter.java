@@ -83,7 +83,22 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         super.startRDF();
     }
 
-    protected void writeHeader(Writer out, SortedTurtleObjectList importList) throws Exception {
+    private void writeSpecialComments(Writer out, String[] comments) throws Exception {
+        if ((comments != null) && (comments.length >= 1)) {
+            ArrayList<String> escapedComments = new ArrayList<String>();
+            for (String comment : comments) {
+                escapedComments.add(escapeCommentText(comment));
+            }
+            final String indent = output.getIndentationString();
+            final String surroundString = "\n" + indent + "####";
+            final String joinString = "\n" + indent + "## ";
+            output.writeEOL(); // add extra EOL before comments
+            output.writeComment(surroundString + joinString + String.join(joinString, escapedComments) + surroundString + "\n" + indent);
+            output.writeEOL(); // add extra EOL after comments
+        }
+    }
+
+    protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception {
         // Get prefixes used for the XML
         rdfPrefix = reverseNamespaceTable.get(RDF_NS_URI);
 
@@ -138,6 +153,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         output.writeCharacters(""); // force writing of closing angle bracket in root element open tag
         output.writeEOL(); // add extra EOL after root element
 
+        writeSpecialComments(out, leadingComments);
     }
 
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
@@ -264,9 +280,16 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writeFooter(Writer out) throws Exception {
+    protected void writeFooter(Writer out, String[] trailingComments) throws Exception {
+        writeSpecialComments(out, trailingComments);
+
         output.writeEndElement(); // </rdf:RDF>
         output.writeEndDocument();
+    }
+
+    public static String escapeCommentText(String comment) {
+        if (comment == null) { return null; }
+        return comment.replaceAll("--", "&#x2D;&#x2D;");
     }
 
 }

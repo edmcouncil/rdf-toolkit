@@ -566,4 +566,50 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(content.contains("<!ENTITY countries \"http://replaced.example.org/countries#\">"), "URI replacement seems to have failed")
   }
 
+  it should "be able to add single-line leading and trailing comments" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_single-comments.rdf")
+    val linePrefix = "## "
+    val leadingComment = "Start of --> My New Ontology."
+    val trailingComment = "End of --> My New Ontology."
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-lc", leadingComment,
+      "-tc", trailingComment
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val escapedLeadingComment = SesameSortedRdfXmlWriter.escapeCommentText(leadingComment)
+    assert(content.contains(linePrefix + escapedLeadingComment), "leading comment insertion seems to have failed")
+    val escapedTrailingComment = SesameSortedRdfXmlWriter.escapeCommentText(trailingComment)
+    assert(content.contains(linePrefix + escapedTrailingComment), "trailing comment insertion seems to have failed")
+  }
+
+  it should "be able to add multi-line leading and trailing comments" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_multiple-comments.rdf")
+    val linePrefix = "## "
+    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
+    val trailingComments = List("End of: My New Ontology.", "Version 1.")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-lc", leadingComments(0), "-lc", leadingComments(1),
+      "-tc", trailingComments(0), "-tc", trailingComments(1)
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    for (comment ← leadingComments) {
+      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      assert(content.contains(linePrefix + escapedComment), "leading comment insertion seems to have failed")
+    }
+    for (comment ← trailingComments) {
+      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      assert(content.contains(linePrefix + escapedComment), "trailing comment insertion seems to have failed")
+    }
+  }
+
 }

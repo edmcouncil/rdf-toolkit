@@ -88,6 +88,12 @@ public class SesameRdfFormatter {
         options.addOption(
                 "ibu", "infer-base-uri", false, "use the OWL ontology URI as the base URI.  Ignored if an explicit base URI has been set"
         );
+        options.addOption(
+                "lc", "leading-comment", true, "sets the text of the leading comment in the ontology.  Can be repeated for a multi-line comment"
+        );
+        options.addOption(
+                "tc", "trailing-comment", true, "sets the text of the trailing comment in the ontology.  Can be repeated for a multi-line comment"
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -120,6 +126,8 @@ public class SesameRdfFormatter {
         boolean inlineBlankNodes = false;
         boolean inferBaseUri = false;
         URI inferredBaseUri = null;
+        String[] leadingComments = null;
+        String[] trailingComments = null;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -228,6 +236,16 @@ public class SesameRdfFormatter {
         // Check if the base URI should be set to be the same as the OWL ontology URI
         if (line.hasOption("ibu")) {
             inferBaseUri = true;
+        }
+
+        // Check if there are leading comments.
+        if (line.hasOption("lc")) {
+            leadingComments = line.getOptionValues("lc");
+        }
+
+        // Check if there are trailing comments.
+        if (line.hasOption("tc")) {
+            trailingComments = line.getOptionValues("tc");
         }
 
         // Load RDF file.
@@ -339,6 +357,8 @@ public class SesameRdfFormatter {
         if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
         writerOptions.put("useDtdSubset", useDtdSubset);
         writerOptions.put("inlineBlankNodes", inlineBlankNodes);
+        writerOptions.put("leadingComments", leadingComments);
+        writerOptions.put("trailingComments", trailingComments);
         RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
         Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();

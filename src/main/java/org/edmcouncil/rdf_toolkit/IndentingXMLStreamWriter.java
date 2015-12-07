@@ -410,9 +410,9 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     public void writeComment(String data) throws XMLStreamException {
         try {
             finishStartElement();
-            output.write("<!-- ");
+            output.write("<!--");
             output.write(data);
-            output.write(" -->");
+            output.write("-->");
         } catch (Throwable t) {
             throw new XMLStreamException(t);
         }

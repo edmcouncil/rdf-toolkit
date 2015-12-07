@@ -111,7 +111,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         output.setIndentationLevel(0);
     }
 
-    protected void writeHeader(Writer out, SortedTurtleObjectList importList) throws Exception {
+    protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception {
         // Write TopBraid-specific special comments, if any.
         if ((baseUri != null) || (importList.size() >= 1)) {
             // Write the baseURI, if any.
@@ -122,6 +122,16 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             for (Value anImport : importList) {
                 output.write("# imports: " + anImport.stringValue()); output.writeEOL();
             }
+            output.writeEOL();
+        }
+
+        // Write leading comments, if any.
+        if ((leadingComments != null) && (leadingComments.length >= 1)) {
+            output.write("####"); output.writeEOL();
+            for (String line : leadingComments) {
+                output.write("## " + line); output.writeEOL();
+            }
+            output.write("####"); output.writeEOL();
             output.writeEOL();
         }
 
@@ -355,7 +365,16 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writeFooter(Writer out) {}
+    protected void writeFooter(Writer out, String[] trailingComments) throws Exception {
+        // Write traiing comments, if any.
+        if ((trailingComments != null) && (trailingComments.length >= 1)) {
+            output.write("####"); output.writeEOL();
+            for (String line : trailingComments) {
+                output.write("## " + line); output.writeEOL();
+            }
+            output.write("####"); output.writeEOL();
+        }
+    }
 
     private String escapeString(String str) {
         if (str == null) { return null; }
