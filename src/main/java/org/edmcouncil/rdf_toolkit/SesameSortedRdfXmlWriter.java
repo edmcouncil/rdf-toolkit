@@ -148,7 +148,8 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         addDefaultNamespacePrefixIfMissing(XML_NS_URI, "xml"); // RDF/XML sometimes uses the 'xml' prefix, e.g. xml:lang.  This prefix is never declared explicitly.
         reverseNamespaceTable.put(XML_NS_URI, "xml"); // need to update reverse namespace table manually
 
-        output.writeAttribute("xml", XML_NS_URI, "space", "preserve"); // make sure whitespace is preserved, for consistency of formatting
+        // NOTE: have decided I don't need to preserve whitespace in attributes as I don't produce whitespace-sensitive attributes in RDF/XML.  Also, apparently some less-than-conformant XML applications have problems with it.
+        // output.writeAttribute("xml", XML_NS_URI, "space", "preserve"); // make sure whitespace is preserved, for consistency of formatting
 
         output.writeCharacters(""); // force writing of closing angle bracket in root element open tag
         output.writeEOL(); // add extra EOL after root element
