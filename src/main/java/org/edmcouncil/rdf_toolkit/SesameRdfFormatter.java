@@ -94,6 +94,9 @@ public class SesameRdfFormatter {
         options.addOption(
                 "tc", "trailing-comment", true, "sets the text of the trailing comment in the ontology.  Can be repeated for a multi-line comment"
         );
+        options.addOption(
+                "sdt", "string-data-typing", true, "sets whether string data values have explicit data types, or not; one of: " + SesameSortedRDFWriterFactory.StringDataTypeOptions.summarise()
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -128,6 +131,7 @@ public class SesameRdfFormatter {
         URI inferredBaseUri = null;
         String[] leadingComments = null;
         String[] trailingComments = null;
+        SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
 
         // Parse the command line options.
         CommandLineParser parser = new BasicParser();
@@ -248,6 +252,11 @@ public class SesameRdfFormatter {
             trailingComments = line.getOptionValues("tc");
         }
 
+        // Check if there is a string data type option.
+        if (line.hasOption("sdt")) {
+            stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.getByOptionValue(line.getOptionValue("sdt"));
+        }
+
         // Load RDF file.
         SesameSortedRDFWriterFactory.SourceFormats sourceFormat = null;
         if (line.hasOption("sfmt")) {
@@ -359,6 +368,7 @@ public class SesameRdfFormatter {
         writerOptions.put("inlineBlankNodes", inlineBlankNodes);
         writerOptions.put("leadingComments", leadingComments);
         writerOptions.put("trailingComments", trailingComments);
+        writerOptions.put("stringDataTypeOption", stringDataTypeOption);
         RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
         Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();

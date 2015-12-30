@@ -159,6 +159,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** xs:string URL */
     protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
 
+    /** rdf:langString URL */
+    protected static final URI rdfLangString = new URIImpl(RDF_NS_URI + "langString");
+
     /** Comparator for TurtleObjectList objects. */
     protected class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
         private ValueComparator valc = null;
@@ -643,6 +646,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Trailing comment lines */
     protected String[] trailingComments = null;
 
+    /** String data type option */
+    protected SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
+
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     protected UnsortedTurtleResourceList unsortedOntologies = null;
 
@@ -741,6 +747,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         if (options.containsKey("trailingComments")) {
             this.trailingComments = (String[]) options.get("trailingComments");
         }
+        if (options.containsKey("stringDataTypeOption")) {
+            this.stringDataTypeOption = (SesameSortedRDFWriterFactory.StringDataTypeOptions) options.get("stringDataTypeOption");
+        }
     }
 
     /**
@@ -769,6 +778,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
         if (options.containsKey("trailingComments")) {
             this.trailingComments = (String[]) options.get("trailingComments");
+        }
+        if (options.containsKey("stringDataTypeOption")) {
+            this.stringDataTypeOption = (SesameSortedRDFWriterFactory.StringDataTypeOptions) options.get("stringDataTypeOption");
         }
     }
 

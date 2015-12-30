@@ -320,9 +320,12 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             writeString(out, literal.stringValue());
             out.write("@" + literal.getLanguage());
         } else if (literal.getDatatype() != null) {
+            boolean useExplicit = (stringDataTypeOption == SesameSortedRDFWriterFactory.StringDataTypeOptions.explicit) || !(xsString.equals(literal.getDatatype()) || rdfLangString.equals(literal.getDatatype()));
             writeString(out, literal.stringValue());
-            out.write("^^");
-            writeUri(out, literal.getDatatype());
+            if (useExplicit) {
+                out.write("^^");
+                writeUri(out, literal.getDatatype());
+            }
         } else {
             writeString(out, literal.stringValue());
         }

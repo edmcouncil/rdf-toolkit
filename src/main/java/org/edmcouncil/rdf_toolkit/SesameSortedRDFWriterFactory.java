@@ -123,6 +123,41 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
 
     private TargetFormats targetFormat = TargetFormats.defaultEnum;
 
+    public enum StringDataTypeOptions {
+        explicit("explicit"),
+        implicit("implicit");
+
+        private static final StringDataTypeOptions defaultEnum = implicit;
+
+        private String optionValue = null;
+
+        StringDataTypeOptions(String optionValue) { this.optionValue = optionValue; }
+
+        public String getOptionValue() { return optionValue; }
+
+        public static StringDataTypeOptions getByOptionValue(String optionValue) {
+            if (optionValue == null) { return null; }
+            for (StringDataTypeOptions dataTypeOption : StringDataTypeOptions.values()) {
+                if (optionValue.equals(dataTypeOption.optionValue)) {
+                    return dataTypeOption;
+                }
+            }
+            return null;
+        }
+
+        public static String summarise() {
+            ArrayList<String> result = new ArrayList<String>();
+            for (StringDataTypeOptions dataTypeOption : StringDataTypeOptions.values()) {
+                String value = dataTypeOption.optionValue;
+                if (defaultEnum.equals(dataTypeOption)) {
+                    value += " [default]";
+                }
+                result.add(value);
+            }
+            return String.join(", ", result);
+        }
+    }
+
     /**
      * Default constructor for new factories.
      */

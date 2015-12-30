@@ -612,4 +612,18 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
+  it should "be able to use explicit data typing for strings" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_sdt_explicit.rdf")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-sdt", "explicit"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("rdf:datatype=\"&xsd;string\""), "explicit string data typing seems to have failed")
+  }
+
 }

@@ -259,15 +259,18 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                     output.endAttribute();
                 } else if (value instanceof Literal) {
                     if (((Literal)value).getDatatype() != null) {
-                        output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
-                        QName datatypeQName = convertUriToQName(((Literal)value).getDatatype());
-                        if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length() < 1)) {
-                            output.writeAttributeCharacters(((Literal)value).getDatatype().stringValue());
-                        } else {
-                            output.writeAttributeEntityRef(datatypeQName.getPrefix());
-                            output.writeAttributeCharacters(datatypeQName.getLocalPart());
+                        boolean useExplicit = (stringDataTypeOption == SesameSortedRDFWriterFactory.StringDataTypeOptions.explicit) || !(xsString.equals(((Literal)value).getDatatype()) || rdfLangString.equals(((Literal)value).getDatatype()));
+                        if (useExplicit) {
+                            output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+                            QName datatypeQName = convertUriToQName(((Literal) value).getDatatype());
+                            if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length() < 1)) {
+                                output.writeAttributeCharacters(((Literal) value).getDatatype().stringValue());
+                            } else {
+                                output.writeAttributeEntityRef(datatypeQName.getPrefix());
+                                output.writeAttributeCharacters(datatypeQName.getLocalPart());
+                            }
+                            output.endAttribute();
                         }
-                        output.endAttribute();
                     }
                     if (((Literal)value).getLanguage() != null) {
                         output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)value).getLanguage());
