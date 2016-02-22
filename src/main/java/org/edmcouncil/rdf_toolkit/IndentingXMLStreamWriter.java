@@ -82,7 +82,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private OutputStream out = null;
     private Writer writer = null;
     private String encoding = "UTF-8";
-    private String indent = null;
+    private String indent = "\t";
     private IndentingWriter output = null;
 
     private boolean inStartElement = false;
@@ -98,11 +98,12 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent) throws Exception {
         this.out = out;
         if (encoding != null) { this.encoding = encoding; }
-        if (indent != null) { this.indent = null; }
+        if (indent != null) { this.indent = indent; }
 
         // Set up output writers
         writer = new OutputStreamWriter(this.out, Charset.forName(this.encoding));
         output = new IndentingWriter(writer);
+        output.setIndentationString(this.indent);
     }
 
     public IndentingXMLStreamWriter(Writer writer) throws Exception {
@@ -117,10 +118,11 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         } else {
             this.encoding = null; // encoding unknown
         }
-        if (indent != null) { this.indent = null; }
+        if (indent != null) { this.indent = indent; }
 
         // Set up output writers
         output = new IndentingWriter(this.writer);
+        output.setIndentationString(this.indent);
     }
 
     public String getXmlEncoding() { return encoding; }

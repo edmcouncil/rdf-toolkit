@@ -6,6 +6,9 @@
                                    allow prefix-based URI shortening
  -h,--help                         print out details of the command-line
                                    arguments for the program
+ -i,--indent <arg>                 sets the indent string.  Default is a
+                                   single tab character.  Use '\t' for a
+                                   tab character
  -ibn,--inline-blank-nodes         use inline representation for blank
                                    nodes.  NOTE: this will fail if there
                                    are any recursive relationships
@@ -71,17 +74,21 @@
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.ttl --source-format turtle --target output.ttl --target-format turtle -lc "Start of my ontology" -lc "Version 1" -tc "End of my ontology" -tc "Version 1"`
 11. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`) with explicit data typing for strings
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.ttl --source-format turtle --target output.ttl --target-format turtle --string-data-typing explicit`
-12. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
+12. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`) with two spaces as the indent string
+  * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.ttl --source-format turtle --target output.ttl --target-format turtle --indent "  "`
+13. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset`
-13. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and inline blank nodes (note: assumes no recursive relationships between blank nodes; this is usually the case for OWL)
+14. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and inline blank nodes (note: assumes no recursive relationships between blank nodes; this is usually the case for OWL)
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --inline-blank-nodes`
-14. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with the OWL ontology URI used as the base URI
+15. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with the OWL ontology URI used as the base URI
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --infer-base-uri`
-15. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both), and replacing 'www.example.com' in URIs with 'www.example.org'
+16. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`), using the default source/target formats (Turtle for both), and replacing 'www.example.com' in URIs with 'www.example.org'
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.ttl --target output.ttl --uri-pattern www.example.com --uri-replacement www.example.org`
-16. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with a leading and a trailing comment
+17. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with a leading and a trailing comment
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --leading-comment "Start of my ontology" --trailing-comment "End of my ontology"`
-17. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with a multi-line leading and a trailing comments
+18. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening, with a multi-line leading and a trailing comments
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset -lc "Start of my ontology" -lc "Version 1" -tc "End of my ontology" -tc "Version 1"`
-18. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and with explicit data typing for strings
+19. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and with explicit data typing for strings
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --string-data-typing explicit`
+20. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and with two spaces as the indent string
+  * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --indent "  "`

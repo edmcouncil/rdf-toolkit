@@ -97,6 +97,9 @@ public class SesameRdfFormatter {
         options.addOption(
                 "sdt", "string-data-typing", true, "sets whether string data values have explicit data types, or not; one of: " + SesameSortedRDFWriterFactory.StringDataTypeOptions.summarise()
         );
+        options.addOption(
+                "i", "indent", true, "sets the indent string.  Default is a single tab character.  Use '\\t' for a tab character"
+        );
     }
 
     /** Main method for running the RDF formatter. Run with "--help" option for help. */
@@ -119,8 +122,6 @@ public class SesameRdfFormatter {
 
     /** Main method, but throws exceptions for use from inside other Java code. */
     public static void run(String[] args) throws Exception {
-        final String indent = "\t\t";
-
         URI baseUri = null;
         String baseUriString = "";
         String uriPattern = null;
@@ -131,6 +132,7 @@ public class SesameRdfFormatter {
         URI inferredBaseUri = null;
         String[] leadingComments = null;
         String[] trailingComments = null;
+        String indent = "\t";
         SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
 
         // Parse the command line options.
@@ -242,19 +244,24 @@ public class SesameRdfFormatter {
             inferBaseUri = true;
         }
 
-        // Check if there are leading comments.
+        // Check if there are leading comments
         if (line.hasOption("lc")) {
             leadingComments = line.getOptionValues("lc");
         }
 
-        // Check if there are trailing comments.
+        // Check if there are trailing comments
         if (line.hasOption("tc")) {
             trailingComments = line.getOptionValues("tc");
         }
 
-        // Check if there is a string data type option.
+        // Check if there is a string data type option
         if (line.hasOption("sdt")) {
             stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.getByOptionValue(line.getOptionValue("sdt"));
+        }
+
+        // Check if an explicit indent string has been provided
+        if (line.hasOption("i")) {
+            indent = "ABC".replaceFirst("ABC", line.getOptionValue("i")); // use 'replaceFirst' to get cheap support for escaped characters like tabs
         }
 
         // Load RDF file.
