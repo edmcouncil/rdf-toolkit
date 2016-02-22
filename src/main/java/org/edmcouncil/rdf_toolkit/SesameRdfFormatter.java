@@ -98,7 +98,7 @@ public class SesameRdfFormatter {
                 "sdt", "string-data-typing", true, "sets whether string data values have explicit data types, or not; one of: " + SesameSortedRDFWriterFactory.StringDataTypeOptions.summarise()
         );
         options.addOption(
-                "i", "indent", true, "sets the indent string.  Default is a single tab character.  Use '\\t' for a tab character"
+                "i", "indent", true, "sets the indent string.  Default is a single tab character"
         );
     }
 

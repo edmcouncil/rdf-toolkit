@@ -7,8 +7,7 @@
  -h,--help                         print out details of the command-line
                                    arguments for the program
  -i,--indent <arg>                 sets the indent string.  Default is a
-                                   single tab character.  Use '\t' for a
-                                   tab character
+                                   single tab character
  -ibn,--inline-blank-nodes         use inline representation for blank
                                    nodes.  NOTE: this will fail if there
                                    are any recursive relationships
