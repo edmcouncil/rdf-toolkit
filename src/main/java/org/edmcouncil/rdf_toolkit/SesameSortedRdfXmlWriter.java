@@ -1,6 +1,7 @@
 package org.edmcouncil.rdf_toolkit;
 
 import org.openrdf.model.*;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandlerException;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -159,9 +160,15 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
 
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
-
         // Try to determine whether to use <rdf:Description> or an element based on rdf:type value.
-        SortedTurtleObjectList subjectRdfTypes = poMap.get(rdfType); // needed to determine if a type can be used as the XML element name
+        SortedTurtleObjectList subjectRdfTypes = (SortedTurtleObjectList) poMap.get(rdfType); // needed to determine if a type can be used as the XML element name
+        if (subjectRdfTypes != null) { subjectRdfTypes = (SortedTurtleObjectList) subjectRdfTypes.clone(); } // make a copy so we can remove values safely
+        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlNamedIndividual)) { // ignore owl:NamedIndividual for the purposes of determining what type to use an an element name in RDF/XML
+            subjectRdfTypes.remove(owlNamedIndividual);
+        }
+        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlThing)) { // ignore owl:Thing for the purposes of determining what type to use an an element name in RDF/XML
+            subjectRdfTypes.remove(owlThing);
+        }
         URI enclosingElementURI = rdfDescription; // default value
         QName enclosingElementQName = convertUriToQName(enclosingElementURI);
         if ((subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
@@ -200,6 +207,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         for (URI predicate : firstPredicates) {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
+                if (values != null) { values = (SortedTurtleObjectList) values.clone(); } // make a copy so we don't delete anything from the original
                 if (predicate == rdfType) { // assumes that rdfType is one of the firstPredicates
                     values.remove(enclosingElementURI); // no need to state type explicitly if it has been used as an enclosing element name
                 }

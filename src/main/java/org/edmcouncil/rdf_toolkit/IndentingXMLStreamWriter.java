@@ -65,7 +65,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         @Override
         public Iterator getPrefixes(String uri) {
             if (suppliedContext != null) {
-                Iterator<String> prefixes = suppliedContext.getPrefixes(uri);
+                Iterator prefixes = suppliedContext.getPrefixes(uri);
                 if (prefixes != null) { return prefixes; }
             }
             List<String> prefixes = uriToPrefixMap.get(uri);

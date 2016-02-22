@@ -156,6 +156,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** owl:sameAs URL */
     protected static final URI owlSameAs = new URIImpl(OWL_NS_URI + "sameAs");
 
+    /** owl:NamedIndividual URL */
+    protected static final URI owlNamedIndividual = new URIImpl(OWL_NS_URI + "NamedIndividual");
+
+    /** owl:Thing URL */
+    protected static final URI owlThing = new URIImpl(OWL_NS_URI + "Thing");
+
     /** xs:string URL */
     protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
 
@@ -268,14 +274,14 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                         SortedTurtleObjectList values2 = map2.get(key2);
                         SortedTurtleObjectList nonBlankValues1 = new SortedTurtleObjectList();
                         SortedTurtleObjectList nonBlankValues2 = new SortedTurtleObjectList();
-                        // Leave blank nodes out of the value comparison.
+                        // Leave blank nodes out of the value comparison, unless blank nodes are being inlined.
                         for (Value value : values1) {
-                            if (!(value instanceof BNode)) {
+                            if (inlineBlankNodes || !(value instanceof BNode)) { // including blank nodes is only feasible when inlining blank nodes, as that implicitly promises no blank node loops
                                 nonBlankValues1.add(value);
                             }
                         }
                         for (Value value : values2) {
-                            if (!(value instanceof BNode)) {
+                            if (inlineBlankNodes || !(value instanceof BNode)) { // including blank nodes is only feasible when inlining blank nodes, as that implicitly promises no blank node loops
                                 nonBlankValues2.add(value);
                             }
                         }
@@ -329,10 +335,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                         excludedList.add(bnode1);
                         excludedList.add(bnode2);
                         int cmp = tpomc.compare(map1, map2, excludedList);
-                        if (cmp != 0) {
+                        if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
                             return cmp;
-                        } else {
-                            // Nothing left to do but test string values
+                        } else { // if all else fails, do a string comparison
                             return bnode1.stringValue().compareTo(bnode2.stringValue());
                         }
                     }
