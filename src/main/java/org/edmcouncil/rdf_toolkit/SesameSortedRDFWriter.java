@@ -135,6 +135,24 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** rdf:Description URL */
     protected static final URI rdfDescription = new URIImpl(RDF_NS_URI + "Description");
 
+    /** rdf:first URL */
+    protected static final URI rdfFirst = new URIImpl(RDF_NS_URI + "first");
+
+    /** rdf:rest URL */
+    protected static final URI rdfRest = new URIImpl(RDF_NS_URI + "rest");
+
+    /** rdf:nil URL */
+    protected static final URI rdfNil = new URIImpl(RDF_NS_URI + "nil");
+
+    /** rdf:parseType URL */
+    protected static final URI rdfParseType = new URIImpl(RDF_NS_URI + "parseType");
+
+    /** rdf:about URL */
+    protected static final URI rdfAbout = new URIImpl(RDF_NS_URI + "about");
+
+    /** rdf:resource URL */
+    protected static final URI rdfResource = new URIImpl(RDF_NS_URI + "resource");
+
     /** rdfs:label URL */
     protected static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
 
@@ -161,6 +179,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** owl:Thing URL */
     protected static final URI owlThing = new URIImpl(OWL_NS_URI + "Thing");
+
+    /** owl:onProperty URL */
+    protected static final URI owlOnProperty = new URIImpl(OWL_NS_URI + "onProperty");
+
+    /** owl:onClass URL */
+    protected static final URI owlOnClass = new URIImpl(OWL_NS_URI + "onClass");
 
     /** xs:string URL */
     protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
@@ -309,6 +333,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Comparator for Sesame BNode objects. */
     protected class BNodeComparator implements Comparator<BNode> {
         private TurtlePredicateObjectMapComparator tpomc = null;
+        private TurtleObjectListComparator tolc = null;
 
         @Override
         public int compare(BNode bnode1, BNode bnode2) {
@@ -329,16 +354,31 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                     if (bnode1 == bnode2) {
                         return 0;
                     } else {
-                        SortedTurtlePredicateObjectMap map1 = unsortedTripleMap.getSorted(bnode1);
-                        SortedTurtlePredicateObjectMap map2 = unsortedTripleMap.getSorted(bnode2);
-                        if (tpomc == null) { tpomc = new TurtlePredicateObjectMapComparator(); }
-                        excludedList.add(bnode1);
-                        excludedList.add(bnode2);
-                        int cmp = tpomc.compare(map1, map2, excludedList);
-                        if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
-                            return cmp;
-                        } else { // if all else fails, do a string comparison
-                            return bnode1.stringValue().compareTo(bnode2.stringValue());
+                        if (inlineBlankNodes && isCollection(bnode1)) { // deal with RDF collection blank nodes separately, when inlining blank nodes
+                            if (inlineBlankNodes && isCollection(bnode2)) {
+                                SortedTurtleObjectList values1 = getCollectionMembers(bnode1);
+                                SortedTurtleObjectList values2 = getCollectionMembers(bnode2);
+                                if (tolc == null) { tolc = new TurtleObjectListComparator(); }
+                                return tolc.compare(values1, values2, excludedList);
+                            } else {
+                                return -1; // an RDF collection comes before any other blank node
+                            }
+                        } else {
+                            if (inlineBlankNodes && isCollection(bnode2)) {
+                                return 1; // an RDF collection comes before any other blank node
+                            } else { // neither blank node is an RDF collection
+                                SortedTurtlePredicateObjectMap map1 = unsortedTripleMap.getSorted(bnode1);
+                                SortedTurtlePredicateObjectMap map2 = unsortedTripleMap.getSorted(bnode2);
+                                if (tpomc == null) { tpomc = new TurtlePredicateObjectMapComparator(); }
+                                excludedList.add(bnode1);
+                                excludedList.add(bnode2);
+                                int cmp = tpomc.compare(map1, map2, excludedList);
+                                if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
+                                    return cmp;
+                                } else { // if all else fails, do a string comparison
+                                    return bnode1.stringValue().compareTo(bnode2.stringValue());
+                                }
+                            }
                         }
                     }
                 }
@@ -694,6 +734,68 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
+    /**
+     * Whether the given blank node represents an RDF collection, or not.
+     * @param bnode blank node to test as an RDF collection
+     * @return whether the blank node is an RDF collection
+     */
+    protected boolean isCollection(BNode bnode) {
+        SortedTurtlePredicateObjectMap poMap = unsortedTripleMap.getSorted(bnode);
+        if (poMap != null) {
+            Set<URI> predicates = poMap.keySet();
+            int firstCount = predicates.contains(rdfFirst) ? 1 : 0;
+            int restCount = predicates.contains(rdfRest) ? 1 : 0;
+            if (predicates.size() == firstCount + restCount) {
+                if (restCount >= 1) {
+                    SortedTurtleObjectList rest = poMap.get(rdfRest);
+                    if (rest.size() == 1) {
+                        for (Value value : rest) {
+                            if (rdfNil.equals(value)) {
+                                return true;
+                            }
+                            if (value instanceof BNode) {
+                                return isCollection((BNode)value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * If the given blank node is an RDF collection, returns the members of the collection.
+     * @param bnode blank node which is an RDF collection
+     * @return the members of the RDF collection
+     */
+    protected SortedTurtleObjectList getCollectionMembers(BNode bnode) {
+        SortedTurtleObjectList members = new SortedTurtleObjectList();
+        if (isCollection(bnode)) {
+            SortedTurtlePredicateObjectMap poMap = unsortedTripleMap.getSorted(bnode);
+            SortedTurtleObjectList newMembers = poMap.get(rdfFirst);
+            if (newMembers != null) {
+                for (Value newMember : newMembers) {
+                    members.add(newMember);
+                }
+            }
+            SortedTurtleObjectList rest = poMap.get(rdfRest);
+            if (rest != null) {
+                for (Value nextRest : rest) {
+                    if (nextRest instanceof BNode) {
+                        SortedTurtleObjectList newRestMembers = getCollectionMembers((BNode)nextRest);
+                        if (newRestMembers != null) {
+                            for (Value newMember : newRestMembers) {
+                                members.add(newMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return members;
+    }
+
     /** A reverse namespace table with which returns the longest namespace URIs first.  Key is URI string, value is prefix string. */
     protected class ReverseNamespaceTable extends TreeMap<String,String> {
         public ReverseNamespaceTable() { super(new StringLengthComparator()); }
@@ -907,6 +1009,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             firstPredicates.add(owlSameAs);
             firstPredicates.add(rdfsLabel);
             firstPredicates.add(rdfsComment);
+            firstPredicates.add(owlOnProperty);
+            firstPredicates.add(owlOnClass);
 
             // Add default namespace prefixes, if they haven't yet been defined.  May fail if these prefixes have already been defined for different namespace URIs.
             addDefaultNamespacePrefixIfMissing(RDF_NS_URI, "rdf");
