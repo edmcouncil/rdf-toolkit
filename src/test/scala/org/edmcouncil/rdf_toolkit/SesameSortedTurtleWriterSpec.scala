@@ -585,4 +585,27 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(content.contains("^^xsd:string"), "explicit string data typing seems to have failed")
   }
 
+  it should "be able to use set the indent string" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_indent_spaces.ttl")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-i", "  "
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
+    assert(singleIndentLineCount >= 1, "double-space indent has failed")
+
+    val outputFile2 = new File(outputDir1, "topbraid-countries-ontology_indent_tabs.ttl")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile2 getAbsolutePath,
+      "-i", "\t\t"
+    )
+    val content2 = getFileContents(outputFile2, "UTF-8")
+    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
+    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
+  }
+
 }
