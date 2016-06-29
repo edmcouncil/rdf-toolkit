@@ -2,9 +2,9 @@ organization := "org.edmcouncil"
 
 name := "rdf-toolkit"
 
-version := "1.4.0"
+version := "1.5.0"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -13,13 +13,15 @@ javacOptions ++= Seq("-Xlint:unchecked")
 Seq(bintrayResolverSettings:_*)
 
 //val owlApiVersion = "4.0.1"
-val sesameVersion = "2.8.9"
+val sesameVersion = "4.1.2"
 
-libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.4"
+libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
 
-libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4" withSources()
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
 
-libraryDependencies += "commons-validator" % "commons-validator" % "1.5.0"
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
+
+libraryDependencies += "commons-validator" % "commons-validator" % "1.5.1"
 
 //
 // OWLAPI Model Interfaces And Utilities
@@ -31,13 +33,13 @@ libraryDependencies += "commons-validator" % "commons-validator" % "1.5.0"
 
 //libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
-libraryDependencies += "org.clapper" % "grizzled-slf4j_2.11" % "1.0.2" withSources()
+libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.4"
 
-libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.14" withSources()
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.21"
 
-libraryDependencies += "org.clapper" % "avsl_2.11" % "1.0.3" withSources()
+libraryDependencies += "org.clapper" %% "avsl" % "1.0.10"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test" withSources()
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 
 //libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
@@ -59,12 +61,12 @@ libraryDependencies += "commons-cli" % "commons-cli" % "1.3.1"
 //
 // jline console utilities
 //
-libraryDependencies += "jline" % "jline" % "2.12.1"
+libraryDependencies += "jline" % "jline" % "2.14.2"
 
 //
 // Argot Command-Line Argument Handling used in the Scala code
 //
-libraryDependencies += "org.clapper" % "argot_2.11" % "1.0.4"
+libraryDependencies += "org.clapper" %% "argot" % "1.0.4"
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
