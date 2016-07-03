@@ -180,7 +180,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         if (subject instanceof BNode) {
             out.write("_:" + blankNodeNameMap.get(subject));
         } else {
-            writeUri(out, (URI) subject);
+            writeUri(out, (IRI) subject);
         }
         if (out instanceof IndentingWriter) {
             IndentingWriter output = (IndentingWriter)out;
@@ -191,7 +191,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
 
         // Write predicate/object pairs rendered first.
-        for (URI predicate : firstPredicates) {
+        for (IRI predicate : firstPredicates) {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
                 writePredicateAndObjectValues(out, predicate, values);
@@ -199,7 +199,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
 
         // Write other predicate/object pairs.
-        for (URI predicate : poMap.keySet()) {
+        for (IRI predicate : poMap.keySet()) {
             if (!firstPredicates.contains(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
                 writePredicateAndObjectValues(out, predicate, values);
@@ -218,7 +218,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception {
+    protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception {
         writePredicate(out, predicate);
         if (values.size() == 1) {
             out.write(" ");
@@ -262,7 +262,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writePredicate(Writer out, URI predicate) throws Exception {
+    protected void writePredicate(Writer out, IRI predicate) throws Exception {
         writeUri(out, predicate);
     }
 
@@ -270,15 +270,15 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
 //        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true));
 //    }
 
-    protected void writeUri(Writer out, URI uri) throws Exception {
-        out.write(convertUriToString(uri, useGeneratedPrefixes, /*useTurtleQuoting*/true));
+    protected void writeUri(Writer out, IRI iri) throws Exception {
+        out.write(convertUriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/true));
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {
         if (value instanceof BNode) {
             writeObject(out, (BNode) value);
-        } else if (value instanceof URI) {
-            writeObject(out, (URI)value);
+        } else if (value instanceof IRI) {
+            writeObject(out, (IRI)value);
         } else if (value instanceof Literal) {
             writeObject(out, (Literal)value);
         } else {
@@ -328,7 +328,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
                 }
 
                 // Write predicate/object pairs rendered first.
-                for (URI predicate : firstPredicates) {
+                for (IRI predicate : firstPredicates) {
                     if (poMap.containsKey(predicate)) {
                         SortedTurtleObjectList values = poMap.get(predicate);
                         writePredicateAndObjectValues(out, predicate, values);
@@ -336,7 +336,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
                 }
 
                 // Write other predicate/object pairs.
-                for (URI predicate : poMap.keySet()) {
+                for (IRI predicate : poMap.keySet()) {
                     if (!firstPredicates.contains(predicate)) {
                         SortedTurtleObjectList values = poMap.get(predicate);
                         writePredicateAndObjectValues(out, predicate, values);
@@ -361,16 +361,16 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writeObject(Writer out, URI uri) throws Exception {
-        writeUri(out, uri);
+    protected void writeObject(Writer out, IRI iri) throws Exception {
+        writeUri(out, iri);
     }
 
     protected void writeObject(Writer out, Literal literal) throws Exception {
         if (literal == null) {
             out.write("null<Literal>");
-        } else if (literal.getLanguage() != null) {
+        } else if (literal.getLanguage().isPresent()) {
             writeString(out, literal.stringValue());
-            out.write("@" + literal.getLanguage());
+            out.write("@" + literal.getLanguage().get());
         } else if (literal.getDatatype() != null) {
             boolean useExplicit = (stringDataTypeOption == SesameSortedRDFWriterFactory.StringDataTypeOptions.explicit) || !(xsString.equals(literal.getDatatype()) || rdfLangString.equals(literal.getDatatype()));
             writeString(out, literal.stringValue());

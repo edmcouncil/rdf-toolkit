@@ -13,7 +13,7 @@ import scala.language.postfixOps
 
 import java.io._
 
-import org.openrdf.model.impl.URIImpl
+import org.openrdf.model.impl.{ SimpleValueFactory, URIImpl }
 import org.openrdf.rio.{ RDFFormat, Rio }
 import org.scalatest.{ Matchers, FlatSpec }
 
@@ -22,11 +22,13 @@ import org.scalatest.{ Matchers, FlatSpec }
  */
 class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSortedWriterSpecSupport /*with OutputSuppressor*/ {
 
-  override val logger = LoggerFactory.getLogger(classOf[SesameSortedTurtleWriterSpec])
+  override val logger = LoggerFactory getLogger classOf[SesameSortedTurtleWriterSpec]
 
   val outputDir0 = mkCleanDir(s"target//temp//${classOf[TurtleWriter].getName}")
   val outputDir1 = mkCleanDir(s"target//temp//${this.getClass.getName}")
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
+
+  val valueFactory = SimpleValueFactory getInstance ()
 
   /** Exclusion list of examples containing inline blank nodes. */
   val turtleInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
@@ -41,11 +43,11 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val writer2 = new SesameSortedTurtleWriter(outWriter)
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-    val writer3Options = Map("baseUri" -> new URIImpl("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.prefix)
+    val writer3Options = Map("baseUri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.prefix)
     val writer3 = new SesameSortedTurtleWriter(System.out, writer3Options)
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
-    val writer4Options = Map("baseUri" -> new URIImpl("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.base_uri)
+    val writer4Options = Map("baseUri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortUriPref" -> ShortUriPreferences.base_uri)
     val writer4 = new SesameSortedTurtleWriter(outWriter, writer4Options)
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
@@ -62,7 +64,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
       val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
       val factory = new TurtleWriterFactory()
       val turtleWriter = factory getWriter (outWriter)
-      val rdfFormat = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.TURTLE)
+      val rdfFormat = (Rio getParserFormatForFileName (sourceFile getName)).get()
 
       val inputModel = Rio parse (new FileReader(sourceFile), "", rdfFormat)
       Rio write (inputModel, turtleWriter)
@@ -73,7 +75,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SortedTurtleWriter" should "be able to produce a sorted Turtle file" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
@@ -186,7 +188,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file preferring prefix over base URI" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
@@ -219,7 +221,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file preferring base URI over prefix" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_uri.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
@@ -257,6 +259,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+      logger.info(s"sourceFile = ${sourceFile.getAbsolutePath}") // TODO: remove debugging
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".ttl"))
       SesameRdfFormatter run Array[String](
@@ -344,7 +347,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".ttl"))
-      val rdfFormat1 = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.TURTLE)
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.TURTLE)
       assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")
@@ -353,7 +356,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted Turtle file with inline blank nodes" in {
     val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
-    val baseUri = new URIImpl("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
+    val baseUri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
     val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.ttl")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
@@ -458,7 +461,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if turtleInlineBlankNodesExclusionList contains sourceFile.getName) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "_ibn2.ttl"))
-      val rdfFormat1 = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.RDFXML)
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.TURTLE)
       assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")

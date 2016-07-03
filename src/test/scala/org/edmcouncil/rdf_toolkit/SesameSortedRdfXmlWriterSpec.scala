@@ -1,5 +1,8 @@
 package org.edmcouncil.rdf_toolkit
 
+import org.omg.CORBA.portable.ValueFactory
+import org.openrdf.model.impl.SimpleValueFactory
+
 import scala.language.postfixOps
 
 import java.io._
@@ -8,7 +11,7 @@ import java.util
 
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
-import org.openrdf.model.impl.URIImpl
+import org.openrdf.model.ValueFactory
 import org.openrdf.rio.{ RDFWriter, RDFFormat, Rio }
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriterFactory
 import org.slf4j.LoggerFactory
@@ -20,11 +23,13 @@ import org.scalatest.{ Matchers, FlatSpec }
  */
 class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSortedWriterSpecSupport /*with OutputSuppressor*/ {
 
-  override val logger = LoggerFactory.getLogger(classOf[SesameSortedRdfXmlWriterSpec])
+  override val logger = LoggerFactory getLogger classOf[SesameSortedRdfXmlWriterSpec]
 
   val outputDir0 = mkCleanDir(s"target//temp//${classOf[RDFWriter].getName}")
   val outputDir1 = mkCleanDir(s"target//temp//${this.getClass.getName}")
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
+
+  val valueFactory = SimpleValueFactory getInstance ()
 
   /** Exclusion list of examples that can't be represented directly in RDF/XML. */
   val rdfXmlExclusionList = List("allemang-test-a.ttl", "allemang-test-b.ttl", "turtle-example-2.ttl", "turtle-example-3.ttl", "turtle-example-4.ttl", "turtle-example-5.ttl", "turtle-example-6.ttl", "turtle-example-9.ttl", "turtle-example-17.ttl", "turtle-example-22.ttl")
@@ -51,14 +56,14 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
     val writer3Options = new util.HashMap[String, Object]()
-    writer3Options.put("baseUri", new URIImpl("http://example.com#"))
+    writer3Options.put("baseUri", valueFactory.createIRI("http://example.com#"))
     writer3Options.put("indent", "\t\t")
     writer3Options.put("shortUriPref", ShortUriPreferences.prefix)
     val writer3 = new SesameSortedRdfXmlWriter(System.out, writer3Options)
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
     val writer4Options = new util.HashMap[String, Object]()
-    writer4Options.put("baseUri", new URIImpl("http://example.com#"))
+    writer4Options.put("baseUri", valueFactory.createIRI("http://example.com#"))
     writer4Options.put("indent", "\t\t")
     writer4Options.put("shortUriPref", ShortUriPreferences.base_uri)
     val writer4 = new SesameSortedRdfXmlWriter(outWriter, writer4Options)
@@ -77,7 +82,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
       val factory = new RDFXMLPrettyWriterFactory()
       val turtleWriter = factory getWriter (outWriter)
-      val rdfFormat = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.RDFXML)
+      val rdfFormat = (Rio getParserFormatForFileName (sourceFile getName)).get()
 
       val inputModel = Rio parse (new FileReader(sourceFile), "", rdfFormat)
       Rio write (inputModel, turtleWriter)
@@ -88,7 +93,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SortedRdfXmlWriter" should "be able to produce a sorted RDF/XML file" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
@@ -195,7 +200,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted RDF/XML file preferring prefix over base URI" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
@@ -226,7 +231,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted RDF/XML file preferring base URI over prefix" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = new URIImpl("http://topbraid.org/countries")
+    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_uri.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
@@ -359,8 +364,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".rdf"))
-      val rdfFormat1 = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.TURTLE)
-      val rdfFormat2 = Rio getParserFormatForFileName (targetFile getName, RDFFormat.TURTLE)
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", rdfFormat2)
       assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")
@@ -369,7 +374,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted RDF/XML file with inline blank nodes" in {
     val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
-    val baseUri = new URIImpl("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
+    val baseUri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
     val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
@@ -488,8 +493,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "_ibn2.rdf"))
-      val rdfFormat1 = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.RDFXML)
-      val rdfFormat2 = Rio getParserFormatForFileName (targetFile getName, RDFFormat.RDFXML)
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", rdfFormat2)
       assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")

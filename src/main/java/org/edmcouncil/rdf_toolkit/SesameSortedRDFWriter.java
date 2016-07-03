@@ -1,10 +1,11 @@
 package org.edmcouncil.rdf_toolkit;
 
 import org.openrdf.model.*;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.helpers.RDFWriterBase;
+import org.openrdf.rio.helpers.AbstractRDFWriter;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import java.util.*;
  * In order to do the sorting, it must be possible to load all of the RDF statements into memory.
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
-public abstract class SesameSortedRDFWriter extends RDFWriterBase {
+public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
 //    private static final Logger logger = LoggerFactory.getLogger(SesameSortedRDFWriter.class);
 
@@ -113,6 +114,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             return String.join(", ", result);
         }
     }
+    
+    /** Factory for generating literal values. */
+    private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     /** XML namespace URI. */
     public static final String XML_NS_URI = "http://www.w3.org/XML/1998/namespace";
@@ -130,67 +134,67 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     public static final String OWL_NS_URI = "http://www.w3.org/2002/07/owl#";
 
     /** rdf:type ('a') URL */
-    protected static final URI rdfType = new URIImpl(RDF_NS_URI + "type");
+    protected static final IRI rdfType = valueFactory.createIRI(RDF_NS_URI + "type");
 
     /** rdf:Description URL */
-    protected static final URI rdfDescription = new URIImpl(RDF_NS_URI + "Description");
+    protected static final IRI rdfDescription = valueFactory.createIRI(RDF_NS_URI + "Description");
 
     /** rdf:first URL */
-    protected static final URI rdfFirst = new URIImpl(RDF_NS_URI + "first");
+    protected static final IRI rdfFirst = valueFactory.createIRI(RDF_NS_URI + "first");
 
     /** rdf:rest URL */
-    protected static final URI rdfRest = new URIImpl(RDF_NS_URI + "rest");
+    protected static final IRI rdfRest = valueFactory.createIRI(RDF_NS_URI + "rest");
 
     /** rdf:nil URL */
-    protected static final URI rdfNil = new URIImpl(RDF_NS_URI + "nil");
+    protected static final IRI rdfNil = valueFactory.createIRI(RDF_NS_URI + "nil");
 
     /** rdf:parseType URL */
-    protected static final URI rdfParseType = new URIImpl(RDF_NS_URI + "parseType");
+    protected static final IRI rdfParseType = valueFactory.createIRI(RDF_NS_URI + "parseType");
 
     /** rdf:about URL */
-    protected static final URI rdfAbout = new URIImpl(RDF_NS_URI + "about");
+    protected static final IRI rdfAbout = valueFactory.createIRI(RDF_NS_URI + "about");
 
     /** rdf:resource URL */
-    protected static final URI rdfResource = new URIImpl(RDF_NS_URI + "resource");
+    protected static final IRI rdfResource = valueFactory.createIRI(RDF_NS_URI + "resource");
 
     /** rdfs:label URL */
-    protected static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
+    protected static final IRI rdfsLabel = valueFactory.createIRI(RDFS_NS_URI + "label");
 
     /** rdfs:comment URL */
-    protected static final URI rdfsComment = new URIImpl(RDFS_NS_URI + "comment");
+    protected static final IRI rdfsComment = valueFactory.createIRI(RDFS_NS_URI + "comment");
 
     /** rdfs:subClassOf URL */
-    protected static final URI rdfsSubClassOf = new URIImpl(RDFS_NS_URI + "subClassOf");
+    protected static final IRI rdfsSubClassOf = valueFactory.createIRI(RDFS_NS_URI + "subClassOf");
 
     /** rdfs:subPropertyOf URL */
-    protected static final URI rdfsSubPropertyOf = new URIImpl(RDFS_NS_URI + "subPropertyOf");
+    protected static final IRI rdfsSubPropertyOf = valueFactory.createIRI(RDFS_NS_URI + "subPropertyOf");
 
     /** owl:Ontology URL */
-    protected static final URI owlOntology = new URIImpl(OWL_NS_URI + "Ontology");
+    protected static final IRI owlOntology = valueFactory.createIRI(OWL_NS_URI + "Ontology");
 
     /** owl:imports URL */
-    protected static final URI owlImports = new URIImpl(OWL_NS_URI + "imports");
+    protected static final IRI owlImports = valueFactory.createIRI(OWL_NS_URI + "imports");
 
     /** owl:sameAs URL */
-    protected static final URI owlSameAs = new URIImpl(OWL_NS_URI + "sameAs");
+    protected static final IRI owlSameAs = valueFactory.createIRI(OWL_NS_URI + "sameAs");
 
     /** owl:NamedIndividual URL */
-    protected static final URI owlNamedIndividual = new URIImpl(OWL_NS_URI + "NamedIndividual");
+    protected static final IRI owlNamedIndividual = valueFactory.createIRI(OWL_NS_URI + "NamedIndividual");
 
     /** owl:Thing URL */
-    protected static final URI owlThing = new URIImpl(OWL_NS_URI + "Thing");
+    protected static final IRI owlThing = valueFactory.createIRI(OWL_NS_URI + "Thing");
 
     /** owl:onProperty URL */
-    protected static final URI owlOnProperty = new URIImpl(OWL_NS_URI + "onProperty");
+    protected static final IRI owlOnProperty = valueFactory.createIRI(OWL_NS_URI + "onProperty");
 
     /** owl:onClass URL */
-    protected static final URI owlOnClass = new URIImpl(OWL_NS_URI + "onClass");
+    protected static final IRI owlOnClass = valueFactory.createIRI(OWL_NS_URI + "onClass");
 
     /** xs:string URL */
-    protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
+    protected static final IRI xsString = valueFactory.createIRI(XML_SCHEMA_NS_URI + "string");
 
     /** rdf:langString URL */
-    protected static final URI rdfLangString = new URIImpl(RDF_NS_URI + "langString");
+    protected static final IRI rdfLangString = valueFactory.createIRI(RDF_NS_URI + "langString");
 
     /** Comparator for TurtleObjectList objects. */
     protected class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
@@ -259,7 +263,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** Comparator for TurtlePredicateObjectMap objects. */
     protected class TurtlePredicateObjectMapComparator implements Comparator<SortedTurtlePredicateObjectMap> {
-        private URIComparator uric = null;
+        private IRIComparator uric = null;
         private TurtleObjectListComparator tolc = null;
         private Class collectionClass = Value.class;
 
@@ -288,20 +292,20 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                     if (map1 == map2) {
                         return 0;
                     } else {
-                        Iterator<URI> iter1 = map1.keySet().iterator();
-                        Iterator<URI> iter2 = map2.keySet().iterator();
+                        Iterator<IRI> iter1 = map1.keySet().iterator();
+                        Iterator<IRI> iter2 = map2.keySet().iterator();
                         return compare(map1, iter1, map2, iter2, excludedList);
                     }
                 }
             }
         }
 
-        private int compare(SortedTurtlePredicateObjectMap map1, Iterator<URI> iter1, SortedTurtlePredicateObjectMap map2, Iterator<URI> iter2, ArrayList<Object> excludedList) {
+        private int compare(SortedTurtlePredicateObjectMap map1, Iterator<IRI> iter1, SortedTurtlePredicateObjectMap map2, Iterator<IRI> iter2, ArrayList<Object> excludedList) {
             if (iter1.hasNext()) {
                 if (iter2.hasNext()) {
-                    URI key1 = iter1.next();
-                    URI key2 = iter2.next();
-                    if (uric == null) { uric = new URIComparator(); }
+                    IRI key1 = iter1.next();
+                    IRI key2 = iter2.next();
+                    if (uric == null) { uric = new IRIComparator(); }
                     excludedList.add(map1);
                     excludedList.add(map2);
                     int cmp = uric.compare(key1, key2, excludedList);
@@ -468,8 +472,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         if (cmp != 0) {
             return cmp;
         } else {
-            if (literal1.getLanguage() == null) {
-                if (literal2.getLanguage() == null) {
+            if (literal1.getLanguage().isPresent()) {
+                if (literal2.getLanguage().isPresent()) {
                     if (literal1.getDatatype() == null) {
                         if (literal2.getDatatype() == null) {
                             return 0; // no language or data type difference
@@ -492,10 +496,10 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                     return 1; // literal1 without language comes after literal2 with language
                 }
             } else {
-                if (literal2.getLanguage() == null) {
+                if (!literal2.getLanguage().isPresent()) {
                     return -1; // literal1 with language comes after literal2 without language
                 } else {
-                    cmp = literal1.getLanguage().compareTo(literal2.getLanguage());
+                    cmp = literal1.getLanguage().get().compareTo(literal2.getLanguage().get());
                     if (cmp != 0) {
                         return cmp; // languages are different
                     } else {
@@ -530,23 +534,23 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
-    /** Comparator for Sesame URI objects. */
-    protected class URIComparator implements Comparator<URI> {
+    /** Comparator for Sesame IRI objects. */
+    protected class IRIComparator implements Comparator<IRI> {
         @Override
-        public int compare(URI uri1, URI uri2) {
+        public int compare(IRI uri1, IRI uri2) {
             return compare(uri1, uri2, new ArrayList<Object>());
         }
 
-        public int compare(URI uri1, URI uri2, ArrayList<Object> excludedList) {
+        public int compare(IRI uri1, IRI uri2, ArrayList<Object> excludedList) {
             if ((uri1 == null) || excludedList.contains(uri1)) {
                 if ((uri2 == null) || excludedList.contains(uri2)) {
                     return 0; // two null/excluded URIs are equal
                 } else {
-                    return -1; // null/excluded URI comes before non-null/excluded URI
+                    return -1; // null/excluded IRI comes before non-null/excluded URI
                 }
             } else {
                 if ((uri2 == null) || excludedList.contains(uri2)) {
-                    return 1; // non-null/excluded URI comes before null/excluded URI
+                    return 1; // non-null/excluded IRI comes before null/excluded URI
                 } else {
                     if (uri1 == uri2) {
                         return 0;
@@ -559,8 +563,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     }
 
     /** An unsorted map from predicate URIs to lists of object values. */
-    protected class UnsortedTurtlePredicateObjectMap extends HashMap<URI, UnsortedTurtleObjectList> {
-        public SortedTurtleObjectList getSorted(URI predicate, Class collectionClass) {
+    protected class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtleObjectList> {
+        public SortedTurtleObjectList getSorted(IRI predicate, Class collectionClass) {
             if (containsKey(predicate)) {
                 return get(predicate).toSorted(collectionClass);
             } else {
@@ -570,7 +574,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
         public SortedTurtlePredicateObjectMap toSorted(Class collectionClass) {
             SortedTurtlePredicateObjectMap sortedPOMap = new SortedTurtlePredicateObjectMap();
-            for (URI predicate : keySet()) {
+            for (IRI predicate : keySet()) {
                 sortedPOMap.put(predicate, getSorted(predicate, collectionClass));
             }
             return sortedPOMap;
@@ -578,30 +582,30 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     }
 
     /** A sorted map from predicate URIs to lists of object values. */
-    protected class SortedTurtlePredicateObjectMap extends TreeMap<URI, SortedTurtleObjectList> {
-        public SortedTurtlePredicateObjectMap() { super(new URIComparator()); }
+    protected class SortedTurtlePredicateObjectMap extends TreeMap<IRI, SortedTurtleObjectList> {
+        public SortedTurtlePredicateObjectMap() { super(new IRIComparator()); }
     }
 
-    /** An unsorted list of RDF URI values. */
-    protected class UnsortedTurtlePredicateList extends HashSet<URI> {
+    /** An unsorted list of RDF IRI values. */
+    protected class UnsortedTurtlePredicateList extends HashSet<IRI> {
         public SortedTurtlePredicateList toSorted() {
             SortedTurtlePredicateList sortedPList = new SortedTurtlePredicateList();
-            for (URI predicate : this) {
+            for (IRI predicate : this) {
                 sortedPList.add(predicate);
             }
             return sortedPList;
         }
     }
 
-    /** A sorted list of RDF URI values. */
-    protected class SortedTurtlePredicateList extends TreeSet<URI> {
-        public SortedTurtlePredicateList() { super(new URIComparator()); }
+    /** A sorted list of RDF IRI values. */
+    protected class SortedTurtlePredicateList extends TreeSet<IRI> {
+        public SortedTurtlePredicateList() { super(new IRIComparator()); }
     }
 
     /** Comparator for Sesame Resource objects. */
     protected class ResourceComparator implements Comparator<Resource> {
         private BNodeComparator bnc = null;
-        private URIComparator uric = null;
+        private IRIComparator iric = null;
         private Class collectionClass = Value.class;
 
         public ResourceComparator() {}
@@ -641,9 +645,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                             if (resource2 instanceof BNode) {
                                 return -1; // resource1 comes before blank node resource2.
                             } else { // compare non-blank-node resources.
-                                if ((resource1 instanceof URI) && (resource2 instanceof URI)) { // compare URIs
-                                    if (uric == null) { uric = new URIComparator(); }
-                                    return uric.compare((URI)resource1, (URI)resource2, excludedList);
+                                if ((resource1 instanceof IRI) && (resource2 instanceof IRI)) { // compare URIs
+                                    if (iric == null) { iric = new IRIComparator(); }
+                                    return iric.compare((IRI)resource1, (IRI)resource2, excludedList);
                                 } else {
                                     return resource1.stringValue().compareTo(resource2.stringValue());
                                 }
@@ -720,13 +724,13 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
-    /** Base URI for the RDF output document. */
-    protected URI baseUri = null;
+    /** Base IRI for the RDF output document. */
+    protected IRI baseUri = null;
 
-    /** Preference for prefix or base-URI based URI shortening. */
+    /** Preference for prefix or base-IRI based IRI shortening. */
     protected ShortUriPreferences shortUriPreference = ShortUriPreferences.prefix;
 
-    /** Whether to use a DTD subset to allow URI shortening in RDF/XML */
+    /** Whether to use a DTD subset to allow IRI shortening in RDF/XML */
     protected boolean useDtdSubset = false;
 
     /** Whether to inline blank nodes */
@@ -763,10 +767,10 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected SortedTurtleSubjectPredicateObjectMap sortedTripleMap = null;
 
     /** All predicates from the input ontology. */
-    protected HashSet<URI> allPredicates = null;
+    protected HashSet<IRI> allPredicates = null;
 
     /** Predicates that are specially rendered before all others. */
-    protected ArrayList<URI> firstPredicates = null;
+    protected ArrayList<IRI> firstPredicates = null;
 
     /** Comparator for Strings that shorts longer strings first. */
     protected class StringLengthComparator implements Comparator<String> {
@@ -793,7 +797,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected boolean isCollection(BNode bnode, Class collectionClass) {
         SortedTurtlePredicateObjectMap poMap = unsortedTripleMap.getSorted(bnode, collectionClass);
         if (poMap != null) {
-            Set<URI> predicates = poMap.keySet();
+            Set<IRI> predicates = poMap.keySet();
             int firstCount = predicates.contains(rdfFirst) ? 1 : 0;
             int restCount = predicates.contains(rdfRest) ? 1 : 0;
             if (predicates.size() == firstCount + restCount) {
@@ -853,7 +857,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         return members;
     }
 
-    /** A reverse namespace table with which returns the longest namespace URIs first.  Key is URI string, value is prefix string. */
+    /** A reverse namespace table with which returns the longest namespace URIs first.  Key is IRI string, value is prefix string. */
     protected class ReverseNamespaceTable extends TreeMap<String,String> {
         public ReverseNamespaceTable() { super(new StringLengthComparator()); }
     }
@@ -864,7 +868,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected Map<String, String> generatedNamespaceTable = null;
 
 
-    /** Reverse namespace table used to map URIs to prefixes.  Key is URI string, value is prefix string. */
+    /** Reverse namespace table used to map URIs to prefixes.  Key is IRI string, value is prefix string. */
     protected ReverseNamespaceTable reverseNamespaceTable = null;
 
     /** Output stream for this RDF writer. */
@@ -900,7 +904,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         assert out != null : "output stream cannot be null";
         this.out = new OutputStreamWriter(out);
         if (options.containsKey("baseUri")) {
-            this.baseUri = (URI) options.get("baseUri");
+            this.baseUri = (IRI) options.get("baseUri");
         }
         if (options.containsKey("shortUriPref")) {
             this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
@@ -932,7 +936,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         assert writer != null : "output writer cannot be null";
         this.out = writer;
         if (options.containsKey("baseUri")) {
-            this.baseUri = (URI) options.get("baseUri");
+            this.baseUri = (IRI) options.get("baseUri");
         }
         if (options.containsKey("shortUriPref")) {
             this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
@@ -963,12 +967,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     }
 
     /**
-     * Converts a URI to a QName, if possible, given the available namespace prefixes.  Returns null if there is no match to a prefix.
-     * @param uri The URI to convert to a QName, if possible.
+     * Converts a IRI to a QName, if possible, given the available namespace prefixes.  Returns null if there is no match to a prefix.
+     * @param uri The IRI to convert to a QName, if possible.
      * @param useGeneratedPrefixes Whether to use namespace prefixes generated by the serializer.
      * @return The equivalent QName for the URI, or null if no equivalent.
      */
-    protected QName convertUriToQName(URI uri, boolean useGeneratedPrefixes) {
+    protected QName convertUriToQName(IRI uri, boolean useGeneratedPrefixes) {
         String uriString = uri.stringValue();
         for (String uriStem : reverseNamespaceTable.keySet()) {
             if ((uriString.length() > uriStem.length()) && uriString.startsWith(uriStem)) {
@@ -989,8 +993,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         return null;
     }
 
-    protected String convertUriToRelativeUri(URI uri, boolean useTurtleQuoting) {
-        // Note: does not check that the baseUri doesn't terminate in the middle of some URI of which it really isn't the base.
+    protected String convertUriToRelativeUri(IRI uri, boolean useTurtleQuoting) {
+        // Note: does not check that the baseUri doesn't terminate in the middle of some IRI of which it really isn't the base.
         if (baseUri != null) {
             String uriString = uri.stringValue();
             String baseUriString = baseUri.stringValue();
@@ -1013,7 +1017,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
      */
     @Override
     public void startRDF() throws RDFHandlerException {
-        allPredicates = new HashSet<URI>();
+        allPredicates = new HashSet<IRI>();
         namespaceTable = new TreeMap<String, String>();
         generatedNamespaceTable = new TreeMap<String, String>();
         unsortedOntologies = new UnsortedTurtleResourceList();
@@ -1042,7 +1046,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
      */
     protected void addNamespacePrefixesForPredicates() {
         int namespaceIndex = 1;
-        for (URI predicate : allPredicates) {
+        for (IRI predicate : allPredicates) {
             String predicateString = predicate.stringValue();
             int namespaceUriEndPos = Math.max(
                 predicateString.lastIndexOf("/"),
@@ -1095,7 +1099,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             }
 
             // Set up list of predicates that appear first under their subjects.
-            firstPredicates = new ArrayList<URI>(); // predicates that are specially rendered first
+            firstPredicates = new ArrayList<IRI>(); // predicates that are specially rendered first
             firstPredicates.add(rdfType);
             firstPredicates.add(rdfsSubClassOf);
             firstPredicates.add(rdfsSubPropertyOf);
@@ -1240,15 +1244,15 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         }
     }
 
-    protected String convertUriToString(URI uri, boolean useGeneratedPrefixes, boolean useTurtleQuoting) {
+    protected String convertUriToString(IRI uri, boolean useGeneratedPrefixes, boolean useTurtleQuoting) {
         if (rdfType.equals(uri)) {
             return "a";
         }
         if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
-            QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the URI out as a QName if possible.
+            QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
             if (qname != null) {
                 return convertQNameToString(qname, useTurtleQuoting);
-            } else { // return the URI relative to the base URI, if possible.
+            } else { // return the IRI relative to the base URI, if possible.
                 String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting);
                 if (relativeUri != null) {
                     return relativeUri;
@@ -1260,11 +1264,11 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             }
         }
         if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
-            String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting); // return the URI relative to the base URI, if possible.
+            String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting); // return the IRI relative to the base URI, if possible.
             if (relativeUri != null) {
                 return relativeUri;
             } else {
-                QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the URI out as a QName if possible.
+                QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
                 if (qname != null) {
                     return convertQNameToString(qname, useTurtleQuoting);
                 } else { // return the absolute URI
@@ -1283,7 +1287,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
 
-    abstract protected void writePredicateAndObjectValues(Writer out, URI predicate, SortedTurtleObjectList values) throws Exception;
+    abstract protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception;
 
     abstract protected void writeFooter(Writer out, String[] trailingComments) throws Exception;
 

@@ -25,9 +25,9 @@ package org.edmcouncil.rdf_toolkit;
 
 import org.apache.commons.cli.*;
 import org.openrdf.model.*;
-import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.impl.TreeModel;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
@@ -49,6 +49,8 @@ public class SesameRdfFormatter {
 
     private static Options options = null;
 
+    private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
     static {
         // Create list of program options, using Apache Commons CLI library.
         options = new Options();
@@ -68,25 +70,25 @@ public class SesameRdfFormatter {
                 "h", "help", false, "print out details of the command-line arguments for the program"
         );
         options.addOption(
-                "bu", "base-uri", true, "set URI to use as base URI"
+                "bi", "base-iri", true, "set IRI to use as base URI"
         );
         options.addOption(
-                "sup", "short-uri-priority", true, "set what takes priority when shortening URIs: " + SesameSortedRDFWriter.ShortUriPreferences.summarise()
+                "sip", "short-iri-priority", true, "set what takes priority when shortening IRIs: " + SesameSortedRDFWriter.ShortUriPreferences.summarise()
         );
         options.addOption(
-                "up", "uri-pattern", true, "set a pattern to replace in all URIs (used together with --uri-replacement)"
+                "ip", "iri-pattern", true, "set a pattern to replace in all IRIs (used together with --iri-replacement)"
         );
         options.addOption(
-                "ur", "uri-replacement", true, "set replacement text used to replace a matching pattern in all URIs (used together with --uri-pattern)"
+                "ir", "iri-replacement", true, "set replacement text used to replace a matching pattern in all IRIs (used together with --iri-pattern)"
         );
         options.addOption(
-                "dtd", "use-dtd-subset", false, "for XML, use a DTD subset in order to allow prefix-based URI shortening"
+                "dtd", "use-dtd-subset", false, "for XML, use a DTD subset in order to allow prefix-based IRI shortening"
         );
         options.addOption(
                 "ibn", "inline-blank-nodes", false, "use inline representation for blank nodes.  NOTE: this will fail if there are any recursive relationships involving blank nodes.  Usually OWL has no such recursion involving blank nodes.  It also will fail if any blank nodes are a triple subject but not a triple object."
         );
         options.addOption(
-                "ibu", "infer-base-uri", false, "use the OWL ontology URI as the base URI.  Ignored if an explicit base URI has been set"
+                "ibi", "infer-base-iri", false, "use the OWL ontology IRI as the base URI.  Ignored if an explicit base IRI has been set"
         );
         options.addOption(
                 "lc", "leading-comment", true, "sets the text of the leading comment in the ontology.  Can be repeated for a multi-line comment"
@@ -122,21 +124,21 @@ public class SesameRdfFormatter {
 
     /** Main method, but throws exceptions for use from inside other Java code. */
     public static void run(String[] args) throws Exception {
-        URI baseUri = null;
-        String baseUriString = "";
+        IRI baseIri = null;
+        String baseIriString = "";
         String uriPattern = null;
         String uriReplacement = null;
         boolean useDtdSubset = false;
         boolean inlineBlankNodes = false;
         boolean inferBaseUri = false;
-        URI inferredBaseUri = null;
+        IRI inferredBaseIri = null;
         String[] leadingComments = null;
         String[] trailingComments = null;
         String indent = "\t";
         SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
 
         // Parse the command line options.
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         CommandLine line = parser.parse( options, args );
 
         // Print out help, if requested.
@@ -198,15 +200,15 @@ public class SesameRdfFormatter {
         // Check if a base URI was provided
         try {
             if (line.hasOption("bu")) {
-                baseUriString = line.getOptionValue("bu");
-                baseUri = new URIImpl(baseUriString);
-                if (baseUriString.endsWith("#")) {
-                    logger.warn("base URI ends in '#', which is unusual: " + baseUriString);
+                baseIriString = line.getOptionValue("bu");
+                baseIri = valueFactory.createIRI(baseIriString);
+                if (baseIriString.endsWith("#")) {
+                    logger.warn("base URI ends in '#', which is unusual: " + baseIriString);
                 }
             }
         } catch (Throwable t) {
-            baseUri = null;
-            baseUriString = "";
+            baseIri = null;
+            baseIriString = "";
         }
 
         // Check if there is a valid URI pattern/replacement pair
@@ -277,9 +279,7 @@ public class SesameRdfFormatter {
         }
         RDFFormat sesameSourceFormat = null;
         if (SesameSortedRDFWriterFactory.SourceFormats.auto.equals(sourceFormat)) {
-            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath, RDFFormat.TURTLE);
-        } else {
-            sesameSourceFormat = sourceFormat.getRDFFormat();
+            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath).orElse(sourceFormat.getRDFFormat());
         }
         if (sesameSourceFormat == null) {
             logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);
@@ -287,7 +287,7 @@ public class SesameRdfFormatter {
 
         Model sourceModel = null;
         try {
-            sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUriString, sesameSourceFormat);
+            sourceModel = Rio.parse(new FileInputStream(sourceFile), baseIriString, sesameSourceFormat);
         } catch (Throwable t) {
             logger.error(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
             logger.error("Unable to parse input file: " + sourceFile.getAbsolutePath());
@@ -304,51 +304,51 @@ public class SesameRdfFormatter {
             Model replacedModel = new TreeModel();
             for (Statement st : sourceModel) {
                 Resource replacedSubject = st.getSubject();
-                if (replacedSubject instanceof URI) {
-                    replacedSubject = new URIImpl(replacedSubject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                if (replacedSubject instanceof IRI) {
+                    replacedSubject = valueFactory.createIRI(replacedSubject.stringValue().replaceFirst(uriPattern, uriReplacement));
                 }
 
-                URI replacedPredicate = st.getPredicate();
-                replacedPredicate = new URIImpl(replacedPredicate.stringValue().replaceFirst(uriPattern, uriReplacement));
+                IRI replacedPredicate = st.getPredicate();
+                replacedPredicate = valueFactory.createIRI(replacedPredicate.stringValue().replaceFirst(uriPattern, uriReplacement));
 
                 Value replacedObject = st.getObject();
-                if (replacedObject instanceof URI) {
-                    replacedObject = new URIImpl(replacedObject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                if (replacedObject instanceof IRI) {
+                    replacedObject = valueFactory.createIRI(replacedObject.stringValue().replaceFirst(uriPattern, uriReplacement));
                 }
 
-                Statement replacedStatement = new StatementImpl(replacedSubject, replacedPredicate, replacedObject);
+                Statement replacedStatement = valueFactory.createStatement(replacedSubject, replacedPredicate, replacedObject);
                 replacedModel.add(replacedStatement);
             }
-            // Do URI replacements in namespaces as well.
+            // Do IRI replacements in namespaces as well.
             Set<Namespace> namespaces = sourceModel.getNamespaces();
             for (Namespace nmsp : namespaces) {
                 replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(uriPattern, uriReplacement));
             }
             sourceModel = replacedModel;
-            // This is also the right time to do URI replacement in the base URI, if appropriate
-            if (baseUri != null) {
-                baseUriString = baseUriString.replaceFirst(uriPattern, uriReplacement);
-                baseUri = new URIImpl(baseUriString);
+            // This is also the right time to do IRI replacement in the base URI, if appropriate
+            if (baseIri != null) {
+                baseIriString = baseIriString.replaceFirst(uriPattern, uriReplacement);
+                baseIri = valueFactory.createIRI(baseIriString);
             }
         }
 
         // Infer the base URI, if requested
         if (inferBaseUri) {
-            LinkedList<URI> owlOntologyUris = new LinkedList<URI>();
+            LinkedList<IRI> owlOntologyIris = new LinkedList<IRI>();
             for (Statement st : sourceModel) {
-                if ((SesameSortedRDFWriter.rdfType.equals(st.getPredicate())) && (SesameSortedRDFWriter.owlOntology.equals(st.getObject())) && (st.getSubject() instanceof URI)) {
-                    owlOntologyUris.add((URI)st.getSubject());
+                if ((SesameSortedRDFWriter.rdfType.equals(st.getPredicate())) && (SesameSortedRDFWriter.owlOntology.equals(st.getObject())) && (st.getSubject() instanceof IRI)) {
+                    owlOntologyIris.add((IRI)st.getSubject());
                 }
             }
-            if (owlOntologyUris.size() >= 1) {
-                Comparator<URI> uriComparator = new Comparator<URI>() {
+            if (owlOntologyIris.size() >= 1) {
+                Comparator<IRI> iriComparator = new Comparator<IRI>() {
                     @Override
-                    public int compare(URI uri1, URI uri2) {
-                        return uri1.toString().compareTo(uri2.toString());
+                    public int compare(IRI iri1, IRI iri2) {
+                        return iri1.toString().compareTo(iri2.toString());
                     }
                 };
-                owlOntologyUris.sort(uriComparator);
-                inferredBaseUri = owlOntologyUris.getFirst();
+                owlOntologyIris.sort(iriComparator);
+                inferredBaseIri = owlOntologyIris.getFirst();
             }
         }
 
@@ -370,17 +370,17 @@ public class SesameRdfFormatter {
             shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.prefix;
         }
         if (shortUriPref == null) {
-            logger.error("Unsupported or unrecognised short URI preference: " + line.getOptionValue("sup"));
+            logger.error("Unsupported or unrecognised short IRI preference: " + line.getOptionValue("sup"));
             return;
         }
 
         Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
         SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory(targetFormat);
         Map<String, Object> writerOptions = new HashMap<String, Object>();
-        if (baseUri != null) {
-            writerOptions.put("baseUri", baseUri);
-        } else if (inferBaseUri && (inferredBaseUri != null)) {
-            writerOptions.put("baseUri", inferredBaseUri);
+        if (baseIri != null) {
+            writerOptions.put("baseIri", baseIri);
+        } else if (inferBaseUri && (inferredBaseIri != null)) {
+            writerOptions.put("baseIri", inferredBaseIri);
         }
         if (indent != null) { writerOptions.put("indent", indent); }
         if (shortUriPref != null) { writerOptions.put("shortUriPref", shortUriPref); }
