@@ -73,7 +73,7 @@ public class SesameRdfFormatter {
                 "bi", "base-iri", true, "set IRI to use as base URI"
         );
         options.addOption(
-                "sip", "short-iri-priority", true, "set what takes priority when shortening IRIs: " + SesameSortedRDFWriter.ShortUriPreferences.summarise()
+                "sip", "short-iri-priority", true, "set what takes priority when shortening IRIs: " + SesameSortedRDFWriter.ShortIriPreferences.summarise()
         );
         options.addOption(
                 "ip", "iri-pattern", true, "set a pattern to replace in all IRIs (used together with --iri-replacement)"
@@ -126,11 +126,11 @@ public class SesameRdfFormatter {
     public static void run(String[] args) throws Exception {
         IRI baseIri = null;
         String baseIriString = "";
-        String uriPattern = null;
-        String uriReplacement = null;
+        String iriPattern = null;
+        String iriReplacement = null;
         boolean useDtdSubset = false;
         boolean inlineBlankNodes = false;
-        boolean inferBaseUri = false;
+        boolean inferBaseIri = false;
         IRI inferredBaseIri = null;
         String[] leadingComments = null;
         String[] trailingComments = null;
@@ -199,11 +199,11 @@ public class SesameRdfFormatter {
 
         // Check if a base URI was provided
         try {
-            if (line.hasOption("bu")) {
-                baseIriString = line.getOptionValue("bu");
+            if (line.hasOption("bi")) {
+                baseIriString = line.getOptionValue("bi");
                 baseIri = valueFactory.createIRI(baseIriString);
                 if (baseIriString.endsWith("#")) {
-                    logger.warn("base URI ends in '#', which is unusual: " + baseIriString);
+                    logger.warn("base IRI ends in '#', which is unusual: " + baseIriString);
                 }
             }
         } catch (Throwable t) {
@@ -212,21 +212,21 @@ public class SesameRdfFormatter {
         }
 
         // Check if there is a valid URI pattern/replacement pair
-        if (line.hasOption("up")) {
-            if(line.hasOption("ur")) {
-                if (line.getOptionValue("up").length() < 1) {
-                    logger.error("A URI pattern cannot be an empty string.  Use --help for help.");
+        if (line.hasOption("ip")) {
+            if(line.hasOption("ir")) {
+                if (line.getOptionValue("ip").length() < 1) {
+                    logger.error("An IRI pattern cannot be an empty string.  Use --help for help.");
                     return;
                 }
-                uriPattern = line.getOptionValue("up");
-                uriReplacement = line.getOptionValue("ur");
+                iriPattern = line.getOptionValue("ip");
+                iriReplacement = line.getOptionValue("ir");
             } else {
-                logger.error("If a URI pattern is specified, a URI replacement must also be specified.  Use --help for help.");
+                logger.error("If an IRI pattern is specified, an IRI replacement must also be specified.  Use --help for help.");
                 return;
             }
         } else {
-            if (line.hasOption("ur")) {
-                logger.error("If a URI replacement is specified, a URI pattern must also be specified.  Use --help for help.");
+            if (line.hasOption("ir")) {
+                logger.error("If an IRI replacement is specified, an IRI pattern must also be specified.  Use --help for help.");
                 return;
             }
         }
@@ -242,8 +242,8 @@ public class SesameRdfFormatter {
         }
 
         // Check if the base URI should be set to be the same as the OWL ontology URI
-        if (line.hasOption("ibu")) {
-            inferBaseUri = true;
+        if (line.hasOption("ibi")) {
+            inferBaseIri = true;
         }
 
         // Check if there are leading comments
@@ -300,20 +300,20 @@ public class SesameRdfFormatter {
         }
 
         // Do any URI replacements
-        if ((uriPattern != null) && (uriReplacement != null)) {
+        if ((iriPattern != null) && (iriReplacement != null)) {
             Model replacedModel = new TreeModel();
             for (Statement st : sourceModel) {
                 Resource replacedSubject = st.getSubject();
                 if (replacedSubject instanceof IRI) {
-                    replacedSubject = valueFactory.createIRI(replacedSubject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                    replacedSubject = valueFactory.createIRI(replacedSubject.stringValue().replaceFirst(iriPattern, iriReplacement));
                 }
 
                 IRI replacedPredicate = st.getPredicate();
-                replacedPredicate = valueFactory.createIRI(replacedPredicate.stringValue().replaceFirst(uriPattern, uriReplacement));
+                replacedPredicate = valueFactory.createIRI(replacedPredicate.stringValue().replaceFirst(iriPattern, iriReplacement));
 
                 Value replacedObject = st.getObject();
                 if (replacedObject instanceof IRI) {
-                    replacedObject = valueFactory.createIRI(replacedObject.stringValue().replaceFirst(uriPattern, uriReplacement));
+                    replacedObject = valueFactory.createIRI(replacedObject.stringValue().replaceFirst(iriPattern, iriReplacement));
                 }
 
                 Statement replacedStatement = valueFactory.createStatement(replacedSubject, replacedPredicate, replacedObject);
@@ -322,18 +322,18 @@ public class SesameRdfFormatter {
             // Do IRI replacements in namespaces as well.
             Set<Namespace> namespaces = sourceModel.getNamespaces();
             for (Namespace nmsp : namespaces) {
-                replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(uriPattern, uriReplacement));
+                replacedModel.setNamespace(nmsp.getPrefix(), nmsp.getName().replaceFirst(iriPattern, iriReplacement));
             }
             sourceModel = replacedModel;
             // This is also the right time to do IRI replacement in the base URI, if appropriate
             if (baseIri != null) {
-                baseIriString = baseIriString.replaceFirst(uriPattern, uriReplacement);
+                baseIriString = baseIriString.replaceFirst(iriPattern, iriReplacement);
                 baseIri = valueFactory.createIRI(baseIriString);
             }
         }
 
         // Infer the base URI, if requested
-        if (inferBaseUri) {
+        if (inferBaseIri) {
             LinkedList<IRI> owlOntologyIris = new LinkedList<IRI>();
             for (Statement st : sourceModel) {
                 if ((SesameSortedRDFWriter.rdfType.equals(st.getPredicate())) && (SesameSortedRDFWriter.owlOntology.equals(st.getObject())) && (st.getSubject() instanceof IRI)) {
@@ -363,11 +363,11 @@ public class SesameRdfFormatter {
             logger.error("Unsupported or unrecognised target format: " + line.getOptionValue("tfmt"));
             return;
         }
-        SesameSortedRDFWriter.ShortUriPreferences shortUriPref = null;
-        if (line.hasOption("sup")) {
-            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.getByOptionValue(line.getOptionValue("sup"));
+        SesameSortedRDFWriter.ShortIriPreferences shortUriPref = null;
+        if (line.hasOption("sip")) {
+            shortUriPref = SesameSortedRDFWriter.ShortIriPreferences.getByOptionValue(line.getOptionValue("sip"));
         } else {
-            shortUriPref = SesameSortedRDFWriter.ShortUriPreferences.prefix;
+            shortUriPref = SesameSortedRDFWriter.ShortIriPreferences.prefix;
         }
         if (shortUriPref == null) {
             logger.error("Unsupported or unrecognised short IRI preference: " + line.getOptionValue("sup"));
@@ -379,7 +379,7 @@ public class SesameRdfFormatter {
         Map<String, Object> writerOptions = new HashMap<String, Object>();
         if (baseIri != null) {
             writerOptions.put("baseIri", baseIri);
-        } else if (inferBaseUri && (inferredBaseIri != null)) {
+        } else if (inferBaseIri && (inferredBaseIri != null)) {
             writerOptions.put("baseIri", inferredBaseIri);
         }
         if (indent != null) { writerOptions.put("indent", indent); }

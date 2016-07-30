@@ -78,23 +78,23 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         return true;
     }
 
-    public enum ShortUriPreferences {
+    public enum ShortIriPreferences {
         prefix("prefix"),
-        base_uri("base-uri");
+        base_iri("base-iri");
 
-        private static final ShortUriPreferences defaultEnum = prefix;
+        private static final ShortIriPreferences defaultEnum = prefix;
 
         private String optionValue = null;
 
-        ShortUriPreferences(String optionValue) {
+        ShortIriPreferences(String optionValue) {
             this.optionValue = optionValue;
         }
 
         public String getOptionValue() { return optionValue; }
 
-        public static ShortUriPreferences getByOptionValue(String optionValue) {
+        public static ShortIriPreferences getByOptionValue(String optionValue) {
             if (optionValue == null) { return null; }
-            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+            for (ShortIriPreferences sup : ShortIriPreferences.values()) {
                 if (optionValue.equals(sup.optionValue)) {
                     return sup;
                 }
@@ -104,7 +104,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
         public static String summarise() {
             ArrayList<String> result = new ArrayList<String>();
-            for (ShortUriPreferences sup : ShortUriPreferences.values()) {
+            for (ShortIriPreferences sup : ShortIriPreferences.values()) {
                 String value = sup.optionValue;
                 if (defaultEnum.equals(sup)) {
                     value += " [default]";
@@ -263,7 +263,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     /** Comparator for TurtlePredicateObjectMap objects. */
     protected class TurtlePredicateObjectMapComparator implements Comparator<SortedTurtlePredicateObjectMap> {
-        private IRIComparator uric = null;
+        private IRIComparator iric = null;
         private TurtleObjectListComparator tolc = null;
         private Class collectionClass = Value.class;
 
@@ -305,10 +305,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                 if (iter2.hasNext()) {
                     IRI key1 = iter1.next();
                     IRI key2 = iter2.next();
-                    if (uric == null) { uric = new IRIComparator(); }
+                    if (iric == null) { iric = new IRIComparator(); }
                     excludedList.add(map1);
                     excludedList.add(map2);
-                    int cmp = uric.compare(key1, key2, excludedList);
+                    int cmp = iric.compare(key1, key2, excludedList);
                     if (cmp != 0) {
                         return cmp;
                     } else { // predicate keys are the same, so test object values
@@ -384,7 +384,12 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                                 ArrayList<Value> values1 = getCollectionMembers(bnode1, collectionClass);
                                 ArrayList<Value> values2 = getCollectionMembers(bnode2, collectionClass);
                                 if (tolc == null) { tolc = new TurtleObjectListComparator(collectionClass); }
-                                return tolc.compare(values1, values2, excludedList);
+                                int cmp = tolc.compare(values1, values2, excludedList);
+                                if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inlining blank nodes
+                                    return cmp;
+                                } else { // if all else fails, do a string comparison
+                                    return bnode1.stringValue().compareTo(bnode2.stringValue());
+                                }
                             } else {
                                 return -1; // an RDF collection comes before any other blank node
                             }
@@ -398,7 +403,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                                 excludedList.add(bnode1);
                                 excludedList.add(bnode2);
                                 int cmp = tpomc.compare(map1, map2, excludedList);
-                                if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
+                                if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inlining blank nodes
                                     return cmp;
                                 } else { // if all else fails, do a string comparison
                                     return bnode1.stringValue().compareTo(bnode2.stringValue());
@@ -445,7 +450,12 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                         if (value1 instanceof BNode) {
                             if (value2 instanceof BNode) {
                                 if (bnc == null) { bnc = new BNodeComparator(collectionClass); }
-                                return bnc.compare((BNode)value1, (BNode)value2, excludedList);
+                                int cmp = bnc.compare((BNode)value1, (BNode)value2, excludedList);
+                                if (cmp != 0) {
+                                    return cmp;
+                                } else {
+                                    return value1.stringValue().compareTo(value2.stringValue()); // to make sure that the sorted blank node list doesn't exclude a blank node just because it has the same content as another
+                                }
                             } else {
                                 return 1; // blank node value1 comes after value2.
                             }
@@ -474,39 +484,37 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         } else {
             if (literal1.getLanguage().isPresent()) {
                 if (literal2.getLanguage().isPresent()) {
-                    if (literal1.getDatatype() == null) {
-                        if (literal2.getDatatype() == null) {
-                            return 0; // no language or data type difference
-                        } else {
-                            return 1; // literal1 with no data type comes after literal2 with data type
-                        }
-                    } else {
-                        if (literal2.getDatatype() == null) {
-                            return -1; // literal1 with data type comes before literal2 without data type
-                        } else {
-                            cmp = literal1.getDatatype().stringValue().compareTo(literal2.getDatatype().stringValue());
-                            if (cmp != 0) {
-                                return cmp; // datatypes are different
-                            } else {
-                                return 0; // no language or data type difference
-                            }
-                        }
+                    int cmp2 = literal1.getLanguage().toString().compareTo(literal2.getLanguage().toString());
+                    if (cmp2 != 0) {
+                        return cmp2;
                     }
-                } else {
-                    return 1; // literal1 without language comes after literal2 with language
+                } else { // !literal2.getLanguage().isPresent()
+                    return -1; // literal1 with language comes before literal2 without language
                 }
-            } else {
-                if (!literal2.getLanguage().isPresent()) {
-                    return -1; // literal1 with language comes after literal2 without language
-                } else {
-                    cmp = literal1.getLanguage().get().compareTo(literal2.getLanguage().get());
-                    if (cmp != 0) {
-                        return cmp; // languages are different
-                    } else {
-                        return 0; // no language or data type difference
-                    }
+            } else { // !literal1.getLanguage().isPresent()
+                if (literal2.getLanguage().isPresent()) {
+                    return 1; // literal1 without language comes after literal2 with language
+                } else { // !literal2.getLanguage().isPresent()
+                    // neither literal has a language to compare
                 }
             }
+            if (literal1.getDatatype() != null) {
+                if (literal2.getDatatype() != null) {
+                    int cmp2 = literal1.getDatatype().stringValue().compareTo(literal2.getDatatype().stringValue());
+                    if (cmp2 != 0) {
+                        return cmp2;
+                    }
+                } else { // literal2.getDatatype() == null
+                    return -1; // literal1 with data type comes before literal2 without data type
+                }
+            } else { // literal1.getDatatype() == null
+                if (literal2.getDatatype() != null) {
+                    return 1; // literal1 without data type comes after literal2 with data type
+                } else { // literal2.getDatatype().isPresent() == null
+                    // neither literal has a data type to compare
+                }
+            }
+            return 0; // no difference in value, language nor datatype
         }
     }
 
@@ -537,32 +545,32 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** Comparator for Sesame IRI objects. */
     protected class IRIComparator implements Comparator<IRI> {
         @Override
-        public int compare(IRI uri1, IRI uri2) {
-            return compare(uri1, uri2, new ArrayList<Object>());
+        public int compare(IRI iri1, IRI iri2) {
+            return compare(iri1, iri2, new ArrayList<Object>());
         }
 
-        public int compare(IRI uri1, IRI uri2, ArrayList<Object> excludedList) {
-            if ((uri1 == null) || excludedList.contains(uri1)) {
-                if ((uri2 == null) || excludedList.contains(uri2)) {
-                    return 0; // two null/excluded URIs are equal
+        public int compare(IRI iri1, IRI iri2, ArrayList<Object> excludedList) {
+            if ((iri1 == null) || excludedList.contains(iri1)) {
+                if ((iri2 == null) || excludedList.contains(iri2)) {
+                    return 0; // two null/excluded IRIs are equal
                 } else {
-                    return -1; // null/excluded IRI comes before non-null/excluded URI
+                    return -1; // null/excluded IRI comes before non-null/excluded IRI
                 }
             } else {
-                if ((uri2 == null) || excludedList.contains(uri2)) {
-                    return 1; // non-null/excluded IRI comes before null/excluded URI
+                if ((iri2 == null) || excludedList.contains(iri2)) {
+                    return 1; // non-null/excluded IRI comes before null/excluded IRI
                 } else {
-                    if (uri1 == uri2) {
+                    if (iri1 == iri2) {
                         return 0;
                     } else {
-                        return uri1.stringValue().compareTo(uri2.stringValue());
+                        return iri1.stringValue().compareTo(iri2.stringValue());
                     }
                 }
             }
         }
     }
 
-    /** An unsorted map from predicate URIs to lists of object values. */
+    /** An unsorted map from predicate IRIs to lists of object values. */
     protected class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtleObjectList> {
         public SortedTurtleObjectList getSorted(IRI predicate, Class collectionClass) {
             if (containsKey(predicate)) {
@@ -579,11 +587,27 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             }
             return sortedPOMap;
         }
+
+        public int fullSize() {
+            int result = 0;
+            for (Resource pred : keySet()) {
+                result += get(pred).size();
+            }
+            return result;
+        }
     }
 
-    /** A sorted map from predicate URIs to lists of object values. */
+    /** A sorted map from predicate IRIs to lists of object values. */
     protected class SortedTurtlePredicateObjectMap extends TreeMap<IRI, SortedTurtleObjectList> {
         public SortedTurtlePredicateObjectMap() { super(new IRIComparator()); }
+
+        public int fullSize() {
+            int result = 0;
+            for (Resource pred : keySet()) {
+                result += get(pred).size();
+            }
+            return result;
+        }
     }
 
     /** An unsorted list of RDF IRI values. */
@@ -637,7 +661,12 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                         if (resource1 instanceof BNode) {
                             if (resource2 instanceof BNode) {
                                 if (bnc == null) { bnc = new BNodeComparator(collectionClass); }
-                                return bnc.compare((BNode)resource1, (BNode)resource2, excludedList);
+                                int cmp = bnc.compare((BNode)resource1, (BNode)resource2, excludedList);
+                                if (cmp != 0) {
+                                    return cmp;
+                                } else {
+                                    return resource1.stringValue().compareTo(resource2.stringValue()); // to make sure that the sorted blank node list doesn't exclude a blank node just because it has the same content as another
+                                }
                             } else {
                                 return 1; // blank node resource1 comes after resource2.
                             }
@@ -645,7 +674,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                             if (resource2 instanceof BNode) {
                                 return -1; // resource1 comes before blank node resource2.
                             } else { // compare non-blank-node resources.
-                                if ((resource1 instanceof IRI) && (resource2 instanceof IRI)) { // compare URIs
+                                if ((resource1 instanceof IRI) && (resource2 instanceof IRI)) { // compare IRIs
                                     if (iric == null) { iric = new IRIComparator(); }
                                     return iric.compare((IRI)resource1, (IRI)resource2, excludedList);
                                 } else {
@@ -676,6 +705,15 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             }
             return sortedSPOMap;
         }
+
+        public int fullSize() {
+            int result = 0;
+            for (Resource subj : keySet()) {
+                UnsortedTurtlePredicateObjectMap poMap = get(subj);
+                if (poMap != null) { result += poMap.fullSize(); }
+            }
+            return result;
+        }
     }
 
     /** A sorted map from subject resources to predicate/object pairs. */
@@ -683,6 +721,15 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         public SortedTurtleSubjectPredicateObjectMap() { super(new ResourceComparator()); }
         public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) {
             super(new ResourceComparator(collectionClass));
+        }
+
+        public int fullSize() {
+            int result = 0;
+            for (Resource subj : keySet()) {
+                SortedTurtlePredicateObjectMap poMap = get(subj);
+                if (poMap != null) { result += poMap.fullSize(); }
+            }
+            return result;
         }
     }
 
@@ -706,6 +753,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     }
 
     /** An unsorted list of RDF blank nodes. */
+    // TODO: why is this not a subclass of UnsortedTurtleResourceList?
     protected class UnsortedTurtleBNodeList extends HashSet<BNode> {
         public SortedTurtleBNodeList toSorted(Class collectionClass) {
             SortedTurtleBNodeList sortedBNList = new SortedTurtleBNodeList(collectionClass);
@@ -717,6 +765,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     }
 
     /** A sorted list of RDF blank nodes. */
+    // TODO: why is this not a subclass of SortedTurtleResourceList?
     protected class SortedTurtleBNodeList extends TreeSet<BNode> {
         public SortedTurtleBNodeList() { super(new BNodeComparator()); }
         public SortedTurtleBNodeList(Class collectionClass) {
@@ -725,10 +774,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     }
 
     /** Base IRI for the RDF output document. */
-    protected IRI baseUri = null;
+    protected IRI baseIri = null;
 
     /** Preference for prefix or base-IRI based IRI shortening. */
-    protected ShortUriPreferences shortUriPreference = ShortUriPreferences.prefix;
+    protected ShortIriPreferences shortIriPreference = ShortIriPreferences.prefix;
 
     /** Whether to use a DTD subset to allow IRI shortening in RDF/XML */
     protected boolean useDtdSubset = false;
@@ -857,7 +906,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         return members;
     }
 
-    /** A reverse namespace table with which returns the longest namespace URIs first.  Key is IRI string, value is prefix string. */
+    /** A reverse namespace table with which returns the longest namespace IRIs first.  Key is IRI string, value is prefix string. */
     protected class ReverseNamespaceTable extends TreeMap<String,String> {
         public ReverseNamespaceTable() { super(new StringLengthComparator()); }
     }
@@ -868,7 +917,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     protected Map<String, String> generatedNamespaceTable = null;
 
 
-    /** Reverse namespace table used to map URIs to prefixes.  Key is IRI string, value is prefix string. */
+    /** Reverse namespace table used to map IRIs to prefixes.  Key is IRI string, value is prefix string. */
     protected ReverseNamespaceTable reverseNamespaceTable = null;
 
     /** Output stream for this RDF writer. */
@@ -903,11 +952,11 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     public SesameSortedRDFWriter(OutputStream out, Map<String, Object> options) {
         assert out != null : "output stream cannot be null";
         this.out = new OutputStreamWriter(out);
-        if (options.containsKey("baseUri")) {
-            this.baseUri = (IRI) options.get("baseUri");
+        if (options.containsKey("baseIri")) {
+            this.baseIri = (IRI) options.get("baseIri");
         }
-        if (options.containsKey("shortUriPref")) {
-            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        if (options.containsKey("shortIriPref")) {
+            this.shortIriPreference = (ShortIriPreferences) options.get("shortIriPref");
         }
         if (options.containsKey("useDtdSubset")) {
             this.useDtdSubset = (Boolean) options.get("useDtdSubset");
@@ -935,11 +984,11 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     public SesameSortedRDFWriter(Writer writer, Map<String, Object> options) {
         assert writer != null : "output writer cannot be null";
         this.out = writer;
-        if (options.containsKey("baseUri")) {
-            this.baseUri = (IRI) options.get("baseUri");
+        if (options.containsKey("baseIri")) {
+            this.baseIri = (IRI) options.get("baseIri");
         }
-        if (options.containsKey("shortUriPref")) {
-            this.shortUriPreference = (ShortUriPreferences) options.get("shortUriPref");
+        if (options.containsKey("shortIriPref")) {
+            this.shortIriPreference = (ShortIriPreferences) options.get("shortIriPref");
         }
         if (options.containsKey("useDtdSubset")) {
             this.useDtdSubset = (Boolean) options.get("useDtdSubset");
@@ -968,19 +1017,19 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     /**
      * Converts a IRI to a QName, if possible, given the available namespace prefixes.  Returns null if there is no match to a prefix.
-     * @param uri The IRI to convert to a QName, if possible.
+     * @param iri The IRI to convert to a QName, if possible.
      * @param useGeneratedPrefixes Whether to use namespace prefixes generated by the serializer.
-     * @return The equivalent QName for the URI, or null if no equivalent.
+     * @return The equivalent QName for the IRI, or null if no equivalent.
      */
-    protected QName convertUriToQName(IRI uri, boolean useGeneratedPrefixes) {
-        String uriString = uri.stringValue();
-        for (String uriStem : reverseNamespaceTable.keySet()) {
-            if ((uriString.length() > uriStem.length()) && uriString.startsWith(uriStem)) {
-                String localPart = uriString.substring(uriStem.length());
+    protected QName convertIriToQName(IRI iri, boolean useGeneratedPrefixes) {
+        String iriString = iri.stringValue();
+        for (String iriStem : reverseNamespaceTable.keySet()) {
+            if ((iriString.length() > iriStem.length()) && iriString.startsWith(iriStem)) {
+                String localPart = iriString.substring(iriStem.length());
                 if (isPrefixedNameLocalPart(localPart)) { // to be a value QName, the 'local part' has to be valid
-                    String prefix = reverseNamespaceTable.get(uriStem);
+                    String prefix = reverseNamespaceTable.get(iriStem);
                     if (useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) {
-                        return new QName(uriStem, localPart, prefix);
+                        return new QName(iriStem, localPart, prefix);
                     } else {
                         return null;
                     }
@@ -993,14 +1042,14 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         return null;
     }
 
-    protected String convertUriToRelativeUri(IRI uri, boolean useTurtleQuoting) {
-        // Note: does not check that the baseUri doesn't terminate in the middle of some IRI of which it really isn't the base.
-        if (baseUri != null) {
-            String uriString = uri.stringValue();
-            String baseUriString = baseUri.stringValue();
-            if ((uriString.length() > baseUriString.length()) && uriString.startsWith(baseUriString)) {
+    protected String convertIriToRelativeIri(IRI iri, boolean useTurtleQuoting) {
+        // Note: does not check that the baseIri doesn't terminate in the middle of some IRI of which it really isn't the base.
+        if (baseIri != null) {
+            String iriString = iri.stringValue();
+            String baseIriString = baseIri.stringValue();
+            if ((iriString.length() > baseIriString.length()) && iriString.startsWith(baseIriString)) {
                 String result = (useTurtleQuoting ? "<" : "") +
-                        uriString.substring(baseUriString.length()) +
+                        iriString.substring(baseIriString.length()) +
                         (useTurtleQuoting ? ">" : "");
                 return result;
             }
@@ -1028,19 +1077,19 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     /**
      * Adds a default namespace prefix to the namespace table, if no prefix has been defined.
-     * @param namespaceUri The namespace URI.  Cannot be null.
+     * @param namespaceIri The namespace IRI.  Cannot be null.
      * @param defaultPrefix The default prefix to use, if no prefix is yet assigned.  Cannot be null.
      */
-    protected void addDefaultNamespacePrefixIfMissing(String namespaceUri, String defaultPrefix) {
-        if ((namespaceUri != null) && (defaultPrefix != null)) {
-            if (!namespaceTable.containsValue(namespaceUri)) {
-                namespaceTable.put(defaultPrefix, namespaceUri);
+    protected void addDefaultNamespacePrefixIfMissing(String namespaceIri, String defaultPrefix) {
+        if ((namespaceIri != null) && (defaultPrefix != null)) {
+            if (!namespaceTable.containsValue(namespaceIri)) {
+                namespaceTable.put(defaultPrefix, namespaceIri);
             }
         }
     }
 
     /**
-     * Checks if all predicate URIs have a matching namespace prefix, i.e. that they can be converted into QNames.
+     * Checks if all predicate IRIs have a matching namespace prefix, i.e. that they can be converted into QNames.
      * This is needed for RDF/XML.
      * If there is a predicate without a matching namespace prefix, a namespace prefix is created for it.
      */
@@ -1048,16 +1097,16 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         int namespaceIndex = 1;
         for (IRI predicate : allPredicates) {
             String predicateString = predicate.stringValue();
-            int namespaceUriEndPos = Math.max(
+            int namespaceIriEndPos = Math.max(
                 predicateString.lastIndexOf("/"),
                 predicateString.lastIndexOf("#")
             );
-            String namespaceUri = predicateString.substring(0, namespaceUriEndPos+1);
-            if (namespaceUri.length() >= 1) {
-                if (!namespaceTable.containsValue(namespaceUri)) {
+            String namespaceIri = predicateString.substring(0, namespaceIriEndPos+1);
+            if (namespaceIri.length() >= 1) {
+                if (!namespaceTable.containsValue(namespaceIri)) {
                     String newPrefix = "zzzns" + String.format("%04d", namespaceIndex);
-                    namespaceTable.put(newPrefix, namespaceUri);
-                    generatedNamespaceTable.put(newPrefix, namespaceUri); // track the namespace mappings created by the serializer
+                    namespaceTable.put(newPrefix, namespaceIri);
+                    generatedNamespaceTable.put(newPrefix, namespaceIri); // track the namespace mappings created by the serializer
                     namespaceIndex += 1;
                 }
             }
@@ -1109,7 +1158,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             firstPredicates.add(owlOnProperty);
             firstPredicates.add(owlOnClass);
 
-            // Add default namespace prefixes, if they haven't yet been defined.  May fail if these prefixes have already been defined for different namespace URIs.
+            // Add default namespace prefixes, if they haven't yet been defined.  May fail if these prefixes have already been defined for different namespace IRIs.
             addDefaultNamespacePrefixIfMissing(RDF_NS_URI, "rdf");
             addDefaultNamespacePrefixIfMissing(RDFS_NS_URI, "rdfs");
             addDefaultNamespacePrefixIfMissing(OWL_NS_URI, "owl");
@@ -1121,8 +1170,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             // Create reverse namespace table.
             reverseNamespaceTable = new ReverseNamespaceTable();
             for (String prefix : namespaceTable.keySet()) {
-                String uri = namespaceTable.get(prefix);
-                reverseNamespaceTable.put(uri, prefix);
+                String iri = namespaceTable.get(prefix);
+                reverseNamespaceTable.put(iri, prefix);
             }
 
             // Create list of imports
@@ -1208,15 +1257,15 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
 
         // Note subjects which are OWL ontologies, as the are handled before other subjects.
-        if (st.getPredicate().equals(rdfType) && st.getObject().equals(owlOntology)) {
+        if (st.getPredicate().equals(rdfType) && st.getObject().equals(owlOntology) && !unsortedOntologies.contains((st.getSubject()))) {
             unsortedOntologies.add(st.getSubject());
         }
 
         // Note subjects & objects which are blank nodes.
-        if (st.getSubject() instanceof BNode) {
+        if ((st.getSubject() instanceof BNode) && !unsortedBlankNodes.contains(st.getSubject())) {
             unsortedBlankNodes.add(st.getSubject());
         }
-        if (st.getObject() instanceof BNode) {
+        if ((st.getObject() instanceof BNode) && !unsortedBlankNodes.contains((st.getObject()))) {
             unsortedBlankNodes.add((BNode)st.getObject());
         }
     }
@@ -1244,42 +1293,42 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
     }
 
-    protected String convertUriToString(IRI uri, boolean useGeneratedPrefixes, boolean useTurtleQuoting) {
-        if (rdfType.equals(uri)) {
+    protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting) {
+        if (rdfType.equals(iri)) {
             return "a";
         }
-        if (ShortUriPreferences.prefix.equals(shortUriPreference)) {
-            QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
+        if (ShortIriPreferences.prefix.equals(shortIriPreference)) {
+            QName qname = convertIriToQName(iri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
             if (qname != null) {
                 return convertQNameToString(qname, useTurtleQuoting);
-            } else { // return the IRI relative to the base URI, if possible.
-                String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting);
-                if (relativeUri != null) {
-                    return relativeUri;
-                } else { // return the absolute URI
+            } else { // return the IRI relative to the base IRI, if possible.
+                String relativeIri = convertIriToRelativeIri(iri, useTurtleQuoting);
+                if (relativeIri != null) {
+                    return relativeIri;
+                } else { // return the absolute IRI
                     return (useTurtleQuoting ? "<" : "") +
-                            uri.stringValue() +
+                            iri.stringValue() +
                             (useTurtleQuoting ? ">" : "");
                 }
             }
         }
-        if (ShortUriPreferences.base_uri.equals(shortUriPreference)) {
-            String relativeUri = convertUriToRelativeUri(uri, useTurtleQuoting); // return the IRI relative to the base URI, if possible.
-            if (relativeUri != null) {
-                return relativeUri;
+        if (ShortIriPreferences.base_iri.equals(shortIriPreference)) {
+            String relativeIri = convertIriToRelativeIri(iri, useTurtleQuoting); // return the IRI relative to the base URI, if possible.
+            if (relativeIri != null) {
+                return relativeIri;
             } else {
-                QName qname = convertUriToQName(uri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
+                QName qname = convertIriToQName(iri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
                 if (qname != null) {
                     return convertQNameToString(qname, useTurtleQuoting);
-                } else { // return the absolute URI
+                } else { // return the absolute IRI
                     return (useTurtleQuoting ? "<" : "") +
-                            uri.stringValue() +
+                            iri.stringValue() +
                             (useTurtleQuoting ? ">" : "");
                 }
             }
         }
         return (useTurtleQuoting ? "<" : "") +
-                uri.stringValue() +
+                iri.stringValue() +
                 (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
 

@@ -1,17 +1,14 @@
 package org.edmcouncil.rdf_toolkit
 
-import org.omg.CORBA.portable.ValueFactory
+import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.openrdf.model.impl.SimpleValueFactory
 
+import scala.collection.JavaConversions._
 import scala.language.postfixOps
 
 import java.io._
-import java.nio.charset.Charset
 import java.util
-
-import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
-import org.openrdf.model.ValueFactory
 import org.openrdf.rio.{ RDFWriter, RDFFormat, Rio }
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriterFactory
 import org.slf4j.LoggerFactory
@@ -39,8 +36,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   // the same as when it is in Turtle format.
   // The other excluded examples don't have a namespace prefix for all predicates, which is a limitation of RDF/XML.
 
-  /** Exclusion list of examples where the ontology URI is different to the base URI. */
-  val rdfXmlInferredBaseUriExclusionList = List("food.rdf", "wine.rdf")
+  /** Exclusion list of examples where the ontology IRI is different to the base IRI. */
+  val rdfXmlInferredBaseIriExclusionList = List("food.rdf", "wine.rdf")
 
   /** Exclusion list of examples containing inline blank nodes. */
   val rdfXmlInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
@@ -55,17 +52,11 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val writer2 = new SesameSortedRdfXmlWriter(outWriter)
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-    val writer3Options = new util.HashMap[String, Object]()
-    writer3Options.put("baseUri", valueFactory.createIRI("http://example.com#"))
-    writer3Options.put("indent", "\t\t")
-    writer3Options.put("shortUriPref", ShortUriPreferences.prefix)
+    val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
     val writer3 = new SesameSortedRdfXmlWriter(System.out, writer3Options)
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
-    val writer4Options = new util.HashMap[String, Object]()
-    writer4Options.put("baseUri", valueFactory.createIRI("http://example.com#"))
-    writer4Options.put("indent", "\t\t")
-    writer4Options.put("shortUriPref", ShortUriPreferences.base_uri)
+    val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
     val writer4 = new SesameSortedRdfXmlWriter(outWriter, writer4Options)
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
@@ -93,16 +84,16 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SortedRdfXmlWriter" should "be able to produce a sorted RDF/XML file" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-    rdfXmlWriterOptions.put("baseUri", baseUri)
+    rdfXmlWriterOptions.put("baseIri", baseIri)
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-    val inputModel = Rio parse (new FileReader(inputFile), baseUri stringValue, RDFFormat.TURTLE)
+    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, rdfXmlWriter)
     outWriter flush ()
     outWriter close ()
@@ -110,11 +101,11 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, outputFile getName)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-    rdfXmlWriter2Options.put("baseUri", baseUri)
+    rdfXmlWriter2Options.put("baseIri", baseIri)
     rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), baseUri stringValue, RDFFormat.RDFXML)
+    val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel2, rdfXmlWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -198,9 +189,9 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter2 close ()
   }
 
-  it should "be able to produce a sorted RDF/XML file preferring prefix over base URI" in {
+  it should "be able to produce a sorted RDF/XML file preferring prefix over base IRI" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
@@ -208,7 +199,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, rdfXmlWriter)
     outWriter flush ()
     outWriter close ()
@@ -221,7 +212,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
-    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseUri stringValue, RDFFormat.RDFXML)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel2, rdfXmlWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -229,35 +220,35 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(contents2.contains("Åland"), "prefix preference file has encoding problem (2)")
   }
 
-  it should "be able to produce a sorted RDF/XML file preferring base URI over prefix" in {
+  it should "be able to produce a sorted RDF/XML file preferring base IRI over prefix" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val baseUri = valueFactory.createIRI("http://topbraid.org/countries")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_uri.rdf")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_iri.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseUri stringValue, RDFFormat.TURTLE)
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, rdfXmlWriter)
     outWriter flush ()
     outWriter close ()
     val contents1 = getFileContents(outputFile, "UTF-8")
-    assert(contents1.contains("Åland"), "base URI preference file has encoding problem (1)")
+    assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
 
-    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_uri.rdf")
+    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.rdf")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val rdfXmlWriter2Options = new util.HashMap[String, Object]()
     rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
-    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseUri stringValue, RDFFormat.RDFXML)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel2, rdfXmlWriter2)
     outWriter2 flush ()
     outWriter2 close ()
     val contents2 = getFileContents(outputFile2, "UTF-8")
-    assert(contents2.contains("Åland"), "base URI preference file has encoding problem (2)")
+    assert(contents2.contains("Åland"), "base IRI preference file has encoding problem (2)")
   }
 
   it should "be able to read various RDF documents and write them in sorted RDF/XML format" in {
@@ -298,7 +289,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri")) {
+    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".rdf"))
       SesameRdfFormatter run Array[String](
@@ -339,7 +330,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_uri")) {
+    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".rdf"))
       SesameRdfFormatter run Array[String](
@@ -368,23 +359,23 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", rdfFormat2)
-      assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")
+      assertTriplesMatch(inputModel1, inputModel2)
     }
   }
 
   it should "be able to produce a sorted RDF/XML file with inline blank nodes" in {
     val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
-    val baseUri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
+    val baseIri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
     val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.rdf")
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-    rdfXmlWriterOptions.put("baseUri", baseUri)
+    rdfXmlWriterOptions.put("baseIri", baseIri)
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-    rdfXmlWriterOptions.put("inlineBlankNodes", java.lang.Boolean.TRUE);
+    rdfXmlWriterOptions.put("inlineBlankNodes", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-    val inputModel = Rio parse (new FileReader(inputFile), baseUri stringValue, RDFFormat.RDFXML)
+    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel, rdfXmlWriter)
     outWriter flush ()
     outWriter close ()
@@ -392,12 +383,12 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "AccountingEquity_inline_blank_nodes.rdf")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-    rdfXmlWriter2Options.put("baseUri", baseUri)
+    rdfXmlWriter2Options.put("baseIri", baseIri)
     rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
     rdfXmlWriter2Options.put("inlineBlankNodes", java.lang.Boolean.TRUE);
     val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), baseUri stringValue, RDFFormat.RDFXML)
+    val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel2, rdfXmlWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -497,29 +488,29 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", rdfFormat2)
-      assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")
+      assertTriplesMatch(inputModel1, inputModel2)
     }
   }
 
-  it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base URI" in {
+  it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI" in {
     val rawTurtleDirectory = new File("src/test/resources")
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if sourceFile.getName.endsWith(".rdf") && !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseUriExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if sourceFile.getName.endsWith(".rdf") && !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
       fileCount += 1
 
       val sourceReader = new BufferedReader(new FileReader(sourceFile))
       var baseLine1: String = null
       var unfinished = true
-      var hasOntologyUri = false
+      var hasOntologyIri = false
       while (unfinished) {
         val line = sourceReader.readLine()
         if (line == null) {
           unfinished = false
         } else if (line.contains("owl:Ontology")) {
-          hasOntologyUri = true
+          hasOntologyIri = true
         } else if (baseLine1 == null) {
           if (line.trim.startsWith("xml:base")) {
             baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
@@ -527,14 +518,14 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         }
       }
 
-      if (hasOntologyUri && (baseLine1 != null)) {
+      if (hasOntologyIri && (baseLine1 != null)) {
         val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibu.rdf"))
         SesameRdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,
           "-tfmt", "rdf-xml",
           "-dtd",
-          "-ibu"
+          "-ibi"
         )
 
         val targetReader = new BufferedReader(new FileReader(targetFile))
@@ -551,12 +542,12 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
           }
         }
 
-        assert(baseLine1 === baseLine2, "base URI changed - was ontology URI different to the base URI?")
+        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
       }
     }
   }
 
-  "A SesameRdfFormatter" should "be able to do pattern-based URI replacements" in {
+  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = new File(outputDir1, "topbraid-countries-ontology_replaced.rdf")
     SesameRdfFormatter run Array[String](
@@ -564,11 +555,11 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
       "-dtd",
-      "-up", "^http://topbraid.org/countries",
-      "-ur", "http://replaced.example.org/countries"
+      "-ip", "^http://topbraid.org/countries",
+      "-ir", "http://replaced.example.org/countries"
     )
     val content = getFileContents(outputFile, "UTF-8")
-    assert(content.contains("<!ENTITY countries \"http://replaced.example.org/countries#\">"), "URI replacement seems to have failed")
+    assert(content.contains("<!ENTITY countries \"http://replaced.example.org/countries#\">"), "IRI replacement seems to have failed")
   }
 
   it should "be able to add single-line leading and trailing comments" in {

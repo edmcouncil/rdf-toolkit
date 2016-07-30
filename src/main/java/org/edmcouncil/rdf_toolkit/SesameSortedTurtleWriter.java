@@ -125,8 +125,22 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         try {
             // Sort triples, etc.
             sortedOntologies = unsortedOntologies.toSorted(collectionClass);
+            if (sortedOntologies.size() != unsortedOntologies.size()) {
+                System.err.println("**** ontologies unexpectedly lost or gained during sorting: " + sortedOntologies.size() + " != " + unsortedOntologies.size());
+                System.err.flush();
+            }
+
             sortedTripleMap = unsortedTripleMap.toSorted(collectionClass);
+            if (sortedTripleMap.fullSize() != unsortedTripleMap.fullSize()) {
+                System.err.println("**** triples unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
+                System.err.flush();
+            }
+
             sortedBlankNodes = unsortedBlankNodes.toSorted(collectionClass);
+            if (sortedBlankNodes.size() != unsortedBlankNodes.size()) {
+                System.err.println("**** blank nodes unexpectedly lost or gained during sorting: " + sortedBlankNodes.size() + " != " + unsortedBlankNodes.size());
+                System.err.flush();
+            }
 
             super.endRDF();
         } catch (Throwable t) {
@@ -136,10 +150,10 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
 
     protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception {
         // Write TopBraid-specific special comments, if any.
-        if ((baseUri != null) || (importList.size() >= 1)) {
-            // Write the baseURI, if any.
-            if (baseUri != null) {
-                output.write("# baseURI: " + baseUri); output.writeEOL();
+        if ((baseIri != null) || (importList.size() >= 1)) {
+            // Write the base IRI, if any.
+            if (baseIri != null) {
+                output.write("# baseURI: " + baseIri); output.writeEOL();
             }
             // Write ontology imports, if any.
             for (Value anImport : importList) {
@@ -158,12 +172,12 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             output.writeEOL();
         }
 
-        // Write the baseURI, if any.
-        if (baseUri != null) {
-            output.write("@base <" + baseUri + "> ."); output.writeEOL();
+        // Write the base IRI, if any.
+        if (baseIri != null) {
+            output.write("@base <" + baseIri + "> ."); output.writeEOL();
         }
 
-        // Write out prefixes and namespaces URIs.
+        // Write out prefixes and namespaces IRIs.
         if (namespaceTable.size() > 0) {
             TreeSet<String> prefixes = new TreeSet<String>(namespaceTable.keySet());
             for (String prefix : prefixes) {
@@ -177,10 +191,11 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
 
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
+        if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }
         if (subject instanceof BNode) {
             out.write("_:" + blankNodeNameMap.get(subject));
         } else {
-            writeUri(out, (IRI) subject);
+            writeIri(out, (IRI) subject);
         }
         if (out instanceof IndentingWriter) {
             IndentingWriter output = (IndentingWriter)out;
@@ -263,15 +278,15 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     }
 
     protected void writePredicate(Writer out, IRI predicate) throws Exception {
-        writeUri(out, predicate);
+        writeIri(out, predicate);
     }
 
 //    protected void writeQName(Writer out, QName qname) throws Exception {
 //        out.write(convertQNameToString(qname, /*useTurtleQuoting*/true));
 //    }
 
-    protected void writeUri(Writer out, IRI iri) throws Exception {
-        out.write(convertUriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/true));
+    protected void writeIri(Writer out, IRI iri) throws Exception {
+        out.write(convertIriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/true));
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {
@@ -316,6 +331,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
                 }
             } else { // not a collection
                 SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(bnode);
+                if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }
 
                 // Open brackets
                 out.write("[");
@@ -356,13 +372,14 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             if (unsortedTripleMap.containsKey(bnode)) {
                 out.write("_:" + blankNodeNameMap.get(bnode));
             } else {
+                System.out.println("**** blank node not a subject: " + bnode.stringValue()); System.out.flush();
                 out.write("[]"); // last resort - this should never happen
             }
         }
     }
 
     protected void writeObject(Writer out, IRI iri) throws Exception {
-        writeUri(out, iri);
+        writeIri(out, iri);
     }
 
     protected void writeObject(Writer out, Literal literal) throws Exception {
@@ -376,7 +393,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             writeString(out, literal.stringValue());
             if (useExplicit) {
                 out.write("^^");
-                writeUri(out, literal.getDatatype());
+                writeIri(out, literal.getDatatype());
             }
         } else {
             writeString(out, literal.stringValue());

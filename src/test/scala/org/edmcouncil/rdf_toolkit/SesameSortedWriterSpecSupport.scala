@@ -3,8 +3,11 @@ package org.edmcouncil.rdf_toolkit
 import java.io.{ FileInputStream, File }
 import java.nio.charset.Charset
 
+import org.openrdf.model.{ Model, Literal, BNode, Statement }
 import org.slf4j.Logger
 
+import scala.collection.JavaConversions._
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.io.{ Codec, BufferedSource }
 import scala.language.postfixOps
@@ -118,6 +121,45 @@ trait SesameSortedWriterSpecSupport {
     } else {
       true
     }
+  }
+
+  /** Compares whether two triples match, allowing for blank nodes. */
+  def triplesMatch(st1: Statement, st2: Statement): Boolean = {
+    if ((st1.getSubject == st2.getSubject) || (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode])) {
+      if (st1.getPredicate == st2.getPredicate) {
+        if (st1.getObject.isInstanceOf[Literal] && st2.getObject.isInstanceOf[Literal]) {
+          st1.getObject.stringValue.replaceAll("\\s+", " ").trim == st2.getObject.stringValue.replaceAll("\\s+", " ").trim
+        } else if ((st1.getObject == st2.getObject) || (st1.getObject.isInstanceOf[BNode] && st2.getObject.isInstanceOf[BNode])) {
+          true
+        } else {
+          false
+        }
+      } else {
+        false
+      }
+    } else {
+      false
+    }
+  }
+
+  def assertTriplesMatch(model1: Model, model2: Model): Unit = {
+    val unmatchedTriples1to2 = new mutable.HashSet[Statement]()
+    for (st1 ← model1) {
+      var triplesMatch1to2 = false
+      for (st2 ← model2 if !triplesMatch1to2) {
+        if (triplesMatch(st1, st2)) { triplesMatch1to2 = true }
+      }
+      if (!triplesMatch1to2) { unmatchedTriples1to2 += st1 }
+    }
+    val unmatchedTriples2to1 = new mutable.HashSet[Statement]()
+    for (st2 ← model2) {
+      var triplesMatch2to1 = false
+      for (st1 ← model1 if !triplesMatch2to1) {
+        if (triplesMatch(st2, st1)) { triplesMatch2to1 = true }
+      }
+      if (!triplesMatch2to1) { unmatchedTriples2to1 += st2 }
+    }
+    assert(((unmatchedTriples1to2.size == 0) && (unmatchedTriples2to1.size == 0)).asInstanceOf[Boolean], s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}]{{{ $unmatchedTriples1to2 }}}, [${unmatchedTriples2to1.size}/${model2.size}]{{{ $unmatchedTriples2to1 }}}")
   }
 
 }
