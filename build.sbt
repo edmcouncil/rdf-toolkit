@@ -54,6 +54,11 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % sesameVersion
 
 //
+// JSON-LD Java Binding & Config
+//
+libraryDependencies += "com.github.jsonld-java" % "jsonld-java" % "0.8.3"
+
+//
 // Apache Command-line Argument Handling Library used in Tony's Java code
 //
 libraryDependencies += "commons-cli" % "commons-cli" % "1.3.1"
