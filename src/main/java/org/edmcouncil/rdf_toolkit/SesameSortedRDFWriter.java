@@ -1325,6 +1325,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting, boolean useJsonLdQuoting) {
         if (rdfType.equals(iri)) {
             if (useTurtleQuoting) { return "a"; }
+            if (useJsonLdQuoting) { return "@type"; }
         }
         if (ShortIriPreferences.prefix.equals(shortIriPreference)) {
             QName qname = convertIriToQName(iri, useGeneratedPrefixes); // return the IRI out as a QName if possible.

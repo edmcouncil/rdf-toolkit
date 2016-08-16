@@ -26,9 +26,13 @@ package org.edmcouncil.rdf_toolkit;
 import info.aduna.io.IndentingWriter;
 import org.openrdf.model.*;
 import org.openrdf.rio.RDFHandlerException;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -151,48 +155,40 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
             System.err.flush();
         }
 
-        // Write opening brace.
-        output.write("{");
-        output.writeEOL();
-        output.increaseIndentation();
+//        // Open context
+//        output.write("\"@context\" : {");
+//        output.writeEOL();
+//        output.increaseIndentation();
+//        ArrayList<String> contextLines = new ArrayList<String>(namespaceTable.size()+1);
+//
+//        // Write the base IRI, if any.
+//        if (baseIri != null) {
+//            contextLines.add("\"@base\" : \"" + baseIri + "\"");
+//        }
+//
+//        // Write out prefixes and namespaces IRIs.
+//        if (namespaceTable.size() > 0) {
+//            TreeSet<String> prefixes = new TreeSet<String>(namespaceTable.keySet());
+//            for (String prefix : prefixes) {
+//                if (useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) {
+//                    contextLines.add("\"" + prefix + "\" : \"" + namespaceTable.get(prefix) + "\"");
+//                }
+//            }
+//        }
+//
+//        // Write out context lines.
+//        int contextIdx = 0;
+//        for (String line : contextLines) {
+//            contextIdx++;
+//            output.write(line);
+//            if (contextIdx < contextLines.size()) {
+//                output.write(",");
+//            }
+//            output.writeEOL();
+//        }
 
-        // Open context
-        output.write("\"@context\" : {");
-        output.writeEOL();
-        output.increaseIndentation();
-        ArrayList<String> contextLines = new ArrayList<String>(namespaceTable.size()+1);
-
-        // Write the base IRI, if any.
-        if (baseIri != null) {
-            contextLines.add("\"@base\" : \"" + baseIri + "\"");
-        }
-
-        // Write out prefixes and namespaces IRIs.
-        if (namespaceTable.size() > 0) {
-            TreeSet<String> prefixes = new TreeSet<String>(namespaceTable.keySet());
-            for (String prefix : prefixes) {
-                if (useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) {
-                    contextLines.add("\"" + prefix + "\" : \"" + namespaceTable.get(prefix) + "\"");
-                }
-            }
-        }
-
-        // Write out context lines.
-        int contextIdx = 0;
-        for (String line : contextLines) {
-            contextIdx++;
-            output.write(line);
-            if (contextIdx < contextLines.size()) {
-                output.write(",");
-            }
-            output.writeEOL();
-        }
-
-        // Close context, open graph
-        output.decreaseIndentation();
-        output.write("},");
-        output.writeEOL();
-        output.write("\"@graph\" : [");
+        // Open list of subject triples
+        output.write("[");
         output.writeEOL();
         output.increaseIndentation();
     }
@@ -282,12 +278,21 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         }
     }
 
+    private String convertIriToString(IRI iri) {
+        return convertIriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/false, /*useJsonLdQuoting*/true);
+    }
+
     protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception {
+        final boolean isRdfTypePredicate = rdfType.equals(predicate);
         out.write("\"");
         writePredicate(out, predicate);
         out.write("\" : ");
         if (values.size() == 1) {
-            writeObject(out, values.first());
+            if (isRdfTypePredicate) {
+                writeObject(out, (IRI)values.first(), isRdfTypePredicate);
+            } else {
+                writeObject(out, values.first());
+            }
         } else if (values.size() > 1) {
             out.write("[");
             if (out instanceof IndentingWriter) {
@@ -301,7 +306,11 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
             int valueIndex = 0;
             for (Value value : values) {
                 valueIndex += 1;
-                writeObject(out, value);
+                if (isRdfTypePredicate) {
+                    writeObject(out, (IRI)value, isRdfTypePredicate);
+                } else {
+                    writeObject(out, value);
+                }
                 if (valueIndex < numValues) { out.write(","); }
                 if (out instanceof IndentingWriter) {
                     IndentingWriter output = (IndentingWriter)out;
@@ -326,7 +335,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeIri(Writer out, IRI iri) throws Exception {
-        out.write(convertIriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/false, /*useJsonLdQuoting*/true));
+        out.write(convertIriToString(iri));
     }
 
     protected void writeObject(Writer out, Value value) throws Exception {
@@ -466,9 +475,13 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeObject(Writer out, IRI iri) throws Exception {
-        out.write("{ \"@id\" : \"");
+        writeObject(out, iri, false);
+    }
+
+    protected void writeObject(Writer out, IRI iri, boolean isRdfType) throws Exception {
+        out.write(isRdfType ? "\"" : "{ \"@id\" : \"");
         writeIri(out, iri);
-        out.write("\" }");
+        out.write(isRdfType ? "\"" : "\" }");
     }
 
     protected void writeObject(Writer out, Literal literal) throws Exception {
@@ -557,15 +570,10 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
     }
 
     protected void writeFooter(Writer out, String[] trailingComments) throws Exception {
-        // Write closing bracket for graph.
+        // Write closing bracket for subject list.
         output.writeEOL();
         output.decreaseIndentation();
         output.write("]");
-        output.writeEOL();
-
-        // Write closing brace.
-        output.decreaseIndentation();
-        output.write("}");
         output.writeEOL();
 
         // Process traiing comments, if any.
