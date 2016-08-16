@@ -21,6 +21,7 @@ import java.util.*;
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
 public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
+    // TODO: add common methods for "eol and increase indent", "eol and decrease indent" and "eol with same indent" and refactor using these
 
 //    private static final Logger logger = LoggerFactory.getLogger(SesameSortedRDFWriter.class);
 
@@ -1191,17 +1192,43 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             // Write header information, including leading comments.
             writeHeader(out, importList, leadingComments);
 
+            // Track how many of the subjects have been written
+            int allSubjectCount = 0;
+            for (Resource subject : sortedOntologies) {
+                if (!(subject instanceof BNode)) {
+                    allSubjectCount++;
+                }
+            }
+            for (Resource subject : sortedTripleMap.keySet()) {
+                if (!sortedOntologies.contains(subject) && !(subject instanceof BNode)) {
+                    allSubjectCount++;
+                }
+            }
+            if (!inlineBlankNodes) {
+                for (Resource resource : sortedBlankNodes) {
+                    BNode bnode = (BNode)resource;
+                    if (unsortedTripleMap.containsKey(bnode)) {
+                        allSubjectCount++;
+                    }
+                }
+            }
+            int subjectCount = 0;
+
             // Write out subjects which are unsortedOntologies.
             for (Resource subject : sortedOntologies) {
                 if (!(subject instanceof BNode)) {
+                    subjectCount++;
                     writeSubjectTriples(out, subject);
+                    if (subjectCount < allSubjectCount) { writeSubjectSeparator(out); }
                 }
             }
 
             // Write out all other subjects (not unsortedOntologies; also not blank nodes).
             for (Resource subject : sortedTripleMap.keySet()) {
                 if (!sortedOntologies.contains(subject) && !(subject instanceof BNode)) {
+                    subjectCount++;
                     writeSubjectTriples(out, subject);
+                    if (subjectCount < allSubjectCount) { writeSubjectSeparator(out); }
                 }
             }
 
@@ -1210,7 +1237,9 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                 for (Resource resource : sortedBlankNodes) {
                     BNode bnode = (BNode)resource;
                     if (unsortedTripleMap.containsKey(bnode)) {
+                        subjectCount++;
                         writeSubjectTriples(out, bnode);
+                        if (subjectCount < allSubjectCount) { writeSubjectSeparator(out); }
                     }
                 }
             }
@@ -1293,9 +1322,9 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
     }
 
-    protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting) {
+    protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting, boolean useJsonLdQuoting) {
         if (rdfType.equals(iri)) {
-            return "a";
+            if (useTurtleQuoting) { return "a"; }
         }
         if (ShortIriPreferences.prefix.equals(shortIriPreference)) {
             QName qname = convertIriToQName(iri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
@@ -1335,6 +1364,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception;
 
     abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
+
+    abstract protected void writeSubjectSeparator(Writer out) throws Exception;
 
     abstract protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception;
 

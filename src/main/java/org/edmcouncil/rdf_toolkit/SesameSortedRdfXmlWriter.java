@@ -196,6 +196,10 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         writeSpecialComments(out, leadingComments);
     }
 
+    protected void writeSubjectSeparator(Writer out) throws Exception {
+        // nothing to do here for RDF/XML
+    }
+
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
         if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }

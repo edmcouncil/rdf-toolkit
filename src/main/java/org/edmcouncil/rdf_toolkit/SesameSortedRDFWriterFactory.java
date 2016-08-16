@@ -74,6 +74,7 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
     }
 
     public enum TargetFormats {
+        json_ld("json-ld", "(JSON-LD)", RDFFormat.JSONLD),
         rdf_xml("rdf-xml", "(RDF/XML)", RDFFormat.RDFXML),
         turtle("turtle", "(Turtle)", RDFFormat.TURTLE);
 
@@ -193,6 +194,8 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
     public RDFWriter getWriter(OutputStream out) {
         try {
             switch (targetFormat) {
+                case json_ld:
+                    return new SesameSortedJsonLdWriter(out);
                 case rdf_xml:
                     return new SesameSortedRdfXmlWriter(out);
                 case turtle:
@@ -213,6 +216,7 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
     public RDFWriter getWriter(Writer writer) {
         try {
             switch (targetFormat) {
+                case json_ld: return new SesameSortedJsonLdWriter(writer);
                 case rdf_xml: return new SesameSortedRdfXmlWriter(writer);
                 case turtle: return new SesameSortedTurtleWriter(writer);
             }
@@ -230,6 +234,7 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
      */
     public RDFWriter getWriter(OutputStream out, Map<String, Object> options) throws Exception {
         switch (targetFormat) {
+            case json_ld: return new SesameSortedJsonLdWriter(out, options);
             case rdf_xml: return new SesameSortedRdfXmlWriter(out, options);
             case turtle: return new SesameSortedTurtleWriter(out, options);
         }
@@ -244,6 +249,7 @@ public class SesameSortedRDFWriterFactory implements RDFWriterFactory {
      */
     public RDFWriter getWriter(Writer writer, Map<String, Object> options) throws Exception {
         switch (targetFormat) {
+            case json_ld: return new SesameSortedJsonLdWriter(writer, options);
             case rdf_xml: return new SesameSortedRdfXmlWriter(writer, options);
             case turtle: return new SesameSortedTurtleWriter(writer, options);
         }
