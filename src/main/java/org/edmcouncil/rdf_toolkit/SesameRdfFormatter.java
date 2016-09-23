@@ -284,7 +284,20 @@ public class SesameRdfFormatter {
         if (sesameSourceFormat == null) {
             logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);
         }
-        Model sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUriString, sesameSourceFormat);
+
+        Model sourceModel = null;
+        try {
+            sourceModel = Rio.parse(new FileInputStream(sourceFile), baseUriString, sesameSourceFormat);
+        } catch (Throwable t) {
+            logger.error(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
+            logger.error("Unable to parse input file: " + sourceFile.getAbsolutePath());
+            logger.error(t.getClass().getSimpleName() + ": " + t.getMessage());
+            StringWriter stackTraceWriter = new StringWriter();
+            t.printStackTrace(new PrintWriter(stackTraceWriter));
+            logger.error(stackTraceWriter.toString());
+            usage(options);
+            System.exit(1);
+        }
 
         // Do any URI replacements
         if ((uriPattern != null) && (uriReplacement != null)) {

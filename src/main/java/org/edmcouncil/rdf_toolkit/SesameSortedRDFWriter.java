@@ -135,6 +135,24 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** rdf:Description URL */
     protected static final URI rdfDescription = new URIImpl(RDF_NS_URI + "Description");
 
+    /** rdf:first URL */
+    protected static final URI rdfFirst = new URIImpl(RDF_NS_URI + "first");
+
+    /** rdf:rest URL */
+    protected static final URI rdfRest = new URIImpl(RDF_NS_URI + "rest");
+
+    /** rdf:nil URL */
+    protected static final URI rdfNil = new URIImpl(RDF_NS_URI + "nil");
+
+    /** rdf:parseType URL */
+    protected static final URI rdfParseType = new URIImpl(RDF_NS_URI + "parseType");
+
+    /** rdf:about URL */
+    protected static final URI rdfAbout = new URIImpl(RDF_NS_URI + "about");
+
+    /** rdf:resource URL */
+    protected static final URI rdfResource = new URIImpl(RDF_NS_URI + "resource");
+
     /** rdfs:label URL */
     protected static final URI rdfsLabel = new URIImpl(RDFS_NS_URI + "label");
 
@@ -162,6 +180,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** owl:Thing URL */
     protected static final URI owlThing = new URIImpl(OWL_NS_URI + "Thing");
 
+    /** owl:onProperty URL */
+    protected static final URI owlOnProperty = new URIImpl(OWL_NS_URI + "onProperty");
+
+    /** owl:onClass URL */
+    protected static final URI owlOnClass = new URIImpl(OWL_NS_URI + "onClass");
+
     /** xs:string URL */
     protected static final URI xsString = new URIImpl(XML_SCHEMA_NS_URI + "string");
 
@@ -171,13 +195,20 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Comparator for TurtleObjectList objects. */
     protected class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
         private ValueComparator valc = null;
+        private Class collectionClass = Value.class;
+
+        public TurtleObjectListComparator() {}
+
+        public TurtleObjectListComparator(Class collectionClass) {
+            this.collectionClass = collectionClass;
+        }
 
         @Override
         public int compare(SortedTurtleObjectList list1, SortedTurtleObjectList list2) {
             return compare(list1, list2, new ArrayList<Object>());
         }
 
-        public int compare(SortedTurtleObjectList list1, SortedTurtleObjectList list2, ArrayList<Object> excludedList) {
+        public int compare(Collection<Value> list1, Collection<Value> list2, ArrayList<Object> excludedList) {
             if ((list1 == null) || excludedList.contains(list1)) {
                 if ((list2 == null) || excludedList.contains(list2)) {
                     return 0; // two null/excluded lists are equal
@@ -199,12 +230,12 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             }
         }
 
-        private int compare(SortedTurtleObjectList list1, Iterator<Value> iter1, SortedTurtleObjectList list2, Iterator<Value> iter2, ArrayList<Object> excludedList) {
+        private int compare(Collection<Value> list1, Iterator<Value> iter1, Collection<Value> list2, Iterator<Value> iter2, ArrayList<Object> excludedList) {
             if (iter1.hasNext()) {
                 if (iter2.hasNext()) {
                     Value value1 = iter1.next();
                     Value value2 = iter2.next();
-                    if (valc == null) { valc = new ValueComparator(); }
+                    if (valc == null) { valc = new ValueComparator(collectionClass); }
                     excludedList.add(list1);
                     excludedList.add(list2);
                     int cmp = valc.compare(value1, value2, excludedList);
@@ -230,6 +261,13 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected class TurtlePredicateObjectMapComparator implements Comparator<SortedTurtlePredicateObjectMap> {
         private URIComparator uric = null;
         private TurtleObjectListComparator tolc = null;
+        private Class collectionClass = Value.class;
+
+        public TurtlePredicateObjectMapComparator() {}
+
+        public TurtlePredicateObjectMapComparator(Class collectionClass) {
+            this.collectionClass = collectionClass;
+        }
 
         @Override
         public int compare(SortedTurtlePredicateObjectMap map1, SortedTurtlePredicateObjectMap map2) {
@@ -272,8 +310,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                     } else { // predicate keys are the same, so test object values
                         SortedTurtleObjectList values1 = map1.get(key1);
                         SortedTurtleObjectList values2 = map2.get(key2);
-                        SortedTurtleObjectList nonBlankValues1 = new SortedTurtleObjectList();
-                        SortedTurtleObjectList nonBlankValues2 = new SortedTurtleObjectList();
+                        SortedTurtleObjectList nonBlankValues1 = new SortedTurtleObjectList(collectionClass);
+                        SortedTurtleObjectList nonBlankValues2 = new SortedTurtleObjectList(collectionClass);
                         // Leave blank nodes out of the value comparison, unless blank nodes are being inlined.
                         for (Value value : values1) {
                             if (inlineBlankNodes || !(value instanceof BNode)) { // including blank nodes is only feasible when inlining blank nodes, as that implicitly promises no blank node loops
@@ -285,7 +323,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                                 nonBlankValues2.add(value);
                             }
                         }
-                        if (tolc == null) { tolc = new TurtleObjectListComparator(); }
+                        if (tolc == null) { tolc = new TurtleObjectListComparator(collectionClass); }
                         cmp = tolc.compare(nonBlankValues1, nonBlankValues2, excludedList);
                         if (cmp != 0) {
                             return cmp;
@@ -309,6 +347,14 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Comparator for Sesame BNode objects. */
     protected class BNodeComparator implements Comparator<BNode> {
         private TurtlePredicateObjectMapComparator tpomc = null;
+        private TurtleObjectListComparator tolc = null;
+        private Class collectionClass = Value.class;
+
+        public BNodeComparator() {}
+
+        public BNodeComparator(Class collectionClass) {
+            this.collectionClass = collectionClass;
+        }
 
         @Override
         public int compare(BNode bnode1, BNode bnode2) {
@@ -329,16 +375,31 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                     if (bnode1 == bnode2) {
                         return 0;
                     } else {
-                        SortedTurtlePredicateObjectMap map1 = unsortedTripleMap.getSorted(bnode1);
-                        SortedTurtlePredicateObjectMap map2 = unsortedTripleMap.getSorted(bnode2);
-                        if (tpomc == null) { tpomc = new TurtlePredicateObjectMapComparator(); }
-                        excludedList.add(bnode1);
-                        excludedList.add(bnode2);
-                        int cmp = tpomc.compare(map1, map2, excludedList);
-                        if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
-                            return cmp;
-                        } else { // if all else fails, do a string comparison
-                            return bnode1.stringValue().compareTo(bnode2.stringValue());
+                        if (inlineBlankNodes && isCollection(bnode1, collectionClass)) { // deal with RDF collection blank nodes separately, when inlining blank nodes
+                            if (inlineBlankNodes && isCollection(bnode2, collectionClass)) {
+                                ArrayList<Value> values1 = getCollectionMembers(bnode1, collectionClass);
+                                ArrayList<Value> values2 = getCollectionMembers(bnode2, collectionClass);
+                                if (tolc == null) { tolc = new TurtleObjectListComparator(collectionClass); }
+                                return tolc.compare(values1, values2, excludedList);
+                            } else {
+                                return -1; // an RDF collection comes before any other blank node
+                            }
+                        } else {
+                            if (inlineBlankNodes && isCollection(bnode2, collectionClass)) {
+                                return 1; // an RDF collection comes before any other blank node
+                            } else { // neither blank node is an RDF collection
+                                SortedTurtlePredicateObjectMap map1 = unsortedTripleMap.getSorted(bnode1, collectionClass);
+                                SortedTurtlePredicateObjectMap map2 = unsortedTripleMap.getSorted(bnode2, collectionClass);
+                                if (tpomc == null) { tpomc = new TurtlePredicateObjectMapComparator(collectionClass); }
+                                excludedList.add(bnode1);
+                                excludedList.add(bnode2);
+                                int cmp = tpomc.compare(map1, map2, excludedList);
+                                if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inling blank nodes
+                                    return cmp;
+                                } else { // if all else fails, do a string comparison
+                                    return bnode1.stringValue().compareTo(bnode2.stringValue());
+                                }
+                            }
                         }
                     }
                 }
@@ -349,6 +410,13 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Comparator for Sesame Value objects. */
     protected class ValueComparator implements Comparator<Value> {
         private BNodeComparator bnc = null;
+        private Class collectionClass = Value.class;
+
+        public ValueComparator() {}
+
+        public ValueComparator(Class collectionClass) {
+            this.collectionClass = collectionClass;
+        }
 
         @Override
         public int compare(Value value1, Value value2) {
@@ -372,7 +440,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                         // Order blank nodes so that they come after other values.
                         if (value1 instanceof BNode) {
                             if (value2 instanceof BNode) {
-                                if (bnc == null) { bnc = new BNodeComparator(); }
+                                if (bnc == null) { bnc = new BNodeComparator(collectionClass); }
                                 return bnc.compare((BNode)value1, (BNode)value2, excludedList);
                             } else {
                                 return 1; // blank node value1 comes after value2.
@@ -445,8 +513,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** An unsorted list of RDF object values. */
     protected class UnsortedTurtleObjectList extends HashSet<Value> {
-        public SortedTurtleObjectList toSorted() {
-            SortedTurtleObjectList sortedOList = new SortedTurtleObjectList();
+        public SortedTurtleObjectList toSorted(Class collectionClass) {
+            SortedTurtleObjectList sortedOList = new SortedTurtleObjectList(collectionClass);
             for (Value value : this) {
                 sortedOList.add(value);
             }
@@ -457,6 +525,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** A sorted list of RDF object values. */
     protected class SortedTurtleObjectList extends TreeSet<Value> {
         public SortedTurtleObjectList() { super(new ValueComparator()); }
+        public SortedTurtleObjectList(Class collectionClass) {
+            super(new ValueComparator(collectionClass));
+        }
     }
 
     /** Comparator for Sesame URI objects. */
@@ -489,18 +560,18 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** An unsorted map from predicate URIs to lists of object values. */
     protected class UnsortedTurtlePredicateObjectMap extends HashMap<URI, UnsortedTurtleObjectList> {
-        public SortedTurtleObjectList getSorted(URI predicate) {
+        public SortedTurtleObjectList getSorted(URI predicate, Class collectionClass) {
             if (containsKey(predicate)) {
-                return get(predicate).toSorted();
+                return get(predicate).toSorted(collectionClass);
             } else {
                 return null;
             }
         }
 
-        public SortedTurtlePredicateObjectMap toSorted() {
+        public SortedTurtlePredicateObjectMap toSorted(Class collectionClass) {
             SortedTurtlePredicateObjectMap sortedPOMap = new SortedTurtlePredicateObjectMap();
             for (URI predicate : keySet()) {
-                sortedPOMap.put(predicate, getSorted(predicate));
+                sortedPOMap.put(predicate, getSorted(predicate, collectionClass));
             }
             return sortedPOMap;
         }
@@ -531,6 +602,13 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     protected class ResourceComparator implements Comparator<Resource> {
         private BNodeComparator bnc = null;
         private URIComparator uric = null;
+        private Class collectionClass = Value.class;
+
+        public ResourceComparator() {}
+
+        public ResourceComparator(Class collectionClass) {
+            this.collectionClass = collectionClass;
+        }
 
         @Override
         public int compare(Resource resource1, Resource resource2) {
@@ -554,7 +632,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                         // Order blank nodes so that they come after other values.
                         if (resource1 instanceof BNode) {
                             if (resource2 instanceof BNode) {
-                                if (bnc == null) { bnc = new BNodeComparator(); }
+                                if (bnc == null) { bnc = new BNodeComparator(collectionClass); }
                                 return bnc.compare((BNode)resource1, (BNode)resource2, excludedList);
                             } else {
                                 return 1; // blank node resource1 comes after resource2.
@@ -579,18 +657,18 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
 
     /** An unsorted map from subject resources to predicate/object pairs. */
     protected class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
-        public SortedTurtlePredicateObjectMap getSorted(Resource subject) {
+        public SortedTurtlePredicateObjectMap getSorted(Resource subject, Class collectionClass) {
             if (containsKey(subject)) {
-                return get(subject).toSorted();
+                return get(subject).toSorted(collectionClass);
             } else {
                 return null;
             }
         }
 
-        public SortedTurtleSubjectPredicateObjectMap toSorted() {
-            SortedTurtleSubjectPredicateObjectMap sortedSPOMap = new SortedTurtleSubjectPredicateObjectMap();
+        public SortedTurtleSubjectPredicateObjectMap toSorted(Class collectionClass) {
+            SortedTurtleSubjectPredicateObjectMap sortedSPOMap = new SortedTurtleSubjectPredicateObjectMap(collectionClass);
             for (Resource subject : keySet()) {
-                sortedSPOMap.put(subject, getSorted(subject));
+                sortedSPOMap.put(subject, getSorted(subject, collectionClass));
             }
             return sortedSPOMap;
         }
@@ -599,12 +677,15 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** A sorted map from subject resources to predicate/object pairs. */
     protected class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
         public SortedTurtleSubjectPredicateObjectMap() { super(new ResourceComparator()); }
+        public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) {
+            super(new ResourceComparator(collectionClass));
+        }
     }
 
     /** An unsorted list of RDF resource values. */
     protected class UnsortedTurtleResourceList extends HashSet<Resource> {
-        public SortedTurtleResourceList toSorted() {
-            SortedTurtleResourceList sortedRList = new SortedTurtleResourceList();
+        public SortedTurtleResourceList toSorted(Class collectionClass) {
+            SortedTurtleResourceList sortedRList = new SortedTurtleResourceList(collectionClass);
             for (Resource resource : this) {
                 sortedRList.add(resource);
             }
@@ -615,12 +696,15 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** A sorted list of RDF resource values. */
     protected class SortedTurtleResourceList extends TreeSet<Resource> {
         public SortedTurtleResourceList() { super(new ResourceComparator()); }
+        public SortedTurtleResourceList(Class collectionClass) {
+            super(new ResourceComparator(collectionClass));
+        }
     }
 
     /** An unsorted list of RDF blank nodes. */
     protected class UnsortedTurtleBNodeList extends HashSet<BNode> {
-        public SortedTurtleBNodeList toSorted() {
-            SortedTurtleBNodeList sortedBNList = new SortedTurtleBNodeList();
+        public SortedTurtleBNodeList toSorted(Class collectionClass) {
+            SortedTurtleBNodeList sortedBNList = new SortedTurtleBNodeList(collectionClass);
             for (BNode bnode : this) {
                 sortedBNList.add(bnode);
             }
@@ -631,6 +715,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** A sorted list of RDF blank nodes. */
     protected class SortedTurtleBNodeList extends TreeSet<BNode> {
         public SortedTurtleBNodeList() { super(new BNodeComparator()); }
+        public SortedTurtleBNodeList(Class collectionClass) {
+            super(new BNodeComparator(collectionClass));
+        }
     }
 
     /** Base URI for the RDF output document. */
@@ -695,6 +782,75 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 return str1.compareTo(str2);
             }
         }
+    }
+
+    /**
+     * Whether the given blank node represents an RDF collection, or not.
+     * @param bnode blank node to test as an RDF collection
+     * @param collectionClass all collection members must be instances of this class
+     * @return whether the blank node is an RDF collection
+     */
+    protected boolean isCollection(BNode bnode, Class collectionClass) {
+        SortedTurtlePredicateObjectMap poMap = unsortedTripleMap.getSorted(bnode, collectionClass);
+        if (poMap != null) {
+            Set<URI> predicates = poMap.keySet();
+            int firstCount = predicates.contains(rdfFirst) ? 1 : 0;
+            int restCount = predicates.contains(rdfRest) ? 1 : 0;
+            if (predicates.size() == firstCount + restCount) {
+                SortedTurtleObjectList firstValues = poMap.get(rdfFirst);
+                for (Value value : firstValues) {
+                    if (!collectionClass.isInstance(value)) { return false; } // all collection members must match the collection class type
+                }
+                if (restCount >= 1) {
+                    SortedTurtleObjectList rest = poMap.get(rdfRest);
+                    if (rest.size() == 1) {
+                        for (Value value : rest) {
+                            if (rdfNil.equals(value)) {
+                                return true;
+                            }
+                            if (value instanceof BNode) {
+                                return isCollection((BNode)value, collectionClass);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * If the given blank node is an RDF collection, returns the members of the collection.
+     * @param bnode blank node which is an RDF collection
+     * @param collectionClass all collection members must be instances of this class
+     * @return the members of the RDF collection
+     */
+    protected ArrayList<Value> getCollectionMembers(BNode bnode, Class collectionClass) {
+        // An ArrayList is used here, as collection members should be retained in their original order, not sorted.
+        ArrayList<Value> members = new ArrayList<Value>();
+        if (isCollection(bnode, collectionClass)) {
+            SortedTurtlePredicateObjectMap poMap = unsortedTripleMap.getSorted(bnode, collectionClass);
+            SortedTurtleObjectList newMembers = poMap.get(rdfFirst);
+            if (newMembers != null) {
+                for (Value newMember : newMembers) {
+                    members.add(newMember);
+                }
+            }
+            SortedTurtleObjectList rest = poMap.get(rdfRest);
+            if (rest != null) {
+                for (Value nextRest : rest) {
+                    if (nextRest instanceof BNode) {
+                        ArrayList<Value> newRestMembers = getCollectionMembers((BNode)nextRest, collectionClass);
+                        if (newRestMembers != null) {
+                            for (Value newMember : newRestMembers) {
+                                members.add(newMember);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return members;
     }
 
     /** A reverse namespace table with which returns the longest namespace URIs first.  Key is URI string, value is prefix string. */
@@ -913,10 +1069,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     @Override
     public void endRDF() throws RDFHandlerException {
         try {
-            // Sort triples, etc.
-            sortedOntologies = unsortedOntologies.toSorted();
-            sortedTripleMap = unsortedTripleMap.toSorted();
-            sortedBlankNodes = unsortedBlankNodes.toSorted();
+            // !!!! Override method must set values for 'sortedOntologies', 'sortedTripleMap' & 'sortedBlankNodes' before calling this method
 
             // Create serialisation names for blank nodes.
             StringBuilder blankNodeNamePaddingBuilder = new StringBuilder();
@@ -949,6 +1102,8 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
             firstPredicates.add(owlSameAs);
             firstPredicates.add(rdfsLabel);
             firstPredicates.add(rdfsComment);
+            firstPredicates.add(owlOnProperty);
+            firstPredicates.add(owlOnClass);
 
             // Add default namespace prefixes, if they haven't yet been defined.  May fail if these prefixes have already been defined for different namespace URIs.
             addDefaultNamespacePrefixIfMissing(RDF_NS_URI, "rdf");
