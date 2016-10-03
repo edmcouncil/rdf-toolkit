@@ -143,6 +143,12 @@ function serialize() {
         return 0
     esac
 
+    if [[ $file == *About* ]] ;  then 
+        log "Skipping unsupported file $file"
+        return 0
+    fi
+
+
     if [ -x "$logcfg" ] ; then
       cat > ${logcfg} << __log_config__
 [logger_root]
