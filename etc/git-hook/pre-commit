@@ -182,7 +182,7 @@ __log_config__
       rm -f "${logcfg}" >/dev/null 2>&1
     fi
 
-    sed '/rdfs:label/!b;:a;/datatype="&xsd;string"/bb;$!{N;ba};:b;s/rdfs:label.*datatype=".....string"/rdfs:label/' "${file}" > temp
+    sed '/rdfs:label/!b;:a;/datatype="&xsd;string"/bb;$!{N;ba};:b;s/rdfs:label[^>]*datatype=".....string"/rdfs:label/' "${file}" > temp
     rm "${file}"
     mv temp "${file}"
 
