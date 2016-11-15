@@ -222,8 +222,14 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }
 
         TreeSet<String> prefixes = new TreeSet<String>();
+        if (subject instanceof IRI) {
+            QName subjectQName = convertIriToQName((IRI)subject, useGeneratedPrefixes);
+            if (subjectQName != null) {
+                prefixes.add(subjectQName.getPrefix());
+            }
+        }
+
         for (IRI predicate : poMap.keySet()) {
-            if (rdfType.equals(predicate)) { continue; }
             QName predicateQName = convertIriToQName(predicate, useGeneratedPrefixes);
             if (predicateQName != null) {
                 prefixes.add(predicateQName.getPrefix());

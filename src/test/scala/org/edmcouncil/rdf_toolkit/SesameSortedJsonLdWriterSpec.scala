@@ -27,25 +27,25 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   val valueFactory = SimpleValueFactory getInstance ()
 
   /** Exclusion list of examples containing inline blank nodes. */
-  val turtleInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
+  val jsonldInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
 
-  "A SortedRDFWriterFactory" should "be able to create a SortedTurtleWriter" in {
+  "A SortedRDFWriterFactory" should "be able to create a SortedJsonLdWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
     val factory = new SesameSortedRDFWriterFactory()
 
-    val writer1 = new SesameSortedTurtleWriter(System.out)
-    assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
+    val writer1 = new SesameSortedJsonLdWriter(System.out)
+    assert(writer1 != null, "failed to create default SortedJsonLdWriter from OutputStream")
 
-    val writer2 = new SesameSortedTurtleWriter(outWriter)
-    assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
+    val writer2 = new SesameSortedJsonLdWriter(outWriter)
+    assert(writer2 != null, "failed to create default SortedJsonLdWriter from Writer")
 
     val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedTurtleWriter(System.out, writer3Options)
-    assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
+    val writer3 = new SesameSortedJsonLdWriter(System.out, writer3Options)
+    assert(writer3 != null, "failed to create default SortedJsonLdWriter from OutputStream with parameters")
 
     val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedTurtleWriter(outWriter, writer4Options)
-    assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
+    val writer4 = new SesameSortedJsonLdWriter(outWriter, writer4Options)
+    assert(writer4 != null, "failed to create default SortedJsonLdWriter from Writer")
   }
 
   "A JSONLDWriter" should "be able to read various RDF documents and write them in JSON-LD format" in {
