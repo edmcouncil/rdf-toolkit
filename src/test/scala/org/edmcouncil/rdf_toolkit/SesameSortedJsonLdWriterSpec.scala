@@ -31,7 +31,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SortedRDFWriterFactory" should "be able to create a SortedJsonLdWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
-    val factory = new SesameSortedRDFWriterFactory()
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
 
     val writer1 = new SesameSortedJsonLdWriter(System.out)
     assert(writer1 != null, "failed to create default SortedJsonLdWriter from OutputStream")
@@ -94,213 +94,217 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter2 close ()
   }
 
-//  it should "be able to produce a sorted Turtle file with blank object nodes" in {
-//    val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
-//    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriter = factory getWriter outWriter
-//
-//    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//
-//    val outputFile2 = new File(outputDir2, outputFile getName)
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2 = factory getWriter (outWriter2)
-//
-//    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//  }
-//
-//  it should "be able to produce a sorted Turtle file with blank subject nodes" in {
-//    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-17.ttl")
-//    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriter = factory getWriter (outWriter)
-//
-//    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//
-//    val outputFile2 = new File(outputDir2, outputFile getName)
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2 = factory getWriter (outWriter2)
-//
-//    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//  }
-//
-//  it should "be able to produce a sorted Turtle file with directly recursive blank object nodes" in {
-//    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
-//    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriter = factory getWriter outWriter
-//
-//    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//
-//    val outputFile2 = new File(outputDir2, outputFile getName)
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2 = factory getWriter (outWriter2)
-//
-//    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//  }
-//
-//  it should "be able to produce a sorted Turtle file with indirectly recursive blank object nodes" in {
-//    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
-//    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriter = factory getWriter outWriter
-//
-//    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//
-//    val outputFile2 = new File(outputDir2, outputFile getName)
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2 = factory getWriter (outWriter2)
-//
-//    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//  }
-//
-//  it should "be able to produce a sorted Turtle file preferring prefix over base IRI" in {
-//    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-//    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-//    val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.ttl")
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-//    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
-//
-//    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//    val contents1 = getFileContents(outputFile, "UTF-8")
-//    assert(contents1.contains("countries:AD"), "prefix preference has failed (1a)")
-//    assert(!contents1.contains("#AD"), "prefix preference has failed (1b)")
-//    assert(contents1.contains("Åland"), "prefix preference file has encoding problem (1)")
-//
-//    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.ttl")
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-//    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
-//
-//    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//    val contents2 = getFileContents(outputFile2, "UTF-8")
-//    assert(contents2.contains("countries:AD"), "prefix preference has failed (2a)")
-//    assert(!contents2.contains("#AD"), "prefix preference has failed (2b)")
-//    assert(contents2.contains("Åland"), "prefix preference file has encoding problem (2)")
-//  }
-//
-//  it should "be able to produce a sorted Turtle file preferring base IRI over prefix" in {
-//    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-//    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-//    val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_iri.ttl")
-//    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
-//    val turtleWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-//    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
-//
-//    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-//    Rio write (inputModel, turtleWriter)
-//    outWriter flush ()
-//    outWriter close ()
-//    val contents1 = getFileContents(outputFile, "UTF-8")
-//    assert(contents1.contains("#AD"), "base IRI preference has failed (1a)")
-//    assert(!contents1.contains("countries:AD"), "base IRI preference has failed (1b)")
-//    assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
-//
-//    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.ttl")
-//    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-//    val turtleWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-//    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
-//
-//    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-//    Rio write (inputModel2, turtleWriter2)
-//    outWriter2 flush ()
-//    outWriter2 close ()
-//    val contents2 = getFileContents(outputFile2, "UTF-8")
-//    assert(contents2.contains("#AD"), "base IRI preference has failed (2a)")
-//    assert(!contents2.contains("countries:AD"), "base IRI preference has failed (2b)")
-//    assert(contents2.contains("Åland"), "base IRI preference file has encoding problem (2)")
-//  }
-//
-//  it should "be able to read various RDF documents and write them in sorted Turtle format" in {
-//    val rawTurtleDirectory = new File("src/test/resources")
-//    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-//    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
-//
-//    var fileCount = 0
-//    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
-//      fileCount += 1
-//      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
-//      SesameRdfFormatter run Array[String](
-//        "-s", sourceFile getAbsolutePath,
-//        "-t", targetFile getAbsolutePath
-//      )
-//    }
-//  }
-//
-//  it should "be able to sort RDF triples consistently when writing in Turtle format" in {
-//    val rawTurtleDirectory = new File("src/test/resources")
-//    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-//    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
-//
-//    // Serialise sample files as sorted Turtle.
-//    var fileCount = 0
-//    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
-//      fileCount += 1
-//      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
-//      SesameRdfFormatter run Array[String](
-//        "-s", sourceFile getAbsolutePath,
-//        "-t", targetFile getAbsolutePath
-//      )
-//    }
-//
-//    // Re-serialise the sorted files, again as sorted Turtle.
-//    fileCount = 0
-//    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
-//      fileCount += 1
-//      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
-//      SesameRdfFormatter run Array[String](
-//        "-s", sourceFile getAbsolutePath,
-//        "-t", targetFile getAbsolutePath
-//      )
-//    }
-//
-//    // Check that re-serialising the Turtle files has changed nothing.
-//    fileCount = 0
-//    for (file1 ← listDirTreeFiles(outputDir1)) {
-//      fileCount += 1
-//      val file2 = new File(outputDir2, file1 getName)
-//      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
-//      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-//    }
-//  }
-//
+  it should "be able to produce a sorted JSON-LD file with blank object nodes" in {
+    val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriter = factory getWriter outWriter
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2 = factory getWriter outWriter2
+
+    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted JSON-LD file with blank subject nodes" in {
+    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-17.ttl")
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriter = factory getWriter (outWriter)
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2 = factory getWriter outWriter2
+
+    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted JSON-LD file with directly recursive blank object nodes" in {
+    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriter = factory getWriter outWriter
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2 = factory getWriter outWriter2
+
+    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted JSON-LD file with indirectly recursive blank object nodes" in {
+    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
+    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriter = factory getWriter outWriter
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2 = factory getWriter outWriter2
+
+    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted JSON-LD file preferring prefix over base IRI" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.jsonld")
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
+    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+    val contents1 = getFileContents(outputFile, "UTF-8")
+    assert(contents1.contains("countries:AD"), "prefix preference has failed (1a)")
+    assert(!contents1.contains("#AD"), "prefix preference has failed (1b)")
+    assert(contents1.contains("Åland"), "prefix preference file has encoding problem (1)")
+
+    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.jsonld")
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
+    val jsonLdWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+    val contents2 = getFileContents(outputFile2, "UTF-8")
+    assert(contents2.contains("countries:AD"), "prefix preference has failed (2a)")
+    assert(!contents2.contains("#AD"), "prefix preference has failed (2b)")
+    assert(contents2.contains("Åland"), "prefix preference file has encoding problem (2)")
+  }
+
+  it should "be able to produce a sorted JSON-LD file preferring base IRI over prefix" in {
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_iri.jsonld")
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
+    val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
+    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel, jsonLdWriter)
+    outWriter flush ()
+    outWriter close ()
+    val contents1 = getFileContents(outputFile, "UTF-8")
+    assert(contents1.contains("#AD"), "base IRI preference has failed (1a)")
+    assert(!contents1.contains("countries:AD"), "base IRI preference has failed (1b)")
+    assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
+
+    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.jsonld")
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
+    val jsonLdWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
+    Rio write (inputModel2, jsonLdWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+    val contents2 = getFileContents(outputFile2, "UTF-8")
+    assert(contents2.contains("#AD"), "base IRI preference has failed (2a)")
+    assert(!contents2.contains("countries:AD"), "base IRI preference has failed (2b)")
+    assert(contents2.contains("Åland"), "base IRI preference file has encoding problem (2)")
+  }
+
+  it should "be able to read various RDF documents and write them in sorted JSON-LD format" in {
+    val rawTurtleDirectory = new File("src/test/resources")
+    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
+    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+      fileCount += 1
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "json-ld"
+      )
+    }
+  }
+
+  it should "be able to sort RDF triples consistently when writing in JSON-LD format" in {
+    val rawTurtleDirectory = new File("src/test/resources")
+    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
+    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+
+    // Serialise sample files as sorted JSON-LD.
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+      fileCount += 1
+      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "json-ld"
+      )
+    }
+
+    // Re-serialise the sorted files, again as sorted Turtle.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
+      fileCount += 1
+      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-sfmt", "json-ld",
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "json-ld"
+      )
+    }
+
+    // Check that re-serialising the Turtle files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1)) {
+      fileCount += 1
+      val file2 = new File(outputDir2, file1 getName)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+  }
+
 //  it should "should not add/lose RDF triples when writing in Turtle format without inline blank nodes" in {
 //    val rawTurtleDirectory = new File("src/test/resources")
 //    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
@@ -354,7 +358,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 //    val baseIri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
 //    val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.ttl")
 //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-//    val factory = new SesameSortedRDFWriterFactory()
+//    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
 //    val turtleWriterOptions = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
 //    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
 //

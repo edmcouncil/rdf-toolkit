@@ -280,6 +280,8 @@ public class SesameRdfFormatter {
         RDFFormat sesameSourceFormat = null;
         if (SesameSortedRDFWriterFactory.SourceFormats.auto.equals(sourceFormat)) {
             sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath).orElse(sourceFormat.getRDFFormat());
+        } else {
+            sesameSourceFormat = sourceFormat.getRDFFormat();
         }
         if (sesameSourceFormat == null) {
             logger.error("Unsupported or unrecognised source format enum: " + sourceFormat);

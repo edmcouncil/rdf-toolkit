@@ -315,8 +315,10 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
 
         // For an ontology, add the base URI to the context.
         if (isOntology(subject)) {
-            out.write("\"@base\" : \"" + baseIri + "\"");
-            if (prefixes.size() > 0) { out.write(","); }
+            if (baseIri != null) {
+                out.write("\"@base\" : \"" + baseIri + "\"");
+                if (prefixes.size() > 0) { out.write(","); }
+            }
             if (out instanceof IndentingWriter) {
                 IndentingWriter output = (IndentingWriter)out;
                 output.writeEOL();
@@ -584,7 +586,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
                 out.write("\n");
             }
 
-            out.write("\"@value\" : \"" + literal.stringValue() + "\"");
+            out.write("\"@value\" : \"" + escapeString(literal.stringValue()) + "\"");
             if (out instanceof IndentingWriter) {
                 IndentingWriter output = (IndentingWriter)out;
                 output.writeEOL();
@@ -664,7 +666,10 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
 
     private String escapeString(String str) { // JSON does not support multi-line strings, different to Turtle
         if (str == null) { return null; }
-        return str.replaceAll("\n", "\\\\n").replaceAll("\r", "\\\\r").replaceAll("\\\\", "\\\\\\\\");
+        return str.replaceAll("\n", "\\\\n").
+                    replaceAll("\r", "\\\\r").
+                    replaceAll("\"", "\\\\\"").
+                    replaceAll("\\\\", "\\\\");
     }
 
 }
