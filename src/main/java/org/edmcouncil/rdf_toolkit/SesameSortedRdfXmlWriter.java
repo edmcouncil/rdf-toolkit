@@ -61,7 +61,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     public SesameSortedRdfXmlWriter(OutputStream out, Map<String, Object> options) throws Exception {
         super(out, options);
         String indent = options.containsKey("indent") ? ((String) options.get("indent")) : null;
-        this.output = new IndentingXMLStreamWriter(out, "UTF-8", indent);
+        this.output = new IndentingXMLStreamWriter(out, "UTF-8", indent, true);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     public SesameSortedRdfXmlWriter(Writer writer, Map<String, Object> options) throws Exception {
         super(writer, options);
         String indent = options.containsKey("indent") ? ((String) options.get("indent")) : null;
-        this.output = new IndentingXMLStreamWriter(writer, indent);
+        this.output = new IndentingXMLStreamWriter(writer, indent, true);
     }
 
     /**

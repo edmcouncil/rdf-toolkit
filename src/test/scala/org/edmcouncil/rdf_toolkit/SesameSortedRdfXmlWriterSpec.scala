@@ -40,6 +40,12 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   /** Exclusion list of examples containing inline blank nodes. */
   val rdfXmlInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
 
+  def substringAfter(str: String, substr: String): String = {
+    if ((str == null) || (str.length < 1) || (substr == null) || (substr.length < 1)) { return str }
+    val idx = str indexOf substr
+    str.substring(idx + substr.length)
+  }
+
   "A SortedRDFWriterFactory" should "be able to create a SortedRdfXmlWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
     val factory = new SesameSortedRDFWriterFactory(TargetFormats.rdf_xml)
@@ -515,8 +521,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
           unfinished = false
         } else if (line.contains("owl:Ontology")) {
           hasOntologyUri = true
-        } else if (baseLine1 == null) {
-          if (line.trim.startsWith("xml:base")) {
+          if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
             baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
           }
         }
@@ -539,8 +544,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
           val line = targetReader.readLine()
           if (line == null) {
             unfinished = false
-          } else if (baseLine2 == null) {
-            if (line.trim.startsWith("xml:base")) {
+          } else if (line.contains("owl:Ontology")) {
+            if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
               baseLine2 = line.trim.replaceAll("\\s*=\\s*", "=")
             }
           }
