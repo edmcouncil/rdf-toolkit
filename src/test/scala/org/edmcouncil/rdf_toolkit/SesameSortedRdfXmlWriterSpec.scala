@@ -7,8 +7,12 @@ import scala.collection.JavaConversions._
 import scala.language.postfixOps
 
 import java.io._
+import java.nio.charset.Charset
 import java.util
+
+import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
+import org.openrdf.model.impl.URIImpl
 import org.openrdf.rio.{ RDFWriter, RDFFormat, Rio }
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriterFactory
 import org.slf4j.LoggerFactory
@@ -41,6 +45,12 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   /** Exclusion list of examples containing inline blank nodes. */
   val rdfXmlInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
+
+  def substringAfter(str: String, substr: String): String = {
+    if ((str == null) || (str.length < 1) || (substr == null) || (substr.length < 1)) { return str }
+    val idx = str indexOf substr
+    str.substring(idx + substr.length)
+  }
 
   "A SortedRDFWriterFactory" should "be able to create a SortedRdfXmlWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
@@ -510,9 +520,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         if (line == null) {
           unfinished = false
         } else if (line.contains("owl:Ontology")) {
-          hasOntologyIri = true
-        } else if (baseLine1 == null) {
-          if (line.trim.startsWith("xml:base")) {
+          hasOntologyUri = true
+          if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
             baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
           }
         }
@@ -535,8 +544,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
           val line = targetReader.readLine()
           if (line == null) {
             unfinished = false
-          } else if (baseLine2 == null) {
-            if (line.trim.startsWith("xml:base")) {
+          } else if (line.contains("owl:Ontology")) {
+            if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
               baseLine2 = line.trim.replaceAll("\\s*=\\s*", "=")
             }
           }

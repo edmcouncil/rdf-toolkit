@@ -83,6 +83,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private Writer writer = null;
     private String encoding = "UTF-8";
     private String indent = "\t";
+    private boolean useCompactAttributes = false;
     private IndentingWriter output = null;
 
     private boolean inStartElement = false;
@@ -92,13 +93,14 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
 
     public IndentingXMLStreamWriter(OutputStream out) throws Exception {
-        this(out, "UTF-8", null);
+        this(out, "UTF-8", null, false);
     }
 
-    public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent) throws Exception {
+    public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent, boolean useCompactAttributes) throws Exception {
         this.out = out;
         if (encoding != null) { this.encoding = encoding; }
         if (indent != null) { this.indent = indent; }
+        this.useCompactAttributes = useCompactAttributes;
 
         // Set up output writers
         writer = new OutputStreamWriter(this.out, Charset.forName(this.encoding));
@@ -107,10 +109,10 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     }
 
     public IndentingXMLStreamWriter(Writer writer) throws Exception {
-        this(writer, null);
+        this(writer, null, true);
     }
 
-    public IndentingXMLStreamWriter(Writer writer, String indent) throws Exception {
+    public IndentingXMLStreamWriter(Writer writer, String indent, boolean useCompactAttributes) throws Exception {
         this.out = null;
         this.writer = writer;
         if (writer instanceof OutputStreamWriter) {
@@ -119,6 +121,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             this.encoding = null; // encoding unknown
         }
         if (indent != null) { this.indent = indent; }
+        this.useCompactAttributes = useCompactAttributes;
 
         // Set up output writers
         output = new IndentingWriter(this.writer);
@@ -298,7 +301,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     public void writeStartAttribute(String localName) throws XMLStreamException {
         try {
-            writeEOL();
+            if (useCompactAttributes) { output.write(' '); } else { writeEOL(); }
             output.write(localName);
             output.write("=\"");
         } catch (Throwable t) {
@@ -308,7 +311,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     public void writeStartAttribute(String namespaceURI, String localName) throws XMLStreamException {
         try {
-            writeEOL();
+            if (useCompactAttributes) { output.write(' ');; } else { writeEOL(); }
             output.write(localName);
             output.write("=\"");
         } catch (Throwable t) {
@@ -318,7 +321,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     public void writeStartAttribute(String prefix, String namespaceURI, String localName) throws XMLStreamException {
         try {
-            writeEOL();
+            if (useCompactAttributes) { output.write(' '); } else { writeEOL(); }
             if ((prefix != null) && (prefix.length() >= 1)) {
                 output.write(prefix);
                 output.write(":");
