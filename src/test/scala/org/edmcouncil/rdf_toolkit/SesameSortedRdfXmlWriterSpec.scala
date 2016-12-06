@@ -10,7 +10,6 @@ import java.io._
 import java.nio.charset.Charset
 import java.util
 
-import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortUriPreferences
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
 import org.openrdf.model.impl.URIImpl
 import org.openrdf.rio.{ RDFWriter, RDFFormat, Rio }
@@ -520,7 +519,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         if (line == null) {
           unfinished = false
         } else if (line.contains("owl:Ontology")) {
-          hasOntologyUri = true
+          hasOntologyIri = true
           if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
             baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
           }

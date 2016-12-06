@@ -2,11 +2,7 @@ organization := "org.edmcouncil"
 
 name := "rdf-toolkit"
 
-<<<<<<< HEAD
 version := "1.6.0"
-=======
-version := "1.5.0"
->>>>>>> origin/RDFSER-65
 
 scalaVersion := "2.11.8"
 
