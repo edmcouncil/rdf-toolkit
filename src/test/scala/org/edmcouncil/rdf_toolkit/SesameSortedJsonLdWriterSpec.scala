@@ -23,6 +23,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   val outputDir0 = mkCleanDir(s"target//temp//${classOf[JSONLDWriter].getName}")
   val outputDir1 = mkCleanDir(s"target//temp//${this.getClass.getName}")
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
+  val outputDir3 = mkCleanDir(s"target//temp//${this.getClass.getName}_3")
 
   val valueFactory = SimpleValueFactory getInstance ()
 
@@ -301,7 +302,18 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       fileCount += 1
       val file2 = new File(outputDir2, file1 getName)
       assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
-      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+      if (!compareFiles(file1, file2, "UTF-8", false)) {
+        logger.info(s"Retrying: $file2 getName")
+        val targetFile = new File(outputDir3, setFilePathExtension(file2 getName, ".jsonld"))
+        SesameRdfFormatter run Array[String](
+          "-s", file2 getAbsolutePath,
+          "-sfmt", "json-ld",
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "json-ld"
+        )
+        assert(targetFile exists, s"file missing in outputDir3: ${targetFile.getName}")
+        assert(compareFiles(file2, targetFile, "UTF-8"), s"file mismatch between outputDir2 and outputDir3: ${file2.getName}")
+      }
     }
   }
 

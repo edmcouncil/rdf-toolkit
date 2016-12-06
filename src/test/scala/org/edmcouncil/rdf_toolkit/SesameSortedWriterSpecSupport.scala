@@ -66,54 +66,55 @@ trait SesameSortedWriterSpecSupport {
 
   def getFileContents(file: File, encoding: String): String = new BufferedSource(new FileInputStream(file))(new Codec(Charset.forName(encoding))).mkString
 
-  def compareFiles(file1: File, file2: File, encoding: String): Boolean = {
-    logger.debug("CompareFiles:")
-    logger.debug(s"   left = ${file1.getAbsolutePath}")
-    logger.debug(s"  right = ${file2.getAbsolutePath}")
+  def compareFiles(file1: File, file2: File, encoding: String, isLogging: Boolean = false): Boolean = {
+    if (isLogging) { logger.debug("CompareFiles:") }
+    if (isLogging) { logger.debug(s"   left = ${file1.getAbsolutePath}") }
+    if (isLogging) { logger.debug(s"  right = ${file2.getAbsolutePath}") }
     val source1Lines = new BufferedSource(new FileInputStream(file1))(new Codec(Charset.forName(encoding))).getLines()
     val source2Lines = new BufferedSource(new FileInputStream(file2))(new Codec(Charset.forName(encoding))).getLines()
-    compareStringIterators(source1Lines, source2Lines, file1, file2)
-    logger.debug("CompareFiles: done")
+    compareStringIterators(source1Lines, source2Lines, file1, file2, isLogging)
+    if (isLogging) { logger.debug("CompareFiles: done") }
     true
   }
 
-  def compareStringIterators(iter1: Iterator[String], iter2: Iterator[String], file1: File, file2: File): Boolean = {
+  def compareStringIterators(iter1: Iterator[String], iter2: Iterator[String], file1: File, file2: File, isLogging: Boolean = false): Boolean = {
     var lineCount = 0
     while (iter1.hasNext || iter2.hasNext) {
       lineCount += 1
       if (!iter2.hasNext) {
-        logger.error(s"left file [${file1 getName}] has more lines than right [${file2 getName}] ($lineCount+): ${iter1.next()}")
+        if (isLogging) { logger.error(s"left file [${file1 getName}] has more lines than right [${file2 getName}] ($lineCount+): ${iter1.next()}") }
         return false
       }
       if (!iter1.hasNext) {
-        logger.error(s"right file [${file2 getName}] has more lines than left [${file1 getName}] ($lineCount+): ${iter2.next()}")
+        if (isLogging) { logger.error(s"right file [${file2 getName}] has more lines than left [${file1 getName}] ($lineCount+): ${iter2.next()}") }
         return false
       }
       val line1 = iter1.next()
       val line2 = iter2.next()
-      if (!compareStrings(line1, line2, lineCount, file1, file2)) {
+      if (!compareStrings(line1, line2, lineCount, file1, file2, isLogging)) {
         return false
       }
     }
     true
   }
 
-  def compareStrings(str1: String, str2: String, lineCount: Int, file1: File, file2: File): Boolean = {
+  def compareStrings(str1: String, str2: String, lineCount: Int, file1: File, file2: File, isLogging: Boolean = false): Boolean = {
     if ((str1.length >= 1) || (str2.length >= 1)) {
       var index = 0
       while ((str1.length > index) || (str2.length > index)) {
         if (str2.length <= index) {
-          logger.error(s"left line [${file1 getName}] ($lineCount) is longer than (${index + 1}+) than right [${file2 getName}]: tail = ${str1.substring(index)}")
+          if (isLogging) { logger.error(s"left line [${file1 getName}] ($lineCount) is longer than (${index + 1}+) than right [${file2 getName}]: tail = ${str1.substring(index)}") }
           return false
         }
         if (str1.length <= index) {
-          logger.error(s"right line [${file2 getName}] ($lineCount) is longer than (${index + 1}+) than left [${file1 getName}]: tail = ${str2.substring(index)}")
+          if (isLogging) { logger.error(s"right line [${file2 getName}] ($lineCount) is longer than (${index + 1}+) than left [${file1 getName}]: tail = ${str2.substring(index)}") }
           return false
         }
         var leftCh = str1.charAt(index)
         var rightCh = str2.charAt(index)
         if (leftCh != rightCh) {
-          logger.error(s"char mismatch at $lineCount:${index + 1} => [${file1 getName}] $leftCh [#${leftCh.toShort}] != [${file2 getName}] $rightCh [#${rightCh.toShort}]")
+          if (isLogging) { logger.error(s"char mismatch at $lineCount:${index + 1} => [${file1 getName}] $leftCh [#${leftCh.toShort}] != [${file2 getName}] $rightCh [#${rightCh.toShort}]") }
+          return false
         }
         index += 1
       }
