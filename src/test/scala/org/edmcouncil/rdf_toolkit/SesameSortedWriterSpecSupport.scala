@@ -1,15 +1,16 @@
 package org.edmcouncil.rdf_toolkit
 
-import java.io.{ FileInputStream, File }
+import java.io.{ File, FileInputStream }
 import java.nio.charset.Charset
+import java.util.Set
 
-import org.openrdf.model.{ Model, Literal, BNode, Statement }
+import org.openrdf.model._
 import org.slf4j.Logger
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.io.{ Codec, BufferedSource }
+import scala.io.{ BufferedSource, Codec }
 import scala.language.postfixOps
 
 /**
@@ -124,21 +125,42 @@ trait SesameSortedWriterSpecSupport {
     }
   }
 
+  def expandQNameToFullIriString(iri: IRI, nss: Set[Namespace]): String = {
+    val iriString = iri.stringValue()
+    for (ns ← nss) {
+      val prefixStr = s"${ns.getPrefix}:"
+      if (iriString startsWith prefixStr) { return s"${ns.getName}${iri.getLocalName}" }
+    }
+    iriString
+  }
+
   /** Compares whether two triples match, allowing for blank nodes. */
-  def triplesMatch(st1: Statement, st2: Statement): Boolean = {
-    if ((st1.getSubject == st2.getSubject) || (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode])) {
-      if (st1.getPredicate == st2.getPredicate) {
+  def triplesMatch(st1: Statement, st2: Statement, nsset1: Set[Namespace], nsset2: Set[Namespace]): Boolean = {
+    if ((st1.getSubject == st2.getSubject) ||
+      (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode]) ||
+      (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (expandQNameToFullIriString(st1.getSubject.asInstanceOf[IRI], nsset1) == expandQNameToFullIriString(st2.getSubject.asInstanceOf[IRI], nsset2)))) {
+      if ((st1.getPredicate == st2.getPredicate) ||
+        (expandQNameToFullIriString(st1.getPredicate, nsset1) == expandQNameToFullIriString(st2.getPredicate, nsset2))) {
         if (st1.getObject.isInstanceOf[Literal] && st2.getObject.isInstanceOf[Literal]) {
           st1.getObject.stringValue.replaceAll("\\s+", " ").trim == st2.getObject.stringValue.replaceAll("\\s+", " ").trim
+        } else if (st1.getObject.isInstanceOf[IRI] && st2.getObject.isInstanceOf[IRI]) {
+          expandQNameToFullIriString(st1.getObject.asInstanceOf[IRI], nsset1) == expandQNameToFullIriString(st2.getObject.asInstanceOf[IRI], nsset2)
         } else if ((st1.getObject == st2.getObject) || (st1.getObject.isInstanceOf[BNode] && st2.getObject.isInstanceOf[BNode])) {
           true
         } else {
+//          if (st1.getObject.isInstanceOf[IRI] && st2.getObject.isInstanceOf[IRI] && (st1.getObject.asInstanceOf[IRI].getLocalName == st2.getObject.asInstanceOf[IRI].getLocalName)) {
+//            println(s"obj: ${st1.getObject.stringValue} <> ${st2.getObject.stringValue}")
+//          } // TODO: remove debugging
           false
         }
       } else {
+//        if (st1.getPredicate.getLocalName == st2.getPredicate.getLocalName) {
+//          println(s"pred: ${st1.getPredicate.stringValue} <> ${st2.getPredicate.stringValue}")
+//        } // TODO: remove debugging
         false
       }
     } else {
+//      if (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (st1.getSubject.asInstanceOf[IRI].getLocalName == st2.getSubject.asInstanceOf[IRI].getLocalName)) { println(s"subj: ${st1.getSubject.stringValue} <> ${st2.getSubject.stringValue}") } // TODO: remove debugging
       false
     }
   }
@@ -148,7 +170,7 @@ trait SesameSortedWriterSpecSupport {
     for (st1 ← model1) {
       var triplesMatch1to2 = false
       for (st2 ← model2 if !triplesMatch1to2) {
-        if (triplesMatch(st1, st2)) { triplesMatch1to2 = true }
+        if (triplesMatch(st1, st2, model1.getNamespaces, model2.getNamespaces)) { triplesMatch1to2 = true }
       }
       if (!triplesMatch1to2) { unmatchedTriples1to2 += st1 }
     }
@@ -156,7 +178,7 @@ trait SesameSortedWriterSpecSupport {
     for (st2 ← model2) {
       var triplesMatch2to1 = false
       for (st1 ← model1 if !triplesMatch2to1) {
-        if (triplesMatch(st2, st1)) { triplesMatch2to1 = true }
+        if (triplesMatch(st2, st1, model1.getNamespaces, model2.getNamespaces)) { triplesMatch2to1 = true }
       }
       if (!triplesMatch2to1) { unmatchedTriples2to1 += st2 }
     }
