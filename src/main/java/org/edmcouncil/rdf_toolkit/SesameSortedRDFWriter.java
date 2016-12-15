@@ -753,6 +753,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     /** Sorted list of blank nodes, as they are rendered separately from other nodes. */
     protected SortedTurtleResourceList sortedBlankNodes = null;
 
+    /** Unsorted list of blank nodes that are objects of statements. */
+    protected UnsortedTurtleBNodeList objectBlankNodes = null;
+
     /** Map of serialisation names for blank nodes. */
     protected HashMap<BNode, String> blankNodeNameMap = null;
 
@@ -1020,6 +1023,7 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
         unsortedBlankNodes = new UnsortedTurtleResourceList();
         blankNodeNameMap = new HashMap<BNode, String>();
         unsortedTripleMap = new UnsortedTurtleSubjectPredicateObjectMap();
+        objectBlankNodes = new UnsortedTurtleBNodeList();
     }
 
     /**
@@ -1152,9 +1156,9 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
                 }
             }
 
-            // Write out blank nodes that are subjects, if blank nodes are not being inlined.
-            if (!inlineBlankNodes) {
-                for (Resource resource : sortedBlankNodes) {
+            // Write out blank nodes that are subjects, if blank nodes are not being inlined or if the blank node is not an object.
+            for (Resource resource : sortedBlankNodes) {
+                if (!inlineBlankNodes || !objectBlankNodes.contains(resource)) {
                     BNode bnode = (BNode)resource;
                     if (unsortedTripleMap.containsKey(bnode)) {
                         writeSubjectTriples(out, bnode);
@@ -1181,6 +1185,11 @@ public abstract class SesameSortedRDFWriter extends RDFWriterBase {
     public void handleStatement(Statement st) throws RDFHandlerException {
         // Store the predicate.
         allPredicates.add(st.getPredicate());
+
+        // Store the object if it is a blank node.
+        if (st.getObject() instanceof BNode) {
+            objectBlankNodes.add((BNode) st.getObject());
+        }
 
         // Store the statement in the main 'triple map'.
         UnsortedTurtlePredicateObjectMap poMap = null;

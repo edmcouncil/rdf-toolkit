@@ -178,7 +178,15 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
         if (subject instanceof BNode) {
-            out.write("_:" + blankNodeNameMap.get(subject));
+            if (inlineBlankNodes) {
+                if (objectBlankNodes.contains(subject)) {
+                    out.write("[");
+                } else {
+                    out.write("[]");
+                }
+            } else {
+                out.write("_:" + blankNodeNameMap.get(subject));
+            }
         } else {
             writeUri(out, (URI) subject);
         }
@@ -207,14 +215,32 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
 
         // Close statement
-        out.write(".");
-        if (out instanceof IndentingWriter) {
-            IndentingWriter output = (IndentingWriter)out;
-            output.writeEOL();
-            output.decreaseIndentation();
-            output.writeEOL(); // blank line
+        boolean unindentBlankNode = inlineBlankNodes && (subject instanceof BNode) && objectBlankNodes.contains(subject);
+        if (unindentBlankNode) {
+            if (out instanceof IndentingWriter) {
+                IndentingWriter output = (IndentingWriter)out;
+                output.writeEOL();
+                output.decreaseIndentation();
+            } else {
+                out.write("\n");
+            }
+            out.write("]");
+            if (out instanceof IndentingWriter) {
+                IndentingWriter output = (IndentingWriter)out;
+                output.writeEOL();
+            } else {
+                out.write("\n");
+            }
         } else {
-            out.write("\n\n");
+            out.write(".");
+            if (out instanceof IndentingWriter) {
+                IndentingWriter output = (IndentingWriter)out;
+                output.writeEOL();
+                output.decreaseIndentation();
+                output.writeEOL(); // blank line
+            } else {
+                out.write("\n\n");
+            }
         }
     }
 

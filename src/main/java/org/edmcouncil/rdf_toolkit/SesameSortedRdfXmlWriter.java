@@ -186,7 +186,6 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
     protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
         SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
         // Try to determine whether to use <rdf:Description> or an element based on rdf:type value.
-        if (poMap == null) { System.out.println("!!!! poMap is null for subject: " + subject.stringValue()); System.out.flush(); } // TODO: remove debugging
         SortedTurtleObjectList subjectRdfTypes = (SortedTurtleObjectList) poMap.get(rdfType); // needed to determine if a type can be used as the XML element name
         if (subjectRdfTypes != null) { subjectRdfTypes = (SortedTurtleObjectList) subjectRdfTypes.clone(); } // make a copy so we can remove values safely
         if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlNamedIndividual)) { // ignore owl:NamedIndividual for the purposes of determining what type to use an an element name in RDF/XML
@@ -276,11 +275,19 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                     for (Value member : members) {
                         if (member instanceof BNode) {
                             writeSubjectTriples(out, (Resource) member);
-                        } else if (member instanceof URI) { // TODO: fix this - it can't be right!!!!  Use an element with the type name as element name, and an rdf:about attribute?
+                        } else if (member instanceof URI) {
                             QName rdfDescriptionQName = convertUriToQName(rdfDescription, useGeneratedPrefixes);
                             QName rdfAboutQName = convertUriToQName(rdfAbout, useGeneratedPrefixes);
                             output.writeStartElement(rdfDescriptionQName.getPrefix(), rdfDescriptionQName.getLocalPart(), rdfDescriptionQName.getNamespaceURI());
-                            output.writeAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart(), member.stringValue());
+                            QName memberQName = convertUriToQName((URI) member, useGeneratedPrefixes);
+                            if ((memberQName == null) || (memberQName.getPrefix() == null) || (memberQName.getPrefix().length() < 1)) {
+                                output.writeAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart(), member.stringValue());
+                            } else {
+                                output.writeStartAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart());
+                                output.writeAttributeEntityRef(memberQName.getPrefix());
+                                output.writeAttributeCharacters(memberQName.getLocalPart());
+                                output.endAttribute();
+                            }
                             output.writeEndElement();
                         } else {
                             QName rdfDescriptionQName = convertUriToQName(rdfDescription, useGeneratedPrefixes);
