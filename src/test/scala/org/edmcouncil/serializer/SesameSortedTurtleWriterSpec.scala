@@ -1,6 +1,29 @@
-package org.edmcouncil.rdf_serializer
+/*
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2015 Enterprise Data Management Council
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.edmcouncil.serializer
 
-import org.openrdf.rio.turtle.{TurtleWriterFactory, TurtleWriter}
+import org.openrdf.rio.turtle.{ TurtleWriterFactory, TurtleWriter }
 
 import scala.collection.mutable.ListBuffer
 import scala.io.BufferedSource
@@ -9,8 +32,8 @@ import scala.language.postfixOps
 import java.io._
 
 import org.openrdf.model.impl.URIImpl
-import org.openrdf.rio.{RDFFormat, Rio}
-import org.scalatest.{Matchers, FlatSpec}
+import org.openrdf.rio.{ RDFFormat, Rio }
+import org.scalatest.{ Matchers, FlatSpec }
 import grizzled.slf4j.Logging
 
 /**
@@ -30,11 +53,11 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
   val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
 
   /** Collects all of the files in a directory tree. */
-  def listDirTreeFiles(dir : File): Seq[File] = {
+  def listDirTreeFiles(dir: File): Seq[File] = {
     val result = new ListBuffer[File]();
     if (dir.exists()) {
       if (dir isDirectory) {
-        for (file <- dir.listFiles()) {
+        for (file ← dir.listFiles()) {
           result ++= listDirTreeFiles(file)
         }
       } else {
@@ -81,13 +104,13 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
     var fileCount = 0
-    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir0, setFilePathExtension(sourceFile getName, "ttl"))
       val outStream = new FileOutputStream(targetFile)
       val factory = new TurtleWriterFactory()
       val turtleWriter = factory getWriter (outStream)
-      val rdfFormat = Rio getParserFormatForFileName(sourceFile getName, RDFFormat.TURTLE)
+      val rdfFormat = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.TURTLE)
 
       val inputModel = Rio parse (new FileReader(sourceFile), "", rdfFormat)
       Rio write (inputModel, turtleWriter)
@@ -213,7 +236,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
     var fileCount = 0
-    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -230,7 +253,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Serialise sample files as sorted Turtle.
     var fileCount = 0
-    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -241,7 +264,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
-    for (sourceFile <- listDirTreeFiles(outputDir1)) {
+    for (sourceFile ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -252,7 +275,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Check that re-serialising the Turtle files has changed nothing.
     fileCount = 0
-    for (file1 <- listDirTreeFiles(outputDir1)) {
+    for (file1 ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
       val file2 = new File(outputDir2, file1 getName)
       val contents1 = getFileContents(file1)
@@ -268,7 +291,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Serialise sample files as sorted Turtle.
     var fileCount = 0
-    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -279,7 +302,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
-    for (sourceFile <- listDirTreeFiles(outputDir1)) {
+    for (sourceFile ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
       SesameRdfFormatter run Array[String](
@@ -290,7 +313,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Check that re-serialising the Turtle files has changed nothing.
     fileCount = 0
-    for (file1 <- listDirTreeFiles(outputDir1)) {
+    for (file1 ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
       val file2 = new File(outputDir2, file1 getName)
       val contents1 = getFileContents(file1)
@@ -300,10 +323,10 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with OutputSup
 
     // Check that the re-serialised Turtle file have the same triple count as the matching raw files
     fileCount = 0
-    for (sourceFile <- listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "ttl"))
-      val rdfFormat1 = Rio getParserFormatForFileName(sourceFile getName, RDFFormat.TURTLE)
+      val rdfFormat1 = Rio getParserFormatForFileName (sourceFile getName, RDFFormat.TURTLE)
       val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
       val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.TURTLE)
       assert(inputModel1.size() === inputModel2.size(), s"ingested triples do not match for: ${sourceFile.getName}")

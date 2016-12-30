@@ -21,42 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.main
+package org.edmcouncil.serializer
 
-import org.edmcouncil.serializer.Serializer
-
-/**
- * Allow for the MainImpl to be executed from tests bypassing Main.
- */
-object MainImpl {
-
-  def apply(args: Array[String]) = new MainImpl(args)
-
-  def apply(args: Seq[String]) = new MainImpl(args.toArray)
-}
+import org.edmcouncil.util.{ PotentialDirectory, BaseURL }
+import org.semanticweb.owlapi.model.IRI
 
 /**
- * The "real" Main of the RDF Serializer.
+ * Test the ImportResolver
  */
-class MainImpl(args: Array[String]) {
+class ImportResolverSpec extends UnitSpec {
 
-  val params = CommandLineParams(args)
+  "An ImportResolver" must {
 
-  private def run2: Int = if (params.shouldShowVersion) {
-    println(BooterProperties.versionFull)
-    0
-  } else if (params.specifiedHelp) {
-    params.showUsage
-    0
-  } else {
-    //
-    // Run the Serializer as if it were a function that returns an Int
-    //
-    Serializer(params)
-  }
+    suppressOutput {
 
-  def run: Int = {
-    val rc = params.parse()
-    if (rc == 0) run2 else rc
+      val baseDir = PotentialDirectory("src/test")
+      val baseUrl = BaseURL("http://whatever.com/")
+      val testImportUrl = "http://whatever.com/resources/wine/"
+      val testImportIri = IRI.create(testImportUrl)
+      val resolver = ImportResolver(baseDir, baseUrl, testImportIri)
+
+      "remainder of test import url is resources/wine" in {
+        assert(resolver.remainderOfImportUrl.get.equals("resources/wine/"))
+      }
+
+      "import should be found" in {
+        assert(resolver.shouldBeFound)
+      }
+
+      "find the wine ontology given a base directory and base URL" in {
+        assert(resolver.resource.isDefined)
+      }
+    }
   }
 }

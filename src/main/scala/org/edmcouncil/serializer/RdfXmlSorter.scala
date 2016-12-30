@@ -21,42 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.main
+package org.edmcouncil.serializer
 
-import org.edmcouncil.serializer.Serializer
+import java.nio.file.Path
+import javax.xml.parsers.DocumentBuilderFactory
 
-/**
- * Allow for the MainImpl to be executed from tests bypassing Main.
- */
-object MainImpl {
+import org.w3c.dom.Document
 
-  def apply(args: Array[String]) = new MainImpl(args)
+class RdfXmlSorter private (input: Path) {
 
-  def apply(args: Seq[String]) = new MainImpl(args.toArray)
+  def xmlDocument: Document = {
+
+    val file = input.toFile
+    val dbFactory = DocumentBuilderFactory.newInstance
+    val dBuilder = dbFactory.newDocumentBuilder()
+    val doc = dBuilder.parse(file)
+
+    //
+    // optional, but recommended
+    //
+    // read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+    //
+    doc.getDocumentElement.normalize()
+    doc
+  }
+
+  def sortedAsString = org.ow2.easywsdl.tooling.java2wsdl.util.XMLSorter.sort(xmlDocument)
+
+  def printIt() = {
+    print(sortedAsString)
+  }
+
 }
 
-/**
- * The "real" Main of the RDF Serializer.
- */
-class MainImpl(args: Array[String]) {
+object RdfXmlSorter {
 
-  val params = CommandLineParams(args)
-
-  private def run2: Int = if (params.shouldShowVersion) {
-    println(BooterProperties.versionFull)
-    0
-  } else if (params.specifiedHelp) {
-    params.showUsage
-    0
-  } else {
-    //
-    // Run the Serializer as if it were a function that returns an Int
-    //
-    Serializer(params)
-  }
-
-  def run: Int = {
-    val rc = params.parse()
-    if (rc == 0) run2 else rc
-  }
+  def apply(path: Path) = new RdfXmlSorter(path)
 }

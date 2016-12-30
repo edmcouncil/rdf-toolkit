@@ -21,40 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.serializer
 
-import java.nio.file.Path
-import javax.xml.parsers.DocumentBuilderFactory
+import org.edmcouncil.util.PotentialFile
 
-import org.w3c.dom.Document
+/**
+ * Test the XmlSorter
+ *
+ * TODO: This test is NOT complete!!
+ */
+class XmlSorterSpec extends UnitSpec {
 
-class RdfXmlSorter private (input: Path) {
+  "An XmlSorter" must {
 
-  def xmlDocument: Document = {
+    "sort an XML file (this test is not finished)" in {
 
-    val file = input.toFile
-    val dbFactory = DocumentBuilderFactory.newInstance
-    val dBuilder = dbFactory.newDocumentBuilder()
-    val doc = dBuilder.parse(file)
+      suppressOutput {
 
-    //
-    // optional, but recommended
-    //
-    // read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-    //
-    doc.getDocumentElement.normalize()
-    doc
+        val file = PotentialFile("src/test/resources/wine.rdf")
+        val sorter = RdfXmlSorter(file.path.get)
+
+        sorter.printIt()
+      }
+    }
   }
-
-  def sortedAsString = org.ow2.easywsdl.tooling.java2wsdl.util.XMLSorter.sort(xmlDocument)
-
-  def printIt() = {
-    print(sortedAsString)
-  }
-
-}
-
-object RdfXmlSorter {
-
-  def apply(path: Path) = new RdfXmlSorter(path)
 }

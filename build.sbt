@@ -1,42 +1,42 @@
+import sbt.Keys.scalaVersion
+
 organization := "org.edmcouncil"
 
-name := "rdf-serializer"
+name := "rdf-toolkit"
 
-version := "1.0.3-SNAPSHOT"
+version := "1.0.4-SNAPSHOT"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.8"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 bintrayResolverSettings
 
+libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value
+
 val owlApiVersion = "4.0.1"
 
-val sesameVersion = "2.8.0"
+val rdf4jVersion = "2.1.4"
 
-libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.1" withSources()
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.5" withSources()
 
-libraryDependencies += "commons-validator" % "commons-validator" % "1.4.0"
+libraryDependencies += "commons-validator" % "commons-validator" % "1.5.1"
 
 //
 // OWLAPI Model Interfaces And Utilities
 //
-//libraryDependencies += "net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources()
-
 libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
                         .exclude("com.fasterxml.jackson.core", "jackson-core")
 
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
-libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
+libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.3.0" withSources()
 
-libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1" withSources()
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.22" withSources()
 
-libraryDependencies += "org.clapper" %% "avsl" % "1.0.2" withSources()
+libraryDependencies += "org.clapper" %% "avsl" % "1.0.13" withSources()
 
-libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.0.2" withSources()
-
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test" withSources()
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSources()
 
 libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
@@ -46,9 +46,9 @@ libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
-// Sesame Binding And Config
+// RDF4F Binding And Config
 //
-libraryDependencies += "org.openrdf.sesame" % "sesame-runtime" % sesameVersion
+libraryDependencies += "org.eclipse.rdf4j" % "rdf4j-runtime" % rdf4jVersion
 
 //
 // Apache Command-line Argument Handling Library used in Tony's Java code
@@ -81,9 +81,9 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 //
 // Multiple main classes detected, select one to run:
 //
-// [1] org.edmcouncil.rdf_serializer.SesameRdfFormatter
-// [2] org.edmcouncil.rdf_serializer.Main
+// [1] org.edmcouncil.rdf-toolkir.SesameRdfFormatter
+// [2] org.edmcouncil.rdf-toolkit.Main
 //
 mainClass in Compile := Some("org.edmcouncil.main.Main")
 
-val `rdf-serializer` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)
+val `rdf-toolkit` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)

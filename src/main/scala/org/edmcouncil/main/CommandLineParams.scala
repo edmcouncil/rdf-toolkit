@@ -26,7 +26,7 @@ package org.edmcouncil.main
 import java.nio.file.Path
 
 import org.clapper.argot.{ ArgotConversionException, ArgotParser, ArgotUsageException }
-import org.edmcouncil.rdf_serializer.{ OwlApiOutputFormats, SesameRdfFormatter }
+import org.edmcouncil.serializer.{ OwlApiOutputFormats, SesameRdfFormatter }
 import org.edmcouncil.util.{ BaseURL, PotentialDirectory, PotentialFile }
 import org.edmcouncil.{ SerializerApi, SerializerApiOWLAPI, SerializerApiSesame }
 

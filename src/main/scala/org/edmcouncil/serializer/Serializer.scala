@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.serializer
 
 import org.edmcouncil.main.CommandLineParams
 import org.edmcouncil.{ SerializerApiOWLAPI, SerializerApiSesame }

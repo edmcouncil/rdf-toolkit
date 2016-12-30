@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.serializer
 
 import java.io.{ IOException, BufferedInputStream, File, FileInputStream }
 import java.nio.file.attribute.BasicFileAttributes

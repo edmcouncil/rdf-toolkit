@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.serializer
 
 import java.io.IOException
 import java.nio.file.Path

@@ -1,4 +1,4 @@
-# Developing the rdf-serializer
+# Developing the rdf-toolkit
 
 ## develop
 
@@ -7,14 +7,14 @@ Also install their [Scala plugin, the EAP version](https://confluence.jetbrains.
 
 ## build
 
-This project is being build and packaged on the EDM Council Jenkins Server by [this job](https://jenkins.edmcouncil.org/job/rdf-serializer-build/).
+This project is being build and packaged on the EDM Council Jenkins Server by [this job](https://jenkins.edmcouncil.org/job/rdf-toolkit-build/).
 
 The current Jenkins build status is: 
-[![Build Status](https://jenkins.edmcouncil.org/buildStatus/icon?job=rdf-serializer-build)](https://jenkins.edmcouncil.org/job/rdf-serializer-build/)
+[![Build Status](https://jenkins.edmcouncil.org/buildStatus/icon?job=rdf-toolkit-build)](https://jenkins.edmcouncil.org/job/rdf-toolkit-build/)
 
 ## test
 
-You can run the rdf-serializer without first packaging it as a jar (see "package" below) by launching it via sbt:
+You can run the rdf-toolkit without first packaging it as a jar (see "package" below) by launching it via sbt:
 
 ```
 sbt "run --help"
@@ -44,9 +44,10 @@ This creates a jar file like:
 
 ### packaging as "uber jar"
 
-The RDF Serializer is packaged as one "fat jar" or "uber jar" which can be downloaded from the Jenkins server:
+The RDF Toolkit is packaged as one "fat jar" or "uber jar" which can be downloaded 
+from the EDM Council Jenkins server:
 
-- https://jenkins.edmcouncil.org/job/rdf-serializer-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-serializer.jar
+- https://jenkins.edmcouncil.org/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-toolkit.jar
 
 You can create this uber jar from the command line yourself as well:
 

@@ -21,42 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.main
+package org.edmcouncil.serializer
 
-import org.edmcouncil.serializer.Serializer
+import java.io.OutputStream
 
-/**
- * Allow for the MainImpl to be executed from tests bypassing Main.
- */
-object MainImpl {
+import org.scalatest.{ Matchers, WordSpecLike }
 
-  def apply(args: Array[String]) = new MainImpl(args)
+abstract class UnitSpec extends WordSpecLike with Matchers with OutputSuppressor
 
-  def apply(args: Seq[String]) = new MainImpl(args.toArray)
-}
+trait OutputSuppressor {
+  def suppressOutput[T](thunk: ⇒ T): T = {
 
-/**
- * The "real" Main of the RDF Serializer.
- */
-class MainImpl(args: Array[String]) {
+    val bitBucket = new OutputStream() {
+      def write(b: Int) {}
+    }
 
-  val params = CommandLineParams(args)
-
-  private def run2: Int = if (params.shouldShowVersion) {
-    println(BooterProperties.versionFull)
-    0
-  } else if (params.specifiedHelp) {
-    params.showUsage
-    0
-  } else {
-    //
-    // Run the Serializer as if it were a function that returns an Int
-    //
-    Serializer(params)
-  }
-
-  def run: Int = {
-    val rc = params.parse()
-    if (rc == 0) run2 else rc
+    Console.withOut(bitBucket) {
+      return thunk
+    }
   }
 }

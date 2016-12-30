@@ -1,4 +1,27 @@
-package org.edmcouncil.rdf_serializer
+/*
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2015 Enterprise Data Management Council
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.edmcouncil.serializer
 
 import java.io.OutputStream
 
@@ -44,7 +67,7 @@ class SerializerSpec extends UnitSpec {
         "--url-replace", "http://www.w3.org/TR/2003/PR-owl-guide-20031209/=http://whatever/",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     /*
@@ -58,7 +81,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources=http://www.w3.org/TR/2003/PR-owl-guide-20031209",
         "src/test/resources/test-out-wine.rdf",
         "src/test/resources/wine.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "convert the fibo contracts ontology" in {
@@ -70,7 +93,7 @@ class SerializerSpec extends UnitSpec {
         "--url-replace", "http://www.omg.org/spec/EDMC-FIBO/=http://spec.edmcouncil.org/fibo/",
         "src/test/resources/test-out-fibo-fnd-contracts.rdf",
         "src/test/resources/fibo-fnd-contracts.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "not generate errors int the output of test-case-001.rdf" in {
@@ -81,7 +104,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-test-case-001.rdf",
         "src/test/resources/test-case-001.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "not mess with the blank nodes in FIBO FND Ownership & Control - Control.rdf" in {
@@ -92,7 +115,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-ownershipandcontrol-control.rdf",
         "src/test/resources/fibo/fnd/OwnershipAndControl/Control.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
 
     "do all the imports right in FIBO FND Accounting - AccountingEquity.rdf" in {
@@ -103,8 +126,7 @@ class SerializerSpec extends UnitSpec {
         "--base", "src/test/resources/fibo/etc/testing/data=http://www.omg.org/techprocess/ab/",
         "src/test/resources/test-out-fibo-fnd-accounting-equity.rdf",
         "src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf"
-      ) should equal (0)
+      ) should equal(0)
     }
   }
 }
-

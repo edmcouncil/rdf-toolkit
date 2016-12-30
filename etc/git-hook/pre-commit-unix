@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# pre-commit hook script that activates the rdf-serializer to serialize any OWL files in a standard format just before
+# pre-commit hook script that activates the rdf-toolkit to serialize any OWL files in a standard format just before
 # they are committed to the (local) Github repository.
 #
 # Called by "git commit" with no arguments. This hook can stop the commit when it encounters an error.
@@ -13,7 +13,7 @@
 #
 exec 1>&2
 
-log_prefix="rdf-serializer: "
+log_prefix="rdf-toolkit: "
 
 echo "${log_prefix}This is the pre-commit hook"
 
@@ -55,7 +55,7 @@ function findJava() {
   if [ $java_major -eq 1 -a $java_minor -gt 7 ] ; then
   	:
   else
-    log_error "You are using Java $java_major.$java_minor whereas the rdf-serializer requires Java 1.7 or higher"
+    log_error "You are using Java $java_major.$java_minor whereas the rdf-toolkit requires Java 1.7 or higher"
     return 2
   fi
 
@@ -64,16 +64,16 @@ function findJava() {
   return 0
 }
 
-function findSerializerJar() {
+function findToolkitJar() {
 
-  serializer_jar="$(cd -P ~/git/rdf-serializer ; pwd)/target/scala-2.11/rdf-serializer.jar"
+  toolkit_jar="$(cd -P ~/git/rdf-toolkit ; pwd)/target/scala-2.11/rdf-toolkit.jar"
 
-  if [ -f "${serializer_jar}" ] ; then
-  	log "Found serializer: ${serializer_jar}"
+  if [ -f "${toolkit_jar}" ] ; then
+  	log "Found toolkit: ${toolkit_jar}"
   	return 0
   fi
 
-  log_error "Could not find serializer, please reinstall"
+  log_error "Could not find toolkit, please reinstall"
 
   return 1
 }
@@ -106,7 +106,7 @@ function serialize() {
 
   local file="$1"
   local extension="${file##*.}"
-  local logcfg="/tmp/rdf-serializer-log"
+  local logcfg="/tmp/rdf-toolkit-log"
 
   case ${extension} in
   	rdf|owl|nt|n3|ttl)
@@ -131,10 +131,10 @@ class: DefaultFormatter
 format: (%l) %t
 __log_config__
 
-  log "Launching the rdf-serializer with --input-file ${file}"
+  log "Launching the rdf-toolkit with --input-file ${file}"
 
   #set -x
-  ${java_exe} -Xmx1g -Dorg.clapper.avsl.config=${logcfg} -jar ${serializer_jar}  \
+  ${java_exe} -Xmx1g -Dorg.clapper.avsl.config=${logcfg} -jar ${toolkit_jar}  \
   	--input-file ${file} \
   	--output-file ${file} \
   	--force \
@@ -150,7 +150,7 @@ __log_config__
     log "Re-adding potentially re-serialized file to git staging area: ${file}"
     git add --update ${file}
   else
-    log_error "rdf-serializer ended with error code ${rc}"
+    log_error "rdf-toolkit ended with error code ${rc}"
   fi
 
   return ${rc}
@@ -173,7 +173,7 @@ function serialize_all() {
 function main() {
 
 	findJava || return 1
-	findSerializerJar || return 2
+	findToolkitJar || return 2
 	findBaseDir || return 3
     serialize_all
 }
