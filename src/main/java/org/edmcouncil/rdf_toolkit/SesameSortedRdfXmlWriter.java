@@ -2,8 +2,6 @@ package org.edmcouncil.rdf_toolkit;
 
 import org.openrdf.model.*;
 import org.openrdf.rio.RDFHandlerException;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
@@ -296,7 +294,15 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                             QName rdfDescriptionQName = convertIriToQName(rdfDescription, useGeneratedPrefixes);
                             QName rdfAboutQName = convertIriToQName(rdfAbout, useGeneratedPrefixes);
                             output.writeStartElement(rdfDescriptionQName.getPrefix(), rdfDescriptionQName.getLocalPart(), rdfDescriptionQName.getNamespaceURI());
-                            output.writeAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart(), member.stringValue());
+                            QName memberQName = convertIriToQName((IRI) member, useGeneratedPrefixes);
+                            if ((memberQName == null) || (memberQName.getPrefix() == null) || (memberQName.getPrefix().length() < 1)) {
+                                output.writeAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart(), member.stringValue());
+                            } else {
+                                output.writeStartAttribute(rdfAboutQName.getPrefix(), rdfAboutQName.getNamespaceURI(), rdfAboutQName.getLocalPart());
+                                output.writeAttributeEntityRef(memberQName.getPrefix());
+                                output.writeAttributeCharacters(memberQName.getLocalPart());
+                                output.endAttribute();
+                            }
                             output.writeEndElement();
                         } else {
                             QName rdfDescriptionQName = convertIriToQName(rdfDescription, useGeneratedPrefixes);
