@@ -125,13 +125,26 @@ trait SesameSortedWriterSpecSupport {
     }
   }
 
+  /** Cache for expanded QNames */
+  var expandedQNames = new mutable.HashMap[IRI, String]()
+
+  /** Convert a QName to a full IRI string, if possible, given a set of namespace mappings. */
   def expandQNameToFullIriString(iri: IRI, nss: Set[Namespace]): String = {
-    val iriString = iri.stringValue()
-    for (ns ← nss) {
-      val prefixStr = s"${ns.getPrefix}:"
-      if (iriString startsWith prefixStr) { return s"${ns.getName}${iri.getLocalName}" }
+    if (expandedQNames isDefinedAt iri) {
+      expandedQNames(iri)
+    } else {
+      val iriString = iri.stringValue()
+      for (ns ← nss) {
+        val prefixStr = s"${ns.getPrefix}:"
+        if (iriString startsWith prefixStr) {
+          val expandedQName = s"${ns.getName}${iri.getLocalName}"
+          expandedQNames put (iri, expandedQName)
+          return expandedQName
+        }
+      }
+      expandedQNames put (iri, iriString)
+      iriString
     }
-    iriString
   }
 
   /** Compares whether two triples match, allowing for blank nodes. */
@@ -148,19 +161,12 @@ trait SesameSortedWriterSpecSupport {
         } else if ((st1.getObject == st2.getObject) || (st1.getObject.isInstanceOf[BNode] && st2.getObject.isInstanceOf[BNode])) {
           true
         } else {
-          //          if (st1.getObject.isInstanceOf[IRI] && st2.getObject.isInstanceOf[IRI] && (st1.getObject.asInstanceOf[IRI].getLocalName == st2.getObject.asInstanceOf[IRI].getLocalName)) {
-          //            println(s"obj: ${st1.getObject.stringValue} <> ${st2.getObject.stringValue}")
-          //          } // TODO: remove debugging
           false
         }
       } else {
-        //        if (st1.getPredicate.getLocalName == st2.getPredicate.getLocalName) {
-        //          println(s"pred: ${st1.getPredicate.stringValue} <> ${st2.getPredicate.stringValue}")
-        //        } // TODO: remove debugging
         false
       }
     } else {
-      //      if (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (st1.getSubject.asInstanceOf[IRI].getLocalName == st2.getSubject.asInstanceOf[IRI].getLocalName)) { println(s"subj: ${st1.getSubject.stringValue} <> ${st2.getSubject.stringValue}") } // TODO: remove debugging
       false
     }
   }
