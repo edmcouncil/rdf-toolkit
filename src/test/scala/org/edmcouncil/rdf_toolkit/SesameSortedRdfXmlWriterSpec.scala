@@ -43,7 +43,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   val rdfXmlInferredBaseIriExclusionList = List("food.rdf", "wine.rdf")
 
   /** Exclusion list of examples containing inline blank nodes. */
-  val rdfXmlInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
+  val rdfXmlInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf", "turtle-example-14.ttl", "turtle-example-25.ttl", "turtle-example-26.ttl")
 
   def substringAfter(str: String, substr: String): String = {
     if ((str == null) || (str.length < 1) || (substr == null) || (substr.length < 1)) { return str }
@@ -410,7 +410,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibn.rdf"))
       SesameRdfFormatter run Array[String](
@@ -453,7 +453,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "_ibn2.rdf"))
       SesameRdfFormatter run Array[String](
@@ -490,7 +490,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "_ibn2.rdf"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
@@ -507,7 +507,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if sourceFile.getName.endsWith(".rdf") && !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
       fileCount += 1
 
       val sourceReader = new BufferedReader(new FileReader(sourceFile))

@@ -27,7 +27,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
   val valueFactory = SimpleValueFactory getInstance ()
 
   /** Exclusion list of examples containing inline blank nodes. */
-  val turtleInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf")
+  val turtleInlineBlankNodesExclusionList = List("allemang-FunctionalEntities.rdf", "turtle-example-14.ttl", "turtle-example-25.ttl", "turtle-example-26.ttl")
 
   "A SortedRDFWriterFactory" should "be able to create a SortedTurtleWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
@@ -381,7 +381,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Serialise sample files as sorted Turtle.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibn.ttl"))
       SesameRdfFormatter run Array[String](
@@ -420,7 +420,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Serialise sample files as sorted Turtle
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if turtleInlineBlankNodesExclusionList contains sourceFile.getName) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "_ibn2.ttl"))
       SesameRdfFormatter run Array[String](
@@ -453,7 +453,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Check that the re-serialised Turtle file have the same triple count as the matching raw files
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if turtleInlineBlankNodesExclusionList contains sourceFile.getName) {
+    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "_ibn2.ttl"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()

@@ -42,6 +42,7 @@ import java.util.*;
  * NOTE: comments are suppressed, as there isn't a clear way to sort them along with triples.
  */
 public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
+    // TODO: check generated files for unnecessary blank lines, and find ways to remove them
 
     // private static final Logger logger = LoggerFactory.getLogger(SesameSortedJsonLdWriter.class);
 
@@ -217,11 +218,10 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         return false;
     }
 
-    protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
-        SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
-        if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }
+    private Set<String> getSubjectPrefixes(Resource subject) {
+        final HashSet<String> prefixes = new HashSet<String>();
 
-        TreeSet<String> prefixes = new TreeSet<String>();
+        // Get subject prefix
         if (subject instanceof IRI) {
             QName subjectQName = convertIriToQName((IRI)subject, useGeneratedPrefixes);
             if (subjectQName != null) {
@@ -229,24 +229,38 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
             }
         }
 
-        for (IRI predicate : poMap.keySet()) {
-            QName predicateQName = convertIriToQName(predicate, useGeneratedPrefixes);
-            if (predicateQName != null) {
-                prefixes.add(predicateQName.getPrefix());
-            }
+        // Get predicate & value prefixes
+        SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
+        if (poMap != null) {
+            for (IRI predicate : poMap.keySet()) {
+                QName predicateQName = convertIriToQName(predicate, useGeneratedPrefixes);
+                if (predicateQName != null) {
+                    prefixes.add(predicateQName.getPrefix());
+                }
 
-            SortedTurtleObjectList values = poMap.get(predicate);
-            if (values != null) {
-                for (Value value : values) {
-                    if (value instanceof IRI) {
-                        QName valueQName = convertIriToQName((IRI)value, useGeneratedPrefixes);
-                        if (valueQName != null) {
-                            prefixes.add(valueQName.getPrefix());
+                SortedTurtleObjectList values = poMap.get(predicate);
+                if (values != null) {
+                    for (Value value : values) {
+                        if (value instanceof IRI) {
+                            QName valueQName = convertIriToQName((IRI)value, useGeneratedPrefixes);
+                            if (valueQName != null) {
+                                prefixes.add(valueQName.getPrefix());
+                            }
+                        }
+                        if (inlineBlankNodes && (value instanceof BNode)) {
+                            prefixes.addAll(getSubjectPrefixes((BNode)value));
                         }
                     }
                 }
             }
         }
+
+        return prefixes;
+    }
+
+    protected void writeSubjectTriples(Writer out, Resource subject) throws Exception {
+        SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
+        if (poMap == null) { poMap = new SortedTurtlePredicateObjectMap(); }
 
         out.write("{");
         if (out instanceof IndentingWriter) {
@@ -304,6 +318,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         }
 
         // Write context
+        Set<String> prefixes = getSubjectPrefixes(subject);
         out.write("\"@context\" : {");
         if (out instanceof IndentingWriter) {
             IndentingWriter output = (IndentingWriter)out;

@@ -1208,8 +1208,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                     allSubjectCount++;
                 }
             }
-            if (!inlineBlankNodes) {
-                for (Resource resource : sortedBlankNodes) {
+            for (Resource resource : sortedBlankNodes) {
+                if (!inlineBlankNodes || !objectBlankNodes.contains(resource)) {
                     BNode bnode = (BNode)resource;
                     if (unsortedTripleMap.containsKey(bnode)) {
                         allSubjectCount++;
