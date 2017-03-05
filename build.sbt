@@ -2,9 +2,20 @@ import sbt.Keys.scalaVersion
 
 organization := "org.edmcouncil"
 
+organizationName := "Enterprise Data Management Council"
+
 name := "rdf-toolkit"
 
 version := "1.0.4-SNAPSHOT"
+
+startYear := Some(2015)
+
+developers := List(
+  Developer(id = "coates", name = "Anthony Coates", email = "", url = new URL("https://github.com/abcoates")),
+  Developer(id = "jgeluk", name = "Jacobus Geluk", email = "", url = new URL("https://github.com/jgeluk"))
+)
+
+licenses += ("mit", new URL("https://opensource.org/licenses/MIT"))
 
 scalaVersion := "2.11.8"
 
@@ -40,6 +51,8 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSou
 
 libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
+
 //
 // Explicit loading of jackson-core to prevent merge issue in sbt-assembly
 //
@@ -61,13 +74,38 @@ libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
 libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
 
 //
+// Command Line Interface Scala Toolkit
+//
+// https://github.com/backuity/clist
+//
+libraryDependencies += "org.backuity.clist" %% "clist-core"   % "3.2.2"
+libraryDependencies += "org.backuity.clist" %% "clist-macros" % "3.2.2" % "provided"
+
+//
+// Scallop CLI processing
+//
+// https://github.com/scallop/scallop
+//
+libraryDependencies += "org.rogach" %% "scallop" % "2.0.6"
+
+//
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
 //
-resourceGenerators in Compile <+= (
-  resourceManaged in Compile, organization, name, version, scalaVersion
-) map {
-  (dir, o, n, v, s) => BooterPropertiesGenerator(dir, o, n, v, s)
-}
+resourceGenerators in Compile += Def.task {
+  BooterPropertiesGenerator(
+    (resourceManaged in Compile).value,
+    licenses.value,
+    organization.value,
+    name.value,
+    version.value,
+    scalaVersion.value
+  )
+}.taskValue
+//resourceGenerators in Compile <+= (
+//  resourceManaged in Compile, licenses, organization, name, version, scalaVersion
+//) map {
+//  (dir, l, o, n, v, s) => BooterPropertiesGenerator(dir, l, o, n, v, s)
+//}
 
 fork in run := true
 
@@ -76,12 +114,12 @@ resolvers += JavaNet2Repository
 resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-repository"
 
 //
-// Select the main class. Let it be the Scala main, not the Java main (SesameRdfSerializer, which can still
-// be selected on the command line seperately. This prevents the following prompt:
+// Select the main class. Let it be the Scala main class, not the Java main (SesameRdfFormatter), which can still
+// be selected on the command line separately. This prevents the following prompt:
 //
 // Multiple main classes detected, select one to run:
 //
-// [1] org.edmcouncil.rdf-toolkir.SesameRdfFormatter
+// [1] org.edmcouncil.rdf-toolkit.SesameRdfFormatter
 // [2] org.edmcouncil.rdf-toolkit.Main
 //
 mainClass in Compile := Some("org.edmcouncil.main.Main")
