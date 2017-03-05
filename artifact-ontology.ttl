@@ -1,31 +1,61 @@
-@prefix : <https://spec.edmcouncil.org/RDFKIT/artifact-ontology#> .
-@prefix ao: <https://spec.edmcouncil.org/RDFKIT/artifact-ontology#> .
+@prefix : <https://spec.edmcouncil.org/rdfkit/artifact-ontology#> .
+@prefix co: <https://spec.edmcouncil.org/command/command-ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <https://spec.edmcouncil.org/RDFKIT/artifact-ontology> .
 
-<https://spec.edmcouncil.org/RDFKIT/artifact-ontology> rdf:type owl:Ontology ;
-                                                        rdfs:comment "The Artifact Ontology of the RDF Toolkit is a model of all the \"Things\" that play a role in the process of generating publishable Artifacts on a \"specs\" site like https://spec.edmcouncil.org."@en ;
-                                                        rdfs:seeAlso "https://wiki.edmcouncil.org/x/KYGJ"^^xsd:anyURI ;
-                                                        rdfs:label "The Artifact Ontology"@en .
+<https://spec.edmcouncil.org/rdfkit/artifact-ontology> a owl:Ontology ;
+	owl:imports <https://spec.edmcouncil.org/command/command-ontology> ;
+	rdfs:comment "The Artifact Ontology of the RDF Toolkit is a model of all the \"Things\" that play a role in the process of generating publishable Artifacts on a \"specs\" site like https://spec.edmcouncil.org."@en ;
+	rdfs:seeAlso "https://wiki.edmcouncil.org/x/KYGJ"^^xsd:anyURI ;
+	rdfs:label "The Artifact Ontology"@en .
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasProductCategory
 
-#################################################################
-#    Classes
-#################################################################
+:hasProductCategory a owl:ObjectProperty ;
+	owl:inverseOf :isProductCategoryForProduct ;
+	a owl:FunctionalProperty ;
+	rdfs:domain :Product ;
+	rdfs:range :ProductCategory .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#isProductCategoryForProduct
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Artifact
-ao:Artifact rdf:type owl:Class ;
-            rdfs:comment "An artifact is the specification of a physical piece of information that is used or produced by a software development process, or by deployment and operation of a system."@en ;
-            rdfs:label "Artifact"@en ;
-            rdfs:seeAlso <https://wiki.edmcouncil.org/x/IQBr> .
+:isProductCategoryForProduct a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain :ProductCategory ;
+	rdfs:range :Product .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Classes
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Artifact
 
+:Artifact a owl:Class ;
+	rdfs:comment "An artifact is the specification of a physical piece of information that is used or produced by a software development process, or by deployment and operation of a system."@en ;
+	rdfs:label "Artifact"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/IQBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Branch
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Branch
-ao:Branch rdf:type owl:Class ;
-          rdfs:comment """The term \"Branch\" is taken from Git. Branches are used to separate multiple tracks of development with different levels of maturity of the work on the artifacts in that track.For the FIBO ontologies we're usually seeing the following branches, where we use colors as their names where each color basically represents a different level of maturity of the FIBO ontologies in that branch:
+:Branch a owl:Class ;
+	rdfs:comment """The term \"Branch\" is taken from Git. Branches are used to separate multiple tracks of development with different levels of maturity of the work on the artifacts in that track.For the FIBO ontologies we're usually seeing the following branches, where we use colors as their names where each color basically represents a different level of maturity of the FIBO ontologies in that branch:
 
 - red: Initial ideas for an ontology, incubation branch
 - pink: The de-facto \"master branch\", where most work is being done (or actually its done in forks but the work coming from forks is merged into pink)
@@ -33,49 +63,67 @@ ao:Branch rdf:type owl:Class ;
 - green: The actual ratified standard version of FIBO
 
 The above scheme of branches changes over time, the RDF Toolkit has to be as flexible as possible with regards to the use of branches and basically just support whatever branch structure you have. However, in the rdf-toolkit config file we should be able to describe your branch model and for instance provide some documentation for it like above, which can be helpful for generating some HTML documentation pages on the target publication site such as https://spec.edmcouncil.org."""@en ;
-          rdfs:seeAlso <https://wiki.edmcouncil.org/x/KQBr> .
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/KQBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Builder
 
+:Builder a owl:Class ;
+	rdfs:comment "A ﻿Builder is a process that takes the source artifacts for one given ﻿Product﻿ and generates all the publishable artifacts for that ﻿Product﻿."@en ;
+	rdfs:label "Builder"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/p4WJ> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Commit
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Builder
-ao:Builder rdf:type owl:Class ;
-           rdfs:comment "A ﻿Builder is a process that takes the source artifacts for one given ﻿Product﻿ and generates all the publishable artifacts for that ﻿Product﻿."@en ;
-           rdfs:label "Builder"@en ;
-           rdfs:seeAlso <https://wiki.edmcouncil.org/x/p4WJ> .
+:Commit a owl:Class ;
+	rdfs:label "Commit"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/KwBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Domain
 
+:Domain a owl:Class ;
+	rdfs:label "Domain"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/HQBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Encoding
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Commit
-ao:Commit rdf:type owl:Class ;
-          rdfs:label "Commit"@en ;
-          rdfs:seeAlso <https://wiki.edmcouncil.org/x/KwBr> .
+:Encoding a owl:Class ;
+	rdfs:label "Encoding"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JQBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyBasedSoftwareComponentProduct
 
+:OntologyBasedSoftwareComponentProduct a owl:Class ;
+	rdfs:subClassOf :ProductCategory ;
+	rdfs:comment "An Ontology-based Software Component Product is a Product that consists of a software component such as a library that goes along with an Ontology, a model-driven software component such as the RDF Toolkit itself (which is based on the Artifact Ontology) and the Command Processor (which is based on the Command Ontology)"@en ;
+	rdfs:label "Ontology-based Software Component Product"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyProduct
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Domain
-ao:Domain rdf:type owl:Class ;
-          rdfs:label "Domain"@en ;
-          rdfs:seeAlso <https://wiki.edmcouncil.org/x/HQBr> .
+:OntologyProduct a owl:Class ;
+	rdfs:subClassOf :ProductCategory ;
+	rdfs:comment "An Ontology Product is a product that consists of Artifacts around OWL ontologies in all its various forms such as JSON-LD files, Turtle files, HTML documentation files, SVG visualizations and so forth"@en ;
+	rdfs:label "Ontology Product"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Product
 
+:Product a owl:Class ;
+	rdfs:label "Product"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/CgBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductCategory
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Encoding
-ao:Encoding rdf:type owl:Class ;
-            rdfs:label "Encoding"@en ;
-            rdfs:seeAlso <https://wiki.edmcouncil.org/x/JQBr> .
+:ProductCategory a owl:Class .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductFamily
 
+:ProductFamily a owl:Class ;
+	rdfs:label "Product Family"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/CABr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ReasoningLevel
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Product
-ao:Product rdf:type owl:Class ;
-           rdfs:label "Product"@en ;
-           rdfs:seeAlso <https://wiki.edmcouncil.org/x/CgBr> .
-
-
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#ProductFamily
-ao:ProductFamily rdf:type owl:Class ;
-                 rdfs:label "Product Family"@en ;
-                 rdfs:seeAlso <https://wiki.edmcouncil.org/x/CABr> .
-
-
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#ReasoningLevel
-ao:ReasoningLevel rdf:type owl:Class ;
-                  rdfs:comment """For certain types of Artifacts that are being generated by the RDF Toolkit, it can be relevant to apply \"reasoning\" via a \"reasoner\" or \"inference engine\" in memory before writing out the Artifacts.The following levels of Reasoning might have to be supported:
+:ReasoningLevel a owl:Class ;
+	rdfs:comment """For certain types of Artifacts that are being generated by the RDF Toolkit, it can be relevant to apply \"reasoning\" via a \"reasoner\" or \"inference engine\" in memory before writing out the Artifacts.The following levels of Reasoning might have to be supported:
 
 - No reasoning
 - RDFS+ / RDF/RDFS
@@ -90,13 +138,20 @@ The following reasoner products come to mind:
 - Hermit
 - Quarule/Sunflower/Flora2
 - .."""@en ;
-                  rdfs:label "Reasoning Level"@en ;
-                  rdfs:seeAlso <https://wiki.edmcouncil.org/x/A4GJ> .
+	rdfs:label "Reasoning Level"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/A4GJ> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RemoteDocumentationProduct
 
+:RemoteDocumentationProduct a owl:Class ;
+	rdfs:subClassOf :ProductCategory ;
+	rdfs:comment "A Remote Documentation Product is a product that is defined by documentation on some remote site such as DCAM which is documented on a \"remote\" site like http://www.edmcouncil.org/dcam."@en ;
+	rdfs:label "Remote Documentation Product"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SerializationFormat
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#SerializationFormat
-ao:SerializationFormat rdf:type owl:Class ;
-                       rdfs:comment """The Artifacts that the RDF-Toolkit can generate can have all sorts of formats, also called serialization formats. For OWL ontologies for instance we have serialization formats like RDF/OWL, JSON-LD and Turtle.
+:SerializationFormat a owl:Class ;
+	rdfs:comment """The Artifacts that the RDF-Toolkit can generate can have all sorts of formats, also called serialization formats. For OWL ontologies for instance we have serialization formats like RDF/OWL, JSON-LD and Turtle.
 OWL Ontologies:
 
 - RDF/XML
@@ -116,20 +171,26 @@ Documentation Pages:
 - LaTeX
 - Confluence
 - .."""@en ;
-                       rdfs:label "Serialization Format"@en ;
-                       rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
+	rdfs:label "Serialization Format"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Source
 
+:Source a owl:Class ;
+	rdfs:label "Source"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Version
 
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Source
-ao:Source rdf:type owl:Class ;
-          rdfs:label "Source"@en ;
-          rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
+:Version a owl:Class ;
+	rdfs:label "Version"@en ;
+	rdfs:seeAlso <https://wiki.edmcouncil.org/x/LQBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#VocabularyProduct
 
-
-###  https://spec.edmcouncil.org/RDFKIT/artifact-ontology#Version
-ao:Version rdf:type owl:Class ;
-           rdfs:label "Version"@en ;
-           rdfs:seeAlso <https://wiki.edmcouncil.org/x/LQBr> .
-
-
-###  Generated by the OWL API (version 4.2.5.20160517-0735) https://github.com/owlcs/owlapi
+:VocabularyProduct a owl:Class ;
+	rdfs:subClassOf :ProductCategory ;
+	rdfs:comment "A Vocabulary Product is a Product that is based on the SKOS-ontology but uses a set of OWL ontologies as its \"authoritative source\", so the SKOS vocabulary (aka taxonomy aka Concept Scheme) is generated from OWL."@en ;
+	rdfs:label "Vocabulary Product"@en .
+# 
+# Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi
