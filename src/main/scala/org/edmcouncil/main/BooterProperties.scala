@@ -41,6 +41,8 @@ object BooterProperties {
   val gitHashShort = properties.getOrElse("booter.git.hash.short", "0")
   val gitBranch = properties.getOrElse("booter.git.branch", "0")
   val generatedAt = properties.getOrElse("booter.generated.at", "0")
+  val copyright = properties.getOrElse("booter.copyright", "unknown")
+  val licenses = properties.getOrElse("booter.licenses", "")
 
   def versionFull = s"$version-$systemRelease"
 
