@@ -50,7 +50,7 @@ trait OnErrorAborter extends Logging {
 class OwlApiOntologyLoader(
     ontologyManager: OWLOntologyManager,
     loaderConfiguration: OWLOntologyLoaderConfiguration,
-    baseDirUrls: Seq[(Path, BaseURL)],
+    baseDirUrls: Map[BaseURL, Path],
     val abortOnError: Boolean) extends Logging with OnErrorAborter {
 
   /**
@@ -59,18 +59,18 @@ class OwlApiOntologyLoader(
    */
   private def findImportResolver(iri: IRI): Option[ImportResolver] = {
 
-    def findIt(basePathUri: (Path, BaseURL)): Boolean = {
-      val (basePath, baseUri) = basePathUri
+    def findIt(basePathUri: (BaseURL, Path)): Boolean = {
+      val (baseUri, basePath) = basePathUri
       info(s"Does $baseUri match with ${iri.toURI.toString}?")
       baseUri.matchesWith(iri.toURI.toString)
     }
 
-    def mapIt(basePathUri: (Path, BaseURL)): ImportResolver = {
-      val (basePath, baseUri) = basePathUri
+    def mapIt(basePathUri: (BaseURL, Path)): ImportResolver = {
+      val (baseUri, basePath) = basePathUri
       ImportResolver(PotentialDirectory(basePath), baseUri, iri)
     }
 
-    baseDirUrls.find(findIt).map(mapIt)
+    baseDirUrls.toSeq.find(findIt).map(mapIt)
   }
 
   /**

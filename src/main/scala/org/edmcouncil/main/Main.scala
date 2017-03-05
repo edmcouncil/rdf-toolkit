@@ -32,5 +32,5 @@ object Main extends App {
   // The whole program is a function returning an Int to the command line, which we need in order to use this
   // program in Bash scripts or Windows scripts.
   //
-  sys.exit(MainImpl(args).run)
+  sys.exit(CommandLineInterfaceOld.run(args))
 }

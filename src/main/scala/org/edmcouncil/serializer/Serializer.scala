@@ -24,7 +24,7 @@
 package org.edmcouncil.serializer
 
 import org.edmcouncil.main.CommandLineParams
-import org.edmcouncil.{ SerializerApiOWLAPI, SerializerApiSesame }
+import org.edmcouncil.{ SerializerApiOWLAPI, SerializerApiRDF4J }
 
 import scala.collection.mutable
 
@@ -55,16 +55,16 @@ object Serializer {
     def sesameRdfFormatterArgs: Array[String] = {
       val ab = mutable.ArrayBuilder.make[String]
 
-      if (params.inputFiles.hasValue)
-        ab ++= Seq("-s", params.inputFiles.value.head.fileName.get)
+      if (params.inputFiles.nonEmpty)
+        ab ++= Seq("-s", params.inputFiles.head.fileName.get)
 
       ab ++= Seq("-sfmt", "auto")
 
-      if (params.outputFile.hasValue)
-        ab ++= Seq("-t", params.outputFile.value.get.fileName.get)
+      if (params.outputFile.isDefined)
+        ab ++= Seq("-t", params.outputFile.get.fileName.get)
 
-      if (params.outputFormat.hasValue)
-        ab ++= Seq("-tfmt", params.outputFormat.value.get)
+      if (params.outputFormat.isDefined)
+        ab ++= Seq("-tfmt", params.outputFormat.get)
 
       ab.result()
     }
@@ -81,6 +81,6 @@ object Serializer {
 
   def apply(params: CommandLineParams) = params.api match {
     case SerializerApiOWLAPI ⇒ OwlApiSerializer(params)
-    case SerializerApiSesame ⇒ runSesameRdfFormatter(params)
+    case SerializerApiRDF4J  ⇒ runSesameRdfFormatter(params)
   }
 }

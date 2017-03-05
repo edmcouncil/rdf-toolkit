@@ -24,5 +24,5 @@
 package org.edmcouncil
 
 sealed trait SerializerApi
-object SerializerApiSesame extends SerializerApi
+object SerializerApiRDF4J extends SerializerApi
 object SerializerApiOWLAPI extends SerializerApi

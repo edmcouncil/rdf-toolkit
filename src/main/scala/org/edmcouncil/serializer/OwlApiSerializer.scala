@@ -66,9 +66,10 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
     ontologyManager: OWLOntologyManager,
     ontologies: Set[OWLOntology],
     format: OWLDocumentFormat) {
-    if (!params.urlReplacePattern.hasValue) return
 
-    for ((regex, replacement) ← params.urlReplacePattern.value) {
+    if (params.urlReplacePattern.isEmpty) return
+
+    for ((regex, replacement) ← params.urlReplacePattern.get) {
       new OwlApiUriRenamer(regex, replacement, ontologyManager, ontologies, format)
     }
   }
@@ -85,9 +86,9 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
 
     info(s"Saving ontology: ${ontology.getOntologyID.getOntologyIRI.get}")
     info(s"In Format: $format")
-    info(s"To File: ${params.outputFile.value.get.toString}")
+    info(s"To File: ${params.outputFile.get.toString}")
 
-    ontology.saveOntology(format, params.outputFile.value.get.outputStream.get)
+    ontology.saveOntology(format, params.outputFile.get.outputStream.get)
 
     ontologyManager.removeOntology(ontology)
   }
@@ -109,8 +110,8 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
   private def run: Int = {
 
     val ontologyManager = createOntologyManager
-    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, params.baseDirUrls.value, params.abortOnError)
-    val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormat.value)
+    val loader = new OwlApiOntologyLoader(ontologyManager, loaderConfiguration, params.baseDirUrls.get, params.abortOnError)
+    val outputFormat = OwlApiOutputFormats.getOutputDocumentFormatWithName(params.outputFormat)
 
     //
     // Some ontology formats support prefix names and prefix IRIs. In our
@@ -158,11 +159,11 @@ class OwlApiSerializer(private val params: CommandLineParams) extends Logging wi
       ontology
     }
 
-    if (params.inputFiles.value.length == 1) {
-      val ontology = load(params.inputFiles.value.head)
+    if (params.inputFiles.length == 1) {
+      val ontology = load(params.inputFiles.head)
       saveOntology(ontologyManager, ontology, outputFormat)
     } else {
-      params.inputFiles.value.foreach(load)
+      params.inputFiles.foreach(load)
       mergeOntology(ontologyManager, outputFormat)
     }
 
