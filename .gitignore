@@ -14,5 +14,3 @@ catalog-v001.xml
 test1.rdf
 test.rdf
 *.xpr
-src/main/scala-2.11/
-src/test/scala-2.11/
