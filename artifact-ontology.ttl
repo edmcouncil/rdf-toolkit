@@ -20,13 +20,102 @@
 # #################################################################
 # 
 # 
+# https://spec.edmcouncil.org/command/command-ontology#hasAction
+
+co:hasAction rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasCommand
+
+co:hasCommand rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasOption
+
+co:hasOption rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasParentCommand
+
+co:hasParentCommand rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasSubCommand
+
+co:hasSubCommand rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#invokedByCommand
+
+co:invokedByCommand rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#isCommandOfApplication
+
+co:isCommandOfApplication rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#branchContainsFile
+
+:branchContainsFile a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	owl:inverseOf :fileIsInBranch ;
+	rdfs:domain :Branch ;
+	rdfs:range :File .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsDirectSubDomainOf
+
+:domainIsDirectSubDomainOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf :domainIsSubDomainOf ;
+	rdfs:domain :Domain ;
+	rdfs:range :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsSubDomainOf
+
+:domainIsSubDomainOf a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:TransitiveProperty ;
+	rdfs:domain :Domain ;
+	rdfs:range :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#fileIsInBranch
+
+:fileIsInBranch a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain :File ;
+	rdfs:range :Branch .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDirectDomain
+
+:hasDirectDomain a owl:ObjectProperty ;
+	rdfs:subPropertyOf :hasDomain ;
+	rdfs:domain :Ontology ;
+	rdfs:range :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDomain
+
+:hasDomain a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain :Ontology ;
+	rdfs:range :Domain ;
+	owl:propertyChainAxiom _:genid2 .
+
+_:genid2 a rdf:List ;
+	rdf:first :hasDirectDomain ;
+	rdf:rest _:genid1 .
+
+_:genid1 a rdf:List ;
+	rdf:first :domainIsSubDomainOf ;
+	rdf:rest rdf:nil .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasProductCategory
 
 :hasProductCategory a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
 	owl:inverseOf :isProductCategoryForProduct ;
 	a owl:FunctionalProperty ;
 	rdfs:domain :Product ;
 	rdfs:range :ProductCategory .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#isBranchInRepository
+
+:isBranchInRepository a owl:ObjectProperty ;
+	owl:inverseOf :repositoryContainsBranch ;
+	rdfs:domain :Branch ;
+	rdfs:range :Repository .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#isProductCategoryForProduct
 
@@ -35,6 +124,27 @@
 	a owl:InverseFunctionalProperty ;
 	rdfs:domain :ProductCategory ;
 	rdfs:range :Product .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyFileContainsOntology
+
+:ontologyFileContainsOntology a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	owl:inverseOf :ontologyIsInOntologyFile ;
+	rdfs:domain :OntologyFile ;
+	rdfs:range :Ontology .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyIsInOntologyFile
+
+:ontologyIsInOntologyFile a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain :Ontology ;
+	rdfs:range :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#repositoryContainsBranch
+
+:repositoryContainsBranch a owl:ObjectProperty ;
+	rdfs:domain :Repository ;
+	rdfs:range :Branch .
 # 
 # 
 # 
@@ -81,6 +191,7 @@ The above scheme of branches changes over time, the RDF Toolkit has to be as fle
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Domain
 
 :Domain a owl:Class ;
+	owl:disjointWith :Ontology ;
 	rdfs:label "Domain"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/HQBr> .
 # 
@@ -90,12 +201,34 @@ The above scheme of branches changes over time, the RDF Toolkit has to be as fle
 	rdfs:label "Encoding"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JQBr> .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#File
+
+:File a owl:Class .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#GeneratedArtifact
+
+:GeneratedArtifact a owl:Class ;
+	rdfs:subClassOf :Artifact ;
+	rdfs:label "Generated Artifact" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ontology
+
+:Ontology a owl:Class ;
+	owl:disjointWith :OntologyFile ;
+	rdfs:comment "Ontology in the OWL sense i.e. owl:Ontology axiom" .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyBasedSoftwareComponentProduct
 
 :OntologyBasedSoftwareComponentProduct a owl:Class ;
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "An Ontology-based Software Component Product is a Product that consists of a software component such as a library that goes along with an Ontology, a model-driven software component such as the RDF Toolkit itself (which is based on the Artifact Ontology) and the Command Processor (which is based on the Command Ontology)"@en ;
 	rdfs:label "Ontology-based Software Component Product"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyFile
+
+:OntologyFile a owl:Class ;
+	rdfs:subClassOf :File ;
+	rdfs:label "Ontology File" .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyProduct
 
@@ -148,6 +281,10 @@ The following reasoner products come to mind:
 	rdfs:comment "A Remote Documentation Product is a product that is defined by documentation on some remote site such as DCAM which is documented on a \"remote\" site like http://www.edmcouncil.org/dcam."@en ;
 	rdfs:label "Remote Documentation Product"@en .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Repository
+
+:Repository a owl:Class .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SerializationFormat
 
 :SerializationFormat a owl:Class ;
@@ -177,8 +314,15 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Source
 
 :Source a owl:Class ;
+	owl:equivalentClass :SourceArtifact ;
 	rdfs:label "Source"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SourceArtifact
+
+:SourceArtifact a owl:Class ;
+	rdfs:subClassOf :Artifact ;
+	rdfs:label "Source Artifact" .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Version
 
@@ -192,5 +336,88 @@ Documentation Pages:
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "A Vocabulary Product is a Product that is based on the SKOS-ontology but uses a set of OWL ontologies as its \"authoritative source\", so the SKOS vocabulary (aka taxonomy aka Concept Scheme) is generated from OWL."@en ;
 	rdfs:label "Vocabulary Product"@en .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Individuals
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAccounting
+
+:AboutAccounting a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain :Accounting ;
+	:hasDomain :Foundations .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Accounting
+
+:Accounting a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf :Foundations .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AccountingEquity
+
+:AccountingEquity a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain :Accounting .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AgentsAndPeople
+
+:AgentsAndPeople a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf :Foundations ;
+	rdfs:label "Agents and People" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessAndCommerce
+
+:BusinessAndCommerce a owl:NamedIndividual , :Domain ;
+	rdfs:label "Business and Commerce" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessEntities
+
+:BusinessEntities a owl:NamedIndividual , :Domain ;
+	rdfs:label "Business Entities" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Corporations
+
+:Corporations a owl:NamedIndividual .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CurrencyAmount
+
+:CurrencyAmount a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain :Accounting .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Debt
+
+:Debt a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf :Securities .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Derivatives
+
+:Derivatives a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FIBO-Master
+
+:FIBO-Master a owl:NamedIndividual , :Branch .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Foundations
+
+:Foundations a owl:NamedIndividual , :Domain ;
+	owl:sameAs <https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IndicesAndIndicators
+
+:IndicesAndIndicators a owl:NamedIndividual , :Domain ;
+	rdfs:label "Indices and Indicators" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Loan
+
+:Loan a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Securities
+
+:Securities a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd
 # 
 # Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi
