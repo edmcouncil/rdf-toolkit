@@ -350,7 +350,525 @@ Documentation Pages:
 
 :AboutAccounting a owl:NamedIndividual , :Ontology ;
 	:hasDirectDomain :Accounting ;
-	:hasDomain :Foundations .
+	:hasDomain :Foundations ;
+	:ontologyIsInOntologyFile :AboutAccounting.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAccounting.rdf
+
+:AboutAccounting.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgentsAndPeople
+
+:AboutAgentsAndPeople a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutAgentsAndPeople.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgentsAndPeople.rdf
+
+:AboutAgentsAndPeople.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgreements
+
+:AboutAgreements a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutAgreements.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgreements.rdf
+
+:AboutAgreements.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutArrangements
+
+:AboutArrangements a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutArrangements.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutArrangements.rdf
+
+:AboutArrangements.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE
+
+:AboutBE a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBE.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.0
+
+:AboutBE-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBE-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.0.rdf
+
+:AboutBE-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1
+
+:AboutBE-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBE-1.1.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-Europe
+
+:AboutBE-1.1-Europe a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBE-1.1-Europe.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-Europe.rdf
+
+:AboutBE-1.1-Europe.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-NorthAmerica
+
+:AboutBE-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBE-1.1-NorthAmerica.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-NorthAmerica.rdf
+
+:AboutBE-1.1-NorthAmerica.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1.rdf
+
+:AboutBE-1.1.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE.rdf
+
+:AboutBE.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBEOwnershipAndControl
+
+:AboutBEOwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutBEOwnershipAndControl.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBEOwnershipAndControl.rdf
+
+:AboutBEOwnershipAndControl.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutCorporations
+
+:AboutCorporations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutCorporations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutCorporations.rdf
+
+:AboutCorporations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER
+
+:AboutDER a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutDER.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER-1.0
+
+:AboutDER-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutDER-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER-1.0.rdf
+
+:AboutDER-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER.rdf
+
+:AboutDER.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDatesAndTimes
+
+:AboutDatesAndTimes a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutDatesAndTimes.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDatesAndTimes.rdf
+
+:AboutDatesAndTimes.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDebtAndEquities
+
+:AboutDebtAndEquities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutDebtAndEquities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDebtAndEquities.rdf
+
+:AboutDebtAndEquities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutEconomicIndicators
+
+:AboutEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutEconomicIndicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutEconomicIndicators.rdf
+
+:AboutEconomicIndicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC
+
+:AboutFBC a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0
+
+:AboutFBC-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-NorthAmerica
+
+:AboutFBC-1.0-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC-1.0-NorthAmerica.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-NorthAmerica.rdf
+
+:AboutFBC-1.0-NorthAmerica.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-test
+
+:AboutFBC-1.0-test a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC-1.0-test.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-test.rdf
+
+:AboutFBC-1.0-test.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0.rdf
+
+:AboutFBC-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1
+
+:AboutFBC-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC-1.1.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1-NorthAmerica
+
+:AboutFBC-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBC-1.1-NorthAmerica.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1-NorthAmerica.rdf
+
+:AboutFBC-1.1-NorthAmerica.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1.rdf
+
+:AboutFBC-1.1.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC.rdf
+
+:AboutFBC.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBCFunctionalEntities
+
+:AboutFBCFunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFBCFunctionalEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBCFunctionalEntities.rdf
+
+:AboutFBCFunctionalEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND
+
+:AboutFND a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFND.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.0
+
+:AboutFND-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFND-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.0.rdf
+
+:AboutFND-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.1
+
+:AboutFND-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFND-1.1.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.1.rdf
+
+:AboutFND-1.1.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.2
+
+:AboutFND-1.2 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFND-1.2.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.2.rdf
+
+:AboutFND-1.2.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND.rdf
+
+:AboutFND.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFinancialInstruments
+
+:AboutFinancialInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFinancialInstruments.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFinancialInstruments.rdf
+
+:AboutFinancialInstruments.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutForeignExchange
+
+:AboutForeignExchange a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutForeignExchange.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutForeignExchange.rdf
+
+:AboutForeignExchange.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFunctionalEntities
+
+:AboutFunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutFunctionalEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFunctionalEntities.rdf
+
+:AboutFunctionalEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGoalsAndObjectives
+
+:AboutGoalsAndObjectives a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutGoalsAndObjectives.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGoalsAndObjectives.rdf
+
+:AboutGoalsAndObjectives.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGovernmentEntities
+
+:AboutGovernmentEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutGovernmentEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGovernmentEntities.rdf
+
+:AboutGovernmentEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND
+
+:AboutIND a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIND.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0
+
+:AboutIND-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIND-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0-NorthAmerica
+
+:AboutIND-1.0-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIND-1.0-NorthAmerica.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0-NorthAmerica.rdf
+
+:AboutIND-1.0-NorthAmerica.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0.rdf
+
+:AboutIND-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1
+
+:AboutIND-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIND-1.1.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1-NorthAmerica
+
+:AboutIND-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIND-1.1-NorthAmerica.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1-NorthAmerica.rdf
+
+:AboutIND-1.1-NorthAmerica.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1.rdf
+
+:AboutIND-1.1.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND.rdf
+
+:AboutIND.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIndicators
+
+:AboutIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutIndicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIndicators.rdf
+
+:AboutIndicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutInterestRates
+
+:AboutInterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutInterestRates.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutInterestRates.rdf
+
+:AboutInterestRates.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN
+
+:AboutLOAN a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutLOAN.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN-1.0
+
+:AboutLOAN-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutLOAN-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN-1.0.rdf
+
+:AboutLOAN-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN.rdf
+
+:AboutLOAN.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLaw
+
+:AboutLaw a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutLaw.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLaw.rdf
+
+:AboutLaw.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLegalEntities
+
+:AboutLegalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutLegalEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLegalEntities.rdf
+
+:AboutLegalEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOrganizations
+
+:AboutOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutOrganizations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOrganizations.rdf
+
+:AboutOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOwnershipAndControl
+
+:AboutOwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutOwnershipAndControl.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOwnershipAndControl.rdf
+
+:AboutOwnershipAndControl.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutParties
+
+:AboutParties a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutParties.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutParties.rdf
+
+:AboutParties.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPartnerships
+
+:AboutPartnerships a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutPartnerships.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPartnerships.rdf
+
+:AboutPartnerships.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPlaces
+
+:AboutPlaces a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutPlaces.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPlaces.rdf
+
+:AboutPlaces.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPrivateLimitedCompanies
+
+:AboutPrivateLimitedCompanies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutPrivateLimitedCompanies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPrivateLimitedCompanies.rdf
+
+:AboutPrivateLimitedCompanies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutProductsAndServices
+
+:AboutProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutProductsAndServices.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutProductsAndServices.rdf
+
+:AboutProductsAndServices.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutQuantities
+
+:AboutQuantities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutQuantities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutQuantities.rdf
+
+:AboutQuantities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutRelations
+
+:AboutRelations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutRelations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutRelations.rdf
+
+:AboutRelations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC
+
+:AboutSEC a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutSEC.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC-1.0
+
+:AboutSEC-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutSEC-1.0.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC-1.0.rdf
+
+:AboutSEC-1.0.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC.rdf
+
+:AboutSEC.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSoleProprietorships
+
+:AboutSoleProprietorships a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutSoleProprietorships.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSoleProprietorships.rdf
+
+:AboutSoleProprietorships.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTheEDMC-FIBOFamily
+
+:AboutTheEDMC-FIBOFamily a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutTheEDMC-FIBOFamily.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTheEDMC-FIBOFamily.rdf
+
+:AboutTheEDMC-FIBOFamily.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTrusts
+
+:AboutTrusts a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutTrusts.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTrusts.rdf
+
+:AboutTrusts.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutUtilities
+
+:AboutUtilities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AboutUtilities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutUtilities.rdf
+
+:AboutUtilities.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Accounting
 
@@ -360,7 +878,30 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AccountingEquity
 
 :AccountingEquity a owl:NamedIndividual , :Ontology ;
-	:hasDirectDomain :Accounting .
+	:hasDirectDomain :Accounting ;
+	:ontologyIsInOntologyFile :AccountingEquity.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AccountingEquity.rdf
+
+:AccountingEquity.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Addresses
+
+:Addresses a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Addresses.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Addresses.rdf
+
+:Addresses.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agents
+
+:Agents a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Agents.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agents.rdf
+
+:Agents.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AgentsAndPeople
 
@@ -368,55 +909,937 @@ Documentation Pages:
 	:domainIsSubDomainOf :Foundations ;
 	rdfs:label "Agents and People" .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agreements
+
+:Agreements a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Agreements.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agreements.rdf
+
+:Agreements.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Analytics
+
+:Analytics a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Analytics.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Analytics.rdf
+
+:Analytics.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AnnotationVocabulary
+
+:AnnotationVocabulary a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :AnnotationVocabulary.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AnnotationVocabulary.rdf
+
+:AnnotationVocabulary.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Arrangements
+
+:Arrangements a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Arrangements.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Arrangements.rdf
+
+:Arrangements.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Baskets
+
+:Baskets a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Baskets.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Baskets.rdf
+
+:Baskets.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessAndCommerce
 
 :BusinessAndCommerce a owl:NamedIndividual , :Domain ;
 	rdfs:label "Business and Commerce" .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessDates
+
+:BusinessDates a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :BusinessDates.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessDates.rdf
+
+:BusinessDates.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessEntities
 
 :BusinessEntities a owl:NamedIndividual , :Domain ;
 	rdfs:label "Business Entities" .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessFacingTypes
+
+:BusinessFacingTypes a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :BusinessFacingTypes.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessFacingTypes.rdf
+
+:BusinessFacingTypes.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessRegistries
+
+:BusinessRegistries a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :BusinessRegistries.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessRegistries.rdf
+
+:BusinessRegistries.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAEconomicIndicators
+
+:CAEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CAEconomicIndicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAEconomicIndicators.rdf
+
+:CAEconomicIndicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAFinancialServicesEntities
+
+:CAFinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CAFinancialServicesEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAFinancialServicesEntities.rdf
+
+:CAFinancialServicesEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAGovernmentEntitiesAndJurisdictions
+
+:CAGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CAGovernmentEntitiesAndJurisdictions.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAGovernmentEntitiesAndJurisdictions.rdf
+
+:CAGovernmentEntitiesAndJurisdictions.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CARegulatoryAgencies
+
+:CARegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CARegulatoryAgencies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CARegulatoryAgencies.rdf
+
+:CARegulatoryAgencies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClassificationSchemes
+
+:ClassificationSchemes a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ClassificationSchemes.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClassificationSchemes.rdf
+
+:ClassificationSchemes.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClientsAndAccounts
+
+:ClientsAndAccounts a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ClientsAndAccounts.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClientsAndAccounts.rdf
+
+:ClientsAndAccounts.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Codes
+
+:Codes a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Codes.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Codes.rdf
+
+:Codes.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CommonInterestRates
+
+:CommonInterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CommonInterestRates.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CommonInterestRates.rdf
+
+:CommonInterestRates.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Contracts
+
+:Contracts a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Contracts.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Contracts.rdf
+
+:Contracts.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Control
+
+:Control a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Control.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Control.rdf
+
+:Control.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ControlParties
+
+:ControlParties a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ControlParties.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ControlParties.rdf
+
+:ControlParties.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateBodies
+
+:CorporateBodies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CorporateBodies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateBodies.rdf
+
+:CorporateBodies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateControl
+
+:CorporateControl a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CorporateControl.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateControl.rdf
+
+:CorporateControl.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateOwnership
+
+:CorporateOwnership a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :CorporateOwnership.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateOwnership.rdf
+
+:CorporateOwnership.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Corporations
 
-:Corporations a owl:NamedIndividual .
+:Corporations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Corporations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Corporations.rdf
+
+:Corporations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Countries
+
+:Countries a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Countries.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Countries.rdf
+
+:Countries.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CurrencyAmount
 
 :CurrencyAmount a owl:NamedIndividual , :Ontology ;
-	:hasDirectDomain :Accounting .
+	:hasDirectDomain :Accounting ;
+	:ontologyIsInOntologyFile :CurrencyAmount.rdf .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Debt
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#CurrencyAmount.rdf
 
-:Debt a owl:NamedIndividual , :Domain ;
-	:domainIsSubDomainOf :Securities .
+:CurrencyAmount.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Debt.rdf
+
+:Debt.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#DebtInstruments
+
+:DebtInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :DebtInstruments.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#DebtInstruments.rdf
+
+:DebtInstruments.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Derivatives
 
 :Derivatives a owl:NamedIndividual , :Domain .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#DerivativesBasics
+
+:DerivativesBasics a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :DerivativesBasics.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#DerivativesBasics.rdf
+
+:DerivativesBasics.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Documents
+
+:Documents a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Documents.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Documents.rdf
+
+:Documents.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EUGovernmentEntitiesAndJurisdictions
+
+:EUGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :EUGovernmentEntitiesAndJurisdictions.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EUGovernmentEntitiesAndJurisdictions.rdf
+
+:EUGovernmentEntitiesAndJurisdictions.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicatorPublishers
+
+:EconomicIndicatorPublishers a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :EconomicIndicatorPublishers.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicatorPublishers.rdf
+
+:EconomicIndicatorPublishers.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicators
+
+:EconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :EconomicIndicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicators.rdf
+
+:EconomicIndicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Executives
+
+:Executives a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Executives.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Executives.rdf
+
+:Executives.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FIBO-Master
 
 :FIBO-Master a owl:NamedIndividual , :Branch .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Facilities
+
+:Facilities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Facilities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Facilities.rdf
+
+:Facilities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialDates
+
+:FinancialDates a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FinancialDates.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialDates.rdf
+
+:FinancialDates.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialInstruments
+
+:FinancialInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FinancialInstruments.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialInstruments.rdf
+
+:FinancialInstruments.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialProductsAndServices
+
+:FinancialProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FinancialProductsAndServices.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialProductsAndServices.rdf
+
+:FinancialProductsAndServices.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialServicesEntities
+
+:FinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FinancialServicesEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialServicesEntities.rdf
+
+:FinancialServicesEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ForeignExchange
+
+:ForeignExchange a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ForeignExchange.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ForeignExchange.rdf
+
+:ForeignExchange.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalBusinessOrganizations
+
+:FormalBusinessOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FormalBusinessOrganizations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalBusinessOrganizations.rdf
+
+:FormalBusinessOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalOrganizations
+
+:FormalOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FormalOrganizations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalOrganizations.rdf
+
+:FormalOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Foundations
 
 :Foundations a owl:NamedIndividual , :Domain ;
 	owl:sameAs <https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd> .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FunctionalEntities
+
+:FunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :FunctionalEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#FunctionalEntities.rdf
+
+:FunctionalEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Goals
+
+:Goals a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Goals.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Goals.rdf
+
+:Goals.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#GovernmentEntities
+
+:GovernmentEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :GovernmentEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#GovernmentEntities.rdf
+
+:GovernmentEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Guaranty
+
+:Guaranty a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Guaranty.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Guaranty.rdf
+
+:Guaranty.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IRSwaps
+
+:IRSwaps a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :IRSwaps.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IRSwaps.rdf
+
+:IRSwaps.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ISO4217-CurrencyCodes
+
+:ISO4217-CurrencyCodes a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ISO4217-CurrencyCodes.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ISO4217-CurrencyCodes.rdf
+
+:ISO4217-CurrencyCodes.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IdentifiersAndIndices
+
+:IdentifiersAndIndices a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :IdentifiersAndIndices.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IdentifiersAndIndices.rdf
+
+:IdentifiersAndIndices.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Indicators
+
+:Indicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Indicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Indicators.rdf
+
+:Indicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#IndicesAndIndicators
 
 :IndicesAndIndicators a owl:NamedIndividual , :Domain ;
 	rdfs:label "Indices and Indicators" .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRatePublishers
+
+:InterestRatePublishers a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :InterestRatePublishers.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRatePublishers.rdf
+
+:InterestRatePublishers.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRates
+
+:InterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :InterestRates.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRates.rdf
+
+:InterestRates.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Jurisdiction
+
+:Jurisdiction a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Jurisdiction.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Jurisdiction.rdf
+
+:Jurisdiction.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LEIEntities
+
+:LEIEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LEIEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LEIEntities.rdf
+
+:LEIEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCapacity
+
+:LegalCapacity a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LegalCapacity.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCapacity.rdf
+
+:LegalCapacity.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCore
+
+:LegalCore a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LegalCore.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCore.rdf
+
+:LegalCore.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalPersons
+
+:LegalPersons a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LegalPersons.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalPersons.rdf
+
+:LegalPersons.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegitimateOrganizations
+
+:LegitimateOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LegitimateOrganizations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegitimateOrganizations.rdf
+
+:LegitimateOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Loan
 
 :Loan a owl:NamedIndividual , :Domain .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanHMDA
+
+:LoanHMDA a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LoanHMDA.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanHMDA.rdf
+
+:LoanHMDA.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanUpperTemp
+
+:LoanUpperTemp a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :LoanUpperTemp.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanUpperTemp.rdf
+
+:LoanUpperTemp.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Locations
+
+:Locations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Locations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Locations.rdf
+
+:Locations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Markets
+
+:Markets a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Markets.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Markets.rdf
+
+:Markets.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Objectives
+
+:Objectives a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Objectives.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Objectives.rdf
+
+:Objectives.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Occurrences
+
+:Occurrences a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Occurrences.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Occurrences.rdf
+
+:Occurrences.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Organizations
+
+:Organizations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Organizations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Organizations.rdf
+
+:Organizations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ownership
+
+:Ownership a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Ownership.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ownership.rdf
+
+:Ownership.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipAndControl
+
+:OwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :OwnershipAndControl.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipAndControl.rdf
+
+:OwnershipAndControl.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipParties
+
+:OwnershipParties a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :OwnershipParties.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipParties.rdf
+
+:OwnershipParties.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ParametricSchedules
+
+:ParametricSchedules a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ParametricSchedules.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ParametricSchedules.rdf
+
+:ParametricSchedules.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Parties
+
+:Parties a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Parties.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Parties.rdf
+
+:Parties.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Partnerships
+
+:Partnerships a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Partnerships.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Partnerships.rdf
+
+:Partnerships.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#PaymentsAndSchedules
+
+:PaymentsAndSchedules a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :PaymentsAndSchedules.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#PaymentsAndSchedules.rdf
+
+:PaymentsAndSchedules.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#People
+
+:People a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :People.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#People.rdf
+
+:People.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Pools
+
+:Pools a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Pools.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Pools.rdf
+
+:Pools.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#PrivateLimitedCompanies
+
+:PrivateLimitedCompanies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :PrivateLimitedCompanies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#PrivateLimitedCompanies.rdf
+
+:PrivateLimitedCompanies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductsAndServices
+
+:ProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :ProductsAndServices.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductsAndServices.rdf
+
+:ProductsAndServices.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Publishers
+
+:Publishers a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Publishers.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Publishers.rdf
+
+:Publishers.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#QuantitiesAndUnits
+
+:QuantitiesAndUnits a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :QuantitiesAndUnits.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#QuantitiesAndUnits.rdf
+
+:QuantitiesAndUnits.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RateDerivatives
+
+:RateDerivatives a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :RateDerivatives.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RateDerivatives.rdf
+
+:RateDerivatives.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegistrationAuthorities
+
+:RegistrationAuthorities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :RegistrationAuthorities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegistrationAuthorities.rdf
+
+:RegistrationAuthorities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegulatoryAgencies
+
+:RegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :RegulatoryAgencies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegulatoryAgencies.rdf
+
+:RegulatoryAgencies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Relations
+
+:Relations a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Relations.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Relations.rdf
+
+:Relations.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Roles
+
+:Roles a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Roles.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Roles.rdf
+
+:Roles.rdf a owl:NamedIndividual , :OntologyFile .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Securities
 
 :Securities a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesClassification
+
+:SecuritiesClassification a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesClassification.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesClassification.rdf
+
+:SecuritiesClassification.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesExampleIndividuals
+
+:SecuritiesExampleIndividuals a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesExampleIndividuals.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesExampleIndividuals.rdf
+
+:SecuritiesExampleIndividuals.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIdentification
+
+:SecuritiesIdentification a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesIdentification.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIdentification.rdf
+
+:SecuritiesIdentification.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIssuance
+
+:SecuritiesIssuance a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesIssuance.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIssuance.rdf
+
+:SecuritiesIssuance.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesListings
+
+:SecuritiesListings a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesListings.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesListings.rdf
+
+:SecuritiesListings.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesRestrictions
+
+:SecuritiesRestrictions a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecuritiesRestrictions.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesRestrictions.rdf
+
+:SecuritiesRestrictions.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecurityAssets
+
+:SecurityAssets a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SecurityAssets.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecurityAssets.rdf
+
+:SecurityAssets.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SoleProprietorships
+
+:SoleProprietorships a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :SoleProprietorships.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SoleProprietorships.rdf
+
+:SoleProprietorships.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Swaps
+
+:Swaps a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Swaps.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Swaps.rdf
+
+:Swaps.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Trusts
+
+:Trusts a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :Trusts.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Trusts.rdf
+
+:Trusts.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#UKGovernmentEntitiesAndJurisdictions
+
+:UKGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :UKGovernmentEntitiesAndJurisdictions.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#UKGovernmentEntitiesAndJurisdictions.rdf
+
+:UKGovernmentEntitiesAndJurisdictions.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USEconomicIndicators
+
+:USEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :USEconomicIndicators.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USEconomicIndicators.rdf
+
+:USEconomicIndicators.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USExampleIndividuals
+
+:USExampleIndividuals a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :USExampleIndividuals.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USExampleIndividuals.rdf
+
+:USExampleIndividuals.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USFinancialServicesEntities
+
+:USFinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :USFinancialServicesEntities.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USFinancialServicesEntities.rdf
+
+:USFinancialServicesEntities.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USGovernmentEntitiesAndJurisdictions
+
+:USGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :USGovernmentEntitiesAndJurisdictions.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USGovernmentEntitiesAndJurisdictions.rdf
+
+:USGovernmentEntitiesAndJurisdictions.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USRegulatoryAgencies
+
+:USRegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :USRegulatoryAgencies.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#USRegulatoryAgencies.rdf
+
+:USRegulatoryAgencies.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#VirtualPlaces
+
+:VirtualPlaces a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :VirtualPlaces.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#VirtualPlaces.rdf
+
+:VirtualPlaces.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#loanCore
+
+:loanCore a owl:NamedIndividual , :Ontology ;
+	:ontologyIsInOntologyFile :loanCore.rdf .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#loanCore.rdf
+
+:loanCore.rdf a owl:NamedIndividual , :OntologyFile .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd
 # 
