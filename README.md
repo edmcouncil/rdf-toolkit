@@ -134,4 +134,4 @@ input-file(s)  Input files to read. You can specify multiple input files, but th
                output file. (May be specified multiple times.)
 ```
 
-Note: For XML output syntax, blank nodes will be handled properly.
+* [Sesame serializer documentation](docs/SesameRdfFormatter.md)

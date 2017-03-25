@@ -46,11 +46,11 @@ class RdfXmlSorter private (input: Path) {
     doc
   }
 
-  def sortedAsString = org.ow2.easywsdl.tooling.java2wsdl.util.XMLSorter.sort(xmlDocument)
+  //  def sortedAsString = org.ow2.easywsdl.tooling.java2wsdl.util.XMLSorter.sort(xmlDocument) // TODO: [ABC] had to comment this out, not downloaded by build.sbt
 
-  def printIt() = {
-    print(sortedAsString)
-  }
+  //  def printIt() = { // TODO: [ABC] had to comment this out, not downloaded by build.sbt
+  //    print(sortedAsString)
+  //  }
 
 }
 

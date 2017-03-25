@@ -1,12 +1,11 @@
 import sbt.Keys.scalaVersion
-
 organization := "org.edmcouncil"
 
 organizationName := "Enterprise Data Management Council"
 
 name := "rdf-toolkit"
 
-version := "1.0.4-SNAPSHOT"
+version := "1.5.0"
 
 startYear := Some(2015)
 
@@ -21,13 +20,19 @@ scalaVersion := "2.11.8"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-bintrayResolverSettings
+javacOptions ++= Seq("-Xlint:unchecked")
+
+Seq(bintrayResolverSettings:_*)
 
 libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value
 
 val owlApiVersion = "4.0.1"
 
-val rdf4jVersion = "2.1.4"
+val rdf4jVersion = "2.2"
+
+libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.5" withSources()
 
@@ -49,14 +54,14 @@ libraryDependencies += "org.clapper" %% "avsl" % "1.0.13" withSources()
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSources()
 
-libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
+//libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
 
 //
 // Explicit loading of jackson-core to prevent merge issue in sbt-assembly
 //
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
+//libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
 // RDF4F Binding And Config
@@ -64,14 +69,24 @@ libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 libraryDependencies += "org.eclipse.rdf4j" % "rdf4j-runtime" % rdf4jVersion
 
 //
+// JSON-LD Java Binding & Config
+//
+libraryDependencies += "com.github.jsonld-java" % "jsonld-java" % "0.8.3"
+
+//
 // Apache Command-line Argument Handling Library used in Tony's Java code
 //
-libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
+libraryDependencies += "commons-cli" % "commons-cli" % "1.3.1"
+
+//
+// jline console utilities
+//
+libraryDependencies += "jline" % "jline" % "2.14.2"
 
 //
 // Argot Command-Line Argument Handling used in the Scala code
 //
-libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
+libraryDependencies += "org.clapper" %% "argot" % "1.0.4"
 
 //
 // Command Line Interface Scala Toolkit
@@ -123,5 +138,6 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [2] org.edmcouncil.rdf-toolkit.Main
 //
 mainClass in Compile := Some("org.edmcouncil.main.Main")
+// mainClass in Compile := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
 
 val `rdf-toolkit` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)

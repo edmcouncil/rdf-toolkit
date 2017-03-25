@@ -27,7 +27,8 @@ import java.nio.file.Path
 
 import org.clapper.argot.{ ArgotConversionException, ArgotUsageException }
 import org.edmcouncil.{ SerializerApi, SerializerApiOWLAPI }
-import org.edmcouncil.serializer.{ OwlApiOutputFormats, SesameRdfFormatter }
+import org.edmcouncil.serializer.OwlApiOutputFormats
+import org.edmcouncil.rdf_toolkit.{ SesameRdfFormatter, SesameSortedRDFWriterFactory }
 import org.edmcouncil.util.{ BaseURL, PotentialDirectory, PotentialFile }
 import scopt.{ OptionDef, Read }
 
@@ -41,7 +42,7 @@ object CommandLineParams {
   private val spacing = "                           "
   private val sep = s"\n$spacing - "
   private def outputFormatsOwlApi = OwlApiOutputFormats.outputDocumentFormatNames.mkString(sep, sep, "")
-  private def outputFormatsSesame = SesameRdfFormatter.TARGET_FORMATS.split(",").map(_.trim).mkString(sep, sep, "")
+  private def outputFormatsSesame = SesameSortedRDFWriterFactory.TargetFormats.values.mkString(sep, sep, "")
 
   private def preUsageText = s"${BooterProperties.name} version ${BooterProperties.versionFull} (${BooterProperties.generatedAt})"
 
