@@ -24,7 +24,7 @@
 package org.edmcouncil.main
 
 import org.rogach.scallop.exceptions._
-import org.rogach.scallop.{CliOption, Scallop}
+import org.rogach.scallop.{ CliOption, Scallop }
 
 private object CommandLineInterfaceSerializeCommand {
 
@@ -89,8 +89,8 @@ object CommandLineInterface {
       .version(BooterProperties.version)
       .banner(generalBanner.stripMargin)
       .footer(footer)
-      .toggle("verbose", default = () => Some(true), short = 'v')
-    //      .addSubBuilder(Seq("serialize"), CommandLineInterfaceSerializeCommand())
+      .toggle("verbose", default = () ⇒ Some(true), short = 'v')
+      //      .addSubBuilder(Seq("serialize"), CommandLineInterfaceSerializeCommand())
       .addSubBuilder(Seq("build"), CommandLineInterfaceBuildCommand())
 
     //    args: Seq[String] = Nil,
@@ -109,8 +109,8 @@ object CommandLineInterface {
     try {
       scallop.verify
     } catch {
-      case Help(command) => println(s"command=${command}")
-      case e @ Version => println("version")
+      case Help(command) ⇒ println(s"command=${command}")
+      case e @ Version   ⇒ println("version")
 
     }
 

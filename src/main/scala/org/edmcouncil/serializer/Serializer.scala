@@ -25,6 +25,7 @@ package org.edmcouncil.serializer
 
 import org.edmcouncil.main.CommandLineParams
 import org.edmcouncil.{ SerializerApiOWLAPI, SerializerApiRDF4J }
+import org.edmcouncil.rdf_toolkit.SesameRdfFormatter
 
 import scala.collection.mutable
 

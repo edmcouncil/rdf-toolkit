@@ -26,7 +26,7 @@ package org.edmcouncil.serializer
 import grizzled.slf4j.Logging
 import org.edmcouncil.main.CommandLineParams
 import org.edmcouncil.util.PotentialFile
-import org.openrdf.rio.RDFWriterRegistry
+import org.eclipse.rdf4j.rio.RDFWriterRegistry
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model._
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.XMLWriterPreferences

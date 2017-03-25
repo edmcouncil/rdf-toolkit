@@ -24,7 +24,7 @@
 package org.edmcouncil.serializer
 
 import grizzled.slf4j.Logging
-import org.openrdf.rio.{ RDFFormat, RDFWriterRegistry }
+import org.eclipse.rdf4j.rio.{ RDFFormat, RDFWriterRegistry }
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.OWLDocumentFormat
 
