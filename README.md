@@ -1,5 +1,7 @@
 ![EDM Council Logo](etc/image/edmc-logo.jpg)
 
+TODO: Update this document, it does not include the builder documentation!
+
 # rdf-toolkit
 
 The `rdf-toolkit` is a command-line 'swiss army knife' tool for reading and writing RDF and OWL files in whatever format.
@@ -134,4 +136,4 @@ input-file(s)  Input files to read. You can specify multiple input files, but th
                output file. (May be specified multiple times.)
 ```
 
-Note: For XML output syntax, blank nodes will be handled properly.
+* [Sesame serializer documentation](docs/SesameRdfFormatter.md)

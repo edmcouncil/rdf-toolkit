@@ -23,7 +23,7 @@
  */
 package org.edmcouncil.main
 
-import org.edmcouncil.serializer.Serializer
+//import org.edmcouncil.serializer.Serializer
 
 /**
  * Allow for the MainImpl to be executed from tests bypassing Main.

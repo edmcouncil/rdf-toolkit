@@ -67,8 +67,8 @@ class OwlApiUriRenamer(
 
   def renameMetadata() {
 
-    if (format.isPrefixOWLOntologyFormat) {
-      val prefixedFormat = format.asPrefixOWLOntologyFormat()
+    if (format.isPrefixOWLDocumentFormat) {
+      val prefixedFormat = format.asPrefixOWLDocumentFormat()
       val map = prefixedFormat.getPrefixName2PrefixMap.asScala
       for ((prefix, ns) ← map) {
         renameOneString(ns) { (from, to) ⇒
@@ -78,7 +78,7 @@ class OwlApiUriRenamer(
       }
     }
 
-    val inputOntologyMetadata = format.getOntologyLoaderMetaData
+    val inputOntologyMetadata = format.getOntologyLoaderMetaData.get
 
     inputOntologyMetadata match {
       case metadata: RDFParserMetaData ⇒ renameRDFParserMetaData(metadata)
@@ -133,7 +133,7 @@ class OwlApiUriRenamer(
 
     for (ontology ← ontologies) {
       val id = ontology.getOntologyID
-      val iri = Some(id.getOntologyIRI.orNull())
+      val iri = Option(id.getOntologyIRI.get)
       if (iri.isDefined) {
         renameOneIri(iri.get) { (from, to) ⇒
           info(s"Ontology IRI rename $from to $to")

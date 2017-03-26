@@ -18,6 +18,44 @@ When you're editing this file it is recommended to do this with Protege and to l
 # 
 # #################################################################
 # #
+# #    Annotation properties
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasCommand
+
+<https://spec.edmcouncil.org/command/command-ontology#hasCommand> a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasParentCommand
+
+<https://spec.edmcouncil.org/command/command-ontology#hasParentCommand> a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory
+
+<https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory> a owl:AnnotationProperty .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#hasLifecycleState
+
+:hasLifecycleState a owl:ObjectProperty ;
+	rdfs:domain ao:Domain ;
+	rdfs:range ao:LifecycleState ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-17T20:39:38Z"^^xsd:dateTime .
+# 
+# 
+# 
+# #################################################################
+# #
 # #    Individuals
 # #
 # #################################################################
@@ -35,43 +73,125 @@ When you're editing this file it is recommended to do this with Protege and to l
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
 	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:10:30Z"^^xsd:dateTime .
 # 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#branch-fibo-master
+
+:branch-fibo-master a owl:NamedIndividual , ao:Branch .
+# 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#command-build
 
 :command-build a owl:NamedIndividual , <https://spec.edmcouncil.org/command/command-ontology#Command> ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
-	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:05:03Z"^^xsd:dateTime .
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:05:03Z"^^xsd:dateTime ;
+	rdfs:label "build"@en .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#command-build-ontology
 
 :command-build-ontology a owl:NamedIndividual , <https://spec.edmcouncil.org/command/command-ontology#SubCommand> ;
-	<https://spec.edmcouncil.org/command/command-ontology#hasParentCommand> :command-build ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
-	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:26:22Z"^^xsd:dateTime .
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:26:22Z"^^xsd:dateTime ;
+	<https://spec.edmcouncil.org/command/command-ontology#hasParentCommand> :command-build .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#command-serialize
 
 :command-serialize a owl:NamedIndividual , <https://spec.edmcouncil.org/command/command-ontology#Command> ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
-	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:05:11Z"^^xsd:dateTime .
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:05:11Z"^^xsd:dateTime ;
+	rdfs:label "serialize"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#command-test
 
-:domain-fnd a owl:NamedIndividual , ao:Domain ;
+:command-test a owl:NamedIndividual , <https://spec.edmcouncil.org/command/command-ontology#Command> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-17T20:47:44Z"^^xsd:dateTime ;
+	rdfs:label "test"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Accounting
+
+:domain-fibo-Accounting a owl:NamedIndividual , ao:Domain ;
+	ao:domainIsSubDomainOf :domain-fibo-Foundations .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-AgentsAndPeople
+
+:domain-fibo-AgentsAndPeople a owl:NamedIndividual , ao:Domain ;
+	ao:domainIsSubDomainOf :domain-fibo-Foundations ;
+	rdfs:label "Agents and People" .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-BusinessAndCommerce
+
+:domain-fibo-BusinessAndCommerce a owl:NamedIndividual , ao:Domain ;
+	rdfs:label "Business and Commerce" .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-BusinessEntities
+
+:domain-fibo-BusinessEntities a owl:NamedIndividual , ao:Domain ;
+	rdfs:label "Business Entities" .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Corporations
+
+:domain-fibo-Corporations a owl:NamedIndividual , ao:Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Debt
+
+:domain-fibo-Debt a owl:NamedIndividual , ao:Domain ;
+	ao:domainIsSubDomainOf :domain-fibo-Securities .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Derivatives
+
+:domain-fibo-Derivatives a owl:NamedIndividual , ao:Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Foundations
+
+:domain-fibo-Foundations a owl:NamedIndividual , ao:Domain ;
+	owl:sameAs :domain-fibo-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-IndicesAndIndicators
+
+:domain-fibo-IndicesAndIndicators a owl:NamedIndividual , ao:Domain ;
+	rdfs:label "Indices and Indicators" .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Loan
+
+:domain-fibo-Loan a owl:NamedIndividual , ao:Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-Securities
+
+:domain-fibo-Securities a owl:NamedIndividual , ao:Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-fnd
+
+:domain-fibo-fnd a owl:NamedIndividual , ao:Domain ;
+	<https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory> "fnd"^^xsd:token ;
 	rdfs:comment "The Foundations Domain"@en ;
 	rdfs:label "FND"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-ind
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fibo-ind
 
-:domain-ind a owl:NamedIndividual , ao:Domain ;
-	<https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory> "ind"^^xsd:token ;
+:domain-fibo-ind a owl:NamedIndividual , ao:Domain ;
 	rdfs:comment "The Indexes & Indices Domain"@en ;
-	rdfs:label "IND"@en .
+	rdfs:label "IND"@en ;
+	<https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory> "ind"^^xsd:token .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#encoding-tar-gz
 
 :encoding-tar-gz a owl:NamedIndividual , ao:Encoding ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
 	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:30:19Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#ontology-fibo-AboutAccounting
+
+:ontology-fibo-AboutAccounting a owl:NamedIndividual , ao:Ontology ;
+	ao:hasDirectDomain :domain-fibo-Accounting ;
+	ao:hasDomain :domain-fibo-Foundations .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#ontology-fibo-AccountingEquity
+
+:ontology-fibo-AccountingEquity a owl:NamedIndividual , ao:Ontology ;
+	ao:hasDirectDomain :domain-fibo-Accounting .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#ontology-fibo-CurrencyAmount
+
+:ontology-fibo-CurrencyAmount a owl:NamedIndividual , ao:Ontology ;
+	ao:hasDirectDomain :domain-fibo-Accounting .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#option-debug
 
@@ -105,7 +225,7 @@ When you're editing this file it is recommended to do this with Protege and to l
 
 :product-family-dcam a owl:NamedIndividual , ao:ProductFamily ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
-	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:32:05Z"^^xsd:dateTime .
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:32:05Z"^^xsd:dateTime , "2017-03-26T18:27:58Z"^^xsd:dateTime .
 # 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#product-family-fibo
 
@@ -124,6 +244,30 @@ When you're editing this file it is recommended to do this with Protege and to l
 :rdfkit a owl:NamedIndividual , <https://spec.edmcouncil.org/command/command-ontology#Application> ;
 	<https://spec.edmcouncil.org/command/command-ontology#hasCommand> :command-build , :command-serialize .
 # 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#reasoning-level-owl-dl
+
+:reasoning-level-owl-dl a owl:NamedIndividual , ao:ReasoningLevel ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-26T18:29:30Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#reasoning-level-owl-el
+
+:reasoning-level-owl-el a owl:NamedIndividual , ao:ReasoningLevel ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-26T18:29:56Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#reasoning-level-owl-sl
+
+:reasoning-level-owl-sl a owl:NamedIndividual , ao:ReasoningLevel ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-26T18:29:43Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#reasoning-level-rdfs
+
+:reasoning-level-rdfs a owl:NamedIndividual , ao:ReasoningLevel ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-26T18:29:13Z"^^xsd:dateTime .
+# 
 # https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#serialization-format-json-ld
 
 :serialization-format-json-ld a owl:NamedIndividual , ao:SerializationFormat ;
@@ -141,5 +285,13 @@ When you're editing this file it is recommended to do this with Protege and to l
 :serialization-format-turtle a owl:NamedIndividual , ao:SerializationFormat ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
 	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:31:11Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#state-release
+
+:state-release a owl:NamedIndividual , ao:LifecycleState ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-17T20:37:40Z"^^xsd:dateTime ;
+	rdfs:comment "A Domain in the Release State has been published, in the current or in a previous form and is now in maintenance mode."@en ;
+	rdfs:label "Release"@en .
 # 
 # Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

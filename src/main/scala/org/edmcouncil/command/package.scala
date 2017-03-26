@@ -21,23 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.serializer
+package org.edmcouncil
 
-import java.io.OutputStream
+import org.semanticweb.owlapi.model.IRI
 
-import org.scalatest.{ Matchers, WordSpecLike }
+/**
+ * Constants for the Command Processing
+ */
+package object command {
 
-abstract class UnitSpec extends WordSpecLike with Matchers with OutputSuppressor
+  val CONFIG_FILE_NAME = "rdf-toolkit.ttl"
+  val CONFIG_FILE_IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl")
 
-trait OutputSuppressor {
-  def suppressOutput[T](thunk: ⇒ T): T = {
+  val COMMAND_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/command-ontology")
+  val ARTIFACT_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/artifact-ontology")
 
-    val bitBucket = new OutputStream() {
-      def write(b: Int) {}
-    }
-
-    Console.withOut(bitBucket) {
-      return thunk
-    }
-  }
 }

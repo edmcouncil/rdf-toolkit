@@ -30,3 +30,4 @@ addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.4.0")
 // https://github.com/sbt/sbt-scalariform
 //
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+

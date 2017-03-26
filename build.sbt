@@ -6,7 +6,7 @@ organizationName := "Enterprise Data Management Council"
 
 name := "rdf-toolkit"
 
-version := "1.0.4-SNAPSHOT"
+version := "2.0.0-SNAPSHOT"
 
 startYear := Some(2015)
 
@@ -17,17 +17,23 @@ developers := List(
 
 licenses += ("mit", new URL("https://opensource.org/licenses/MIT"))
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
-bintrayResolverSettings
+javacOptions ++= Seq("-Xlint:unchecked")
+
+Seq(bintrayResolverSettings:_*)
 
 libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value
 
-val owlApiVersion = "4.0.1"
+val owlApiVersion = "5.0.5"
 
-val rdf4jVersion = "2.1.4"
+val rdf4jVersion = "2.2"
+
+libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
 
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.5" withSources()
 
@@ -49,14 +55,14 @@ libraryDependencies += "org.clapper" %% "avsl" % "1.0.13" withSources()
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSources()
 
-libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
+//libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
 
 //
 // Explicit loading of jackson-core to prevent merge issue in sbt-assembly
 //
-libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
+//libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 
 //
 // RDF4F Binding And Config
@@ -64,29 +70,39 @@ libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.5.1"
 libraryDependencies += "org.eclipse.rdf4j" % "rdf4j-runtime" % rdf4jVersion
 
 //
+// JSON-LD Java Binding & Config
+//
+libraryDependencies += "com.github.jsonld-java" % "jsonld-java" % "0.10.0"
+
+//
 // Apache Command-line Argument Handling Library used in Tony's Java code
 //
-libraryDependencies += "commons-cli" % "commons-cli" % "1.2"
+libraryDependencies += "commons-cli" % "commons-cli" % "1.4"
+
+//
+// jline console utilities
+//
+libraryDependencies += "jline" % "jline" % "2.14.3"
 
 //
 // Argot Command-Line Argument Handling used in the Scala code
 //
-libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
+//libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
 
 //
 // Command Line Interface Scala Toolkit
 //
 // https://github.com/backuity/clist
 //
-libraryDependencies += "org.backuity.clist" %% "clist-core"   % "3.2.2"
-libraryDependencies += "org.backuity.clist" %% "clist-macros" % "3.2.2" % "provided"
+//libraryDependencies += "org.backuity.clist" %% "clist-core"   % "3.2.2"
+//libraryDependencies += "org.backuity.clist" %% "clist-macros" % "3.2.2" % "provided"
 
 //
 // Scallop CLI processing
 //
 // https://github.com/scallop/scallop
 //
-libraryDependencies += "org.rogach" %% "scallop" % "2.0.6"
+//libraryDependencies += "org.rogach" %% "scallop" % "2.0.6"
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
@@ -122,6 +138,12 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [1] org.edmcouncil.rdf-toolkit.SesameRdfFormatter
 // [2] org.edmcouncil.rdf-toolkit.Main
 //
-mainClass in Compile := Some("org.edmcouncil.main.Main")
+//mainClass in Compile := Some("org.edmcouncil.main.Main")
+mainClass in Compile := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
 
-val `rdf-toolkit` = project.in(file(".")).enablePlugins(AutomateHeaderPlugin)
+lazy val depProject = RootProject(uri("https://github.com/modelfabric/sparql-dl-api.git#master"))
+
+lazy val `rdf-toolkit` = project
+  .in(file("."))
+  .dependsOn(depProject)
+  .enablePlugins(AutomateHeaderPlugin)
