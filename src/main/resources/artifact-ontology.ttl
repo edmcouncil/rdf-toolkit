@@ -1,4 +1,4 @@
-@prefix : <https://spec.edmcouncil.org/rdfkit/artifact-ontology#> .
+@prefix : <https://spec.edmcouncil.org/rdfkit/artifact#> .
 @prefix co: <https://spec.edmcouncil.org/command/command-ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -6,8 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<https://spec.edmcouncil.org/rdfkit/artifact-ontology> a owl:Ontology ;
-	owl:imports <https://spec.edmcouncil.org/command/command-ontology> ;
+<https://spec.edmcouncil.org/rdfkit/artifact> a owl:Ontology ;
 	rdfs:comment "The Artifact Ontology of the RDF Toolkit is a model of all the \"Things\" that play a role in the process of generating publishable Artifacts on a \"specs\" site like https://spec.edmcouncil.org."@en ;
 	rdfs:seeAlso "https://wiki.edmcouncil.org/x/KYGJ"^^xsd:anyURI ;
 	rdfs:label "The Artifact Ontology"@en .
@@ -28,6 +27,18 @@
 
 <http://purl.org/dc/elements/1.1/date> a owl:AnnotationProperty .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact#domainIsSubDomainOf
+
+:domainIsSubDomainOf a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#hasDirectDomain
+
+:hasDirectDomain a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#hasDomain
+
+:hasDomain a owl:AnnotationProperty .
+# 
 # 
 # 
 # #################################################################
@@ -39,68 +50,75 @@
 # 
 # https://spec.edmcouncil.org/command/command-ontology#hasAction
 
-co:hasAction rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:hasAction a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#hasCommand
 
-co:hasCommand rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:hasCommand a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#hasOption
 
-co:hasOption rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:hasOption a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#hasParentCommand
 
-co:hasParentCommand rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:hasParentCommand a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#hasSubCommand
 
-co:hasSubCommand rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:hasSubCommand a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#invokedByCommand
 
-co:invokedByCommand rdfs:subPropertyOf owl:topObjectProperty .
-#
+co:invokedByCommand a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
 # https://spec.edmcouncil.org/command/command-ontology#isCommandOfApplication
 
-co:isCommandOfApplication rdfs:subPropertyOf owl:topObjectProperty .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#branchContainsFile
+co:isCommandOfApplication a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#branchContainsFile
 
 :branchContainsFile a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	owl:inverseOf :fileIsInBranch ;
 	rdfs:domain :Branch .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsDirectSubDomainOf
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#domainIsDirectSubDomainOf
 
 :domainIsDirectSubDomainOf a owl:ObjectProperty ;
 	rdfs:subPropertyOf :domainIsSubDomainOf ;
 	rdfs:domain :Domain ;
 	rdfs:range :Domain .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsSubDomainOf
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#domainIsSubDomainOf
 
 :domainIsSubDomainOf a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	a owl:TransitiveProperty ;
 	rdfs:domain :Domain ;
 	rdfs:range :Domain .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#fileIsInBranch
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#fileIsInBranch
 
 :fileIsInBranch a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	rdfs:range :Branch .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDirectDomain
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#hasDirectDomain
 
 :hasDirectDomain a owl:ObjectProperty ;
 	rdfs:subPropertyOf :hasDomain ;
 	rdfs:domain :Ontology ;
 	rdfs:range :Domain .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDomain
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#hasDomain
 
 :hasDomain a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
@@ -116,7 +134,7 @@ _:genid1 a rdf:List ;
 	rdf:first :domainIsSubDomainOf ;
 	rdf:rest rdf:nil .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasProductCategory
+# https://spec.edmcouncil.org/rdfkit/artifact#hasProductCategory
 
 :hasProductCategory a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
@@ -125,14 +143,14 @@ _:genid1 a rdf:List ;
 	rdfs:domain :Product ;
 	rdfs:range :ProductCategory .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#isBranchInRepository
+# https://spec.edmcouncil.org/rdfkit/artifact#isBranchInRepository
 
 :isBranchInRepository a owl:ObjectProperty ;
 	owl:inverseOf :repositoryContainsBranch ;
 	rdfs:domain :Branch ;
 	rdfs:range :Repository .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#isProductCategoryForProduct
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#isProductCategoryForProduct
 
 :isProductCategoryForProduct a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
@@ -140,22 +158,22 @@ _:genid1 a rdf:List ;
 	rdfs:domain :ProductCategory ;
 	rdfs:range :Product .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyFileContainsOntology
+# https://spec.edmcouncil.org/rdfkit/artifact#ontologyFileContainsOntology
 
 :ontologyFileContainsOntology a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	owl:inverseOf :ontologyIsInOntologyFile ;
-	rdfs:domain :SourceOntologyFile ;
+	rdfs:domain :SourceOntologyDocument ;
 	rdfs:range :Ontology .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyIsInOntologyFile
+# https://spec.edmcouncil.org/rdfkit/artifact#ontologyIsInOntologyFile
 
 :ontologyIsInOntologyFile a owl:ObjectProperty ;
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	rdfs:domain :Ontology ;
-	rdfs:range :SourceOntologyFile .
+	rdfs:range :SourceOntologyDocument .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#repositoryContainsBranch
+# https://spec.edmcouncil.org/rdfkit/artifact#repositoryContainsBranch
 
 :repositoryContainsBranch a owl:ObjectProperty ;
 	rdfs:domain :Repository ;
@@ -170,14 +188,14 @@ _:genid1 a rdf:List ;
 # #################################################################
 # 
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Artifact
+# https://spec.edmcouncil.org/rdfkit/artifact#Artifact
 
 :Artifact a owl:Class ;
 	rdfs:comment "An artifact is the specification of a physical piece of information that is used or produced by a software development process, or by deployment and operation of a system."@en ;
 	rdfs:label "Artifact"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/IQBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Branch
+# https://spec.edmcouncil.org/rdfkit/artifact#Branch
 
 :Branch a owl:Class ;
 	rdfs:comment """The term \"Branch\" is taken from Git. Branches are used to separate multiple tracks of development with different levels of maturity of the work on the artifacts in that track.For the FIBO ontologies we're usually seeing the following branches, where we use colors as their names where each color basically represents a different level of maturity of the FIBO ontologies in that branch:
@@ -190,33 +208,33 @@ _:genid1 a rdf:List ;
 The above scheme of branches changes over time, the RDF Toolkit has to be as flexible as possible with regards to the use of branches and basically just support whatever branch structure you have. However, in the rdf-toolkit config file we should be able to describe your branch model and for instance provide some documentation for it like above, which can be helpful for generating some HTML documentation pages on the target publication site such as https://spec.edmcouncil.org."""@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/KQBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Builder
+# https://spec.edmcouncil.org/rdfkit/artifact#Builder
 
 :Builder a owl:Class ;
 	rdfs:comment "A ﻿Builder is a process that takes the source artifacts for one given ﻿Product﻿ and generates all the publishable artifacts for that ﻿Product﻿."@en ;
 	rdfs:label "Builder"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/p4WJ> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Commit
+# https://spec.edmcouncil.org/rdfkit/artifact#Commit
 
 :Commit a owl:Class ;
 	rdfs:label "Commit"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/KwBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Domain
+# https://spec.edmcouncil.org/rdfkit/artifact#Domain
 
 :Domain a owl:Class ;
 	owl:disjointWith :Ontology ;
 	rdfs:label "Domain"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/HQBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Encoding
+# https://spec.edmcouncil.org/rdfkit/artifact#Encoding
 
 :Encoding a owl:Class ;
 	rdfs:label "Encoding"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JQBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#LifecycleState
+# https://spec.edmcouncil.org/rdfkit/artifact#LifecycleState
 
 :LifecycleState a owl:Class ;
 	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
@@ -224,43 +242,43 @@ The above scheme of branches changes over time, the RDF Toolkit has to be as fle
 	rdfs:comment "The Lifecycle State represents a maturity level state for an Artifact or Domain"@en ;
 	rdfs:label "Lifecycle State"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ontology
+# https://spec.edmcouncil.org/rdfkit/artifact#Ontology
 
 :Ontology a owl:Class ;
-	owl:disjointWith :SourceOntologyFile ;
+	owl:disjointWith :SourceOntologyDocument ;
 	rdfs:comment "Ontology in the OWL sense i.e. owl:Ontology axiom" .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyBasedSoftwareComponentProduct
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#OntologyBasedSoftwareComponentProduct
 
 :OntologyBasedSoftwareComponentProduct a owl:Class ;
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "An Ontology-based Software Component Product is a Product that consists of a software component such as a library that goes along with an Ontology, a model-driven software component such as the RDF Toolkit itself (which is based on the Artifact Ontology) and the Command Processor (which is based on the Command Ontology)"@en ;
 	rdfs:label "Ontology-based Software Component Product"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#OntologyProduct
+# https://spec.edmcouncil.org/rdfkit/artifact#OntologyProduct
 
 :OntologyProduct a owl:Class ;
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "An Ontology Product is a product that consists of Artifacts around OWL ontologies in all its various forms such as JSON-LD files, Turtle files, HTML documentation files, SVG visualizations and so forth"@en ;
 	rdfs:label "Ontology Product"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Product
+# https://spec.edmcouncil.org/rdfkit/artifact#Product
 
 :Product a owl:Class ;
 	rdfs:label "Product"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/CgBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductCategory
+# https://spec.edmcouncil.org/rdfkit/artifact#ProductCategory
 
 :ProductCategory a owl:Class .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductFamily
+# https://spec.edmcouncil.org/rdfkit/artifact#ProductFamily
 
 :ProductFamily a owl:Class ;
 	rdfs:label "Product Family"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/CABr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ReasoningLevel
+# https://spec.edmcouncil.org/rdfkit/artifact#ReasoningLevel
 
 :ReasoningLevel a owl:Class ;
 	rdfs:comment """For certain types of Artifacts that are being generated by the RDF Toolkit, it can be relevant to apply \"reasoning\" via a \"reasoner\" or \"inference engine\" in memory before writing out the Artifacts.The following levels of Reasoning might have to be supported:
@@ -281,18 +299,18 @@ The following reasoner products come to mind:
 	rdfs:label "Reasoning Level"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/A4GJ> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#RemoteDocumentationProduct
+# https://spec.edmcouncil.org/rdfkit/artifact#RemoteDocumentationProduct
 
 :RemoteDocumentationProduct a owl:Class ;
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "A Remote Documentation Product is a product that is defined by documentation on some remote site such as DCAM which is documented on a \"remote\" site like http://www.edmcouncil.org/dcam."@en ;
 	rdfs:label "Remote Documentation Product"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Repository
+# https://spec.edmcouncil.org/rdfkit/artifact#Repository
 
 :Repository a owl:Class .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SerializationFormat
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#SerializationFormat
 
 :SerializationFormat a owl:Class ;
 	rdfs:comment """The Artifacts that the RDF-Toolkit can generate can have all sorts of formats, also called serialization formats. For OWL ontologies for instance we have serialization formats like RDF/OWL, JSON-LD and Turtle.
@@ -317,8 +335,8 @@ Documentation Pages:
 - .."""@en ;
 	rdfs:label "Serialization Format"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/JwBr> .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SourceArtifact
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#SourceArtifact
 
 :SourceArtifact a owl:Class ;
 	rdfs:subClassOf :Artifact ;
@@ -328,30 +346,163 @@ Documentation Pages:
 	rdfs:comment "A Source Artifact exists before the \"build\" process is executed, it therefore is persisted in the git repository, whereas a Built Artifact has been generated or built from one or more Source Artifacts. However, a Source Artifact can also be \"published\" \"as is\" and could therefore also become a Built Artifact (with a different location though)."@en ;
 	rdfs:label "Source Artifact"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#SourceOntologyFile
+# https://spec.edmcouncil.org/rdfkit/artifact#SourceOntologyDocument
 
-:SourceOntologyFile a owl:Class ;
+:SourceOntologyDocument a owl:Class ;
 	rdfs:subClassOf :SourceArtifact ;
-	rdfs:label "Ontology File" .
-#
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#TargetArtifact
+	rdfs:label "Source Ontology Document"@en ;
+	rdfs:seeAlso "https://www.w3.org/TR/2009/REC-owl2-syntax-20091027/#Ontology_Documents"^^xsd:anyURI .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact#TargetArtifact
 
 :TargetArtifact a owl:Class ;
 	rdfs:subClassOf :Artifact ;
 	rdfs:comment "A Generated Artifact is produced by a \"builder\" from one or more Source Artifacts. Every generated artifact is publishable as a downloadable file and has a unique identity on the publication host."@en ;
 	rdfs:label "Target Artifact"@en .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Version
+# https://spec.edmcouncil.org/rdfkit/artifact#Version
 
 :Version a owl:Class ;
 	rdfs:label "Version"@en ;
 	rdfs:seeAlso <https://wiki.edmcouncil.org/x/LQBr> .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#VocabularyProduct
+# https://spec.edmcouncil.org/rdfkit/artifact#VocabularyProduct
 
 :VocabularyProduct a owl:Class ;
 	rdfs:subClassOf :ProductCategory ;
 	rdfs:comment "A Vocabulary Product is a Product that is based on the SKOS-ontology but uses a set of OWL ontologies as its \"authoritative source\", so the SKOS vocabulary (aka taxonomy aka Concept Scheme) is generated from OWL."@en ;
 	rdfs:label "Vocabulary Product"@en .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Individuals
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#branch-fibo-master
+
+<https://spec.edmcouncil.org/rdfkit/configuration#branch-fibo-master> a owl:NamedIndividual , :Branch .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Accounting
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Accounting> a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Foundations> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-AgentsAndPeople
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-AgentsAndPeople> a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Foundations> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-BusinessAndCommerce
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-BusinessAndCommerce> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-BusinessEntities
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-BusinessEntities> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Corporations
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Corporations> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Debt
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Debt> a owl:NamedIndividual , :Domain ;
+	:domainIsSubDomainOf <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Securities> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Derivatives
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Derivatives> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Foundations
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Foundations> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-IndicesAndIndicators
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-IndicesAndIndicators> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Loan
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Loan> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Securities
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Securities> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-fnd
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-fnd> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-ind
+
+<https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-ind> a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#encoding-tar-gz
+
+<https://spec.edmcouncil.org/rdfkit/configuration#encoding-tar-gz> a owl:NamedIndividual , :Encoding .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-AboutAccounting
+
+<https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-AboutAccounting> a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Accounting> ;
+	:hasDomain <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Foundations> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-AccountingEquity
+
+<https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-AccountingEquity> a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Accounting> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-CurrencyAmount
+
+<https://spec.edmcouncil.org/rdfkit/configuration#ontology-fibo-CurrencyAmount> a owl:NamedIndividual , :Ontology ;
+	:hasDirectDomain <https://spec.edmcouncil.org/rdfkit/configuration#domain-fibo-Accounting> .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#product-family-dcam
+
+<https://spec.edmcouncil.org/rdfkit/configuration#product-family-dcam> a owl:NamedIndividual , :ProductFamily .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#product-family-fibo
+
+<https://spec.edmcouncil.org/rdfkit/configuration#product-family-fibo> a owl:NamedIndividual , :ProductFamily .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#product-family-rdfkit
+
+<https://spec.edmcouncil.org/rdfkit/configuration#product-family-rdfkit> a owl:NamedIndividual , :ProductFamily .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-dl
+
+<https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-dl> a owl:NamedIndividual , :ReasoningLevel .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-el
+
+<https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-el> a owl:NamedIndividual , :ReasoningLevel .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-sl
+
+<https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-owl-sl> a owl:NamedIndividual , :ReasoningLevel .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-rdfs
+
+<https://spec.edmcouncil.org/rdfkit/configuration#reasoning-level-rdfs> a owl:NamedIndividual , :ReasoningLevel .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-json-ld
+
+<https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-json-ld> a owl:NamedIndividual , :SerializationFormat .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-rdf-xml
+
+<https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-rdf-xml> a owl:NamedIndividual , :SerializationFormat .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-turtle
+
+<https://spec.edmcouncil.org/rdfkit/configuration#serialization-format-turtle> a owl:NamedIndividual , :SerializationFormat .
+# 
+# https://spec.edmcouncil.org/rdfkit/configuration#state-release
+
+<https://spec.edmcouncil.org/rdfkit/configuration#state-release> a owl:NamedIndividual , :LifecycleState .
 # 
 # Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

@@ -32,8 +32,9 @@ package object command {
 
   val CONFIG_FILE_NAME = "rdf-toolkit.ttl"
   val CONFIG_FILE_IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl")
+  val CONFIG_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/configuration")
 
-  val COMMAND_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/command-ontology")
-  val ARTIFACT_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/artifact-ontology")
+  val COMMAND_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/command")
+  val ARTIFACT_ONTOLOGY_IRI: IRI = IRI.create("https://spec.edmcouncil.org/rdfkit/artifact")
 
 }
