@@ -33,6 +33,8 @@ import org.eclipse.jgit.util.FS
 
 import scala.util.Try
 
+import org.edmcouncil.extension.AutoCloseExtensions._
+
 /**
  * Wrapper around a JGit Repository
  *
@@ -69,11 +71,8 @@ class GitRepository private (val repository: org.eclipse.jgit.lib.Repository) {
     // Do the equivalent of "git rev-parse --short HEAD^{tree}"
     //
     val objectId = repository.resolve("HEAD^{tree}")
-    val reader = repository.newObjectReader
-    try {
+    autoClose(repository.newObjectReader) { reader ⇒
       reader.abbreviate(objectId, 7).name
-    } finally {
-      reader.release()
     }
   }
 }

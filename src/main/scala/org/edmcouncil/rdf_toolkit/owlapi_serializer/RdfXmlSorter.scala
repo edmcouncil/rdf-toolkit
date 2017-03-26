@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.serializer
+package org.edmcouncil.rdf_toolkit.owlapi_serializer
 
 import java.nio.file.Path
 import javax.xml.parsers.DocumentBuilderFactory

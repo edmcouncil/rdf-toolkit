@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.command
+package org.edmcouncil.rdf_toolkit.command
 
-import org.edmcouncil.test.UnitSpec
+import org.edmcouncil.test_util.UnitSpec
 
 /**
  * Test the OntologyManager utility object

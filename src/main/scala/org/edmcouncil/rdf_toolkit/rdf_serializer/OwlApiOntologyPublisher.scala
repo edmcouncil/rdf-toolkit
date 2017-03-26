@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_serializer
+package org.edmcouncil.rdf_toolkit.rdf_serializer
 
 import grizzled.slf4j.Logging
 import org.edmcouncil.fibo.EdmCouncilVersionIRI
@@ -95,7 +95,7 @@ class OwlApiOntologyPublisher(ontology: OWLOntology, format: OWLDocumentFormat, 
 
     OwlApiAnnotationAdder(ontology, annotationProperty, IRI.create(edmcFiboNamespaceIRI.toString, "test"))
 
-    for (annotation <- ontology.getAnnotations.asScala) {
+    for (annotation ← ontology.getAnnotations.asScala) {
       info(s"Annotation: $annotation")
     }
   }

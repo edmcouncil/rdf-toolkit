@@ -23,12 +23,12 @@
  */
 package org.edmcouncil.util
 
-import java.io.{BufferedInputStream, File, FileInputStream, FileOutputStream}
-import java.nio.file.{Files, Paths}
+import java.io.{ BufferedInputStream, File, FileInputStream, FileOutputStream }
+import java.nio.file.{ Files, Paths }
 
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.lib.{Ref, Repository}
-import org.semanticweb.owlapi.io.{OWLOntologyDocumentSource, StreamDocumentSource}
+import org.eclipse.jgit.lib.{ Ref, Repository }
+import org.semanticweb.owlapi.io.{ OWLOntologyDocumentSource, StreamDocumentSource }
 import org.semanticweb.owlapi.model.IRI
 
 import scala.collection.JavaConverters._

@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.command
+package org.edmcouncil.rdf_toolkit.command
 
 import java.io.File
 import java.nio.file.{ Files, Path, Paths }
 import org.semanticweb.owlapi.model.IRI
 
-/**
- * Created by jgeluk on 12/03/2017.
- */
 object ConfigFile {
 
   private lazy val configFile: Option[File] = {

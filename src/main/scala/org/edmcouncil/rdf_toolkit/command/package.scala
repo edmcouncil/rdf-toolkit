@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil
+package org.edmcouncil.rdf_toolkit
 
 import org.semanticweb.owlapi.model.IRI
 

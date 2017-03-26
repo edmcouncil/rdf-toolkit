@@ -108,14 +108,14 @@ libraryDependencies += "jline" % "jline" % "2.14.3"
 // Java library JGit used to read git log for the input file and determine what default versionIRI to use when
 // publishing.
 //
-libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "3.7.0.201502260915-r"
+libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "4.6.1.201703071140-r"
 
 //
 // Scala ARM library
 //
 // https://github.com/jsuereth/scala-arm
 //
-libraryDependencies += "com.jsuereth" %% "scala-arm" % "1.4"
+libraryDependencies += "com.jsuereth" %% "scala-arm" % "2.0"
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties
