@@ -24,19 +24,18 @@
 package org.edmcouncil.rdf_toolkit;
 
 import org.apache.commons.cli.*;
-import org.openrdf.model.*;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.model.impl.TreeModel;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-
-import java.io.*;
-import java.util.*;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.impl.TreeModel;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * RDF formatter that formats in a consistent order, friendly for version control systems.

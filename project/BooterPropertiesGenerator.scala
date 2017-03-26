@@ -14,19 +14,21 @@ import scala.util.Try
 object BooterPropertiesGenerator {
 
   def apply(
-    dir: File, 
+    dir: File,
+    licenses: Seq[(String, URL)],
     organization: String, 
     name: String, 
     version: String,
     scalaVersion: String
-  ): Seq[File] = generate(dir, organization, name, version, scalaVersion)
+  ): Seq[File] = generate(dir, licenses, organization, name, version, scalaVersion)
 
   /**
    * Generate the file ./target/scala-<version>/resource_managed/main/booter.properties
    * when sbt run or package is executed.
    */
   private def generate(
-    dir: File, 
+    dir: File,
+    licenses: Seq[(String, URL)],
     organization: String, 
     name: String, 
     version: String,
@@ -40,19 +42,22 @@ object BooterPropertiesGenerator {
     val now           = new java.util.Date()
     val year          = new java.text.SimpleDateFormat("yyyy").format(now)
     val nowString     = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(now)
-    val content = s"""#
-# Copyright © $year EDM Council
-#
-booter.organization   = $organization
-booter.name           = $name
-booter.version        = $version
-booter.scala.version  = $scalaVersion
-booter.git.hash.long  = $gitLongHash
-booter.git.hash.short = $gitShortHash
-booter.git.branch     = $gitBranch
-booter.generated.at   = $nowString
-#
-"""
+    val content = s"""
+      |#
+      |# Copyright © $year EDM Council
+      |#
+      |booter.copyright      = Copyright © $year EDM Council
+      |booter.license        = ${licenses}
+      |booter.organization   = $organization
+      |booter.name           = $name
+      |booter.version        = $version
+      |booter.scala.version  = $scalaVersion
+      |booter.git.hash.long  = $gitLongHash
+      |booter.git.hash.short = $gitShortHash
+      |booter.git.branch     = $gitBranch
+      |booter.generated.at   = $nowString
+      |#
+    """.stripMargin
 
     def stripContent(x: String) = x.replaceAll("booter.generated.at.*", "").replaceAll("""(?m)\s+$""", "")
 

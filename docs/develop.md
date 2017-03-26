@@ -2,7 +2,7 @@
 
 ## develop
 
-The primary development IDE used for this project is [IntelliJ IDEA 14.1](http://www.jetbrains.com/idea/).
+The primary development IDE used for this project is [IntelliJ IDEA (http://www.jetbrains.com/idea/).
 Also install their [Scala plugin](https://confluence.jetbrains.com/display/SCA/Scala+Plugin+for+IntelliJ+IDEA).
 
 ## build
@@ -13,6 +13,12 @@ The current Jenkins build status is:
 [![Build Status](https://jenkins.edmcouncil.org/buildStatus/icon?job=rdf-toolkit-build)](https://jenkins.edmcouncil.org/job/rdf-toolkit-build/)
 
 ## test
+
+You can run the rdf-toolkit without first packaging it as a jar (see "package" below) by launching it via sbt:
+
+```
+sbt "run --help"
+```
 
 All the unit tests can be executed by this command:
 
@@ -38,7 +44,8 @@ This creates a jar file like:
 
 ### packaging as "uber jar"
 
-The RDF Serializer is packaged as one "fat jar" or "uber jar" which can be downloaded from the Jenkins server:
+The RDF Toolkit is packaged as one "fat jar" or "uber jar" which can be downloaded 
+from the EDM Council Jenkins server:
 
 - https://jenkins.edmcouncil.org/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-toolkit.jar
 

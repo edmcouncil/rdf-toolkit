@@ -24,8 +24,8 @@
 package org.edmcouncil.rdf_toolkit;
 
 import info.aduna.io.IndentingWriter;
-import org.openrdf.model.*;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -34,7 +34,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Equivalent to Sesame's built-in JSON-LD writer, but the triples are sorted into a consistent order.

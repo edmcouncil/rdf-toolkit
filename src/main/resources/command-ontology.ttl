@@ -1,0 +1,337 @@
+@prefix : <https://spec.edmcouncil.org/command/command-ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology> a owl:Ontology ;
+	rdfs:label "The EDM Council Command Ontology"@en ;
+	rdfs:comment "The EDM Council Command Ontology defines \"commands\", their \"sub-commands\" and their \"options\" and \"parameters\" and their \"actions\" so that a Command Processor can provide a Command Line Interface (CLI) or the equivalent web based interface."@en .
+# 
+# 
+# #################################################################
+# #
+# #    Annotation properties
+# #
+# #################################################################
+# 
+# 
+# http://purl.org/dc/elements/1.1/creator
+
+<http://purl.org/dc/elements/1.1/creator> a owl:AnnotationProperty .
+# 
+# http://purl.org/dc/elements/1.1/date
+
+<http://purl.org/dc/elements/1.1/date> a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasCommand
+
+:hasCommand a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#hasParentCommand
+
+:hasParentCommand a owl:AnnotationProperty .
+# 
+# https://spec.edmcouncil.org/command/command-ontology#relativeRootDirectory
+
+:relativeRootDirectory a owl:AnnotationProperty .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Object Properties
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#hasAction
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#hasAction> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	owl:inverseOf <https://spec.edmcouncil.org/rdfkit/command-ontology#invokedByCommand> ;
+	a owl:FunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#Action> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:36:00Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#hasCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#hasCommand> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Application> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:07:11Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#hasOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#hasOption> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	owl:inverseOf <https://spec.edmcouncil.org/rdfkit/command-ontology#optionOfOwner> ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#OptionOwner> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:40:00Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#hasParentCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#hasParentCommand> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	owl:inverseOf <https://spec.edmcouncil.org/rdfkit/command-ontology#hasSubCommand> ;
+	a owl:FunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#SubCommand> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#ParentCommand> .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#hasSubCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#hasSubCommand> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#ParentCommand> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#SubCommand> .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#invokedByCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#invokedByCommand> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Action> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:36:44Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#isCommandOfApplication
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#isCommandOfApplication> a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	a owl:FunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#Application> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:06:20Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#optionOfOwner
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#optionOfOwner> a owl:ObjectProperty , owl:FunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	rdfs:range <https://spec.edmcouncil.org/rdfkit/command-ontology#OptionOwner> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:40:34Z"^^xsd:dateTime .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Data properties
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#alternativeOptionLabel
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#alternativeOptionLabel> a owl:DatatypeProperty ;
+	rdfs:subPropertyOf owl:topDataProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	rdfs:range xsd:string ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:21:03Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#falseOptionLabel
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#falseOptionLabel> a owl:DatatypeProperty ;
+	rdfs:subPropertyOf <https://spec.edmcouncil.org/rdfkit/command-ontology#oppositeOptionLabel> ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#TrueOption> ;
+	rdfs:range xsd:string ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:19:17Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#oppositeOptionLabel
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#oppositeOptionLabel> a owl:DatatypeProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#BooleanOption> ;
+	rdfs:range xsd:string ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:14:53Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#optionLabel
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#optionLabel> a owl:DatatypeProperty , owl:FunctionalProperty ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	rdfs:range xsd:string ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:20:22Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#relativeRootDirectory
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#relativeRootDirectory> a owl:DatatypeProperty ;
+	rdfs:range xsd:token ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:33:27Z"^^xsd:dateTime ;
+	rdfs:comment "The root directory where all OWL files can be found for the given Domain. Must be relative to the location of the rdf-toolkit.ttl config file (or when option --repo-root is given relative to that."@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#trueOptionLabel
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#trueOptionLabel> a owl:DatatypeProperty ;
+	rdfs:subPropertyOf <https://spec.edmcouncil.org/rdfkit/command-ontology#oppositeOptionLabel> ;
+	rdfs:domain <https://spec.edmcouncil.org/rdfkit/command-ontology#FalseOption> ;
+	rdfs:range xsd:string ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:19:26Z"^^xsd:dateTime .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Classes
+# #
+# #################################################################
+# 
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#Action
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#Action> a owl:Class ;
+	rdfs:comment "Abstract class Action, defines what needs to be done once the Command (or sub-command) is executed. Define your own specific sub-classes under Action in your own Ontology."@en ;
+	rdfs:label "Action"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#Application
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#Application> a owl:Class ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "An Application \"owns\" one or more first-level Commands"@en ;
+	rdfs:label "Root"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#BooleanOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#BooleanOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:12:37Z"^^xsd:dateTime ;
+	rdfs:comment "A Boolean Option is an option that can results, when given, in a value that's either true or false"@en ;
+	rdfs:label "Boolean Option"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#Command
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#Command> a owl:Class ;
+	rdfs:subClassOf owl:Thing , <https://spec.edmcouncil.org/rdfkit/command-ontology#OptionOwner> ;
+	rdfs:comment "A Command is a word, usually a verb like \"serialize\" or \"build\" that links to an Action and can have associated Options and Parameters and optionally can have Sub-commands."@en ;
+	rdfs:label "Command"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#FalseOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#FalseOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#BooleanOption> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:13:59Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#FileOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#FileOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:22:51Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#JavaMainFunction
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#JavaMainFunction> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Action> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:33:35Z"^^xsd:dateTime ;
+	rdfs:comment "Calls a given Java main function"@en ;
+	rdfs:label "Java Main Function"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#NumericOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#NumericOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:21:51Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#Option
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#Option> a owl:Class ;
+	rdfs:label "Option"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#OptionOwner
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#OptionOwner> a owl:Class ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:37:54Z"^^xsd:dateTime ;
+	rdfs:comment "An OptionOwner is either a Root or Command owning a set of potential Options"@en ;
+	rdfs:label "Option Owner"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#Parameter
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#Parameter> a owl:Class ;
+	rdfs:label "Parameter"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#ParentCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#ParentCommand> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	rdfs:comment "When a Command has sub-commands then its a Parent Command"@en ;
+	rdfs:label "Parent Command"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#ScalaObjectApplyMethod
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#ScalaObjectApplyMethod> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Action> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T19:33:56Z"^^xsd:dateTime ;
+	rdfs:comment "Calls a given apply method of a given Scala object"@en ;
+	rdfs:label "Scala Object Apply Method"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#StringOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#StringOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:22:43Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#SubCommand
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#SubCommand> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Command> ;
+	rdfs:comment "A Command is a Sub-command when it has a parent Command not being the Root."@en ;
+	rdfs:label "Sub-command"@en .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#TrueOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#TrueOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#BooleanOption> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:13:50Z"^^xsd:dateTime .
+# 
+# https://spec.edmcouncil.org/rdfkit/command-ontology#UrlOption
+
+<https://spec.edmcouncil.org/rdfkit/command-ontology#UrlOption> a owl:Class ;
+	rdfs:subClassOf <https://spec.edmcouncil.org/rdfkit/command-ontology#Option> ;
+	<http://purl.org/dc/elements/1.1/creator> <http://orcid.org/0000-0003-2309-5068> ;
+	<http://purl.org/dc/elements/1.1/date> "2017-03-05T20:22:35Z"^^xsd:dateTime .
+# 
+# 
+# 
+# #################################################################
+# #
+# #    Annotations
+# #
+# #################################################################
+# 
+# 
+
+<https://spec.edmcouncil.org/rdfkit/configuration-file#command-build-ontology> :hasParentCommand <https://spec.edmcouncil.org/rdfkit/configuration-file#command-build> .
+# 
+
+<https://spec.edmcouncil.org/rdfkit/configuration-file#domain-fibo-fnd> :relativeRootDirectory "fnd"^^xsd:token .
+# 
+
+<https://spec.edmcouncil.org/rdfkit/configuration-file#domain-fibo-ind> :relativeRootDirectory "ind"^^xsd:token .
+# 
+
+<https://spec.edmcouncil.org/rdfkit/configuration-file#rdfkit> :hasCommand <https://spec.edmcouncil.org/rdfkit/configuration-file#command-serialize> , <https://spec.edmcouncil.org/rdfkit/configuration-file#command-build> .
+# 
+# Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi

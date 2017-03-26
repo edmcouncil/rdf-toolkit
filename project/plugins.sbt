@@ -1,6 +1,6 @@
 
 
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.13.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
 
 //
 // https://github.com/orrsella/sbt-sublime
@@ -30,3 +30,4 @@ addSbtPlugin("de.heikoseeberger" % "sbt-header" % "1.4.0")
 // https://github.com/sbt/sbt-scalariform
 //
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+

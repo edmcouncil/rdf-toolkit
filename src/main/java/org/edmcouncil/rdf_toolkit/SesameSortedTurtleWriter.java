@@ -24,8 +24,8 @@
 package org.edmcouncil.rdf_toolkit;
 
 import info.aduna.io.IndentingWriter;
-import org.openrdf.model.*;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,8 @@ import org.openrdf.rio.RDFHandlerException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * Equivalent to Sesame's built-in Turtle writer, but the triples are sorted into a consistent order.
