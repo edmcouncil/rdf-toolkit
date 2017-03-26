@@ -1,0 +1,640 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY Roles "http://spec.edmcouncil.org/fibo/FND/Parties/Roles/" >
+    <!ENTITY Relations "http://spec.edmcouncil.org/fibo/FND/Relations/Relations/" >
+    <!ENTITY Debt "http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/" >
+    <!ENTITY Contracts "http://spec.edmcouncil.org/fibo/FND/Agreements/Contracts/" >
+    <!ENTITY Agents "http://spec.edmcouncil.org/fibo/FND/AgentsAndPeople/Agents/" >
+    <!ENTITY IRSwaps "http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/" >
+    <!ENTITY CurrencyAmount "http://spec.edmcouncil.org/fibo/FND/Accounting/CurrencyAmount/" >
+    <!ENTITY Swaps "http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/" >
+    <!ENTITY Control "http://spec.edmcouncil.org/fibo/FND/OwnershipAndControl/Control/" >
+    <!ENTITY tst-ir-swap "http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/" >
+    <!ENTITY InterestRates "http://spec.edmcouncil.org/fibo/IND/InterestRates/InterestRates/" >
+    <!ENTITY Ownership "http://spec.edmcouncil.org/fibo/FND/OwnershipAndControl/Ownership/" >
+    <!ENTITY BusinessFacingTypes "http://spec.edmcouncil.org/fibo/FND/Utilities/BusinessFacingTypes/" >
+]>
+
+
+<rdf:RDF xmlns="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/"
+     xml:base="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/"
+     xmlns:tst-ir-swap="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/"
+     xmlns:Relations="http://spec.edmcouncil.org/fibo/FND/Relations/Relations/"
+     xmlns:Contracts="http://spec.edmcouncil.org/fibo/FND/Agreements/Contracts/"
+     xmlns:IRSwaps="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/"
+     xmlns:CurrencyAmount="http://spec.edmcouncil.org/fibo/FND/Accounting/CurrencyAmount/"
+     xmlns:Control="http://spec.edmcouncil.org/fibo/FND/OwnershipAndControl/Control/"
+     xmlns:Agents="http://spec.edmcouncil.org/fibo/FND/AgentsAndPeople/Agents/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:InterestRates="http://spec.edmcouncil.org/fibo/IND/InterestRates/InterestRates/"
+     xmlns:Debt="http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:BusinessFacingTypes="http://spec.edmcouncil.org/fibo/FND/Utilities/BusinessFacingTypes/"
+     xmlns:Ownership="http://spec.edmcouncil.org/fibo/FND/OwnershipAndControl/Ownership/"
+     xmlns:Swaps="http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/"
+     xmlns:Roles="http://spec.edmcouncil.org/fibo/FND/Parties/Roles/">
+    <owl:Ontology rdf:about="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/">
+        <owl:imports rdf:resource="http://spec.edmcouncil.org/fibo/BE/Corporations/TestCorporations/"/>
+        <owl:imports rdf:resource="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwapRules/"/>
+        <owl:imports rdf:resource="http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/hasLeg -->
+
+    <owl:AnnotationProperty rdf:about="&Swaps;hasLeg"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/hasPayingParty -->
+
+    <owl:AnnotationProperty rdf:about="&Swaps;hasPayingParty"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/hasReceivingParty -->
+
+    <owl:AnnotationProperty rdf:about="&Swaps;hasReceivingParty"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/hasNotionalStepSchedule -->
+
+    <owl:AnnotationProperty rdf:about="&IRSwaps;hasNotionalStepSchedule"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/specifies -->
+
+    <owl:AnnotationProperty rdf:about="&IRSwaps;specifies"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/hasInterestRate -->
+
+    <owl:AnnotationProperty rdf:about="&Debt;hasInterestRate"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/isBasedOn -->
+
+    <owl:AnnotationProperty rdf:about="&Debt;isBasedOn"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FND/Accounting/CurrencyAmount/hasAmount -->
+
+    <owl:AnnotationProperty rdf:about="&CurrencyAmount;hasAmount"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FND/Accounting/CurrencyAmount/hasCurrency -->
+
+    <owl:AnnotationProperty rdf:about="&CurrencyAmount;hasCurrency"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FND/Accounting/CurrencyAmount/hasRateValue -->
+
+    <owl:AnnotationProperty rdf:about="&CurrencyAmount;hasRateValue"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FND/Parties/Roles/isPlayedBy -->
+
+    <owl:AnnotationProperty rdf:about="&Roles;isPlayedBy"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/IND/InterestRates/InterestRates/hasReferenceRate -->
+
+    <owl:AnnotationProperty rdf:about="&InterestRates;hasReferenceRate"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://org.semanticweb.owlapi/error#Error1 -->
+
+    <owl:Class rdf:about="http://org.semanticweb.owlapi/error#Error1"/>
+    
+
+
+    <!-- http://org.semanticweb.owlapi/error#Error2 -->
+
+    <owl:Class rdf:about="http://org.semanticweb.owlapi/error#Error2"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/Swap -->
+
+    <owl:Class rdf:about="&Swaps;Swap"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/SwapLeg -->
+
+    <rdf:Description rdf:about="&Swaps;SwapLeg">
+        <rdfs:label>Sample
+</rdfs:label>
+    </rdf:Description>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/DerivativesContracts/Swaps/SwapParty -->
+
+    <owl:Class rdf:about="&Swaps;SwapParty"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/NotionalStepAmount -->
+
+    <owl:Class rdf:about="&IRSwaps;NotionalStepAmount"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/IRSwaps/NotionalStepSchedule -->
+
+    <owl:Class rdf:about="&IRSwaps;NotionalStepSchedule"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/FixedInterestRate -->
+
+    <owl:Class rdf:about="&Debt;FixedInterestRate"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/FBC/DebtAndEquities/Debt/FloatingInterestRate -->
+
+    <owl:Class rdf:about="&Debt;FloatingInterestRate"/>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/IND/InterestRates/CommonInterestRates/USDollarLIBOR -->
+
+    <owl:Class rdf:about="http://spec.edmcouncil.org/fibo/IND/InterestRates/CommonInterestRates/USDollarLIBOR"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/LIBOR1 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;LIBOR1">
+        <rdf:type rdf:resource="http://spec.edmcouncil.org/fibo/IND/InterestRates/CommonInterestRates/USDollarLIBOR"/>
+        <CurrencyAmount:hasRateValue rdf:datatype="&xsd;decimal">2.250</CurrencyAmount:hasRateValue>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01">
+        <rdf:type rdf:resource="http://org.semanticweb.owlapi/error#Error1"/>
+        <rdf:type rdf:resource="&Swaps;Swap"/>
+        <Swaps:hasLeg rdf:resource="&tst-ir-swap;Swap-SC01-Leg-1"/>
+        <Swaps:hasLeg rdf:resource="&tst-ir-swap;Swap-SC01-Leg-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-1 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-1">
+        <rdf:type rdf:resource="&Swaps;SwapLeg"/>
+        <Debt:hasInterestRate rdf:resource="&tst-ir-swap;Swap-SC01-Leg-1-Fixed-Rate"/>
+        <IRSwaps:hasNotionalStepSchedule rdf:resource="&tst-ir-swap;Swap-SC01-Leg-1-Notional-Step-Schedule"/>
+        <Swaps:hasPayingParty rdf:resource="&tst-ir-swap;Swap-SC01-Party-1"/>
+        <Swaps:hasReceivingParty rdf:resource="&tst-ir-swap;Swap-SC01-Party-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-1-Fixed-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-1-Fixed-Rate">
+        <rdf:type rdf:resource="&Debt;FixedInterestRate"/>
+        <CurrencyAmount:hasRateValue rdf:datatype="&xsd;decimal">.05</CurrencyAmount:hasRateValue>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">2500000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC01-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-2 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-2">
+        <rdf:type rdf:resource="&Swaps;SwapLeg"/>
+        <Debt:hasInterestRate rdf:resource="&tst-ir-swap;Swap-SC01-Leg-2-Floating-Rate"/>
+        <IRSwaps:hasNotionalStepSchedule rdf:resource="&tst-ir-swap;Swap-SC01-Leg-2-Notional-Step-Schedule"/>
+        <Swaps:hasReceivingParty rdf:resource="&tst-ir-swap;Swap-SC01-Party-1"/>
+        <Swaps:hasPayingParty rdf:resource="&tst-ir-swap;Swap-SC01-Party-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-2-Floating-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-2-Floating-Rate">
+        <rdf:type rdf:resource="&Debt;FloatingInterestRate"/>
+        <InterestRates:hasReferenceRate rdf:resource="&tst-ir-swap;LIBOR"/>
+        <Debt:isBasedOn rdf:resource="&tst-ir-swap;LIBOR1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">2500000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC01-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Party-1 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Party-1">
+        <rdf:type rdf:resource="&Swaps;SwapParty"/>
+        <Roles:isPlayedBy rdf:resource="http://spec.edmcouncil.org/fibo/BE/Corporations/TestCorporations/GlobalBank"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC01-Party-2 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC01-Party-2">
+        <rdf:type rdf:resource="&Swaps;SwapParty"/>
+        <Roles:isPlayedBy rdf:resource="http://spec.edmcouncil.org/fibo/BE/Corporations/TestCorporations/WallStreetBank"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02">
+        <rdf:type rdf:resource="http://org.semanticweb.owlapi/error#Error2"/>
+        <rdf:type rdf:resource="&Swaps;Swap"/>
+        <Swaps:hasLeg rdf:resource="&tst-ir-swap;Swap-SC02-Leg-1"/>
+        <Swaps:hasLeg rdf:resource="&tst-ir-swap;Swap-SC02-Leg-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-1 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-1">
+        <rdf:type rdf:resource="&Swaps;SwapLeg"/>
+        <Debt:hasInterestRate rdf:resource="&tst-ir-swap;Swap-SC01-Leg-2-Floating-Rate"/>
+        <IRSwaps:hasNotionalStepSchedule rdf:resource="&tst-ir-swap;Swap-SC02-Leg-1-Notional-Step-Schedule"/>
+        <Swaps:hasPayingParty rdf:resource="&tst-ir-swap;Swap-SC02-Party-1"/>
+        <Swaps:hasReceivingParty rdf:resource="&tst-ir-swap;Swap-SC02-Party-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-1-Floating-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-1-Floating-Rate">
+        <rdf:type rdf:resource="&Debt;FloatingInterestRate"/>
+        <Debt:isBasedOn rdf:resource="&tst-ir-swap;LIBOR1"/>
+        <InterestRates:hasReferenceRate rdf:resource="&tst-ir-swap;USD-FederalFunds-H15"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">5650000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC02-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-2 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-2">
+        <rdf:type rdf:resource="&Swaps;SwapLeg"/>
+        <Debt:hasInterestRate rdf:resource="&tst-ir-swap;Swap-SC02-Leg-2-Floating-Rate"/>
+        <IRSwaps:hasNotionalStepSchedule rdf:resource="&tst-ir-swap;Swap-SC02-Leg-2-Notional-Step-Schedule"/>
+        <Swaps:hasReceivingParty rdf:resource="&tst-ir-swap;Swap-SC02-Party-1"/>
+        <Swaps:hasPayingParty rdf:resource="&tst-ir-swap;Swap-SC02-Party-2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-2-Floating-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-2-Floating-Rate">
+        <rdf:type rdf:resource="&Debt;FloatingInterestRate"/>
+        <Debt:isBasedOn rdf:resource="&tst-ir-swap;LIBOR1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">5650000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/Euro"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC02-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Party-1 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Party-1">
+        <rdf:type rdf:resource="&Swaps;SwapParty"/>
+        <Roles:isPlayedBy rdf:resource="http://spec.edmcouncil.org/fibo/BE/Corporations/TestCorporations/AtlasBank"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC02-Party-2 -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC02-Party-2">
+        <rdf:type rdf:resource="&Swaps;SwapParty"/>
+        <Roles:isPlayedBy rdf:resource="http://spec.edmcouncil.org/fibo/BE/Corporations/TestCorporations/LondonBank"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC03-Leg-1-Fixed-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC03-Leg-1-Fixed-Rate">
+        <rdf:type rdf:resource="&Debt;FixedInterestRate"/>
+        <CurrencyAmount:hasRateValue rdf:datatype="&xsd;decimal">.0375</CurrencyAmount:hasRateValue>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC03-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC03-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">1000000.00</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC03-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC03-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC03-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC03-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC03-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">1000000.00</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/Euro"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC03-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC03-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC03-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC04-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC04-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">2000000.00</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC04-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC04-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC04-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC04-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC04-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">2000000.00</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/Euro"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC04-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC04-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC04-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC05-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC05-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">7460000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC05-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC05-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC05-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC05-Leg-2-Fixed-Rate -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC05-Leg-2-Fixed-Rate">
+        <rdf:type rdf:resource="&Debt;FixedInterestRate"/>
+        <CurrencyAmount:hasRateValue rdf:datatype="&xsd;decimal">.045</CurrencyAmount:hasRateValue>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC05-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC05-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">7460000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC05-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC05-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC05-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC06-Leg-1-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC06-Leg-1-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">8531000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/USDollar"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC06-Leg-1-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC06-Leg-1-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC06-Leg-1-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC06-Leg-2-Notional-Step-Amount -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC06-Leg-2-Notional-Step-Amount">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepAmount"/>
+        <CurrencyAmount:hasAmount rdf:datatype="&xsd;decimal">8531000</CurrencyAmount:hasAmount>
+        <CurrencyAmount:hasCurrency rdf:resource="http://spec.edmcouncil.org/fibo/FND/Accounting/ISO4217-CurrencyCodes/Euro"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://spec.edmcouncil.org/fibo/DER/RateDerivatives/TestIRSwaps/Swap-SC06-Leg-2-Notional-Step-Schedule -->
+
+    <owl:NamedIndividual rdf:about="&tst-ir-swap;Swap-SC06-Leg-2-Notional-Step-Schedule">
+        <rdf:type rdf:resource="&IRSwaps;NotionalStepSchedule"/>
+        <IRSwaps:specifies rdf:resource="&tst-ir-swap;Swap-SC06-Leg-2-Notional-Step-Amount"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="&tst-ir-swap;Swap-SC01-Leg-1"/>
+            <rdf:Description rdf:about="&tst-ir-swap;Swap-SC02-Leg-2"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

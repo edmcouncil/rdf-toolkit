@@ -1,6 +1,6 @@
 # Supported Output Formats
 
-The `rdf-serializer` supports the following output formats:
+The `rdf-toolkit` supports the following output formats:
 
 | Format | Default File Extension | Mime Type | Notes |
 | ------ | -------------- | --------- | ----- |

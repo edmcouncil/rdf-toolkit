@@ -23,7 +23,7 @@
  */
 package org.edmcouncil.main
 
-import org.edmcouncil.rdf_serializer.Serializer
+//import org.edmcouncil.serializer.Serializer
 
 /**
  * Allow for the MainImpl to be executed from tests bypassing Main.
@@ -40,23 +40,25 @@ object MainImpl {
  */
 class MainImpl(args: Array[String]) {
 
-  val params = CommandLineParams(args)
+  //  CommandLineInterface.main(args)
 
-  private def run2: Int = if (params.shouldShowVersion) {
-    println(BooterProperties.versionFull)
-    0
-  } else if (params.specifiedHelp) {
-    params.showUsage
-    0
-  } else {
-    //
-    // Run the Serializer as if it were a function that returns an Int
-    //
-    Serializer(params)
-  }
-
-  def run: Int = {
-    val rc = params.parse()
-    if (rc == 0) run2 else rc
-  }
+  //  val params = CommandLineParams(args)
+  //
+  //  private def run2: Int = if (false) /*params.shouldShowVersion)*/ {
+  //    println(BooterProperties.versionFull)
+  //    0
+  //    //  } else if (params.specifiedHelp) {
+  //    //    params.showUsage
+  //    //    0
+  //  } else {
+  //    //
+  //    // Run the Serializer as if it were a function that returns an Int
+  //    //
+  //    Serializer(params)
+  //  }
+  //
+  //  def run: Int = {
+  //    val rc = params.parse()
+  //    if (rc == 0) run2 else rc
+  //  }
 }

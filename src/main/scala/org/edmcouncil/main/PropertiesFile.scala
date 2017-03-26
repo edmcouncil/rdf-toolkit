@@ -78,7 +78,7 @@ object PropertiesFile {
     if (is == null)
       is = inputStream("./target/scala-2.11/resource_managed/main/booter.properties")
 
-    require(is != null, fileName + " needs to be found on the classpath")
+    require(is != null, s"$fileName needs to be found on the classpath")
     require(is.available() > 0)
 
     new PropertiesFile(is)
