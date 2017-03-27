@@ -56,12 +56,36 @@ co:isCommandOfApplication rdfs:subPropertyOf owl:topObjectProperty .
 	rdfs:domain :Branch ;
 	rdfs:range :File .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsDirectDomainOfOntology
+
+:domainIsDirectDomainOfOntology a owl:ObjectProperty ;
+	rdfs:subPropertyOf :domainIsDomainOfOntology ;
+	owl:inverseOf :ontologyHasDirectDomain ;
+	rdfs:domain :Domain ;
+	rdfs:range :Ontology .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsDirectSubDomainOf
 
 :domainIsDirectSubDomainOf a owl:ObjectProperty ;
 	rdfs:subPropertyOf :domainIsSubDomainOf ;
 	rdfs:domain :Domain ;
 	rdfs:range :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsDomainOfOntology
+
+:domainIsDomainOfOntology a owl:ObjectProperty ;
+	owl:inverseOf :ontologyHasDomain ;
+	rdfs:domain :Domain ;
+	rdfs:range :Ontology ;
+	owl:propertyChainAxiom _:genid2 .
+
+_:genid2 a rdf:List ;
+	rdf:first :domainIsDirectDomainOfOntology ;
+	rdf:rest _:genid1 .
+
+_:genid1 a rdf:List ;
+	rdf:first :domainIsSubDomainOf ;
+	rdf:rest rdf:nil .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#domainIsSubDomainOf
 
@@ -77,29 +101,6 @@ co:isCommandOfApplication rdfs:subPropertyOf owl:topObjectProperty .
 	rdfs:subPropertyOf owl:topObjectProperty ;
 	rdfs:domain :File ;
 	rdfs:range :Branch .
-# 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDirectDomain
-
-:hasDirectDomain a owl:ObjectProperty ;
-	rdfs:subPropertyOf :hasDomain ;
-	rdfs:domain :Ontology ;
-	rdfs:range :Domain .
-# 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasDomain
-
-:hasDomain a owl:ObjectProperty ;
-	rdfs:subPropertyOf owl:topObjectProperty ;
-	rdfs:domain :Ontology ;
-	rdfs:range :Domain ;
-	owl:propertyChainAxiom _:genid2 .
-
-_:genid2 a rdf:List ;
-	rdf:first :hasDirectDomain ;
-	rdf:rest _:genid1 .
-
-_:genid1 a rdf:List ;
-	rdf:first :domainIsSubDomainOf ;
-	rdf:rest rdf:nil .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#hasProductCategory
 
@@ -132,6 +133,29 @@ _:genid1 a rdf:List ;
 	owl:inverseOf :ontologyIsInOntologyFile ;
 	rdfs:domain :OntologyFile ;
 	rdfs:range :Ontology .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyHasDirectDomain
+
+:ontologyHasDirectDomain a owl:ObjectProperty ;
+	rdfs:subPropertyOf :ontologyHasDomain ;
+	rdfs:domain :Ontology ;
+	rdfs:range :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyHasDomain
+
+:ontologyHasDomain a owl:ObjectProperty ;
+	rdfs:subPropertyOf owl:topObjectProperty ;
+	rdfs:domain :Ontology ;
+	rdfs:range :Domain ;
+	owl:propertyChainAxiom _:genid4 .
+
+_:genid4 a rdf:List ;
+	rdf:first :ontologyHasDirectDomain ;
+	rdf:rest _:genid3 .
+
+_:genid3 a rdf:List ;
+	rdf:first :domainIsSubDomainOf ;
+	rdf:rest rdf:nil .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ontologyIsInOntologyFile
 
@@ -349,8 +373,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAccounting
 
 :AboutAccounting a owl:NamedIndividual , :Ontology ;
-	:hasDirectDomain :Accounting ;
-	:hasDomain :Foundations ;
+	:ontologyHasDirectDomain :domain-Accounting ;
 	:ontologyIsInOntologyFile :AboutAccounting.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAccounting.rdf
@@ -360,6 +383,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgentsAndPeople
 
 :AboutAgentsAndPeople a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-AgentsAndPeople ;
 	:ontologyIsInOntologyFile :AboutAgentsAndPeople.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgentsAndPeople.rdf
@@ -369,6 +393,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgreements
 
 :AboutAgreements a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Agreements ;
 	:ontologyIsInOntologyFile :AboutAgreements.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutAgreements.rdf
@@ -378,6 +403,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutArrangements
 
 :AboutArrangements a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :AboutArrangements.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutArrangements.rdf
@@ -387,11 +413,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE
 
 :AboutBE a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-be ;
 	:ontologyIsInOntologyFile :AboutBE.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.0
 
 :AboutBE-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-be ;
 	:ontologyIsInOntologyFile :AboutBE-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.0.rdf
@@ -401,11 +429,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1
 
 :AboutBE-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-be ;
 	:ontologyIsInOntologyFile :AboutBE-1.1.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-Europe
 
 :AboutBE-1.1-Europe a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-be ;
 	:ontologyIsInOntologyFile :AboutBE-1.1-Europe.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-Europe.rdf
@@ -415,6 +445,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-NorthAmerica
 
 :AboutBE-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-be ;
 	:ontologyIsInOntologyFile :AboutBE-1.1-NorthAmerica.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBE-1.1-NorthAmerica.rdf
@@ -432,6 +463,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBEOwnershipAndControl
 
 :AboutBEOwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :AboutBEOwnershipAndControl.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutBEOwnershipAndControl.rdf
@@ -441,6 +473,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutCorporations
 
 :AboutCorporations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Corporations ;
 	:ontologyIsInOntologyFile :AboutCorporations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutCorporations.rdf
@@ -450,11 +483,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER
 
 :AboutDER a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-der ;
 	:ontologyIsInOntologyFile :AboutDER.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER-1.0
 
 :AboutDER-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-der ;
 	:ontologyIsInOntologyFile :AboutDER-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDER-1.0.rdf
@@ -468,6 +503,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDatesAndTimes
 
 :AboutDatesAndTimes a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DatesAndTimes ;
 	:ontologyIsInOntologyFile :AboutDatesAndTimes.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDatesAndTimes.rdf
@@ -477,6 +513,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDebtAndEquities
 
 :AboutDebtAndEquities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DebtAndEquities ;
 	:ontologyIsInOntologyFile :AboutDebtAndEquities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutDebtAndEquities.rdf
@@ -486,6 +523,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutEconomicIndicators
 
 :AboutEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-EconomicIndicators ;
 	:ontologyIsInOntologyFile :AboutEconomicIndicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutEconomicIndicators.rdf
@@ -495,16 +533,19 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC
 
 :AboutFBC a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0
 
 :AboutFBC-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-NorthAmerica
 
 :AboutFBC-1.0-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC-1.0-NorthAmerica.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-NorthAmerica.rdf
@@ -514,6 +555,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-test
 
 :AboutFBC-1.0-test a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC-1.0-test.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.0-test.rdf
@@ -527,11 +569,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1
 
 :AboutFBC-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC-1.1.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1-NorthAmerica
 
 :AboutFBC-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fbc ;
 	:ontologyIsInOntologyFile :AboutFBC-1.1-NorthAmerica.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBC-1.1-NorthAmerica.rdf
@@ -549,6 +593,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBCFunctionalEntities
 
 :AboutFBCFunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :AboutFBCFunctionalEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFBCFunctionalEntities.rdf
@@ -558,11 +603,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND
 
 :AboutFND a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fnd ;
 	:ontologyIsInOntologyFile :AboutFND.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.0
 
 :AboutFND-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fnd ;
 	:ontologyIsInOntologyFile :AboutFND-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.0.rdf
@@ -572,6 +619,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.1
 
 :AboutFND-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fnd ;
 	:ontologyIsInOntologyFile :AboutFND-1.1.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.1.rdf
@@ -581,6 +629,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.2
 
 :AboutFND-1.2 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fnd ;
 	:ontologyIsInOntologyFile :AboutFND-1.2.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFND-1.2.rdf
@@ -594,6 +643,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFinancialInstruments
 
 :AboutFinancialInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FinancialInstruments ;
 	:ontologyIsInOntologyFile :AboutFinancialInstruments.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFinancialInstruments.rdf
@@ -603,6 +653,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutForeignExchange
 
 :AboutForeignExchange a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ForeignExchange ;
 	:ontologyIsInOntologyFile :AboutForeignExchange.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutForeignExchange.rdf
@@ -612,6 +663,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFunctionalEntities
 
 :AboutFunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :AboutFunctionalEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutFunctionalEntities.rdf
@@ -621,6 +673,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGoalsAndObjectives
 
 :AboutGoalsAndObjectives a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-GoalsAndObjectives ;
 	:ontologyIsInOntologyFile :AboutGoalsAndObjectives.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGoalsAndObjectives.rdf
@@ -630,6 +683,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGovernmentEntities
 
 :AboutGovernmentEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-GovernmentEntities ;
 	:ontologyIsInOntologyFile :AboutGovernmentEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutGovernmentEntities.rdf
@@ -639,16 +693,19 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND
 
 :AboutIND a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ind ;
 	:ontologyIsInOntologyFile :AboutIND.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0
 
 :AboutIND-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ind ;
 	:ontologyIsInOntologyFile :AboutIND-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0-NorthAmerica
 
 :AboutIND-1.0-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ind ;
 	:ontologyIsInOntologyFile :AboutIND-1.0-NorthAmerica.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.0-NorthAmerica.rdf
@@ -662,11 +719,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1
 
 :AboutIND-1.1 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ind ;
 	:ontologyIsInOntologyFile :AboutIND-1.1.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1-NorthAmerica
 
 :AboutIND-1.1-NorthAmerica a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ind ;
 	:ontologyIsInOntologyFile :AboutIND-1.1-NorthAmerica.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIND-1.1-NorthAmerica.rdf
@@ -684,6 +743,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIndicators
 
 :AboutIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Indicators ;
 	:ontologyIsInOntologyFile :AboutIndicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutIndicators.rdf
@@ -693,6 +753,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutInterestRates
 
 :AboutInterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-InterestRates ;
 	:ontologyIsInOntologyFile :AboutInterestRates.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutInterestRates.rdf
@@ -702,11 +763,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN
 
 :AboutLOAN a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-loan ;
 	:ontologyIsInOntologyFile :AboutLOAN.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN-1.0
 
 :AboutLOAN-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-loan ;
 	:ontologyIsInOntologyFile :AboutLOAN-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLOAN-1.0.rdf
@@ -720,6 +783,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLaw
 
 :AboutLaw a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Law ;
 	:ontologyIsInOntologyFile :AboutLaw.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLaw.rdf
@@ -729,6 +793,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLegalEntities
 
 :AboutLegalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LegalEntities ;
 	:ontologyIsInOntologyFile :AboutLegalEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutLegalEntities.rdf
@@ -738,6 +803,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOrganizations
 
 :AboutOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Organizations ;
 	:ontologyIsInOntologyFile :AboutOrganizations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOrganizations.rdf
@@ -747,6 +813,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOwnershipAndControl
 
 :AboutOwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :AboutOwnershipAndControl.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutOwnershipAndControl.rdf
@@ -756,6 +823,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutParties
 
 :AboutParties a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Parties ;
 	:ontologyIsInOntologyFile :AboutParties.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutParties.rdf
@@ -765,6 +833,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPartnerships
 
 :AboutPartnerships a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Partnerships ;
 	:ontologyIsInOntologyFile :AboutPartnerships.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPartnerships.rdf
@@ -774,6 +843,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPlaces
 
 :AboutPlaces a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :AboutPlaces.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPlaces.rdf
@@ -783,6 +853,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPrivateLimitedCompanies
 
 :AboutPrivateLimitedCompanies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-PrivateLimitedCompanies ;
 	:ontologyIsInOntologyFile :AboutPrivateLimitedCompanies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutPrivateLimitedCompanies.rdf
@@ -792,6 +863,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutProductsAndServices
 
 :AboutProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ProductsAndServices ;
 	:ontologyIsInOntologyFile :AboutProductsAndServices.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutProductsAndServices.rdf
@@ -801,6 +873,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutQuantities
 
 :AboutQuantities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Quantities ;
 	:ontologyIsInOntologyFile :AboutQuantities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutQuantities.rdf
@@ -810,6 +883,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutRelations
 
 :AboutRelations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Relations ;
 	:ontologyIsInOntologyFile :AboutRelations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutRelations.rdf
@@ -819,11 +893,13 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC
 
 :AboutSEC a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-sec ;
 	:ontologyIsInOntologyFile :AboutSEC.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC-1.0
 
 :AboutSEC-1.0 a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-sec ;
 	:ontologyIsInOntologyFile :AboutSEC-1.0.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSEC-1.0.rdf
@@ -837,6 +913,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSoleProprietorships
 
 :AboutSoleProprietorships a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-SoleProprietorships ;
 	:ontologyIsInOntologyFile :AboutSoleProprietorships.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutSoleProprietorships.rdf
@@ -846,6 +923,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTheEDMC-FIBOFamily
 
 :AboutTheEDMC-FIBOFamily a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-fnd ;
 	:ontologyIsInOntologyFile :AboutTheEDMC-FIBOFamily.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTheEDMC-FIBOFamily.rdf
@@ -855,6 +933,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTrusts
 
 :AboutTrusts a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Trusts ;
 	:ontologyIsInOntologyFile :AboutTrusts.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutTrusts.rdf
@@ -864,21 +943,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutUtilities
 
 :AboutUtilities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Utilities ;
 	:ontologyIsInOntologyFile :AboutUtilities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AboutUtilities.rdf
 
 :AboutUtilities.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Accounting
-
-:Accounting a owl:NamedIndividual , :Domain ;
-	:domainIsSubDomainOf :Foundations .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AccountingEquity
 
 :AccountingEquity a owl:NamedIndividual , :Ontology ;
-	:hasDirectDomain :Accounting ;
+	:ontologyHasDirectDomain :domain-Accounting ;
 	:ontologyIsInOntologyFile :AccountingEquity.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AccountingEquity.rdf
@@ -888,6 +963,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Addresses
 
 :Addresses a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :Addresses.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Addresses.rdf
@@ -897,21 +973,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agents
 
 :Agents a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-AgentsAndPeople ;
 	:ontologyIsInOntologyFile :Agents.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agents.rdf
 
 :Agents.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#AgentsAndPeople
-
-:AgentsAndPeople a owl:NamedIndividual , :Domain ;
-	:domainIsSubDomainOf :Foundations ;
-	rdfs:label "Agents and People" .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agreements
 
 :Agreements a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Agreements ;
 	:ontologyIsInOntologyFile :Agreements.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Agreements.rdf
@@ -921,6 +993,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Analytics
 
 :Analytics a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Utilities ;
 	:ontologyIsInOntologyFile :Analytics.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Analytics.rdf
@@ -930,6 +1003,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AnnotationVocabulary
 
 :AnnotationVocabulary a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Utilities ;
 	:ontologyIsInOntologyFile :AnnotationVocabulary.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#AnnotationVocabulary.rdf
@@ -939,6 +1013,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Arrangements
 
 :Arrangements a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :Arrangements.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Arrangements.rdf
@@ -948,34 +1023,27 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Baskets
 
 :Baskets a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :Baskets.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Baskets.rdf
 
 :Baskets.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessAndCommerce
-
-:BusinessAndCommerce a owl:NamedIndividual , :Domain ;
-	rdfs:label "Business and Commerce" .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessDates
 
 :BusinessDates a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DatesAndTimes ;
 	:ontologyIsInOntologyFile :BusinessDates.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessDates.rdf
 
 :BusinessDates.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessEntities
-
-:BusinessEntities a owl:NamedIndividual , :Domain ;
-	rdfs:label "Business Entities" .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessFacingTypes
 
 :BusinessFacingTypes a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Utilities ;
 	:ontologyIsInOntologyFile :BusinessFacingTypes.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessFacingTypes.rdf
@@ -985,6 +1053,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessRegistries
 
 :BusinessRegistries a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :BusinessRegistries.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#BusinessRegistries.rdf
@@ -994,6 +1063,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAEconomicIndicators
 
 :CAEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanIndicators ;
 	:ontologyIsInOntologyFile :CAEconomicIndicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAEconomicIndicators.rdf
@@ -1003,6 +1073,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAFinancialServicesEntities
 
 :CAFinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanEntities ;
 	:ontologyIsInOntologyFile :CAFinancialServicesEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAFinancialServicesEntities.rdf
@@ -1012,6 +1083,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAGovernmentEntitiesAndJurisdictions
 
 :CAGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanJurisdiction ;
 	:ontologyIsInOntologyFile :CAGovernmentEntitiesAndJurisdictions.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CAGovernmentEntitiesAndJurisdictions.rdf
@@ -1021,6 +1093,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CARegulatoryAgencies
 
 :CARegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanEntities ;
 	:ontologyIsInOntologyFile :CARegulatoryAgencies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CARegulatoryAgencies.rdf
@@ -1030,6 +1103,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClassificationSchemes
 
 :ClassificationSchemes a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :ClassificationSchemes.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClassificationSchemes.rdf
@@ -1039,6 +1113,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClientsAndAccounts
 
 :ClientsAndAccounts a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ProductsAndServices ;
 	:ontologyIsInOntologyFile :ClientsAndAccounts.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ClientsAndAccounts.rdf
@@ -1048,6 +1123,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Codes
 
 :Codes a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :Codes.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Codes.rdf
@@ -1057,6 +1133,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CommonInterestRates
 
 :CommonInterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-InterestRates ;
 	:ontologyIsInOntologyFile :CommonInterestRates.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CommonInterestRates.rdf
@@ -1066,6 +1143,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Contracts
 
 :Contracts a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Agreements ;
 	:ontologyIsInOntologyFile :Contracts.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Contracts.rdf
@@ -1075,6 +1153,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Control
 
 :Control a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :Control.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Control.rdf
@@ -1084,6 +1163,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ControlParties
 
 :ControlParties a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :ControlParties.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ControlParties.rdf
@@ -1093,6 +1173,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateBodies
 
 :CorporateBodies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LegalEntities ;
 	:ontologyIsInOntologyFile :CorporateBodies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateBodies.rdf
@@ -1102,6 +1183,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateControl
 
 :CorporateControl a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :CorporateControl.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateControl.rdf
@@ -1111,6 +1193,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateOwnership
 
 :CorporateOwnership a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :CorporateOwnership.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CorporateOwnership.rdf
@@ -1120,6 +1203,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Corporations
 
 :Corporations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Corporations ;
 	:ontologyIsInOntologyFile :Corporations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Corporations.rdf
@@ -1129,6 +1213,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Countries
 
 :Countries a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :Countries.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Countries.rdf
@@ -1138,12 +1223,18 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CurrencyAmount
 
 :CurrencyAmount a owl:NamedIndividual , :Ontology ;
-	:hasDirectDomain :Accounting ;
+	:ontologyHasDirectDomain :domain-Accounting ;
 	:ontologyIsInOntologyFile :CurrencyAmount.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#CurrencyAmount.rdf
 
 :CurrencyAmount.rdf a owl:NamedIndividual , :OntologyFile .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Debt
+
+:Debt a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DebtAndEquities ;
+	:ontologyIsInOntologyFile :Debt.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Debt.rdf
 
@@ -1152,19 +1243,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#DebtInstruments
 
 :DebtInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Debt ;
 	:ontologyIsInOntologyFile :DebtInstruments.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#DebtInstruments.rdf
 
 :DebtInstruments.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Derivatives
-
-:Derivatives a owl:NamedIndividual , :Domain .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#DerivativesBasics
 
 :DerivativesBasics a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DerivativesContracts ;
 	:ontologyIsInOntologyFile :DerivativesBasics.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#DerivativesBasics.rdf
@@ -1174,6 +1263,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Documents
 
 :Documents a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :Documents.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Documents.rdf
@@ -1183,6 +1273,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EUGovernmentEntitiesAndJurisdictions
 
 :EUGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-EuropeanJurisdiction ;
 	:ontologyIsInOntologyFile :EUGovernmentEntitiesAndJurisdictions.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EUGovernmentEntitiesAndJurisdictions.rdf
@@ -1192,6 +1283,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicatorPublishers
 
 :EconomicIndicatorPublishers a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-EconomicIndicators ;
 	:ontologyIsInOntologyFile :EconomicIndicatorPublishers.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicatorPublishers.rdf
@@ -1201,6 +1293,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicators
 
 :EconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-EconomicIndicators ;
 	:ontologyIsInOntologyFile :EconomicIndicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#EconomicIndicators.rdf
@@ -1210,6 +1303,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Executives
 
 :Executives a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :Executives.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Executives.rdf
@@ -1223,6 +1317,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Facilities
 
 :Facilities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :Facilities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Facilities.rdf
@@ -1232,6 +1327,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialDates
 
 :FinancialDates a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DatesAndTimes ;
 	:ontologyIsInOntologyFile :FinancialDates.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialDates.rdf
@@ -1241,6 +1337,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialInstruments
 
 :FinancialInstruments a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FinancialInstruments ;
 	:ontologyIsInOntologyFile :FinancialInstruments.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialInstruments.rdf
@@ -1250,6 +1347,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialProductsAndServices
 
 :FinancialProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ProductsAndServices ;
 	:ontologyIsInOntologyFile :FinancialProductsAndServices.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialProductsAndServices.rdf
@@ -1259,6 +1357,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialServicesEntities
 
 :FinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :FinancialServicesEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FinancialServicesEntities.rdf
@@ -1268,6 +1367,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ForeignExchange
 
 :ForeignExchange a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ForeignExchange ;
 	:ontologyIsInOntologyFile :ForeignExchange.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ForeignExchange.rdf
@@ -1277,6 +1377,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalBusinessOrganizations
 
 :FormalBusinessOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LegalEntities ;
 	:ontologyIsInOntologyFile :FormalBusinessOrganizations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalBusinessOrganizations.rdf
@@ -1286,20 +1387,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalOrganizations
 
 :FormalOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Organizations ;
 	:ontologyIsInOntologyFile :FormalOrganizations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FormalOrganizations.rdf
 
 :FormalOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Foundations
-
-:Foundations a owl:NamedIndividual , :Domain ;
-	owl:sameAs <https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd> .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FunctionalEntities
 
 :FunctionalEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :FunctionalEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#FunctionalEntities.rdf
@@ -1309,6 +1407,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Goals
 
 :Goals a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-GoalsAndObjectives ;
 	:ontologyIsInOntologyFile :Goals.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Goals.rdf
@@ -1318,6 +1417,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#GovernmentEntities
 
 :GovernmentEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-GovernmentEntities ;
 	:ontologyIsInOntologyFile :GovernmentEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#GovernmentEntities.rdf
@@ -1327,6 +1427,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Guaranty
 
 :Guaranty a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DebtAndEquities ;
 	:ontologyIsInOntologyFile :Guaranty.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Guaranty.rdf
@@ -1336,6 +1437,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#IRSwaps
 
 :IRSwaps a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-RateDerivatives ;
 	:ontologyIsInOntologyFile :IRSwaps.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#IRSwaps.rdf
@@ -1345,6 +1447,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ISO4217-CurrencyCodes
 
 :ISO4217-CurrencyCodes a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Accounting ;
 	:ontologyIsInOntologyFile :ISO4217-CurrencyCodes.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ISO4217-CurrencyCodes.rdf
@@ -1354,6 +1457,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#IdentifiersAndIndices
 
 :IdentifiersAndIndices a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Arrangements ;
 	:ontologyIsInOntologyFile :IdentifiersAndIndices.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#IdentifiersAndIndices.rdf
@@ -1363,20 +1467,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Indicators
 
 :Indicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Indicators ;
 	:ontologyIsInOntologyFile :Indicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Indicators.rdf
 
 :Indicators.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#IndicesAndIndicators
-
-:IndicesAndIndicators a owl:NamedIndividual , :Domain ;
-	rdfs:label "Indices and Indicators" .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRatePublishers
 
 :InterestRatePublishers a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-InterestRates ;
 	:ontologyIsInOntologyFile :InterestRatePublishers.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRatePublishers.rdf
@@ -1386,6 +1487,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRates
 
 :InterestRates a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-InterestRates ;
 	:ontologyIsInOntologyFile :InterestRates.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#InterestRates.rdf
@@ -1395,6 +1497,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Jurisdiction
 
 :Jurisdiction a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Law ;
 	:ontologyIsInOntologyFile :Jurisdiction.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Jurisdiction.rdf
@@ -1404,6 +1507,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LEIEntities
 
 :LEIEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LegalEntities ;
 	:ontologyIsInOntologyFile :LEIEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LEIEntities.rdf
@@ -1413,6 +1517,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCapacity
 
 :LegalCapacity a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Law ;
 	:ontologyIsInOntologyFile :LegalCapacity.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCapacity.rdf
@@ -1422,6 +1527,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCore
 
 :LegalCore a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Law ;
 	:ontologyIsInOntologyFile :LegalCore.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalCore.rdf
@@ -1431,6 +1537,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalPersons
 
 :LegalPersons a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LegalEntities ;
 	:ontologyIsInOntologyFile :LegalPersons.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegalPersons.rdf
@@ -1440,19 +1547,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegitimateOrganizations
 
 :LegitimateOrganizations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Organizations ;
 	:ontologyIsInOntologyFile :LegitimateOrganizations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LegitimateOrganizations.rdf
 
 :LegitimateOrganizations.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Loan
-
-:Loan a owl:NamedIndividual , :Domain .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanHMDA
 
 :LoanHMDA a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LoanContracts ;
 	:ontologyIsInOntologyFile :LoanHMDA.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanHMDA.rdf
@@ -1462,6 +1567,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanUpperTemp
 
 :LoanUpperTemp a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LoanContracts ;
 	:ontologyIsInOntologyFile :LoanUpperTemp.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#LoanUpperTemp.rdf
@@ -1471,6 +1577,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Locations
 
 :Locations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :Locations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Locations.rdf
@@ -1480,6 +1587,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Markets
 
 :Markets a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :Markets.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Markets.rdf
@@ -1489,6 +1597,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Objectives
 
 :Objectives a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-GoalsAndObjectives ;
 	:ontologyIsInOntologyFile :Objectives.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Objectives.rdf
@@ -1498,6 +1607,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Occurrences
 
 :Occurrences a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DatesAndTimes ;
 	:ontologyIsInOntologyFile :Occurrences.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Occurrences.rdf
@@ -1507,6 +1617,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Organizations
 
 :Organizations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Organizations ;
 	:ontologyIsInOntologyFile :Organizations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Organizations.rdf
@@ -1516,6 +1627,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ownership
 
 :Ownership a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :Ownership.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Ownership.rdf
@@ -1525,6 +1637,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipAndControl
 
 :OwnershipAndControl a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :OwnershipAndControl.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipAndControl.rdf
@@ -1534,6 +1647,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipParties
 
 :OwnershipParties a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-OwnershipAndControl ;
 	:ontologyIsInOntologyFile :OwnershipParties.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#OwnershipParties.rdf
@@ -1543,6 +1657,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ParametricSchedules
 
 :ParametricSchedules a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :ParametricSchedules.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ParametricSchedules.rdf
@@ -1552,6 +1667,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Parties
 
 :Parties a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Parties ;
 	:ontologyIsInOntologyFile :Parties.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Parties.rdf
@@ -1561,6 +1677,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Partnerships
 
 :Partnerships a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Partnerships ;
 	:ontologyIsInOntologyFile :Partnerships.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Partnerships.rdf
@@ -1570,6 +1687,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#PaymentsAndSchedules
 
 :PaymentsAndSchedules a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ProductsAndServices ;
 	:ontologyIsInOntologyFile :PaymentsAndSchedules.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#PaymentsAndSchedules.rdf
@@ -1579,6 +1697,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#People
 
 :People a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-AgentsAndPeople ;
 	:ontologyIsInOntologyFile :People.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#People.rdf
@@ -1588,6 +1707,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Pools
 
 :Pools a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :Pools.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Pools.rdf
@@ -1597,6 +1717,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#PrivateLimitedCompanies
 
 :PrivateLimitedCompanies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-PrivateLimitedCompanies ;
 	:ontologyIsInOntologyFile :PrivateLimitedCompanies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#PrivateLimitedCompanies.rdf
@@ -1606,6 +1727,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductsAndServices
 
 :ProductsAndServices a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-ProductsAndServices ;
 	:ontologyIsInOntologyFile :ProductsAndServices.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#ProductsAndServices.rdf
@@ -1615,6 +1737,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Publishers
 
 :Publishers a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :Publishers.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Publishers.rdf
@@ -1624,6 +1747,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#QuantitiesAndUnits
 
 :QuantitiesAndUnits a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Quantities ;
 	:ontologyIsInOntologyFile :QuantitiesAndUnits.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#QuantitiesAndUnits.rdf
@@ -1633,6 +1757,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RateDerivatives
 
 :RateDerivatives a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-RateDerivatives ;
 	:ontologyIsInOntologyFile :RateDerivatives.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RateDerivatives.rdf
@@ -1642,6 +1767,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegistrationAuthorities
 
 :RegistrationAuthorities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :RegistrationAuthorities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegistrationAuthorities.rdf
@@ -1651,6 +1777,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegulatoryAgencies
 
 :RegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-FunctionalEntities ;
 	:ontologyIsInOntologyFile :RegulatoryAgencies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#RegulatoryAgencies.rdf
@@ -1660,6 +1787,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Relations
 
 :Relations a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Relations ;
 	:ontologyIsInOntologyFile :Relations.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Relations.rdf
@@ -1669,19 +1797,17 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Roles
 
 :Roles a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Parties ;
 	:ontologyIsInOntologyFile :Roles.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Roles.rdf
 
 :Roles.rdf a owl:NamedIndividual , :OntologyFile .
 # 
-# https://spec.edmcouncil.org/rdfkit/artifact-ontology#Securities
-
-:Securities a owl:NamedIndividual , :Domain .
-# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesClassification
 
 :SecuritiesClassification a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesClassification.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesClassification.rdf
@@ -1691,6 +1817,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesExampleIndividuals
 
 :SecuritiesExampleIndividuals a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesExampleIndividuals.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesExampleIndividuals.rdf
@@ -1700,6 +1827,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIdentification
 
 :SecuritiesIdentification a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesIdentification.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIdentification.rdf
@@ -1709,6 +1837,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIssuance
 
 :SecuritiesIssuance a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesIssuance.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesIssuance.rdf
@@ -1718,6 +1847,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesListings
 
 :SecuritiesListings a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesListings.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesListings.rdf
@@ -1727,6 +1857,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesRestrictions
 
 :SecuritiesRestrictions a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecuritiesRestrictions.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecuritiesRestrictions.rdf
@@ -1736,6 +1867,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecurityAssets
 
 :SecurityAssets a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Securities ;
 	:ontologyIsInOntologyFile :SecurityAssets.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SecurityAssets.rdf
@@ -1745,6 +1877,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SoleProprietorships
 
 :SoleProprietorships a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-SoleProprietorships ;
 	:ontologyIsInOntologyFile :SoleProprietorships.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#SoleProprietorships.rdf
@@ -1754,6 +1887,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Swaps
 
 :Swaps a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-DerivativesContracts ;
 	:ontologyIsInOntologyFile :Swaps.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Swaps.rdf
@@ -1763,6 +1897,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Trusts
 
 :Trusts a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Trusts ;
 	:ontologyIsInOntologyFile :Trusts.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#Trusts.rdf
@@ -1772,6 +1907,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#UKGovernmentEntitiesAndJurisdictions
 
 :UKGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-EuropeanJurisdiction ;
 	:ontologyIsInOntologyFile :UKGovernmentEntitiesAndJurisdictions.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#UKGovernmentEntitiesAndJurisdictions.rdf
@@ -1781,6 +1917,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USEconomicIndicators
 
 :USEconomicIndicators a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanIndicators ;
 	:ontologyIsInOntologyFile :USEconomicIndicators.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USEconomicIndicators.rdf
@@ -1790,6 +1927,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USExampleIndividuals
 
 :USExampleIndividuals a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanEntities ;
 	:ontologyIsInOntologyFile :USExampleIndividuals.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USExampleIndividuals.rdf
@@ -1799,6 +1937,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USFinancialServicesEntities
 
 :USFinancialServicesEntities a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanEntities ;
 	:ontologyIsInOntologyFile :USFinancialServicesEntities.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USFinancialServicesEntities.rdf
@@ -1808,6 +1947,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USGovernmentEntitiesAndJurisdictions
 
 :USGovernmentEntitiesAndJurisdictions a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanJurisdiction ;
 	:ontologyIsInOntologyFile :USGovernmentEntitiesAndJurisdictions.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USGovernmentEntitiesAndJurisdictions.rdf
@@ -1817,6 +1957,7 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USRegulatoryAgencies
 
 :USRegulatoryAgencies a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-NorthAmericanEntities ;
 	:ontologyIsInOntologyFile :USRegulatoryAgencies.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#USRegulatoryAgencies.rdf
@@ -1826,15 +1967,235 @@ Documentation Pages:
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#VirtualPlaces
 
 :VirtualPlaces a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-Places ;
 	:ontologyIsInOntologyFile :VirtualPlaces.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#VirtualPlaces.rdf
 
 :VirtualPlaces.rdf a owl:NamedIndividual , :OntologyFile .
 # 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Accounting
+
+:domain-Accounting a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-AgentsAndPeople
+
+:domain-AgentsAndPeople a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Agreements
+
+:domain-Agreements a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Arrangements
+
+:domain-Arrangements a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Corporations
+
+:domain-Corporations a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-DatesAndTimes
+
+:domain-DatesAndTimes a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Debt
+
+:domain-Debt a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-sec .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-DebtAndEquities
+
+:domain-DebtAndEquities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fbc .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-DerivativesContracts
+
+:domain-DerivativesContracts a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-der .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-EconomicIndicators
+
+:domain-EconomicIndicators a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-ind .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-EuropeanJurisdiction
+
+:domain-EuropeanJurisdiction a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-GovernmentEntities .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-FinancialInstruments
+
+:domain-FinancialInstruments a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fbc .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-ForeignExchange
+
+:domain-ForeignExchange a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-ind .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-FunctionalEntities
+
+:domain-FunctionalEntities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be , :domain-fbc .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-GoalsAndObjectives
+
+:domain-GoalsAndObjectives a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-GovernmentEntities
+
+:domain-GovernmentEntities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Indicators
+
+:domain-Indicators a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-ind .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-InterestRates
+
+:domain-InterestRates a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-ind .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Law
+
+:domain-Law a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-LegalEntities
+
+:domain-LegalEntities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-LoanContracts
+
+:domain-LoanContracts a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-loan .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-NorthAmericanEntities
+
+:domain-NorthAmericanEntities a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-NorthAmericanIndicators
+
+:domain-NorthAmericanIndicators a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-EconomicIndicators .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-NorthAmericanJurisdiction
+
+:domain-NorthAmericanJurisdiction a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-GovernmentEntities .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Organizations
+
+:domain-Organizations a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-OwnershipAndControl
+
+:domain-OwnershipAndControl a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be , :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Parties
+
+:domain-Parties a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Partnerships
+
+:domain-Partnerships a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Places
+
+:domain-Places a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-PrivateLimitedCompanies
+
+:domain-PrivateLimitedCompanies a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-ProductsAndServices
+
+:domain-ProductsAndServices a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fbc , :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Quantities
+
+:domain-Quantities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-RateDerivatives
+
+:domain-RateDerivatives a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-der .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Relations
+
+:domain-Relations a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Securities
+
+:domain-Securities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-sec .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-SoleProprietorships
+
+:domain-SoleProprietorships a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Trusts
+
+:domain-Trusts a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-be .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-Utilities
+
+:domain-Utilities a owl:NamedIndividual , :Domain ;
+	:domainIsDirectSubDomainOf :domain-fnd .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-be
+
+:domain-be a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-der
+
+:domain-der a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-fbc
+
+:domain-fbc a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-fnd
+
+:domain-fnd a owl:NamedIndividual , :Domain ;
+	owl:sameAs <https://spec.edmcouncil.org/rdfkit/rdf-toolkit.ttl#domain-fnd> .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-ind
+
+:domain-ind a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-loan
+
+:domain-loan a owl:NamedIndividual , :Domain .
+# 
+# https://spec.edmcouncil.org/rdfkit/artifact-ontology#domain-sec
+
+:domain-sec a owl:NamedIndividual , :Domain .
+# 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#loanCore
 
 :loanCore a owl:NamedIndividual , :Ontology ;
+	:ontologyHasDirectDomain :domain-LoanContracts ;
 	:ontologyIsInOntologyFile :loanCore.rdf .
 # 
 # https://spec.edmcouncil.org/rdfkit/artifact-ontology#loanCore.rdf
