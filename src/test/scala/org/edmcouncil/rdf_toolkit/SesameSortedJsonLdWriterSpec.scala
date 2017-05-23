@@ -27,7 +27,7 @@ import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.eclipse.rdf4j.rio.jsonld.{ JSONLDWriter, JSONLDWriterFactory }
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.language.postfixOps
 import java.io._
 
@@ -63,11 +63,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(writer2 != null, "failed to create default SortedJsonLdWriter from Writer")
 
     val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedJsonLdWriter(System.out, writer3Options)
+    val writer3 = new SesameSortedJsonLdWriter(System.out, mapAsJavaMap[String,Object](writer3Options))
     assert(writer3 != null, "failed to create default SortedJsonLdWriter from OutputStream with parameters")
 
     val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedJsonLdWriter(outWriter, writer4Options)
+    val writer4 = new SesameSortedJsonLdWriter(outWriter, mapAsJavaMap[String,Object](writer4Options))
     assert(writer4 != null, "failed to create default SortedJsonLdWriter from Writer")
   }
 
@@ -99,7 +99,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri)
-    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
@@ -109,7 +109,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, outputFile getName)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri)
-    val jsonLdWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
@@ -212,7 +212,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
@@ -226,7 +226,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.jsonld")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val jsonLdWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
@@ -245,7 +245,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
@@ -259,7 +259,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.jsonld")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val jsonLdWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
@@ -397,7 +397,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val jsonLdWriter = factory getWriter (outWriter, jsonLdWriterOptions)
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel, jsonLdWriter)
@@ -407,7 +407,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "AccountingEquity_inline_blank_nodes.jsonld")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val jsonWriter2 = factory getWriter (outWriter2, jsonLdWriter2Options)
+    val jsonWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonWriter2)

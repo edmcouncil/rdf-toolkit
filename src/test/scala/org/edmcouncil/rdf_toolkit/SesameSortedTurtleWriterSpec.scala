@@ -27,7 +27,7 @@ import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.eclipse.rdf4j.rio.turtle.{ TurtleWriterFactory, TurtleWriter }
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.language.postfixOps
 
 import java.io._
@@ -63,11 +63,11 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
     val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedTurtleWriter(System.out, writer3Options)
+    val writer3 = new SesameSortedTurtleWriter(System.out, mapAsJavaMap[String,Object](writer3Options))
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
     val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedTurtleWriter(outWriter, writer4Options)
+    val writer4 = new SesameSortedTurtleWriter(outWriter, mapAsJavaMap[String,Object](writer4Options))
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
 
@@ -99,7 +99,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriterOptions = Map("baseIri" -> baseIri)
-    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
+    val turtleWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](turtleWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -109,7 +109,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, outputFile getName)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val turtleWriter2Options = Map("baseIri" -> baseIri)
-    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
+    val turtleWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](turtleWriter2Options))
 
     val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)
@@ -212,7 +212,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
+    val turtleWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](turtleWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -226,7 +226,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.ttl")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val turtleWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
+    val turtleWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](turtleWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)
@@ -245,7 +245,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
+    val turtleWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](turtleWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, turtleWriter)
@@ -259,7 +259,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.ttl")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val turtleWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
+    val turtleWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](turtleWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)
@@ -379,7 +379,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory()
     val turtleWriterOptions = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val turtleWriter = factory getWriter (outWriter, turtleWriterOptions)
+    val turtleWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](turtleWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel, turtleWriter)
@@ -389,7 +389,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputFile2 = new File(outputDir2, "AccountingEquity_inline_blank_nodes.ttl")
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val turtleWriter2Options = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val turtleWriter2 = factory getWriter (outWriter2, turtleWriter2Options)
+    val turtleWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](turtleWriter2Options))
 
     val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel2, turtleWriter2)

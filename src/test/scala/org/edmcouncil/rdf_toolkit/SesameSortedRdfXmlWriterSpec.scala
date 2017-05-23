@@ -26,7 +26,7 @@ package org.edmcouncil.rdf_toolkit
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.language.postfixOps
 
 import java.io._
@@ -83,11 +83,11 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
     val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedRdfXmlWriter(System.out, writer3Options)
+    val writer3 = new SesameSortedRdfXmlWriter(System.out, mapAsJavaMap[String,Object](writer3Options))
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
     val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedRdfXmlWriter(outWriter, writer4Options)
+    val writer4 = new SesameSortedRdfXmlWriter(outWriter, mapAsJavaMap[String,Object](writer4Options))
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
 

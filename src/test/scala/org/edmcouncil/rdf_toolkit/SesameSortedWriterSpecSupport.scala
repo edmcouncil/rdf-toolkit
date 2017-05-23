@@ -30,7 +30,7 @@ import java.util.Set
 import org.eclipse.rdf4j.model._
 import org.slf4j.Logger
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.io.{ BufferedSource, Codec }
@@ -61,6 +61,9 @@ trait SesameSortedWriterSpecSupport {
     newDir
   }
 
+  /** Returns the list of all file prefixes that should be ignored. */
+  def listDirTreeFilesExcludeSuffixes = List(".conf")
+
   /** Collects all of the files in a directory tree. */
   def listDirTreeFiles(dir: File): Seq[File] = {
     val result = new ListBuffer[File]();
@@ -70,7 +73,10 @@ trait SesameSortedWriterSpecSupport {
           result ++= listDirTreeFiles(file)
         }
       } else {
-        result += dir // 'dir' is actually a file
+        val isExcluded = listDirTreeFilesExcludeSuffixes.map(sfx => dir.getName.endsWith(sfx)).contains(true)
+        if (!isExcluded) {
+          result += dir // 'dir' is actually a file
+        }
       }
     }
     result
@@ -157,7 +163,7 @@ trait SesameSortedWriterSpecSupport {
       expandedQNames(iri)
     } else {
       val iriString = iri.stringValue()
-      for (ns ← nss) {
+      for (ns ← asScalaSet(nss)) {
         val prefixStr = s"${ns.getPrefix}:"
         if (iriString startsWith prefixStr) {
           val expandedQName = s"${ns.getName}${iri.getLocalName}"
@@ -196,17 +202,17 @@ trait SesameSortedWriterSpecSupport {
 
   def assertTriplesMatch(model1: Model, model2: Model): Unit = {
     val unmatchedTriples1to2 = new mutable.HashSet[Statement]()
-    for (st1 ← model1) {
+    for (st1 ← asScalaSet(model1)) {
       var triplesMatch1to2 = false
-      for (st2 ← model2 if !triplesMatch1to2) {
+      for (st2 ← asScalaSet(model2) if !triplesMatch1to2) {
         if (triplesMatch(st1, st2, model1.getNamespaces, model2.getNamespaces)) { triplesMatch1to2 = true }
       }
       if (!triplesMatch1to2) { unmatchedTriples1to2 += st1 }
     }
     val unmatchedTriples2to1 = new mutable.HashSet[Statement]()
-    for (st2 ← model2) {
+    for (st2 ← asScalaSet(model2)) {
       var triplesMatch2to1 = false
-      for (st1 ← model1 if !triplesMatch2to1) {
+      for (st1 ← asScalaSet(model1) if !triplesMatch2to1) {
         if (triplesMatch(st2, st1, model1.getNamespaces, model2.getNamespaces)) { triplesMatch2to1 = true }
       }
       if (!triplesMatch2to1) { unmatchedTriples2to1 += st2 }
