@@ -42,10 +42,10 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   override val logger = LoggerFactory getLogger classOf[SesameSortedJsonLdWriterSpec]
 
-  val outputDir0 = mkCleanDir(s"target//temp//${classOf[JSONLDWriter].getName}")
-  val outputDir1 = mkCleanDir(s"target//temp//${this.getClass.getName}")
-  val outputDir2 = mkCleanDir(s"target//temp//${this.getClass.getName}_2")
-  val outputDir3 = mkCleanDir(s"target//temp//${this.getClass.getName}_3")
+  val outputDir0 = mkCleanDir(s"target/temp/${classOf[JSONLDWriter].getName}")
+  val outputDir1 = mkCleanDir(s"target/temp/${this.getClass.getName}")
+  val outputDir2 = mkCleanDir(s"target/temp/${this.getClass.getName}_2")
+  val outputDir3 = mkCleanDir(s"target/temp/${this.getClass.getName}_3")
 
   val valueFactory = SimpleValueFactory getInstance ()
 
@@ -63,23 +63,23 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(writer2 != null, "failed to create default SortedJsonLdWriter from Writer")
 
     val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedJsonLdWriter(System.out, mapAsJavaMap[String,Object](writer3Options))
+    val writer3 = new SesameSortedJsonLdWriter(System.out, mapAsJavaMap[String, Object](writer3Options))
     assert(writer3 != null, "failed to create default SortedJsonLdWriter from OutputStream with parameters")
 
     val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedJsonLdWriter(outWriter, mapAsJavaMap[String,Object](writer4Options))
+    val writer4 = new SesameSortedJsonLdWriter(outWriter, mapAsJavaMap[String, Object](writer4Options))
     assert(writer4 != null, "failed to create default SortedJsonLdWriter from Writer")
   }
 
   "A JSONLDWriter" should "be able to read various RDF documents and write them in JSON-LD format" in {
-    val rawRdfDirectory = new File("src/test/resources")
+    val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir0, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir0, Some(".jsonld"))
       val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
       val factory = new JSONLDWriterFactory()
       val jsonLdWriter = factory getWriter (outWriter)
@@ -95,23 +95,23 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   "A SortedJsonLdWriter" should "be able to produce a sorted JSON-LD file" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri)
-    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String, Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri)
-    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String, Object](jsonLdWriter2Options))
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -119,7 +119,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted JSON-LD file with blank object nodes" in {
     val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriter = factory getWriter outWriter
@@ -129,11 +129,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2 = factory getWriter outWriter2
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -141,7 +141,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted JSON-LD file with blank subject nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-17.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriter = factory getWriter (outWriter)
@@ -151,11 +151,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2 = factory getWriter outWriter2
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -163,7 +163,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted JSON-LD file with directly recursive blank object nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriter = factory getWriter outWriter
@@ -173,11 +173,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2 = factory getWriter outWriter2
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -185,7 +185,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to produce a sorted JSON-LD file with indirectly recursive blank object nodes" in {
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
-    val outputFile = new File(outputDir1, setFilePathExtension(inputFile getName, ".jsonld"))
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriter = factory getWriter outWriter
@@ -195,11 +195,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, outputFile getName)
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2 = factory getWriter outWriter2
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), "", RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -208,11 +208,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   it should "be able to produce a sorted JSON-LD file preferring prefix over base IRI" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_prefix.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_prefix.jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String, Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
@@ -223,10 +223,10 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(!contents1.contains("#AD"), "prefix preference has failed (1b)")
     assert(contents1.contains("Åland"), "prefix preference file has encoding problem (1)")
 
-    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_prefix.jsonld")
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.prefix)
-    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String, Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
@@ -241,11 +241,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   it should "be able to produce a sorted JSON-LD file preferring base IRI over prefix" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_base_iri.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_base_iri.jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String, Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
     Rio write (inputModel, jsonLdWriter)
@@ -256,10 +256,10 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(!contents1.contains("countries:AD"), "base IRI preference has failed (1b)")
     assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
 
-    val outputFile2 = new File(outputDir2, "topbraid-countries-ontology_base_iri.jsonld")
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map("baseIri" -> baseIri, "shortIriPref" -> ShortIriPreferences.base_iri)
-    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
+    val jsonLdWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String, Object](jsonLdWriter2Options))
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonLdWriter2)
@@ -272,14 +272,14 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to read various RDF documents and write them in sorted JSON-LD format" in {
-    val rawTurtleDirectory = new File("src/test/resources")
+    val rawTurtleDirectory = resourceDir
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, resourceDir, outputDir1, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -289,7 +289,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to sort RDF triples consistently when writing in JSON-LD format" in {
-    val rawTurtleDirectory = new File("src/test/resources")
+    val rawTurtleDirectory = resourceDir
     assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
     assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
 
@@ -297,7 +297,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, resourceDir, outputDir1, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -309,7 +309,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-sfmt", "json-ld",
@@ -322,25 +322,25 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
-      val file2 = new File(outputDir2, file1 getName)
-      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
       if (!compareFiles(file1, file2, "UTF-8", false)) {
         logger.info(s"Retrying: $file2 getName")
-        val targetFile = new File(outputDir3, setFilePathExtension(file2 getName, ".jsonld"))
+        val targetFile = constructTargetFile(file2, outputDir2, outputDir3)
         SesameRdfFormatter run Array[String](
           "-s", file2 getAbsolutePath,
           "-sfmt", "json-ld",
           "-t", targetFile getAbsolutePath,
           "-tfmt", "json-ld"
         )
-        assert(targetFile exists, s"file missing in outputDir3: ${targetFile.getName}")
+        assert(targetFile exists, s"file missing in outputDir3: ${targetFile.getAbsolutePath}")
         assert(compareFiles(file2, targetFile, "UTF-8"), s"file mismatch between outputDir2 and outputDir3: ${file2.getName}")
       }
     }
   }
 
   it should "should not add/lose RDF triples when writing in JSON-LD format without inline blank nodes" in {
-    val rawRdfDirectory = new File("src/test/resources")
+    val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
@@ -348,7 +348,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -360,7 +360,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-sfmt", "json-ld",
@@ -373,8 +373,8 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
-      val file2 = new File(outputDir2, file1 getName)
-      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
       assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
     }
 
@@ -382,10 +382,11 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some(".jsonld"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-      val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
-      val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.JSONLD)
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.JSONLD)
+      // println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") // TODO: remove debugging
       assertTriplesMatch(inputModel1, inputModel2)
     }
   }
@@ -393,30 +394,30 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   it should "be able to produce a sorted JSON-LD file with inline blank nodes" in {
     val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
     val baseIri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
-    val outputFile = new File(outputDir1, "AccountingEquity_inline_blank_nodes.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.jsonld"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.json_ld)
     val jsonLdWriterOptions = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String,Object](jsonLdWriterOptions))
+    val jsonLdWriter = factory getWriter (outWriter, mapAsJavaMap[String, Object](jsonLdWriterOptions))
 
     val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
     Rio write (inputModel, jsonLdWriter)
     outWriter flush ()
     outWriter close ()
 
-    val outputFile2 = new File(outputDir2, "AccountingEquity_inline_blank_nodes.jsonld")
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
     val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
     val jsonLdWriter2Options = Map[String, AnyRef]("baseIri" -> baseIri, "inlineBlankNodes" -> java.lang.Boolean.TRUE)
-    val jsonWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String,Object](jsonLdWriter2Options))
+    val jsonWriter2 = factory getWriter (outWriter2, mapAsJavaMap[String, Object](jsonLdWriter2Options))
 
-    val inputModel2 = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.JSONLD)
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.JSONLD)
     Rio write (inputModel2, jsonWriter2)
     outWriter2 flush ()
     outWriter2 close ()
   }
 
   it should "be able to sort RDF triples consistently when writing in JSON-LD format with inline blank nodes" in {
-    val rawRdfDirectory = new File("src/test/resources")
+    val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
@@ -424,7 +425,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibn.jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn.jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -437,7 +438,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-sfmt", "json-ld",
@@ -451,14 +452,14 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn")) {
       fileCount += 1
-      val file2 = new File(outputDir2, file1 getName)
-      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
       assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
     }
   }
 
   it should "should not add/lose RDF triples when writing in JSON-LD format with inline blank nodes" in {
-    val rawRdfDirectory = new File("src/test/resources")
+    val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
@@ -466,7 +467,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     var fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = new File(outputDir1, setFilePathExtension(sourceFile getName, "_ibn2.jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -479,7 +480,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, ".jsonld"))
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-sfmt", "json-ld",
@@ -493,8 +494,8 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
       fileCount += 1
-      val file2 = new File(outputDir2, file1 getName)
-      assert(file2 exists, s"file missing in outputDir2: ${file2.getName}")
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
       assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
     }
 
@@ -502,16 +503,16 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = new File(outputDir2, setFilePathExtension(sourceFile getName, "_ibn2.jsonld"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.jsonld"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-      val inputModel1 = Rio parse (new FileReader(sourceFile), "", rdfFormat1)
-      val inputModel2 = Rio parse (new FileReader(targetFile), "", RDFFormat.JSONLD)
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.JSONLD)
       assertTriplesMatch(inputModel1, inputModel2)
     }
   }
 
   it should "be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI" in {
-    val rawRdfDirectory = new File("src/test/resources")
+    val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
@@ -539,7 +540,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       }
 
       if (hasOntologyIri && (baseLine1 != null)) {
-        val targetFile = new File(outputDir1, setFilePathExtension(sourceFile.getName, "_ibu.ttl"))
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.ttl"))
         SesameRdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,
@@ -547,7 +548,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
           "-ibi"
         )
 
-        val targetReader = new BufferedReader(new FileReader(targetFile))
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
         var baseLine2: String = null
         unfinished = true
         while (unfinished) {
@@ -568,7 +569,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_replaced.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.jsonld"))
     SesameRdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
@@ -582,7 +583,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "*not* add single-line leading and trailing comments" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_single-comments.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.jsonld"))
     val leadingComment = "Start of: My New Ontology."
     val trailingComment = "End of: My New Ontology."
     SesameRdfFormatter run Array[String](
@@ -600,7 +601,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "*not* add multi-line leading and trailing comments" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_multiple-comments.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.jsonld"))
     val leadingComments = List("Start of: My New Ontology.", "Version 1.")
     val trailingComments = List("End of: My New Ontology.", "Version 1.")
     SesameRdfFormatter run Array[String](
@@ -622,7 +623,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to use explicit data typing for strings" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_sdt-explicit.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt-explicit.jsonld"))
     SesameRdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
@@ -635,7 +636,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
 
   it should "be able to use set the indent string" in {
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-    val outputFile = new File(outputDir1, "topbraid-countries-ontology_indent_spaces.jsonld")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.jsonld"))
     SesameRdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
@@ -646,7 +647,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
     assert(singleIndentLineCount >= 1, "double-space indent has failed")
 
-    val outputFile2 = new File(outputDir1, "topbraid-countries-ontology_indent_tabs.jsonld")
+    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.jsonld"))
     SesameRdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile2 getAbsolutePath,

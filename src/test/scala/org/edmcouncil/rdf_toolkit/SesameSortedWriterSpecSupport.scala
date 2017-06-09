@@ -43,6 +43,8 @@ trait SesameSortedWriterSpecSupport {
 
   val logger: Logger
 
+  val resourceDir = new File("src/test/resources")
+
   /** Deletes the given file or directory.  For a directory, deletes recursively. */
   def deleteFile(file: File): Unit = {
     if (file isDirectory) {
@@ -61,6 +63,30 @@ trait SesameSortedWriterSpecSupport {
     newDir
   }
 
+  /** Replaces the stem of a file path. */
+  def replaceDirStem(file: File, fromDir: File, toDir: File): File = {
+    assert(fromDir.isDirectory, s"[error] fromDir: not a directory: ${fromDir getAbsolutePath}")
+    assert(!toDir.exists || toDir.isDirectory, s"[error] toDir: not a directory: ${toDir getAbsolutePath}")
+    val filePath = file getCanonicalPath ()
+    val fromDirPath = fromDir getCanonicalPath ()
+    val toDirPath = toDir getCanonicalPath ()
+    if (filePath startsWith fromDirPath) {
+      new File(s"$toDirPath${filePath substring (fromDirPath length)}")
+    } else {
+      file
+    }
+  }
+
+  /** Creates a target file path from a source file path. */
+  def constructTargetFile(sourceFile: File, resourceDir: File, outputDir: File, newStem: Option[String] = None): File = {
+    val targetFile = newStem match {
+      case Some(stem) ⇒ new File(replaceDirStem(sourceFile getParentFile, resourceDir, outputDir), setFilePathExtension(sourceFile getName, stem))
+      case None       ⇒ new File(replaceDirStem(sourceFile getParentFile, resourceDir, outputDir), sourceFile getName)
+    }
+    if (!targetFile.getParentFile.exists) { targetFile.getParentFile.mkdirs() }
+    targetFile
+  }
+
   /** Returns the list of all file prefixes that should be ignored. */
   def listDirTreeFilesExcludeSuffixes = List(".conf")
 
@@ -73,7 +99,7 @@ trait SesameSortedWriterSpecSupport {
           result ++= listDirTreeFiles(file)
         }
       } else {
-        val isExcluded = listDirTreeFilesExcludeSuffixes.map(sfx => dir.getName.endsWith(sfx)).contains(true)
+        val isExcluded = listDirTreeFilesExcludeSuffixes.map(sfx ⇒ dir.getName.endsWith(sfx)).contains(true)
         if (!isExcluded) {
           result += dir // 'dir' is actually a file
         }
@@ -201,23 +227,44 @@ trait SesameSortedWriterSpecSupport {
   }
 
   def assertTriplesMatch(model1: Model, model2: Model): Unit = {
+    val maxWarnings = 3
     val unmatchedTriples1to2 = new mutable.HashSet[Statement]()
-    for (st1 ← asScalaSet(model1)) {
+    for (st1 ← asScalaSet(model1)) { // for each triple in model1, does it exist in model2?
       var triplesMatch1to2 = false
       for (st2 ← asScalaSet(model2) if !triplesMatch1to2) {
         if (triplesMatch(st1, st2, model1.getNamespaces, model2.getNamespaces)) { triplesMatch1to2 = true }
       }
-      if (!triplesMatch1to2) { unmatchedTriples1to2 += st1 }
+      if (!triplesMatch1to2) {
+        unmatchedTriples1to2 += st1
+        if (unmatchedTriples1to2.size <= maxWarnings) {
+          println(s"[warn] unmatched triple 1 to 2 [${unmatchedTriples1to2 size}]: $st1")
+          for (st2 ← asScalaSet(model2) if !triplesMatch1to2) { // TODO: remove debugging
+            if ((st1.getSubject == st2.getSubject) ||
+              (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode]) ||
+              (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (expandQNameToFullIriString(st1.getSubject.asInstanceOf[IRI], model1.getNamespaces) == expandQNameToFullIriString(st2.getSubject.asInstanceOf[IRI], model2.getNamespaces)))) {
+              if ((st1.getPredicate == st2.getPredicate) ||
+                (expandQNameToFullIriString(st1.getPredicate, model1.getNamespaces) == expandQNameToFullIriString(st2.getPredicate, model2.getNamespaces))) {
+                println(s"[...] possible object match: ${st2.getObject.stringValue}")
+              }
+            }
+          }
+        }
+      }
     }
     val unmatchedTriples2to1 = new mutable.HashSet[Statement]()
-    for (st2 ← asScalaSet(model2)) {
+    for (st2 ← asScalaSet(model2)) { // for each triple in model2, does it exist in model1?
       var triplesMatch2to1 = false
       for (st1 ← asScalaSet(model1) if !triplesMatch2to1) {
         if (triplesMatch(st2, st1, model1.getNamespaces, model2.getNamespaces)) { triplesMatch2to1 = true }
       }
-      if (!triplesMatch2to1) { unmatchedTriples2to1 += st2 }
+      if (!triplesMatch2to1) {
+        unmatchedTriples2to1 += st2
+        if (unmatchedTriples2to1.size <= maxWarnings) {
+          println(s"[warn] unmatched triple 2 to 1 [${unmatchedTriples2to1 size}]: $st2")
+        }
+      }
     }
-    assert(((unmatchedTriples1to2.size == 0) && (unmatchedTriples2to1.size == 0)).asInstanceOf[Boolean], s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}]{{{ $unmatchedTriples1to2 }}}, [${unmatchedTriples2to1.size}/${model2.size}]{{{ $unmatchedTriples2to1 }}}")
+    assert(((unmatchedTriples1to2.size == 0) && (unmatchedTriples2to1.size == 0)).asInstanceOf[Boolean], s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}], [${unmatchedTriples2to1.size}/${model2.size}]")
   }
 
 }

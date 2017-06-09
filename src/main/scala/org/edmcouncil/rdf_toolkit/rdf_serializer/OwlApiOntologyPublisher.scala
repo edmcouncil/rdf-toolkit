@@ -104,4 +104,3 @@ class OwlApiOntologyPublisher(ontology: OWLOntology, format: OWLDocumentFormat, 
   checkOntology()
   modifyOntology()
 }
-
