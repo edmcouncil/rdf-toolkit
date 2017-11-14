@@ -6,7 +6,7 @@ organizationName := "Enterprise Data Management Council"
 
 name := "rdf-toolkit"
 
-version := "1.6.0"
+version := "1.7.0"
 
 startYear := Some(2015)
 
@@ -17,7 +17,7 @@ developers := List(
 
 licenses += ("mit", new URL("https://opensource.org/licenses/MIT"))
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.4"
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
@@ -27,17 +27,17 @@ Seq(bintrayResolverSettings:_*)
 
 libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value
 
-val owlApiVersion = "5.0.5"
+val owlApiVersion = "5.1.3"
 
-val rdf4jVersion = "2.2"
+val rdf4jVersion = "2.2.2"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 
-libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.5" withSources()
+libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.7" withSources()
 
-libraryDependencies += "commons-validator" % "commons-validator" % "1.5.1"
+libraryDependencies += "commons-validator" % "commons-validator" % "1.6"
 
 //
 // OWLAPI Model Interfaces And Utilities
@@ -47,17 +47,17 @@ libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion 
 
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
 
-libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.3.0" withSources()
+libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.3.1" withSources()
 
-libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.22" withSources()
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.25" withSources()
 
-libraryDependencies += "org.clapper" %% "avsl" % "1.0.13" withSources()
+libraryDependencies += "org.clapper" %% "avsl" % "1.0.15" withSources()
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test" withSources()
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test" withSources()
 
 //libraryDependencies += "org.ow2.easywsdl" % "easywsdl-tool-java2wsdl" % "2.3"
 
-libraryDependencies += "com.github.scopt" %% "scopt" % "3.5.0"
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.0"
 
 //
 // Explicit loading of jackson-core to prevent merge issue in sbt-assembly
@@ -72,7 +72,7 @@ libraryDependencies += "org.eclipse.rdf4j" % "rdf4j-runtime" % rdf4jVersion
 //
 // JSON-LD Java Binding & Config
 //
-libraryDependencies += "com.github.jsonld-java" % "jsonld-java" % "0.10.0"
+libraryDependencies += "com.github.jsonld-java" % "jsonld-java" % "0.11.1"
 
 //
 // Apache Command-line Argument Handling Library used in Tony's Java code
@@ -82,7 +82,7 @@ libraryDependencies += "commons-cli" % "commons-cli" % "1.4"
 //
 // jline console utilities
 //
-libraryDependencies += "jline" % "jline" % "2.14.3"
+libraryDependencies += "jline" % "jline" % "2.14.5"
 
 //
 // Argot Command-Line Argument Handling used in the Scala code
@@ -108,7 +108,7 @@ libraryDependencies += "jline" % "jline" % "2.14.3"
 // Java library JGit used to read git log for the input file and determine what default versionIRI to use when
 // publishing.
 //
-libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "4.6.1.201703071140-r"
+libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "4.9.0.201710071750-r"
 
 //
 // Scala ARM library
