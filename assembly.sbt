@@ -28,7 +28,8 @@ test in assembly := {}
 //
 // To set an explicit main class:
 //
-mainClass in assembly := Some("org.edmcouncil.main.Main")
+// mainClass in assembly := Some("org.edmcouncil.main.Main")
+mainClass in assembly := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
 
 //
 // Prepend the following shell script to the jar:
