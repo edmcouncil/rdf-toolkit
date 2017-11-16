@@ -395,8 +395,8 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to produce a sorted RDF/XML file with inline blank nodes" in {
-    val inputFile = new File("src/test/resources/fibo/fnd/Accounting/AccountingEquity.rdf")
-    val baseIri = valueFactory.createIRI("http://www.omg.org/spec/EDMC-FIBO/FND/Accounting/AccountingEquity/")
+    val inputFile = new File("src/test/resources/FIBO/ontology/master/latest/FND/Accounting/AccountingEquity.rdf")
+    val baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
     val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)

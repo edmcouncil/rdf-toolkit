@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY afn "http://jena.apache.org/ARQ/function#">
+	<!ENTITY dc "http://purl.org/dc/elements/1.1/">
+	<!ENTITY dct "http://purl.org/dc/terms/">
+	<!ENTITY fibo-be-fct-pub "https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/">
+	<!ENTITY fibo-fbc-fct-cajrga "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/">
+	<!ENTITY fibo-fbc-fct-eufsind "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/EuropeanEntities/EuropeanFinancialServicesEntitiesIndividuals/">
+	<!ENTITY fibo-fbc-fct-usfsind "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/">
+	<!ENTITY fibo-fnd-aap-agt "https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/Agents/">
+	<!ENTITY fibo-fnd-acc-4217 "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/ISO4217-CurrencyCodes/">
+	<!ENTITY fibo-fnd-acc-cur "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/">
+	<!ENTITY fibo-fnd-pty-rl "https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Roles/">
+	<!ENTITY fibo-fnd-rel-rel "https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/">
+	<!ENTITY fibo-fnd-utl-av "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/">
+	<!ENTITY fibo-ind-ind-ind "https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/">
+	<!ENTITY fibo-ind-ir-cm "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/">
+	<!ENTITY fibo-ind-ir-ir "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/">
+	<!ENTITY fibo-ind-ir-pub "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRatePublishers/">
+	<!ENTITY grddl "http://www.w3.org/2003/g/data-view#">
+	<!ENTITY lcc-3166-1 "http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/">
+	<!ENTITY lcc-3166-2 "http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/">
+	<!ENTITY lcc-639-1 "http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/">
+	<!ENTITY lcc-639-2 "http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/">
+	<!ENTITY lcc-cr "http://www.omg.org/spec/LCC/Countries/CountryRepresentation/">
+	<!ENTITY lcc-lr "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/">
+	<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+	<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+	<!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
+	<!ENTITY sm "http://www.omg.org/techprocess/ab/SpecificationMetadata/">
+	<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"
+	xmlns:afn="http://jena.apache.org/ARQ/function#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:dct="http://purl.org/dc/terms/"
+	xmlns:fibo-be-fct-pub="https://spec.edmcouncil.org/fibo/ontology/BE/FunctionalEntities/Publishers/"
+	xmlns:fibo-fbc-fct-cajrga="https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/"
+	xmlns:fibo-fbc-fct-eufsind="https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/EuropeanEntities/EuropeanFinancialServicesEntitiesIndividuals/"
+	xmlns:fibo-fbc-fct-usfsind="https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/"
+	xmlns:fibo-fnd-aap-agt="https://spec.edmcouncil.org/fibo/ontology/FND/AgentsAndPeople/Agents/"
+	xmlns:fibo-fnd-acc-4217="https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/ISO4217-CurrencyCodes/"
+	xmlns:fibo-fnd-acc-cur="https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/"
+	xmlns:fibo-fnd-pty-rl="https://spec.edmcouncil.org/fibo/ontology/FND/Parties/Roles/"
+	xmlns:fibo-fnd-rel-rel="https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/"
+	xmlns:fibo-fnd-utl-av="https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/"
+	xmlns:fibo-ind-ind-ind="https://spec.edmcouncil.org/fibo/ontology/IND/Indicators/Indicators/"
+	xmlns:fibo-ind-ir-cm="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"
+	xmlns:fibo-ind-ir-ir="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/"
+	xmlns:fibo-ind-ir-pub="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRatePublishers/"
+	xmlns:grddl="http://www.w3.org/2003/g/data-view#"
+	xmlns:lcc-3166-1="http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/"
+	xmlns:lcc-3166-2="http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/"
+	xmlns:lcc-639-1="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"
+	xmlns:lcc-639-2="http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"
+	xmlns:lcc-cr="http://www.omg.org/spec/LCC/Countries/CountryRepresentation/"
+	xmlns:lcc-lr="http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:sm="http://www.omg.org/techprocess/ab/SpecificationMetadata/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+	
+	<owl:Ontology rdf:about="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/">
+		<rdfs:label>Common Interest Rates Ontology</rdfs:label>
+		<dct:license rdf:resource="&sm;MITLicense"/>
+		<sm:contentLanguage rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/ODM/</sm:contentLanguage>
+		<sm:contentLanguage rdf:datatype="&xsd;anyURI">http://www.w3.org/standards/techs/owl#w3c_all</sm:contentLanguage>
+		<sm:copyright>Copyright (c) 2015-2017 EDM Council, Inc.
+Copyright (c) 2015-2017 Object Management Group, Inc.</sm:copyright>
+		<sm:dependsOn rdf:datatype="&xsd;anyURI">https://spec.edmcouncil.org/fibo/ontology/master/latest/BE/</sm:dependsOn>
+		<sm:dependsOn rdf:datatype="&xsd;anyURI">https://spec.edmcouncil.org/fibo/ontology/master/latest/FBC/</sm:dependsOn>
+		<sm:dependsOn rdf:datatype="&xsd;anyURI">https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/</sm:dependsOn>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/Indicators/Indicators/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/InterestRatePublishers/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/InterestRates/"/>
+		<sm:fileAbbreviation>fibo-ind-ir-cm</sm:fileAbbreviation>
+		<sm:fileAbstract>This ontology provides definitions for commonly referenced interest rates, for time periods specific to those rates. It is intended to provide examples of how to model reference rates for use in a variety of banking and financial services applications, rather than to be exhaustive.</sm:fileAbstract>
+		<sm:filename>CommonInterestRates.rdf</sm:filename>
+		<rdfs:seeAlso rdf:resource="https://spec.edmcouncil.org/fibo/AboutTheEDMC-FIBOFamily/"/>
+		<rdfs:seeAlso rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/AboutIND/"/>
+		<rdfs:seeAlso rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/AboutInterestRates/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/CountryRepresentation/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/BE/FunctionalEntities/Publishers/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FBC/FunctionalEntities/EuropeanEntities/EuropeanFinancialServicesEntitiesIndividuals/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/Accounting/CurrencyAmount/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/Accounting/ISO4217-CurrencyCodes/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/AgentsAndPeople/Agents/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/Parties/Roles/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/Relations/Relations/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/FND/Utilities/AnnotationVocabulary/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/Indicators/Indicators/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/InterestRatePublishers/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/InterestRates/"/>
+		<owl:versionIRI rdf:resource="https://spec.edmcouncil.org/fibo/ontology/master/latest/IND/InterestRates/CommonInterestRates/"/>
+		<fibo-fnd-utl-av:hasMaturityLevel rdf:resource="&fibo-fnd-utl-av;Release"/>
+	</owl:Ontology>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;CanadianDollarOfferedRate">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-ir;InterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;isManagedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-cajrga;BankOfCanada"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;hasPublisher"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-usfsind;ThomsonReuters"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;isPublishedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-usfsind;ThomsonReutersCorporation"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;CanadianDollar"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>Canadian Dollar Offered Rate</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<skos:definition>a daily interbank offered rate based on the trimmed arithmetic average of the rates at which CDOR submitters would be willing to lend funds for specific terms-to-maturity against the primary market issuance of Banker&apos;s Acceptances to clients with existing credit facilities that reference CDOR (i.e. bid-side rates of the primary BA market)</skos:definition>
+		<fibo-fnd-utl-av:abbreviation>CDOR</fibo-fnd-utl-av:abbreviation>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/publications/glossaries/glossary/</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-utl-av:explanatoryNote>CDOR submitters are banks that are issuers and, directly or through an affiliate, market makers in banker&apos;s acceptances in Canada. CDOR is published daily at 10:15 am by Reuters.
+
+OSFI will be responsible for supervising the effectiveness of governance and risk controls surrounding banks&apos; CDOR submission processes.
+
+NOTE: CDOR is also used to establish the floating benchmark rate for Canadian dollar floating rate notes and interest rate swaps, as well as for calculating the final settlement price for BAX futures contracts traded on the Montreal Exchange.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;EuroInterbankOfferedRate">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-ir;InterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;isPublishedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-eufsind;EuropeanMoneyMarketsInstitute"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;isManagedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-eufsind;EuropeanMoneyMarketsInstitute"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;Euro"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;hasPublisher"/>
+				<owl:hasValue rdf:resource="&fibo-ind-ir-cm;EuropeanMoneyMarketsInstituteBenchmarkPublisher"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>Euro Interbank Offered Rate</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<skos:definition>a daily interbank offered rate based on the averaged interest rates at which Eurozone banks offer to lend unsecured funds to other banks in the euro wholesale money market (or interbank market)</skos:definition>
+		<skos:scopeNote>Euribors are used as a reference rate for euro-denominated forward rate agreements, short-term interest rate futures contracts and interest rate swaps, in very much the same way as LIBORs are commonly used for Sterling and US dollar-denominated instruments. They thus provide the basis for some of the world&apos;s most liquid and active interest rate markets.</skos:scopeNote>
+		<fibo-fnd-utl-av:abbreviation>EURIBOR</fibo-fnd-utl-av:abbreviation>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.emmi-benchmarks.eu/euribor-org/euribor-history.html</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">https://en.wikipedia.org/wiki/Euribor</fibo-fnd-utl-av:adaptedFrom>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;EuroLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;Euro"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>Euro LIBOR</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+	</owl:Class>
+	
+	<fibo-ind-ir-pub:InterestRateAuthority rdf:about="&fibo-ind-ir-cm;EuropeanMoneyMarketsInstituteBenchmarkPublisher">
+		<rdf:type rdf:resource="&owl;NamedIndividual"/>
+		<rdfs:label>European Money Markets Institute (EMMI) benchmark publisher</rdfs:label>
+		<skos:definition>individual representing the European Money Markets Institute (EMMI) functional entity that is an international financial information publisher, responsible for the publication of euro-based benchmarks, including Euribor</skos:definition>
+		<fibo-fnd-rel-rel:hasIdentity rdf:resource="&fibo-fbc-fct-eufsind;EuropeanMoneyMarketsInstitute"/>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.emmi-benchmarks.eu/</fibo-fnd-utl-av:adaptedFrom>
+	</fibo-ind-ir-pub:InterestRateAuthority>
+	
+	<fibo-ind-ir-pub:InterestRateAuthority rdf:about="&fibo-ind-ir-cm;ICEBenchmarkPublisher">
+		<rdf:type rdf:resource="&owl;NamedIndividual"/>
+		<rdfs:label>ICE benchmark publisher</rdfs:label>
+		<skos:definition>individual representing the ICE Benchmark Administration functional entity that is an international financial information publisher, responsible for the publication of ICE LIBOR, ICE Swap Rate, LBMA Gold Price and ISDA SIMM benchmarks</skos:definition>
+		<fibo-fnd-rel-rel:hasIdentity rdf:resource="&fibo-fbc-fct-usfsind;ICEBenchmarkAdministration"/>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">https://www.theice.com/index</fibo-fnd-utl-av:adaptedFrom>
+	</fibo-ind-ir-pub:InterestRateAuthority>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;JapaneseYenLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;Yen"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<skos:altLabel>Japanese yen LIBOR</skos:altLabel>
+		<skos:prefLabel>JPY LIBOR</skos:prefLabel>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;LondonInterbankOfferedRate">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-ir;InterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;isPublishedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-usfsind;ICEBenchmarkAdministration"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;isManagedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-usfsind;ICEBenchmarkAdministration"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;hasPublisher"/>
+				<owl:hasValue rdf:resource="&fibo-ind-ir-cm;ICEBenchmarkPublisher"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>London Interbank Offered Rate</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<rdfs:seeAlso rdf:resource="https://www.theice.com/iba/libor"/>
+		<skos:definition>a benchmark interbank offered rate that the most creditworthy international banks charge each other for large, short-term loans</skos:definition>
+		<fibo-fnd-utl-av:abbreviation>ICE LIBOR</fibo-fnd-utl-av:abbreviation>
+		<fibo-fnd-utl-av:abbreviation>LIBOR</fibo-fnd-utl-av:abbreviation>
+		<fibo-fnd-utl-av:adaptedFrom>Barron&apos;s Dictionary of Financial and Investment Terms, Ninth Edition, 2014</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-utl-av:explanatoryNote>Libor rates are calculated for 5 currencies and 7 borrowing periods ranging from overnight to one year and are published each business day by Thomson Reuters.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;OvernightLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-ir;OvernightRate"/>
+		<rdfs:label>LIBOR overnight rate</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<fibo-fnd-utl-av:abbreviation>O/N LIBOR</fibo-fnd-utl-av:abbreviation>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;PoundSterlingLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;PoundSterling"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<skos:altLabel>pound sterling LIBOR</skos:altLabel>
+		<skos:prefLabel>GBP LIBOR</skos:prefLabel>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;StockholmInterbankOfferedRate">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-ir;InterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;isPublishedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-eufsind;NasdaqOMXGroup"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;isManagedBy"/>
+				<owl:hasValue rdf:resource="&fibo-fbc-fct-eufsind;SwedishBankersAssociation"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;SwedishKrona"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-be-fct-pub;hasPublisher"/>
+				<owl:someValuesFrom>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fnd-pty-rl;isPlayedBy"/>
+						<owl:someValuesFrom>
+							<owl:Restriction>
+								<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;hasIdentity"/>
+								<owl:hasValue rdf:resource="&fibo-fbc-fct-eufsind;NasdaqOMXGroup"/>
+							</owl:Restriction>
+						</owl:someValuesFrom>
+					</owl:Restriction>
+				</owl:someValuesFrom>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>Stockholm interbank offered rate</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<rdfs:seeAlso rdf:resource="http://www.nasdaqomx.com/transactions/trading/fixedincome/fixedincome/sweden/stiborswaptreasuryfixing"/>
+		<skos:definition>a daily interbank offered rate based on the interest rates at which banks offer to lend unsecured funds to other banks in the Swedish wholesale money market (or interbank market), without collateral, at different maturities; STIBOR is the average (with the exception of the highest and lowest quotes) of the interest rates listed at 11 a.m.</skos:definition>
+		<fibo-fnd-utl-av:abbreviation>STIBOR</fibo-fnd-utl-av:abbreviation>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.investopedia.com/terms/s/stibor.asp</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.swedishbankers.se/Sidor/en/6_Stibor/default.aspx</fibo-fnd-utl-av:adaptedFrom>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;SwissFrancLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;SwissFranc"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+		<skos:altLabel>Swiss franc LIBOR</skos:altLabel>
+		<skos:prefLabel>CHF LIBOR</skos:prefLabel>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-ind-ir-cm;USDollarLIBOR">
+		<rdfs:subClassOf rdf:resource="&fibo-ind-ir-cm;LondonInterbankOfferedRate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-ind-ir-ir;hasReferenceCurrency"/>
+				<owl:hasValue rdf:resource="&fibo-fnd-acc-4217;USDollar"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>US Dollar LIBOR</rdfs:label>
+		<rdfs:isDefinedBy rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/CommonInterestRates/"/>
+	</owl:Class>
+
+</rdf:RDF>
