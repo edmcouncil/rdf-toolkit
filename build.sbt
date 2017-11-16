@@ -151,8 +151,9 @@ resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-reposito
 // [1] org.edmcouncil.rdf-toolkit.SesameRdfFormatter
 // [2] org.edmcouncil.rdf-toolkit.Main
 //
+// [ABC] see 'assembly.sbt' for the actual main class setting
 //mainClass in Compile := Some("org.edmcouncil.main.Main")
-mainClass in Compile := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
+//mainClass in Compile := Some("org.edmcouncil.rdf_toolkit.SesameRdfFormatter")
 
 lazy val depProject = RootProject(uri("https://github.com/modelfabric/sparql-dl-api.git#master"))
 
