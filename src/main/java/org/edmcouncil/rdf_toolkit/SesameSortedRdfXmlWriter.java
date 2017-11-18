@@ -229,15 +229,19 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         // Try to determine whether to use <rdf:Description> or an element based on rdf:type value.
         SortedTurtleObjectList subjectRdfTypes = (SortedTurtleObjectList) poMap.get(rdfType); // needed to determine if a type can be used as the XML element name
         if (subjectRdfTypes != null) { subjectRdfTypes = (SortedTurtleObjectList) subjectRdfTypes.clone(); } // make a copy so we can remove values safely
-        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlNamedIndividual)) { // ignore owl:NamedIndividual for the purposes of determining what type to use an an element name in RDF/XML
-            subjectRdfTypes.remove(owlNamedIndividual);
-        }
         if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlThing)) { // ignore owl:Thing for the purposes of determining what type to use an an element name in RDF/XML
             subjectRdfTypes.remove(owlThing);
         }
         IRI enclosingElementIRI = rdfDescription; // default value
         QName enclosingElementQName = convertIriToQName(enclosingElementIRI, useGeneratedPrefixes);
-        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
+        if ((subjectRdfTypes != null) && subjectRdfTypes.contains(owlNamedIndividual)) { // prioritise owl:NamedIndividual as the preferred RDF/XML element name
+            Value subjectRdfTypeValue = owlNamedIndividual;
+            QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, useGeneratedPrefixes);
+            if (subjectRdfTypeQName != null) {
+                enclosingElementIRI = (IRI) subjectRdfTypeValue;
+                enclosingElementQName = subjectRdfTypeQName;
+            }
+        } else if ((subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
             Value subjectRdfTypeValue = subjectRdfTypes.first();
             if (subjectRdfTypeValue instanceof IRI) {
                 QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, useGeneratedPrefixes);
