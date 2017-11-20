@@ -23,7 +23,7 @@
  */
 package org.edmcouncil.rdf_toolkit
 
-import java.io.{ File, FileInputStream }
+import java.io.{File, FileInputStream}
 import java.nio.charset.Charset
 import java.util.Set
 
@@ -33,8 +33,9 @@ import org.slf4j.Logger
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.io.{ BufferedSource, Codec }
+import scala.io.{BufferedSource, Codec}
 import scala.language.postfixOps
+import scala.util.matching.Regex
 
 /**
  * Common functionality for tests of Sesame sorted RDF writers.
@@ -88,7 +89,7 @@ trait SesameSortedWriterSpecSupport {
   }
 
   /** Returns the list of all file prefixes that should be ignored. */
-  def listDirTreeFilesExcludeSuffixes = List(".conf")
+  def listDirTreeFilesExcludeRegexes = List("\\.conf", "^About", "catalog\\d+\\.xml")
 
   /** Collects all of the files in a directory tree. */
   def listDirTreeFiles(dir: File): Seq[File] = {
@@ -99,7 +100,7 @@ trait SesameSortedWriterSpecSupport {
           result ++= listDirTreeFiles(file)
         }
       } else {
-        val isExcluded = listDirTreeFilesExcludeSuffixes.map(sfx ⇒ dir.getName.endsWith(sfx)).contains(true)
+        val isExcluded = listDirTreeFilesExcludeRegexes.map(regex ⇒ (new Regex(regex)).findFirstIn(dir.getName).isDefined).contains(true)
         if (!isExcluded) {
           result += dir // 'dir' is actually a file
         }
