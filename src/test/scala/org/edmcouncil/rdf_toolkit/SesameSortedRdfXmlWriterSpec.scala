@@ -519,7 +519,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
       val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
-      println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") // TODO: comment out debugging
+      // println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") // TODO: comment out debugging
       assertTriplesMatch(inputModel1, inputModel2)
     }
   }
