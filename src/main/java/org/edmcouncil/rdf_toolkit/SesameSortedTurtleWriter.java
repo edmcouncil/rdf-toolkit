@@ -132,10 +132,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
             }
 
             sortedTripleMap = unsortedTripleMap.toSorted(collectionClass);
-            if (sortedTripleMap.fullSize() != unsortedTripleMap.fullSize()) {
-                System.err.println("**** triples unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
-                System.err.flush();
-            }
+            compareSortedToUnsortedTripleMap(sortedTripleMap, unsortedTripleMap, "Turtle");
 
             sortedBlankNodes = unsortedBlankNodes.toSorted(collectionClass);
             if (sortedBlankNodes.size() != unsortedBlankNodes.size()) {

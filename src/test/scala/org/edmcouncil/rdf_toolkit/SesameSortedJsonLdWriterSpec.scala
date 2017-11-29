@@ -272,12 +272,12 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to read various RDF documents and write them in sorted JSON-LD format" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawJsonLdDirectory = resourceDir
+    assert(rawJsonLdDirectory isDirectory, "raw JSON-LD directory is not a directory")
+    assert(rawJsonLdDirectory exists, "raw JSON-LD directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawJsonLdDirectory)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, resourceDir, outputDir1, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
@@ -289,13 +289,13 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to sort RDF triples consistently when writing in JSON-LD format" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawJsonLdDirectory = resourceDir
+    assert(rawJsonLdDirectory isDirectory, "raw JSON-LD directory is not a directory")
+    assert(rawJsonLdDirectory exists, "raw JSON-LD directory does not exist")
 
     // Serialise sample files as sorted JSON-LD.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawJsonLdDirectory)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, resourceDir, outputDir1, Some(".jsonld"))
       SesameRdfFormatter run Array[String](
@@ -305,7 +305,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Re-serialise the sorted files, again as sorted Turtle.
+    // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
@@ -318,7 +318,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Check that re-serialising the Turtle files has changed nothing.
+    // Check that re-serialising the JSON-LD files has changed nothing.
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1)) {
       fileCount += 1
@@ -434,7 +434,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Re-serialise the sorted files, again as sorted Turtle.
+    // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
       fileCount += 1
@@ -448,7 +448,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Check that re-serialising the Turtle files has changed nothing.
+    // Check that re-serialising the JSON-LD files has changed nothing.
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn")) {
       fileCount += 1
@@ -476,7 +476,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Re-serialise the sorted files, again as sorted Turtle.
+    // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
       fileCount += 1
@@ -490,7 +490,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       )
     }
 
-    // Check that re-serialising the Turtle files has changed nothing.
+    // Check that re-serialising the JSON-LD files has changed nothing.
     fileCount = 0
     for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
       fileCount += 1
@@ -499,7 +499,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
     }
 
-    // Check that the re-serialised Turtle file have the same triple count as the matching raw files
+    // Check that the re-serialised JSON-LD file have the same triple count as the matching raw files
     fileCount = 0
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1

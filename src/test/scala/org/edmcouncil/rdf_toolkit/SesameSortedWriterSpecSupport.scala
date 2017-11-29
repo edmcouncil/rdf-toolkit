@@ -23,7 +23,7 @@
  */
 package org.edmcouncil.rdf_toolkit
 
-import java.io.{File, FileInputStream}
+import java.io.{ File, FileInputStream }
 import java.nio.charset.Charset
 import java.util.Set
 
@@ -33,7 +33,7 @@ import org.slf4j.Logger
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.io.{BufferedSource, Codec}
+import scala.io.{ BufferedSource, Codec }
 import scala.language.postfixOps
 import scala.util.matching.Regex
 
@@ -239,7 +239,7 @@ trait SesameSortedWriterSpecSupport {
         unmatchedTriples1to2 += st1
         if (unmatchedTriples1to2.size <= maxWarnings) {
           println(s"[warn] unmatched triple 1 to 2 [${unmatchedTriples1to2 size}]: $st1")
-          for (st2 ← asScalaSet(model2) if !triplesMatch1to2) { // TODO: remove debugging
+          for (st2 ← asScalaSet(model2) if !triplesMatch1to2) {
             if ((st1.getSubject == st2.getSubject) ||
               (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode]) ||
               (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (expandQNameToFullIriString(st1.getSubject.asInstanceOf[IRI], model1.getNamespaces) == expandQNameToFullIriString(st2.getSubject.asInstanceOf[IRI], model2.getNamespaces)))) {

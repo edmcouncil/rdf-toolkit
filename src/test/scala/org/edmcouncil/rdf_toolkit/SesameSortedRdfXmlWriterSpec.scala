@@ -92,14 +92,14 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   "An RDFWriter" should "be able to read various RDF documents and write them in RDF/XML format" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir0, Some(".rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir0, Some(".rdf"))
       val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
       val factory = new RDFXMLPrettyWriterFactory()
       val turtleWriter = factory getWriter (outWriter)
@@ -282,14 +282,14 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to read various RDF documents and write them in sorted RDF/XML format" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some(".rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -300,15 +300,15 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to sort RDF triples consistently when writing in RDF/XML format" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some(".rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -341,15 +341,15 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "should not add/lose RDF triples when writing in RDF/XML format without blank nodes" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some(".rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -382,9 +382,9 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir2, Some(".rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some(".rdf"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
       val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
@@ -426,15 +426,15 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "be able to sort RDF triples consistently when writing in RDF/XML format with inline blank nodes" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some("_ibn.rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn.rdf"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -469,15 +469,15 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
   }
 
   it should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     // Serialise sample files as sorted RDF/XML.
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some("_ibn2.rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.rdf"))
       SesameRdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
@@ -512,25 +512,25 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
     // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
     fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
-      val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir2, Some("_ibn2.rdf"))
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.rdf"))
       val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
       val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
       val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
       val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
-      // println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...")
+      println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") // TODO: comment out debugging
       assertTriplesMatch(inputModel1, inputModel2)
     }
   }
 
   it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI" in {
-    val rawTurtleDirectory = resourceDir
-    assert(rawTurtleDirectory isDirectory, "raw turtle directory is not a directory")
-    assert(rawTurtleDirectory exists, "raw turtle directory does not exist")
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawTurtleDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
       fileCount += 1
 
       val sourceReader = new BufferedReader(new FileReader(sourceFile))
@@ -550,7 +550,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       }
 
       if (hasOntologyIri && (baseLine1 != null)) {
-        val targetFile = constructTargetFile(sourceFile, rawTurtleDirectory, outputDir1, Some("_ibu.rdf"))
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.rdf"))
         SesameRdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,

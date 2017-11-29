@@ -487,7 +487,7 @@ Copyright (c) 2013-2017 Object Management Group, Inc.</sm:copyright>
 		<skos:definition>The parent of the company, if there is one.</skos:definition>
 		<skos:editorialNote>This is usually (but not necessarily) any entity which owns a controlling stake (50 percent plus one voting share or above, or equivalent) in this company, if it is a limited company.</skos:editorialNote>
 	</owl:ObjectProperty>
-	
+
 	<owl:ObjectProperty rdf:about="&fibo-be-oac-cpty;hasNatureOfControl">
 		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-rel-rel;has"/>
 		<rdfs:label>has nature of control</rdfs:label>

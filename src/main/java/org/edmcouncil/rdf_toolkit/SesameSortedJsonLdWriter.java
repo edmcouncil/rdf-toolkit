@@ -136,10 +136,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
             }
 
             sortedTripleMap = unsortedTripleMap.toSorted(collectionClass);
-            if (sortedTripleMap.fullSize() != unsortedTripleMap.fullSize()) {
-                System.err.println("**** triples unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
-                System.err.flush();
-            }
+            compareSortedToUnsortedTripleMap(sortedTripleMap, unsortedTripleMap, "JSON-LD");
 
             sortedBlankNodes = unsortedBlankNodes.toSorted(collectionClass);
             if (sortedBlankNodes.size() != unsortedBlankNodes.size()) {
@@ -159,38 +156,6 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
             System.err.println("#### leading comments ignored - JSON-LD does not support comments");
             System.err.flush();
         }
-
-//        // Open context
-//        output.write("\"@context\" : {");
-//        output.writeEOL();
-//        output.increaseIndentation();
-//        ArrayList<String> contextLines = new ArrayList<String>(namespaceTable.size()+1);
-//
-//        // Write the base IRI, if any.
-//        if (baseIri != null) {
-//            contextLines.add("\"@base\" : \"" + baseIri + "\"");
-//        }
-//
-//        // Write out prefixes and namespaces IRIs.
-//        if (namespaceTable.size() > 0) {
-//            TreeSet<String> prefixes = new TreeSet<String>(namespaceTable.keySet());
-//            for (String prefix : prefixes) {
-//                if (useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) {
-//                    contextLines.add("\"" + prefix + "\" : \"" + namespaceTable.get(prefix) + "\"");
-//                }
-//            }
-//        }
-//
-//        // Write out context lines.
-//        int contextIdx = 0;
-//        for (String line : contextLines) {
-//            contextIdx++;
-//            output.write(line);
-//            if (contextIdx < contextLines.size()) {
-//                output.write(",");
-//            }
-//            output.writeEOL();
-//        }
 
         // Open list of subject triples
         output.write("[");

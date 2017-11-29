@@ -1393,6 +1393,17 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                 (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
 
+    protected void compareSortedToUnsortedTripleMap(SortedTurtleSubjectPredicateObjectMap sortedTripleMap, UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap, String label) {
+        if (sortedTripleMap.fullSize() != unsortedTripleMap.fullSize()) {
+            System.err.println("**** " + label + ": triples unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
+            System.err.flush();
+            if (sortedTripleMap.size() != unsortedTripleMap.size()) {
+                System.err.println("**** " + label + ": subjects unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
+                System.err.flush();
+            }
+        }
+    }
+
     abstract protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments) throws Exception;
 
     abstract protected void writeSubjectTriples(Writer out, Resource subject) throws Exception;
