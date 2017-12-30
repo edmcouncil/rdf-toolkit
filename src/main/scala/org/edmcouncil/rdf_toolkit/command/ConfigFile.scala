@@ -40,7 +40,7 @@ object ConfigFile {
   private def findConfigFileInDirectory(directory: Path): Option[Path] = {
     if (Files.exists(directory) && Files.isDirectory(directory)) {
       val configFilePath = directory.resolve(CONFIG_FILE_NAME)
-      if (Files.exists(configFilePath) && Files.isRegularFile(configFilePath)) {
+      if (Files.exists(configFilePath) /*&& Files.isRegularFile(configFilePath)*/ ) { // TODO: [ABC] commented out 'isRegularPath' call as it was failing on a real, non-symlink file (under Windows 10), for reasons I was unable to debug
         return Some(configFilePath)
       } else {
         findConfigFileInDirectory(directory.getParent)
