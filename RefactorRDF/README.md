@@ -22,7 +22,6 @@ Command line:
 
     python RefactorRDF.py <RulesFile> <Directory> 
 Optional; use the following command line options (may be abbreviated to first letter):
-'''
 
 	-rules <RulesFile>	     : an XML file that defines the refactoring rules.
 	
@@ -47,7 +46,7 @@ Optional; use the following command line options (may be abbreviated to first le
 	
 	-help 
 	-help example 	             : show an example rules file
-'''
+
 A log of changes is written to the log file and a batch file exported for post processing of each changed ontology.
 	
 
@@ -60,6 +59,7 @@ which contains a set of individual rules that are applied to every triple in
 every file.
 
 ### Arguments of the root "rules" element:
+	<?xml version="1.0"  encoding="utf-8"?>
 	<rules 
 	   changeSuffix="NAME" that will be appended to every changed file name
 		without this argument the files are replaced when changed.
@@ -129,3 +129,24 @@ every file.
 				
 	Note that output files are not in "pretty xml" format as this did not work with RDFLIB and 
 	the FIBO rdf-toolkit serializer may be used to reformat rdf-xml in a normalized syntax.
+	
+# Example Rules File
+
+	<?xml version="1.0"  encoding="utf-8"?>
+	<!DOCTYPE rdf:RDF [ <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#"> 
+		<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#"> 
+		<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#"> 
+		<!ENTITY fibo-fnd-pty-rl "https://spec.edmcouncil.org/fibo/FND/Parties/Roles/"> 
+		<!ENTITY fibo-fnd-rel-rel "https://spec.edmcouncil.org/fibo/FND/Relations/Relations/"> 
+		<!ENTITY fibo-fnd-utl-val "https://spec.edmcouncil.org/fibo/FND/Utilities/Values/"> 
+		<!ENTITY fibo-fnd-util-ctx "https://spec.edmcouncil.org/fibo/FND/Utilities/Context/"> 
+		<!ENTITY fibo-fnd-utl-bt "https://spec.edmcouncil.org/fibo/FND/Utilities/BusinessFacingTypes/">]>
+	<rules changeSuffix="_CHANGED"> 
+    	<type from="&fibo-fnd-plc-fac;Site" to="&xsd;string" kind="DatatypeProperty" /> 
+		<type from="&fibo-fnd-utl-bt;Percentage" to="https://spec.edmcouncil.org/fibo/FND/UtilitiesExt/Values/PercentageValue" kind="ObjectProperty" /> 
+		<replace from="&fibo-fnd-pty-rl;ThingInRole" to="&fibo-fnd-pty-rl;EntityInRole"  match="so"/> 
+		<edit from="surface of the Earth" to="surface of a planet"  /> 
+		<delete from="&fibo-fnd-pty-rl;DontCare"   /> 
+		<namespace from="&fibo-fnd-rel-rel;" to="&fibo-fnd-util-ctx;" /> 
+		<namespace to="http://www.omg.org/techprocess/ab/SpecificationMetadata/" prefix="sm" dependencies="adjust"/>
+	</rules>
