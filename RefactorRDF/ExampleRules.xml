@@ -1,0 +1,104 @@
+<?xml version="1.0"  encoding="utf-8"?>
+<!-- 
+	RefactorRDF is a program for performing global changes on a set of RDF or OWL files.
+	This file performs changes for the value ontology refactoring
+-->
+
+<!-- 
+	DOCTYPE	- the rule file and rdf/owl files may contain XML entity definitions that are used
+	in the rule body.
+-->
+<!DOCTYPE rdf:RDF [
+	<!ENTITY fibo-fnd-utl-val "https://spec.edmcouncil.org/fibo/FND/Utilities/Values/">
+	<!ENTITY fibo-fnd-utlx-val "https://spec.edmcouncil.org/fibo/FND/UtilitiesExt/Values/">
+	<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+	<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+	<!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
+	<!ENTITY sm "http://www.omg.org/techprocess/ab/SpecificationMetadata/">
+	<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+	<!ENTITY fibo-fnd-plc-adr "https://spec.edmcouncil.org/fibo/FND/Places/Addresses/">
+	<!ENTITY fibo-fnd-plc-fac "https://spec.edmcouncil.org/fibo/FND/Places/Facilities/">
+	<!ENTITY fibo-fnd-plc-loc "https://spec.edmcouncil.org/fibo/FND/Places/Locations/">
+	<!ENTITY fibo-fnd-pty-rl "https://spec.edmcouncil.org/fibo/FND/Parties/Roles/">
+	<!ENTITY fibo-fnd-rel-rel "https://spec.edmcouncil.org/fibo/FND/Relations/Relations/">
+	<!ENTITY fibo-fnd-util-ctx "https://spec.edmcouncil.org/fibo/FND/Utilities/Context/">
+	<!ENTITY fibo-fnd-utl-bt "https://spec.edmcouncil.org/fibo/FND/Utilities/BusinessFacingTypes/">
+	<!ENTITY fibo-fnd-dt-fd "https://spec.edmcouncil.org/fibo/FND/DatesAndTimes/FinancialDates/">
+]>
+<!-- 
+	rules	- the root of the rules document is an XML element "rules"
+	which contains a set of individual rules that are applied to every triple in
+	every file.
+	
+	The rules has an optional argument "changeSuffix" that will be apended to every changed file.
+	without this argument the files are replaced when changed.
+	In all cases, it is recommended to perform these operations on a copy of a set of ontologies.
+-->
+<rules exclude="+Values.rdf">
+
+	<!--
+		The type rule changes all references to a class or property to another type.
+		Format:
+			<type from=<from-reference> to="<to-reference> kind=<property-kind> />
+				- from-reference: The class or property to be replaced
+				- to-reference: The replacement class or property
+				- property-kind (optional): either "ObjectProperty" or "DatatypeProeprty"
+				  as the appropriate type of property for the destination type.
+				  all property definition referencing this type will be changed to
+				  the indicated kind.
+	-->
+	<type from="&fibo-fnd-utl-val;DateTimeValue" to="&fibo-fnd-dt-fd;DateTime"  />
+	<type from="&fibo-fnd-utl-val;DateValue" to="&fibo-fnd-dt-fd;Date"  />
+	<type from="&fibo-fnd-utl-val;DecimalValue" to="&xsd;decimal" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utl-val;IntegerValue" to="&xsd;integer" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utl-val;NonNegativeIntegerValue" to="&xsd;nonNegativeInteger" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utl-val;TextValue" to="&xsd;string" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utl-val;TrueFalseValue" to="&xsd;boolean" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utl-val;URIValue;TextValue" to="&xsd;anyURI" kind="DatatypeProperty" />
+	<!--
+					Due to potential random order, check old and new namespaces
+	-->
+	<type from="&fibo-fnd-utlx-val;DateTimeValue" to="&fibo-fnd-dt-fd;DateTime"  />
+	<type from="&fibo-fnd-utlx-val;DateValue" to="&fibo-fnd-dt-fd;Date"  />
+	<type from="&fibo-fnd-utlx-val;DecimalValue" to="&xsd;decimal" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utlx-val;IntegerValue" to="&xsd;integer" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utlx-val;NonNegativeIntegerValue" to="&xsd;nonNegativeInteger" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utlx-val;TextValue" to="&xsd;string" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utlx-val;TrueFalseValue" to="&xsd;boolean" kind="DatatypeProperty" />
+	<type from="&fibo-fnd-utlx-val;URIValue;TextValue" to="&xsd;anyURI" kind="DatatypeProperty" />	
+	<!--
+		The replace rule changes all references or literals from one value to another
+		Format:
+			<replace from=<from> to="<to> match=<spo> predicate=<selector> />
+				- from: The reference or literal to change from
+				- to: The replacement reference or literal
+				- match (optional): Any combination of "s", "p" or "o" (defaults to all - "spo")
+					Indicates what should be changed: <s>ubject, <p>redicate and/or <o>object
+				- selector (optional) - restricts replacements to a single property type (defaults to any)
+	-->
+	<!--
+		The namespace rule replaces just the namespace portion of a URI reference
+		Format:
+			<namespace from=<from> to="<to>  prefix=<prefix> />
+				- from (optional): The namespace to replace. If not specified, the rule will only set the prefix
+				- to: The replacement namespace
+				- prefix (optional): The prefix of the replacement namespace.
+				- dependencies = {adjust/all} - adjust imports and namspeces based on usage. All will check all of fibo
+	-->
+
+	<namespace from="&fibo-fnd-utlx-val;" to="&fibo-fnd-utl-val;" prefix="fibo-fnd-utl-val" />
+	<namespace to="&fibo-fnd-utl-val;" prefix="fibo-fnd-utl-val" />
+	<namespace to="https://spec.edmcouncil.org/fibo/FND/DatesAndTimes/FinancialDates/" prefix="fibo-fnd-dt-fd" />
+	<namespace dependencies="adjust" />
+	<!--
+		The edit rule edits a triples object, substituting the from with to. A "substring" replace.
+		Format:
+			<edit from=<from> to="<to>  predicate=<selector> />
+				- from: The subtext to replace
+				- to: The replacement subtext
+				- selector (optional) - restricts replacements to a single property type (defaults to any)
+	-->
+
+
+</rules>
