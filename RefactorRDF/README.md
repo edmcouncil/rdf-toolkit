@@ -1,4 +1,4 @@
-RefactorRDF is a utility for performing global changes on a set of RDF or OWL files
+__RefactorRDF__ is a utility for performing global changes on a set of RDF or OWL files
 in support of refactoring or other global operations.
 
 RefactorRDF is intended to operate across a set of .rdf or .owl files in nested directories.
@@ -9,7 +9,7 @@ the set of rdf/owl files. See below for specific rule syntax.
 	RefactorRDF requires Python and RDFLib, see: 
 		https://www.python.org/
 		http://rdflib.readthedocs.io/en/stable/gettingstarted.html#
-		TO use the default "changed.bat" script, FIBO rdf-toolkit.jar
+		To use the default "changed.bat" script, FIBO rdf-toolkit.jar
 		must be copied to the same directory as the script. See:
 			[https://github.com/edmcouncil/rdf-toolkit/]
 		Tested with: python 2.7.14 and FIBO .rdf files on MS-Windows
@@ -17,20 +17,20 @@ the set of rdf/owl files. See below for specific rule syntax.
 # Executing RefactorRDF: 
 python RefactorRDF.py <RulesFile> <Directory> 
 or with the following command line options (may be abbreviated to first letter):
-	--rules <RulesFile>	          - an XML file that defines the refactoring rules.
-	--source <Directory>          - directory that is the root of a directory structure 
+	-rules <RulesFile>	          - an XML file that defines the refactoring rules.
+	-source <Directory>          - directory that is the root of a directory structure 
 	                                containing source rdf/owl files
-	--destination <Destination>   - directory to write modified RDF/OWL files
-	--extension <file extension>  - file extension to scan (Default = rdf & .owl)
-	--log <Log file>              - (Default RefactorRDFLog.txt in the <RulesFile> directory)
-	--command "command"           - (default "call changed \"%s\"\\n") - post processing command 
+	-destination <Destination>   - directory to write modified RDF/OWL files
+	-extension <file extension>  - file extension to scan (Default = rdf & .owl)
+	-log <Log file>              - (Default RefactorRDFLog.txt in the <RulesFile> directory)
+	-command "command"           - (default "call changed \"%s\"\\n") - post processing command 
 	                                in exported batch file, one per changed file (python format string)
-	--batch <batch/script file>   - (default ChangedFiles.bat) - exported batch file 
+	-batch <batch/script file>   - (default ChangedFiles.bat) - exported batch file 
 	                                to post-process each ontology
-	--format <RDF-Syntax>         - (default "rdf-xml") - RDF file format
-	--noise <"trd">               - Log noise detail for log <t>riples, <r>ead, <d>irectory
-	--help 
-	--help example 	              - show an example rules file
+	-format <RDF-Syntax>         - (default "rdf-xml") - RDF file format
+	-noise <"trd">               - Log noise detail for log <t>riples, <r>ead, <d>irectory
+	-help 
+	-help example 	              - show an example rules file
 A log of changes is written to the log file and a batch file exported for post processing of each changed ontology.
 	
 
