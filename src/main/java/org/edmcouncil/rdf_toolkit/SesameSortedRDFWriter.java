@@ -28,6 +28,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFWriter;
+import scala.Tuple2;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
@@ -729,6 +730,28 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
     }
 
+    /** Cached comparator for Sesame Resource objects. */
+    protected class CachedResourceComparator implements Comparator<Resource> {
+        private HashMap<Tuple2<Resource,Resource>,Integer> cache = new HashMap<Tuple2<Resource,Resource>,Integer>();
+        private ResourceComparator comparator = null;
+
+        public CachedResourceComparator() { comparator = new ResourceComparator(); }
+
+        public CachedResourceComparator(Class collectionClass) { comparator = new ResourceComparator(collectionClass); }
+
+        @Override
+        public int compare(Resource resource1, Resource resource2) {
+            Tuple2<Resource,Resource> key = new Tuple2<Resource,Resource>(resource1, resource2);
+            if (cache.containsKey(key)) {
+                return cache.get(key);
+            } else {
+                int result = comparator.compare(resource1, resource2);
+                cache.put(key, result);
+                return result;
+            }
+        }
+    }
+
     /** An unsorted map from subject resources to predicate/object pairs. */
     protected class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
         public SortedTurtlePredicateObjectMap getSorted(Resource subject, Class collectionClass) {
@@ -770,8 +793,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     /** A sorted map from subject resources to predicate/object pairs. */
     protected class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
-        public SortedTurtleSubjectPredicateObjectMap() { super(new ResourceComparator()); }
-        public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) { super(new ResourceComparator(collectionClass)); }
+        public SortedTurtleSubjectPredicateObjectMap() { super(new CachedResourceComparator()); }
+        public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) { super(new CachedResourceComparator(collectionClass)); }
 
         public int fullSize() {
             int result = 0;
