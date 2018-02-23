@@ -504,7 +504,6 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
     val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.RDFXML)
-    println(s"[1] inputModel.size = ${inputModel.size()}") // TODO: remove debugging
     Rio write (inputModel, rdfXmlWriter)
     outWriter flush ()
     outWriter close ()
@@ -517,7 +516,6 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
     val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
-    println(s"[2] inputModel2.size = ${inputModel2.size()}") // TODO: remove debugging
     Rio write (inputModel2, rdfXmlWriter2)
     outWriter2 flush ()
     outWriter2 close ()
@@ -530,9 +528,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val rdfFormat1 = (Rio getParserFormatForFileName (inputFile getName)).get()
     val rdfFormat2 = (Rio getParserFormatForFileName (outputFile2 getName)).get()
     val inputModel1a = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), "", rdfFormat1)
-    println(s"[3] inputModel1a.size = ${inputModel1a.size()}") // TODO: remove debugging
     val inputModel2a = Rio parse (new InputStreamReader(new FileInputStream(outputFile2), "UTF-8"), "", rdfFormat2)
-    println(s"[4] inputModel2a.size = ${inputModel2a.size()}") // TODO: remove debugging
     println(s"[single] [info] Comparing ${inputFile.getAbsolutePath} to ${outputFile2.getAbsolutePath} ...")
     assertTriplesMatch(inputModel1a, inputModel2a, DebugState(true, Some("single")))
   }
