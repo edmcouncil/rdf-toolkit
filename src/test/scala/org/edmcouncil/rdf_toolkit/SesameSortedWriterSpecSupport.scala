@@ -25,6 +25,7 @@ package org.edmcouncil.rdf_toolkit
 
 import java.io.{ File, FileInputStream }
 import java.nio.charset.Charset
+import java.nio.file.Files
 import java.util.Set
 
 import org.eclipse.rdf4j.model._
@@ -45,6 +46,21 @@ trait SesameSortedWriterSpecSupport {
   val logger: Logger
 
   val resourceDir = new File("src/test/resources")
+
+  /** Case class used to enable/disable debugging via a method parameter. */
+  case class DebugState(val isDebug: Boolean, val debugPrefix: Option[String] = None) {}
+  val DEBUG = DebugState(true)
+  val NODEBUG = DebugState(false)
+
+  /** Creates a temporary directory in a given parent directory with a given prefix. */
+  def createTempDir(parentDir: File, prefix: String): File = (Files createTempDirectory (parentDir toPath, prefix)) toFile
+
+  /** Creates a directory in a given parent directory with a given name. */
+  def createDir(parentDir: File, name: String): File = {
+    val newDir = new File(parentDir, name)
+    newDir mkdirs ()
+    newDir
+  }
 
   /** Deletes the given file or directory.  For a directory, deletes recursively. */
   def deleteFile(file: File): Unit = {
@@ -227,7 +243,9 @@ trait SesameSortedWriterSpecSupport {
     }
   }
 
-  def assertTriplesMatch(model1: Model, model2: Model): Unit = {
+  def assertTriplesMatch(model1: Model, model2: Model, debugState: DebugState = NODEBUG): Unit = {
+    val isDebugByDefault = false
+    val isDebug = isDebugByDefault || debugState.isDebug
     val maxWarnings = 3
     val unmatchedTriples1to2 = new mutable.HashSet[Statement]()
     for (st1 ← asScalaSet(model1)) { // for each triple in model1, does it exist in model2?
@@ -237,15 +255,15 @@ trait SesameSortedWriterSpecSupport {
       }
       if (!triplesMatch1to2) {
         unmatchedTriples1to2 += st1
-        if (unmatchedTriples1to2.size <= maxWarnings) {
-          println(s"[warn] unmatched triple 1 to 2 [${unmatchedTriples1to2 size}]: $st1")
-          for (st2 ← asScalaSet(model2) if !triplesMatch1to2) {
+        if (isDebug && (unmatchedTriples1to2.size <= maxWarnings)) {
+          println(s"${if (debugState.debugPrefix.isDefined) s"[${debugState.debugPrefix.get}] "}[warn] unmatched triple 1 to 2 [${unmatchedTriples1to2 size}]: $st1")
+          for (st2 ← asScalaSet(model2)) {
             if ((st1.getSubject == st2.getSubject) ||
               (st1.getSubject.isInstanceOf[BNode] && st2.getSubject.isInstanceOf[BNode]) ||
               (st1.getSubject.isInstanceOf[IRI] && st2.getSubject.isInstanceOf[IRI] && (expandQNameToFullIriString(st1.getSubject.asInstanceOf[IRI], model1.getNamespaces) == expandQNameToFullIriString(st2.getSubject.asInstanceOf[IRI], model2.getNamespaces)))) {
-              if ((st1.getPredicate == st2.getPredicate) ||
-                (expandQNameToFullIriString(st1.getPredicate, model1.getNamespaces) == expandQNameToFullIriString(st2.getPredicate, model2.getNamespaces))) {
-                println(s"[...] possible object match: ${st2.getObject.stringValue}")
+              if (isDebug && ((st1.getPredicate == st2.getPredicate) ||
+                (expandQNameToFullIriString(st1.getPredicate, model1.getNamespaces) == expandQNameToFullIriString(st2.getPredicate, model2.getNamespaces)))) {
+                println(s"${if (debugState.debugPrefix.isDefined) s"[${debugState.debugPrefix.get}] "}[...] possible object match: ${st2.getObject.stringValue}")
               }
             }
           }
@@ -260,12 +278,12 @@ trait SesameSortedWriterSpecSupport {
       }
       if (!triplesMatch2to1) {
         unmatchedTriples2to1 += st2
-        if (unmatchedTriples2to1.size <= maxWarnings) {
-          println(s"[warn] unmatched triple 2 to 1 [${unmatchedTriples2to1 size}]: $st2")
+        if (isDebug && (unmatchedTriples2to1.size <= maxWarnings)) {
+          println(s"${if (debugState.debugPrefix.isDefined) s"[${debugState.debugPrefix.get}] "}[warn] unmatched triple 2 to 1 [${unmatchedTriples2to1 size}]: $st2")
         }
       }
     }
-    assert(((unmatchedTriples1to2.size == 0) && (unmatchedTriples2to1.size == 0)).asInstanceOf[Boolean], s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}], [${unmatchedTriples2to1.size}/${model2.size}]")
+    assert(unmatchedTriples1to2.isEmpty && unmatchedTriples2to1.isEmpty, s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}], [${unmatchedTriples2to1.size}/${model2.size}]")
   }
 
 }

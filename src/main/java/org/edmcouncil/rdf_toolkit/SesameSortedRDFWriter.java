@@ -28,13 +28,12 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFWriter;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import javax.util.TreeMap; // TODO: revert to a java.util class when debugging is finished
 import java.util.*;
 
 /**
@@ -391,6 +390,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         public int compare(BNode bnode1, BNode bnode2, ArrayList<Object> excludedList) {
             if ((bnode1 == null) || excludedList.contains(bnode1) || !unsortedTripleMap.containsKey(bnode1)) {
                 if ((bnode2 == null) || excludedList.contains(bnode2) || !unsortedTripleMap.containsKey(bnode2)) {
+//                    if (bnode1 != bnode2) { // TODO: remove debugging
+//                        System.err.println("[<<<] possible BNode compare inconsistency: " + bnode1.stringValue() + " " + bnode2.stringValue());
+//                        System.err.flush(); // TODO: remove debugging
+//                    }
                     return 0; // two null/excluded blank nodes are equal
                 } else {
                     return -1; // null/excluded blank node comes before non-null/excluded blank node
@@ -411,6 +414,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                                 if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inlining blank nodes
                                     return cmp;
                                 } else { // if all else fails, do a string comparison
+//                                    if ((bnode1 != bnode2) && (bnode1.stringValue().compareTo(bnode2.stringValue()) == 0)) { // TODO: remove debugging
+//                                        System.err.println("[<<<] possible BNode compare inconsistency: " + bnode1.stringValue() + " " + bnode2.stringValue());
+//                                        System.err.flush(); // TODO: remove debugging
+//                                    }
                                     return bnode1.stringValue().compareTo(bnode2.stringValue());
                                 }
                             } else {
@@ -429,6 +436,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                                 if ((cmp != 0) || inlineBlankNodes) { // cmp = 0 value is only reliable when inlining blank nodes
                                     return cmp;
                                 } else { // if all else fails, do a string comparison
+//                                    if ((bnode1 != bnode2) && (bnode1.stringValue().compareTo(bnode2.stringValue()) == 0)) { // TODO: remove debugging
+//                                        System.err.println("[<<<] possible BNode compare inconsistency: " + bnode1.stringValue() + " " + bnode2.stringValue());
+//                                        System.err.flush(); // TODO: remove debugging
+//                                    }
                                     return bnode1.stringValue().compareTo(bnode2.stringValue());
                                 }
                             }
@@ -549,9 +560,19 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** An unsorted list of RDF object values. */
     protected class UnsortedTurtleObjectList extends HashSet<Value> {
         public SortedTurtleObjectList toSorted(Class collectionClass) {
+            return toSorted(collectionClass, new HashMap<String,Object>());
+        }
+
+        public SortedTurtleObjectList toSorted(Class collectionClass, Map<String,Object> debugData) {
             SortedTurtleObjectList sortedOList = new SortedTurtleObjectList(collectionClass);
+            UnsortedTurtleObjectList debugOList = new UnsortedTurtleObjectList(); // TODO: remove debugging
             for (Value value : this) {
                 sortedOList.add(value);
+                debugOList.add(value); // TODO: remove debugging
+                if (sortedOList.size() < debugOList.size()) { // TODO: remove debugging
+                    System.err.println("**** [<] sorted object list lost value: " + value.stringValue());
+                    System.err.flush();
+                }
             }
             return sortedOList;
         }
@@ -562,6 +583,18 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         public SortedTurtleObjectList() { super(new ValueComparator()); }
         public SortedTurtleObjectList(Class collectionClass) {
             super(new ValueComparator(collectionClass));
+        }
+
+        @Override
+        public boolean add(Value value) { // TODO: remove debugging override
+            int presize = size();
+            boolean result = super.add(value);
+            int postsize = size();
+            if ((postsize <= presize) && (value instanceof BNode)) {
+                System.err.println("**** failed to add BNode to sorted object list: " + value.stringValue());
+                System.err.flush();
+            }
+            return result;
         }
     }
 
@@ -596,17 +629,47 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** An unsorted map from predicate IRIs to lists of object values. */
     protected class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtleObjectList> {
         public SortedTurtleObjectList getSorted(IRI predicate, Class collectionClass) {
+            return getSorted(predicate, collectionClass, new HashMap<String,Object>());
+        }
+
+        public SortedTurtleObjectList getSorted(IRI predicate, Class collectionClass, Map<String,Object> debugData) {
             if (containsKey(predicate)) {
-                return get(predicate).toSorted(collectionClass);
+                return get(predicate).toSorted(collectionClass, debugData);
             } else {
                 return null;
             }
         }
 
         public SortedTurtlePredicateObjectMap toSorted(Class collectionClass) {
+            return toSorted(collectionClass, new HashMap<String,Object>());
+        }
+
+        public SortedTurtlePredicateObjectMap toSorted(Class collectionClass, Map<String,Object> debugData) {
             SortedTurtlePredicateObjectMap sortedPOMap = new SortedTurtlePredicateObjectMap();
+            UnsortedTurtlePredicateObjectMap debugPOMap = new UnsortedTurtlePredicateObjectMap(); // TODO: remove debugging
+            int debugFullDiff = 0; // TODO: remove debugging
             for (IRI predicate : keySet()) {
-                sortedPOMap.put(predicate, getSorted(predicate, collectionClass));
+                HashMap<String,Object> newDebugData = new HashMap<String,Object>(); // TODO: remove debugging
+                if (debugData.containsKey("subject")) { // TODO: remove debugging
+                    newDebugData.putAll(debugData);
+                    newDebugData.put("predicate", predicate);
+                }
+                sortedPOMap.put(predicate, getSorted(predicate, collectionClass, newDebugData));
+                debugPOMap.put(predicate, get(predicate)); // TODO: remove debugging
+                if (sortedPOMap.size() < debugPOMap.size()) { // TODO: remove debugging
+                    System.err.println("**** [<] sorted predicate/object map lost predicate: " + predicate.stringValue());
+                    System.err.flush();
+                }
+                int debugDiff = debugPOMap.fullSize() - sortedPOMap.fullSize() - debugFullDiff; // TODO: remove debugging
+                if (debugDiff > 0) { // TODO: remove debugging
+                    debugFullDiff = debugPOMap.fullSize() - sortedPOMap.fullSize();
+                    System.err.println("**** [<] sorted predicate/object map lost predicate/object pairs: " + debugDiff + ": predicate = " + predicate.stringValue());
+                    System.err.flush();
+                }
+            }
+            if (sortedPOMap.fullSize() < fullSize()) { // TODO: remove debugging
+                System.err.println("**** [<<] sorted predicate/object map lost predicate/object pairs");
+                System.err.flush();
             }
             return sortedPOMap;
         }
@@ -618,6 +681,14 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             }
             return result;
         }
+
+        public boolean checkValid() {
+            for (IRI predicate : keySet()) {
+                if (get(predicate) == null) { return false; }
+            }
+            return true;
+        }
+
     }
 
     /** A sorted map from predicate IRIs to lists of object values. */
@@ -663,7 +734,12 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
         @Override
         public int compare(Resource resource1, Resource resource2) {
-            return compare(resource1, resource2, new ArrayList<Object>());
+            int result = compare(resource1, resource2, new ArrayList<Object>()); // TODO: return result directly
+            if ((resource1 instanceof BNode) && (resource2 instanceof BNode) && (result == 0) && (resource1 != resource2)) { // TODO: remove debugging
+                System.err.println("[<<<] possible compare inconsistency: " + resource1.stringValue() + " " + resource2.stringValue());
+            }
+            System.err.flush(); // TODO: remove debugging
+            return result; // TODO: return result directly
         }
 
         private int compare(Resource resource1, Resource resource2, ArrayList<Object> excludedList) {
@@ -714,17 +790,89 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** An unsorted map from subject resources to predicate/object pairs. */
     protected class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
         public SortedTurtlePredicateObjectMap getSorted(Resource subject, Class collectionClass) {
+            return getSorted(subject, collectionClass, new HashMap<String,Object>());
+        }
+
+        public SortedTurtlePredicateObjectMap getSorted(Resource subject, Class collectionClass, Map<String, Object> debugData) {
             if (containsKey(subject)) {
-                return get(subject).toSorted(collectionClass);
+                return get(subject).toSorted(collectionClass, debugData);
             } else {
                 return null;
             }
         }
 
         public SortedTurtleSubjectPredicateObjectMap toSorted(Class collectionClass) {
+            return toSorted(collectionClass, false);
+        }
+
+        public SortedTurtleSubjectPredicateObjectMap toSorted(Class collectionClass, boolean isDebug) { // TODO: remove isDebug parameter
+            UnsortedTurtleObjectList debugBlankBlankObjects = new UnsortedTurtleObjectList(); // TODO: remove debugging
+            if (isDebug) {
+                HashSet<String> predicatesOfInterest = new HashSet<String>();
+                predicatesOfInterest.addAll(Arrays.asList(new String[] {
+                    OWL_NS_URI + "allValuesFrom",
+                    OWL_NS_URI + "someValuesFrom"
+                }));
+                for (Resource subject : keySet()) {
+                    UnsortedTurtlePredicateObjectMap poMap = get(subject);
+                    for (IRI predicate: poMap.keySet()) {
+                        UnsortedTurtleObjectList objectList = poMap.get(predicate);
+                        for (Value object: objectList) {
+                            if ((subject instanceof BNode) && (object instanceof BNode) && (predicatesOfInterest.contains(predicate.stringValue()))) {
+                                System.err.println("**** sorting BN-to-BN triple: " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                                int beforeSize = debugBlankBlankObjects.size(); // TODO: remove debugging
+                                debugBlankBlankObjects.add(object);
+                                int afterSize = debugBlankBlankObjects.size(); // TODO: remove debugging
+                                if ((afterSize != beforeSize + 1) && !debugBlankBlankObjects.contains(object)) { // TODO: remove debugging
+                                    System.err.println("**** !! failed to add object: " + object.stringValue());
+                                }
+                            }
+                        }
+                    }
+                }
+                System.err.flush();
+            }
             SortedTurtleSubjectPredicateObjectMap sortedSPOMap = new SortedTurtleSubjectPredicateObjectMap(collectionClass);
+            UnsortedTurtleSubjectPredicateObjectMap debugSPOMap = new UnsortedTurtleSubjectPredicateObjectMap(); // TODO: remove debugging
+            int debugFullDiff = 0; // TODO: remove debugging
             for (Resource subject : keySet()) {
-                sortedSPOMap.put(subject, getSorted(subject, collectionClass));
+                HashMap<String,Object> debugData = new HashMap<String,Object>(); // TODO: remove debugging
+                if (isDebug) {
+                    debugData.put("subject", subject);
+                    debugData.put("blankObjects", debugBlankBlankObjects);
+                }
+                sortedSPOMap.put(subject, getSorted(subject, collectionClass, debugData));
+                debugSPOMap.put(subject, get(subject));
+                if (sortedSPOMap.size() < debugSPOMap.size()) { // TODO: remove debugging
+                    System.err.println("**** [<] sorted triple map lost subject: " + subject.stringValue());
+                    System.err.flush();
+                }
+                int debugDiff = debugSPOMap.fullSize() - sortedSPOMap.fullSize() - debugFullDiff; // TODO: remove debugging
+                if (debugDiff > 0) { // TODO: remove debugging
+                    debugFullDiff = debugSPOMap.fullSize() - sortedSPOMap.fullSize();
+                    System.err.println("**** [<] sorted triple map lost triples: " + debugDiff + ": subject = " + subject.stringValue());
+                    System.err.println("**** == unsorted ==");
+                    UnsortedTurtlePredicateObjectMap debugUnsortedPOMap = debugSPOMap.get(subject);
+                    for (IRI predicate : debugUnsortedPOMap.keySet()) {
+                        UnsortedTurtleObjectList debugUnsortedOList = debugUnsortedPOMap.get(predicate);
+                        for (Value object : debugUnsortedOList) {
+                            System.err.println("---- " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                        }
+                    }
+                    System.err.println("**** == sorted ==");
+                    SortedTurtlePredicateObjectMap debugSortedPOMap = sortedSPOMap.get(subject);
+                    for (IRI predicate : debugSortedPOMap.keySet()) {
+                        SortedTurtleObjectList debugSortedOList = debugSortedPOMap.get(predicate);
+                        for (Value object : debugSortedOList) {
+                            System.err.println("---- " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                        }
+                    }
+                    System.err.flush();
+                }
+            }
+            if (sortedSPOMap.fullSize() < fullSize()) { // TODO: remove debugging
+                System.err.println("**** [<<] sorted triple map lost triples");
+                System.err.flush();
             }
             return sortedSPOMap;
         }
@@ -732,26 +880,61 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         public int fullSize() {
             int result = 0;
             for (Resource subj : keySet()) {
-                UnsortedTurtlePredicateObjectMap poMap = get(subj);
-                if (poMap != null) { result += poMap.fullSize(); }
+                result += get(subj).fullSize();
             }
             return result;
         }
+
+        public boolean checkValid() {
+            for (Resource subject : keySet()) {
+                if ((get(subject) == null) || !get(subject).checkValid()) { return false; }
+            }
+            return true;
+        }
+
     }
 
     /** A sorted map from subject resources to predicate/object pairs. */
     protected class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
+        private TreeMap<Resource, SortedTurtlePredicateObjectMap> debugTreeMap = null; // TODO: remove debugging
         public SortedTurtleSubjectPredicateObjectMap() { super(new ResourceComparator()); }
         public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) {
             super(new ResourceComparator(collectionClass));
+            debugTreeMap = new TreeMap<Resource, SortedTurtlePredicateObjectMap>(new ResourceComparator(collectionClass)); // TODO: remove debugging
         }
 
         public int fullSize() {
             int result = 0;
             for (Resource subj : keySet()) {
-                SortedTurtlePredicateObjectMap poMap = get(subj);
-                if (poMap != null) { result += poMap.fullSize(); }
+                result += get(subj).fullSize();
             }
+            return result;
+        }
+
+        @Override
+        public SortedTurtlePredicateObjectMap put(Resource key, SortedTurtlePredicateObjectMap value) { // TODO: remove debugging override
+            // TODO: there is a bug (somehow) where if you add a new key with a new predicate/object map, the predicate/object map of an earlier key can go to null.  Why????
+            if (containsKey(key)) { // TODO: debugging
+                System.err.println("[<<<] triple map already contains subject: " + key.stringValue());
+            }
+            SortedTurtlePredicateObjectMap result = super.put(key, value); // TODO: return value directly after removing debugging code
+            boolean isFailed = false; // TODO: remove debugging
+            for (Resource subj : keySet()) { // TODO: remove debugging
+                if (get(subj) == null) {
+                    isFailed = true;
+                    System.err.println("[<<<] added/lost: " + key.stringValue() + " " + subj.stringValue());
+                    SortedTurtlePredicateObjectMap debugResult = get(subj); // TODO: remove debugging
+                    if (debugResult == null) {}; // TODO: remove debugging
+                }
+            }
+            debugTreeMap.put(key, value); // TODO: remove debugging
+            System.err.flush(); // TODO: remove debugging
+            return result; // TODO: return value directly after removing debugging code
+        }
+
+        @Override
+        public SortedTurtlePredicateObjectMap get(Object key) { // TODO: remove this override
+            SortedTurtlePredicateObjectMap result = super.get(key);
             return result;
         }
     }
@@ -1287,6 +1470,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
      */
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
+        int debugSizeBefore = unsortedTripleMap.fullSize(); // TODO: remove debugging
+
         // Store the predicate.
         allPredicates.add(st.getPredicate());
 
@@ -1327,6 +1512,11 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
         if ((st.getObject() instanceof BNode) && !unsortedBlankNodes.contains((st.getObject()))) {
             unsortedBlankNodes.add((BNode)st.getObject());
+        }
+
+        int debugSizeAfter = unsortedTripleMap.fullSize(); // TODO: remove debugging
+        if (debugSizeAfter != (debugSizeBefore + 1)) { // TODO: remove debugging
+            System.err.println("[*] handleStatement - triple not added: " + st.toString());
         }
     }
 
@@ -1393,14 +1583,62 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                 (useTurtleQuoting ? ">" : ""); // if nothing else, do this
     }
 
+    /** Compares a sorted triple map to the unsorted triple map from which it was created,
+     *  to check that no triples were lost.  Prints detailed information is a triple loss is detected.
+     */
     protected void compareSortedToUnsortedTripleMap(SortedTurtleSubjectPredicateObjectMap sortedTripleMap, UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap, String label) {
         if (sortedTripleMap.fullSize() != unsortedTripleMap.fullSize()) {
+            unsortedTripleMap.toSorted(Value.class, true); // generate BN-to-BN debugging
             System.err.println("**** " + label + ": triples unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
-            System.err.flush();
             if (sortedTripleMap.size() != unsortedTripleMap.size()) {
                 System.err.println("**** " + label + ": subjects unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
-                System.err.flush();
             }
+            for (Resource subject: unsortedTripleMap.keySet()) {
+                if (!sortedTripleMap.containsKey(subject)) {
+                    System.err.println("**** " + label + ": subject missing from sorted triple map: " + subject.stringValue());
+                    System.err.println("**** " + label + ": missing triples:");
+                    UnsortedTurtlePredicateObjectMap unsortedPredicateObjectMap = unsortedTripleMap.get(subject);
+                    for (IRI predicate: unsortedPredicateObjectMap.keySet()) {
+                        UnsortedTurtleObjectList unsortedObjectList = unsortedPredicateObjectMap.get(predicate);
+                        for (Value object: unsortedObjectList) {
+                            System.err.println("****** " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                        }
+                    }
+                } else {
+                    UnsortedTurtlePredicateObjectMap unsortedPredicateObjectMap = unsortedTripleMap.get(subject);
+                    SortedTurtlePredicateObjectMap sortedPredicateObjectMap = sortedTripleMap.get(subject);
+                    if (sortedPredicateObjectMap.fullSize() != unsortedPredicateObjectMap.fullSize()) {
+                        System.err.println("**** " + label + ": predicates/objects unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize() + " for subject: " + subject.stringValue());
+                        if (sortedPredicateObjectMap.size() != unsortedPredicateObjectMap.size()) {
+                            System.err.println("**** " + label + ": predicates unexpectedly lost or gained during sorting: " + sortedTripleMap.fullSize() + " != " + unsortedTripleMap.fullSize());
+                        }
+                        for (IRI predicate: unsortedPredicateObjectMap.keySet()) {
+                            if (!sortedPredicateObjectMap.containsKey(predicate)) {
+                                System.err.println("**** " + label + ": predicate missing from sorted triple map: " + predicate.stringValue());
+                                System.err.println("**** " + label + ": missing triples:");
+                                UnsortedTurtleObjectList unsortedObjectList = unsortedPredicateObjectMap.get(predicate);
+                                for (Value object: unsortedObjectList) {
+                                    System.err.println("****** " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                                }
+                            } else {
+                                UnsortedTurtleObjectList unsortedObjectList = unsortedPredicateObjectMap.get(predicate);
+                                SortedTurtleObjectList sortedObjectList = sortedPredicateObjectMap.get(predicate);
+                                if (sortedObjectList.size() != unsortedObjectList.size()) {
+                                    System.err.println("**** " + label + ": objects unexpectedly lost or gained during sorting: " + sortedObjectList.size() + " != " + unsortedObjectList.size() + " for subject: " + subject.stringValue() + " and predicate: " + predicate.stringValue());
+                                    for (Value object: unsortedObjectList) {
+                                        if (!sortedObjectList.contains(object)) {
+                                            System.err.println("**** " + label + ": object missing from sorted triple map: " + object.stringValue());
+                                            System.err.println("**** " + label + ": missing triple:");
+                                            System.err.println("****** " + subject.stringValue() + " " + predicate.stringValue() + " " + object.stringValue());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            System.err.flush();
         }
     }
 
