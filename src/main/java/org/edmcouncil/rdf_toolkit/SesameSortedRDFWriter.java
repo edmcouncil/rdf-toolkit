@@ -30,6 +30,7 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFWriter;
 import scala.Tuple2;
 
+import javax.util.SortedHashMap;
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -314,8 +315,8 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                     if (map1 == map2) {
                         return 0;
                     } else {
-                        Iterator<IRI> iter1 = map1.keySet().iterator();
-                        Iterator<IRI> iter2 = map2.keySet().iterator();
+                        Iterator<IRI> iter1 = map1.sortedKeys().iterator();
+                        Iterator<IRI> iter2 = map2.sortedKeys().iterator();
                         return compare(map1, iter1, map2, iter2, excludedList);
                     }
                 }
@@ -640,7 +641,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     }
 
     /** A sorted map from predicate IRIs to lists of object values. */
-    protected class SortedTurtlePredicateObjectMap extends TreeMap<IRI, SortedTurtleObjectList> {
+    protected class SortedTurtlePredicateObjectMap extends SortedHashMap<IRI, SortedTurtleObjectList> {
         public SortedTurtlePredicateObjectMap() { super(new IRIComparator()); }
 
         public int fullSize() {
@@ -792,7 +793,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     }
 
     /** A sorted map from subject resources to predicate/object pairs. */
-    protected class SortedTurtleSubjectPredicateObjectMap extends TreeMap<Resource, SortedTurtlePredicateObjectMap> {
+    protected class SortedTurtleSubjectPredicateObjectMap extends SortedHashMap<Resource, SortedTurtlePredicateObjectMap> {
         public SortedTurtleSubjectPredicateObjectMap() { super(new CachedResourceComparator()); }
         public SortedTurtleSubjectPredicateObjectMap(Class collectionClass) { super(new CachedResourceComparator(collectionClass)); }
 
@@ -1274,7 +1275,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                     allSubjectCount++;
                 }
             }
-            for (Resource subject : sortedTripleMap.keySet()) {
+            for (Resource subject : sortedTripleMap.sortedKeys()) {
                 if (!sortedOntologies.contains(subject) && !(subject instanceof BNode)) {
                     allSubjectCount++;
                 }
@@ -1299,7 +1300,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             }
 
             // Write out all other subjects (not unsortedOntologies; also not blank nodes).
-            for (Resource subject : sortedTripleMap.keySet()) {
+            for (Resource subject : sortedTripleMap.sortedKeys()) {
                 if (!sortedOntologies.contains(subject) && !(subject instanceof BNode)) {
                     subjectCount++;
                     writeSubjectTriples(out, subject);

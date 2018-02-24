@@ -72,425 +72,425 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     str.substring(idx + substr.length)
   }
 
-  //  "A SortedRDFWriterFactory" should "be able to create a SortedRdfXmlWriter" in {
-  //    val outWriter = new OutputStreamWriter(System.out)
-  //    val factory = new SesameSortedRDFWriterFactory(TargetFormats.rdf_xml)
-  //
-  //    val writer1 = new SesameSortedRdfXmlWriter(System.out)
-  //    assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
-  //
-  //    val writer2 = new SesameSortedRdfXmlWriter(outWriter)
-  //    assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
-  //
-  //    val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-  //    val writer3 = new SesameSortedRdfXmlWriter(System.out, mapAsJavaMap[String, Object](writer3Options))
-  //    assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
-  //
-  //    val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-  //    val writer4 = new SesameSortedRdfXmlWriter(outWriter, mapAsJavaMap[String, Object](writer4Options))
-  //    assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
-  //  }
+  "A SortedRDFWriterFactory" should "be able to create a SortedRdfXmlWriter" in {
+    val outWriter = new OutputStreamWriter(System.out)
+    val factory = new SesameSortedRDFWriterFactory(TargetFormats.rdf_xml)
 
-  //  "An RDFWriter" should "be able to read various RDF documents and write them in RDF/XML format" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir0 = createTempDir(rootOutputDir0, "rdfxml")
-  //
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir0, Some(".rdf"))
-  //      val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
-  //      val factory = new RDFXMLPrettyWriterFactory()
-  //      val turtleWriter = factory getWriter outWriter
-  //      val rdfFormat = (Rio getParserFormatForFileName (sourceFile getName)).get()
-  //
-  //      val inputModel = Rio parse (new FileReader(sourceFile), "", rdfFormat)
-  //      Rio write (inputModel, turtleWriter)
-  //      outWriter flush ()
-  //      outWriter close ()
-  //    }
-  //  }
+    val writer1 = new SesameSortedRdfXmlWriter(System.out)
+    assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
 
-  //  "A SortedRdfXmlWriter" should "be able to produce a sorted RDF/XML file" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("baseIri", baseIri)
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("baseIri", baseIri)
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //  }
+    val writer2 = new SesameSortedRdfXmlWriter(outWriter)
+    assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-  //  it should "be able to produce a sorted RDF/XML file with blank object nodes" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //  }
+    val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
+    val writer3 = new SesameSortedRdfXmlWriter(System.out, mapAsJavaMap[String, Object](writer3Options))
+    assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
-  //  it should "be able to produce a sorted RDF/XML file with directly recursive blank object nodes" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //  }
+    val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
+    val writer4 = new SesameSortedRdfXmlWriter(outWriter, mapAsJavaMap[String, Object](writer4Options))
+    assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
+  }
 
-  //  it should "be able to produce a sorted RDF/XML file with indirectly recursive blank object nodes" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //  }
+  "An RDFWriter" should "be able to read various RDF documents and write them in RDF/XML format" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir0 = createTempDir(rootOutputDir0, "rdfxml")
 
-  //  it should "be able to produce a sorted RDF/XML file preferring prefix over base IRI" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_prefix.rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //    val contents1 = getFileContents(outputFile, "UTF-8")
-  //    assert(contents1.contains("Åland"), "prefix preference file has encoding problem (1)")
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //    val contents2 = getFileContents(outputFile2, "UTF-8")
-  //    assert(contents2.contains("Åland"), "prefix preference file has encoding problem (2)")
-  //  }
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir0, Some(".rdf"))
+      val outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")
+      val factory = new RDFXMLPrettyWriterFactory()
+      val turtleWriter = factory getWriter outWriter
+      val rdfFormat = (Rio getParserFormatForFileName (sourceFile getName)).get()
 
-  //  it should "be able to produce a sorted RDF/XML file preferring base IRI over prefix" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_base_iri.rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //    val contents1 = getFileContents(outputFile, "UTF-8")
-  //    assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //    val contents2 = getFileContents(outputFile2, "UTF-8")
-  //    assert(contents2.contains("Åland"), "base IRI preference file has encoding problem (2)")
-  //  }
+      val inputModel = Rio parse (new FileReader(sourceFile), "", rdfFormat)
+      Rio write (inputModel, turtleWriter)
+      outWriter flush ()
+      outWriter close ()
+    }
+  }
 
-  //  it should "be able to read various RDF documents and write them in sorted RDF/XML format" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd"
-  //      )
-  //    }
-  //  }
+  "A SortedRdfXmlWriter" should "be able to produce a sorted RDF/XML file" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("baseIri", baseIri)
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-  //  it should "be able to sort RDF triples consistently when writing in RDF/XML format" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted RDF/XML.
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted RDF/XML.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the RDF/XML files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1)) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //  }
+    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
 
-  //  it should "should not add/lose RDF triples when writing in RDF/XML format without blank nodes" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted RDF/XML.
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted RDF/XML.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the RDF/XML files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1)) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //
-  //    // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some(".rdf"))
-  //      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-  //      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
-  //      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
-  //      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
-  //      // println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...")
-  //      assertTriplesMatch(inputModel1, inputModel2)
-  //    }
-  //  }
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("baseIri", baseIri)
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
 
-  //  it should "be able to produce a sorted RDF/XML file with inline blank nodes" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //    val inputFile = new File("src/test/resources/FIBO/ontology/master/latest/FND/Accounting/AccountingEquity.rdf")
-  //    val baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.rdf"))
-  //    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-  //    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
-  //    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
-  //    rdfXmlWriterOptions.put("baseIri", baseIri)
-  //    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    rdfXmlWriterOptions.put("inlineBlankNodes", java.lang.Boolean.TRUE)
-  //    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
-  //
-  //    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
-  //    Rio write (inputModel, rdfXmlWriter)
-  //    outWriter flush ()
-  //    outWriter close ()
-  //
-  //    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
-  //    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
-  //    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
-  //    rdfXmlWriter2Options.put("baseIri", baseIri)
-  //    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
-  //    rdfXmlWriter2Options.put("inlineBlankNodes", java.lang.Boolean.TRUE);
-  //    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
-  //
-  //    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
-  //    Rio write (inputModel2, rdfXmlWriter2)
-  //    outWriter2 flush ()
-  //    outWriter2 close ()
-  //  }
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
 
-  //  it should "be able to sort RDF triples consistently when writing in RDF/XML format with inline blank nodes" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted RDF/XML.
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn.rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted RDF/XML.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the RDF/XML files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn")) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //  }
+  it should "be able to produce a sorted RDF/XML file with blank object nodes" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
 
-  "A SortedRdfXmlWriter" should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes (single file)" in { // TODO: restore 'it'
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted RDF/XML file with directly recursive blank object nodes" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted RDF/XML file with indirectly recursive blank object nodes" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
+
+    val inputModel = Rio parse (new FileReader(inputFile), "", RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), "", RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to produce a sorted RDF/XML file preferring prefix over base IRI" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_prefix.rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
+
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+    val contents1 = getFileContents(outputFile, "UTF-8")
+    assert(contents1.contains("Åland"), "prefix preference file has encoding problem (1)")
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+    val contents2 = getFileContents(outputFile2, "UTF-8")
+    assert(contents2.contains("Åland"), "prefix preference file has encoding problem (2)")
+  }
+
+  it should "be able to produce a sorted RDF/XML file preferring base IRI over prefix" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_base_iri.rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
+
+    val inputModel = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), baseIri stringValue, RDFFormat.TURTLE)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+    val contents1 = getFileContents(outputFile, "UTF-8")
+    assert(contents1.contains("Åland"), "base IRI preference file has encoding problem (1)")
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+    val contents2 = getFileContents(outputFile2, "UTF-8")
+    assert(contents2.contains("Åland"), "base IRI preference file has encoding problem (2)")
+  }
+
+  it should "be able to read various RDF documents and write them in sorted RDF/XML format" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd"
+      )
+    }
+  }
+
+  it should "be able to sort RDF triples consistently when writing in RDF/XML format" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+
+    // Serialise sample files as sorted RDF/XML.
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd"
+      )
+    }
+
+    // Re-serialise the sorted files, again as sorted RDF/XML.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd"
+      )
+    }
+
+    // Check that re-serialising the RDF/XML files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1)) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+  }
+
+  it should "should not add/lose RDF triples when writing in RDF/XML format without blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+
+    // Serialise sample files as sorted RDF/XML.
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd"
+      )
+    }
+
+    // Re-serialise the sorted files, again as sorted RDF/XML.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd"
+      )
+    }
+
+    // Check that re-serialising the RDF/XML files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1)) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+
+    // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some(".rdf"))
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
+      // println(s"[info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...")
+      assertTriplesMatch(inputModel1, inputModel2)
+    }
+  }
+
+  it should "be able to produce a sorted RDF/XML file with inline blank nodes" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+    val inputFile = new File("src/test/resources/FIBO/ontology/master/latest/FND/Accounting/AccountingEquity.rdf")
+    val baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.rdf"))
+    val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
+    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val rdfXmlWriterOptions = new util.HashMap[String, Object]()
+    rdfXmlWriterOptions.put("baseIri", baseIri)
+    rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
+    rdfXmlWriterOptions.put("inlineBlankNodes", java.lang.Boolean.TRUE)
+    val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
+
+    val inputModel = Rio parse (new FileReader(inputFile), baseIri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel, rdfXmlWriter)
+    outWriter flush ()
+    outWriter close ()
+
+    val outputFile2 = constructTargetFile(outputFile, outputDir1, outputDir2)
+    val outWriter2 = new OutputStreamWriter(new FileOutputStream(outputFile2), "UTF-8")
+    val rdfXmlWriter2Options = new util.HashMap[String, Object]()
+    rdfXmlWriter2Options.put("baseIri", baseIri)
+    rdfXmlWriter2Options.put("useDtdSubset", java.lang.Boolean.TRUE)
+    rdfXmlWriter2Options.put("inlineBlankNodes", java.lang.Boolean.TRUE);
+    val rdfXmlWriter2 = factory getWriter (outWriter2, rdfXmlWriter2Options)
+
+    val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(outputFile), "UTF-8"), baseIri stringValue, RDFFormat.RDFXML)
+    Rio write (inputModel2, rdfXmlWriter2)
+    outWriter2 flush ()
+    outWriter2 close ()
+  }
+
+  it should "be able to sort RDF triples consistently when writing in RDF/XML format with inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+
+    // Serialise sample files as sorted RDF/XML.
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn.rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd",
+        "-ibn"
+      )
+    }
+
+    // Re-serialise the sorted files, again as sorted RDF/XML.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd",
+        "-ibn"
+      )
+    }
+
+    // Check that re-serialising the RDF/XML files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn")) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+  }
+
+  it should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes (single file)" in {
     // Serialise sample file as sorted RDF/XML.
     val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
     val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
@@ -529,228 +529,228 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val rdfFormat2 = (Rio getParserFormatForFileName (outputFile2 getName)).get()
     val inputModel1a = Rio parse (new InputStreamReader(new FileInputStream(inputFile), "UTF-8"), "", rdfFormat1)
     val inputModel2a = Rio parse (new InputStreamReader(new FileInputStream(outputFile2), "UTF-8"), "", rdfFormat2)
-    println(s"[single] [info] Comparing ${inputFile.getAbsolutePath} to ${outputFile2.getAbsolutePath} ...")
+    // println(s"[single] [info] Comparing ${inputFile.getAbsolutePath} to ${outputFile2.getAbsolutePath} ...")
     assertTriplesMatch(inputModel1a, inputModel2a, DebugState(true, Some("single")))
   }
 
-  //  it should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes (multiple files)" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted RDF/XML.
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted RDF/XML.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "rdf-xml",
-  //        "-dtd",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the RDF/XML files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //
-  //    // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.rdf"))
-  //      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-  //      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
-  //      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
-  //      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
-  //      // println(s"[multi] [info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") } // TODO: comment out debugging
-  //      assertTriplesMatch(inputModel1, inputModel2, NODEBUG)
-  //    }
-  //  }
+  it should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes (multiple files)" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
 
-  //  it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //
-  //      val sourceReader = new BufferedReader(new FileReader(sourceFile))
-  //      var baseLine1: String = null
-  //      var unfinished = true
-  //      var hasOntologyIri = false
-  //      while (unfinished) {
-  //        val line = sourceReader.readLine()
-  //        if (line == null) {
-  //          unfinished = false
-  //        } else if (line.contains("owl:Ontology")) {
-  //          hasOntologyIri = true
-  //          if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
-  //            baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
-  //          }
-  //        }
-  //      }
-  //
-  //      if (hasOntologyIri && (baseLine1 != null)) {
-  //        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.rdf"))
-  //        SesameRdfFormatter run Array[String](
-  //          "-s", sourceFile getAbsolutePath,
-  //          "-t", targetFile getAbsolutePath,
-  //          "-tfmt", "rdf-xml",
-  //          "-dtd",
-  //          "-ibi"
-  //        )
-  //
-  //        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
-  //        var baseLine2: String = null
-  //        unfinished = true
-  //        while (unfinished) {
-  //          val line = targetReader.readLine()
-  //          if (line == null) {
-  //            unfinished = false
-  //          } else if (line.contains("owl:Ontology")) {
-  //            if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
-  //              baseLine2 = line.trim.replaceAll("\\s*=\\s*", "=")
-  //            }
-  //          }
-  //        }
-  //
-  //        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
-  //      }
-  //    }
-  //  }
+    // Serialise sample files as sorted RDF/XML.
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd",
+        "-ibn"
+      )
+    }
 
-  //  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.rdf"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-ip", "^http://topbraid.org/countries",
-  //      "-ir", "http://replaced.example.org/countries"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("<!ENTITY countries \"http://replaced.example.org/countries#\">"), "IRI replacement seems to have failed")
-  //  }
+    // Re-serialise the sorted files, again as sorted RDF/XML.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "rdf-xml",
+        "-dtd",
+        "-ibn"
+      )
+    }
 
-  //  it should "be able to add single-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.rdf"))
-  //    val linePrefix = "## "
-  //    val leadingComment = "Start of --> My New Ontology."
-  //    val trailingComment = "End of --> My New Ontology."
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-lc", leadingComment,
-  //      "-tc", trailingComment
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    val escapedLeadingComment = SesameSortedRdfXmlWriter.escapeCommentText(leadingComment)
-  //    assert(content.contains(linePrefix + escapedLeadingComment), "leading comment insertion seems to have failed")
-  //    val escapedTrailingComment = SesameSortedRdfXmlWriter.escapeCommentText(trailingComment)
-  //    assert(content.contains(linePrefix + escapedTrailingComment), "trailing comment insertion seems to have failed")
-  //  }
+    // Check that re-serialising the RDF/XML files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
 
-  //  it should "be able to add multi-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.rdf"))
-  //    val linePrefix = "## "
-  //    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
-  //    val trailingComments = List("End of: My New Ontology.", "Version 1.")
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-lc", leadingComments(0), "-lc", leadingComments(1),
-  //      "-tc", trailingComments(0), "-tc", trailingComments(1)
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    for (comment ← leadingComments) {
-  //      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
-  //      assert(content.contains(linePrefix + escapedComment), "leading comment insertion seems to have failed")
-  //    }
-  //    for (comment ← trailingComments) {
-  //      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
-  //      assert(content.contains(linePrefix + escapedComment), "trailing comment insertion seems to have failed")
-  //    }
-  //  }
+    // Check that the re-serialised RDF/XML files have the same triple count as the matching raw files.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.rdf"))
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val rdfFormat2 = (Rio getParserFormatForFileName (targetFile getName)).get()
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", rdfFormat2)
+      // println(s"[multi] [info] Comparing ${sourceFile.getAbsolutePath} to ${targetFile.getAbsolutePath} ...") } // TODO: comment out debugging
+      assertTriplesMatch(inputModel1, inputModel2, NODEBUG)
+    }
+  }
 
-  //  it should "be able to use explicit data typing for strings" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt_explicit.rdf"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-sdt", "explicit"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("rdf:datatype=\"&xsd;string\""), "explicit string data typing seems to have failed")
-  //  }
-  //
-  //  it should "be able to use set the indent string" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.rdf"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-i", "  "
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
-  //    assert(singleIndentLineCount >= 1, "double-space indent has failed")
-  //
-  //    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.rdf"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile2 getAbsolutePath,
-  //      "-tfmt", "rdf-xml",
-  //      "-dtd",
-  //      "-i", "\t\t"
-  //    )
-  //    val content2 = getFileContents(outputFile2, "UTF-8")
-  //    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
-  //    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
-  //  }
+  it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseLine1: String = null
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+          if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
+            baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
+          }
+        }
+      }
+
+      if (hasOntologyIri && (baseLine1 != null)) {
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.rdf"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "rdf-xml",
+          "-dtd",
+          "-ibi"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseLine2: String = null
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (line.contains("owl:Ontology")) {
+            if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
+              baseLine2 = line.trim.replaceAll("\\s*=\\s*", "=")
+            }
+          }
+        }
+
+        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+  }
+
+  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.rdf"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-ip", "^http://topbraid.org/countries",
+      "-ir", "http://replaced.example.org/countries"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("<!ENTITY countries \"http://replaced.example.org/countries#\">"), "IRI replacement seems to have failed")
+  }
+
+  it should "be able to add single-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.rdf"))
+    val linePrefix = "## "
+    val leadingComment = "Start of --> My New Ontology."
+    val trailingComment = "End of --> My New Ontology."
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-lc", leadingComment,
+      "-tc", trailingComment
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val escapedLeadingComment = SesameSortedRdfXmlWriter.escapeCommentText(leadingComment)
+    assert(content.contains(linePrefix + escapedLeadingComment), "leading comment insertion seems to have failed")
+    val escapedTrailingComment = SesameSortedRdfXmlWriter.escapeCommentText(trailingComment)
+    assert(content.contains(linePrefix + escapedTrailingComment), "trailing comment insertion seems to have failed")
+  }
+
+  it should "be able to add multi-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.rdf"))
+    val linePrefix = "## "
+    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
+    val trailingComments = List("End of: My New Ontology.", "Version 1.")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-lc", leadingComments(0), "-lc", leadingComments(1),
+      "-tc", trailingComments(0), "-tc", trailingComments(1)
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    for (comment ← leadingComments) {
+      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      assert(content.contains(linePrefix + escapedComment), "leading comment insertion seems to have failed")
+    }
+    for (comment ← trailingComments) {
+      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      assert(content.contains(linePrefix + escapedComment), "trailing comment insertion seems to have failed")
+    }
+  }
+
+  it should "be able to use explicit data typing for strings" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt_explicit.rdf"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-sdt", "explicit"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("rdf:datatype=\"&xsd;string\""), "explicit string data typing seems to have failed")
+  }
+
+  it should "be able to use set the indent string" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.rdf"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-i", "  "
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
+    assert(singleIndentLineCount >= 1, "double-space indent has failed")
+
+    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.rdf"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile2 getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-i", "\t\t"
+    )
+    val content2 = getFileContents(outputFile2, "UTF-8")
+    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
+    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
+  }
 
 }

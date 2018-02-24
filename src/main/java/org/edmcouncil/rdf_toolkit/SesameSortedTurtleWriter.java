@@ -224,7 +224,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
 
         // Write other predicate/object pairs.
-        for (IRI predicate : poMap.keySet()) {
+        for (IRI predicate : poMap.sortedKeys()) {
             if (!firstPredicates.contains(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
                 writePredicateAndObjectValues(out, predicate, values);
@@ -381,7 +381,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
                 }
 
                 // Write other predicate/object pairs.
-                for (IRI predicate : poMap.keySet()) {
+                for (IRI predicate : poMap.sortedKeys()) {
                     if (!firstPredicates.contains(predicate)) {
                         SortedTurtleObjectList values = poMap.get(predicate);
                         writePredicateAndObjectValues(out, predicate, values);
