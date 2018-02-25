@@ -44,8 +44,9 @@ libraryDependencies += "commons-validator" % "commons-validator" % "1.6"
 //
 libraryDependencies += ("net.sourceforge.owlapi" % "owlapi-api" % owlApiVersion withSources())
                         .exclude("com.fasterxml.jackson.core", "jackson-core")
-
 libraryDependencies += "net.sourceforge.owlapi" % "owlapi-apibinding" % owlApiVersion withSources()
+libraryDependencies += "net.sourceforge.owlapi" % "owlapi-tools" % owlApiVersion withSources()
+libraryDependencies += "net.sourceforge.owlapi" % "owlapi-distribution" % owlApiVersion withSources()
 
 libraryDependencies += "org.clapper" %% "grizzled-slf4j" % "1.3.1" withSources()
 
@@ -88,6 +89,14 @@ libraryDependencies += "jline" % "jline" % "2.14.5"
 // Argot Command-Line Argument Handling used in the Scala code
 //
 //libraryDependencies += "org.clapper" %% "argot" % "1.0.3"
+
+//
+// Aduna Commons IO provides an indenting XML writer class.
+//
+
+// https://mvnrepository.com/artifact/info.aduna.commons/aduna-commons-io
+libraryDependencies += "info.aduna.commons" % "aduna-commons-io" % "2.10.0"
+
 
 //
 // Command Line Interface Scala Toolkit
@@ -141,6 +150,8 @@ fork in run := true
 resolvers += JavaNet2Repository
 
 resolvers += "http://weblab.ow2.org/" at "http://weblab.ow2.org/release-repository"
+
+resolvers += "MyGrid" at "http://www.mygrid.org.uk/maven/repository/"
 
 //
 // Select the main class. Let it be the Scala main class, not the Java main (SesameRdfFormatter), which can still
