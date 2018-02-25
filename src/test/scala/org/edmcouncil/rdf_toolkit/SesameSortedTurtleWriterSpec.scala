@@ -395,7 +395,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
   it should "be able to produce a sorted Turtle file with inline blank nodes" in {
     val outputDir1 = createTempDir(rootOutputDir1, "turtle")
     val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-    val inputFile = new File("src/test/resources/FIBO/ontology/master/latest/FND/Accounting/AccountingEquity.rdf")
+    val inputFile = new File("src/test/resources/fibo/ontology/master/latest/FND/Accounting/AccountingEquity.rdf")
     val baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.ttl"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
