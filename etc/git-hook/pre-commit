@@ -143,7 +143,12 @@ function serialize() {
         return 0
     esac
 
-    if [[ $file == *About* ]] ;  then 
+    if [[ $file =~ .*About.* ]] ;  then 
+        log "Skipping unsupported file $file"
+        return 0
+    fi
+
+    if [[ $file =~ .*OWL.* ]] ;  then 
         log "Skipping unsupported file $file"
         return 0
     fi
@@ -173,8 +178,10 @@ __log_config__
       --source "${file}" \
       --target "${file}" \
       --target-format rdf-xml \
-      --use-dtd-subset -ibn -ibu \
-      -sdt explicit 
+      --use-dtd-subset \
+      --inline-blank-nodes \
+      --infer-base-iri \
+      --string-data-typing explicit 
     rc=$?
     set +x
 
@@ -182,9 +189,9 @@ __log_config__
       rm -f "${logcfg}" >/dev/null 2>&1
     fi
 
-    sed '/rdfs:label/!b;:a;/datatype="&xsd;string"/bb;$!{N;ba};:b;s/rdfs:label[^>]*datatype=".....string"/rdfs:label/' "${file}" > temp
-    rm "${file}"
-    mv temp "${file}"
+#    sed '/rdfs:label/!b;:a;/datatype="&xsd;string"/bb;$!{N;ba};:b;s/rdfs:label[^>]*datatype=".....string"/rdfs:label/' "${file}" > temp
+#    rm "${file}"
+#    mv temp "${file}"
 
     if [ ${rc} -eq 0 ] ; then
       log "Re-adding potentially re-serialized file to git staging area: ${file}"
