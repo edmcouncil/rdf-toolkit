@@ -180,8 +180,7 @@ __log_config__
       --target-format rdf-xml \
       --use-dtd-subset \
       --inline-blank-nodes \
-      --infer-base-iri \
-      --string-data-typing explicit 
+      --infer-base-iri
     rc=$?
     set +x
 
