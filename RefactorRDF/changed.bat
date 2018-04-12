@@ -1,0 +1,1 @@
+java -Xmx1g  -cp "rdf-toolkit.jar" org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source "%~1" --target "%~1" --target-format rdf-xml --use-dtd-subset -ibn -ibi
