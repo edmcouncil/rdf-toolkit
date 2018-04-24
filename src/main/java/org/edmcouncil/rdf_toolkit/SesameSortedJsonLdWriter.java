@@ -27,17 +27,11 @@ import info.aduna.io.IndentingWriter;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Equivalent to Sesame's built-in JSON-LD writer, but the triples are sorted into a consistent order.
@@ -111,7 +105,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
      * Signals the start of the RDF data. This method is called before any data
      * is reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void startRDF() throws RDFHandlerException {
@@ -123,7 +117,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
      * Signals the end of the RDF data. This method is called when all data has
      * been reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void endRDF() throws RDFHandlerException {
@@ -259,13 +253,32 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         for (IRI predicate : firstPredicates) {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
-                writePredicateAndObjectValues(out, predicate, values);
-                out.write(",");
-                if (out instanceof IndentingWriter) {
-                    IndentingWriter output = (IndentingWriter)out;
-                    output.writeEOL();
-                } else {
-                    out.write("\n");
+                if (values != null) { values = (SortedTurtleObjectList) values.clone(); } // make a copy so we don't delete anything from the original
+                ArrayList<Value> valuesList = new ArrayList<>();
+                if (values.size() >= 1) {
+                    if (predicate == rdfType) {
+                        for (IRI preferredType : preferredRdfTypes) {
+                            if (values.contains(preferredType)) {
+                                valuesList.add(preferredType);
+                                values.remove(preferredType);
+                            }
+                        }
+                    }
+                    if (values.size() >= 1) {
+                        for (Value value : values) {
+                            valuesList.add(value);
+                        }
+                    }
+                }
+                if (valuesList.size() >= 1) {
+                    writePredicateAndObjectValues(out, predicate, valuesList);
+                    out.write(",");
+                    if (out instanceof IndentingWriter) {
+                        IndentingWriter output = (IndentingWriter)out;
+                        output.writeEOL();
+                    } else {
+                        out.write("\n");
+                    }
                 }
             }
         }
@@ -346,16 +359,16 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         return convertIriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/false, /*useJsonLdQuoting*/true);
     }
 
-    protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception {
+    protected void writePredicateAndObjectValues(Writer out, IRI predicate, Collection<Value> values) throws Exception {
         final boolean isRdfTypePredicate = rdfType.equals(predicate);
         out.write("\"");
         writePredicate(out, predicate);
         out.write("\" : ");
         if (values.size() == 1) {
             if (isRdfTypePredicate) {
-                writeObject(out, (IRI)values.first(), isRdfTypePredicate);
+                writeObject(out, (IRI)values.toArray()[0], isRdfTypePredicate);
             } else {
-                writeObject(out, values.first());
+                writeObject(out, (Value)values.toArray()[0]);
             }
         } else if (values.size() > 1) {
             out.write("[");

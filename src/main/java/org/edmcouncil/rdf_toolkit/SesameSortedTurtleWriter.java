@@ -26,15 +26,10 @@ package org.edmcouncil.rdf_toolkit;
 import info.aduna.io.IndentingWriter;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-
-// import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Equivalent to Sesame's built-in Turtle writer, but the triples are sorted into a consistent order.
@@ -107,7 +102,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
      * Signals the start of the RDF data. This method is called before any data
      * is reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void startRDF() throws RDFHandlerException {
@@ -119,7 +114,7 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
      * Signals the end of the RDF data. This method is called when all data has
      * been reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void endRDF() throws RDFHandlerException {
@@ -219,7 +214,26 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         for (IRI predicate : firstPredicates) {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
-                writePredicateAndObjectValues(out, predicate, values);
+                if (values != null) { values = (SortedTurtleObjectList) values.clone(); } // make a copy so we don't delete anything from the original
+                ArrayList<Value> valuesList = new ArrayList<>();
+                if (values.size() >= 1) {
+                    if (predicate == rdfType) {
+                        for (IRI preferredType : preferredRdfTypes) {
+                            if (values.contains(preferredType)) {
+                                valuesList.add(preferredType);
+                                values.remove(preferredType);
+                            }
+                        }
+                    }
+                    if (values.size() >= 1) {
+                        for (Value value : values) {
+                            valuesList.add(value);
+                        }
+                    }
+                }
+                if (valuesList.size() >= 1) {
+                    writePredicateAndObjectValues(out, predicate, valuesList);
+                }
             }
         }
 
@@ -261,11 +275,11 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception {
+    protected void writePredicateAndObjectValues(Writer out, IRI predicate, Collection<Value> values) throws Exception {
         writePredicate(out, predicate);
         if (values.size() == 1) {
             out.write(" ");
-            writeObject(out, values.first());
+            writeObject(out, (Value) values.toArray()[0]);
             out.write(" ;");
             if (out instanceof IndentingWriter) {
                 IndentingWriter output = (IndentingWriter)out;

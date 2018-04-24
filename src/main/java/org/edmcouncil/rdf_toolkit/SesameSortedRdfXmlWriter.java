@@ -30,6 +30,7 @@ import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -102,7 +103,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
      * Signals the start of the RDF data. This method is called before any data
      * is reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void startRDF() throws RDFHandlerException {
@@ -113,7 +114,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
      * Signals the end of the RDF data. This method is called when all data has
      * been reported.
      *
-     * @throws org.openrdf.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
+     * @throws org.eclipse.rdf4j.rio.RDFHandlerException If the RDF handler has encountered an unrecoverable error.
      */
     @Override
     public void endRDF() throws RDFHandlerException {
@@ -231,14 +232,18 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         }
         IRI enclosingElementIRI = rdfDescription; // default value
         QName enclosingElementQName = convertIriToQName(enclosingElementIRI, useGeneratedPrefixes);
-        if ((subjectRdfTypes != null) && subjectRdfTypes.contains(owlNamedIndividual)) { // prioritise owl:NamedIndividual as the preferred RDF/XML element name
-            Value subjectRdfTypeValue = owlNamedIndividual;
-            QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, useGeneratedPrefixes);
-            if (subjectRdfTypeQName != null) {
-                enclosingElementIRI = (IRI) subjectRdfTypeValue;
-                enclosingElementQName = subjectRdfTypeQName;
+        for (IRI preferredType : preferredRdfTypes) { // use a preferred rdf:type for the XML element tag name, if possible
+            if ((subjectRdfTypes != null) && subjectRdfTypes.contains(preferredType)) { // prioritise owl:NamedIndividual as the preferred RDF/XML element name
+                Value subjectRdfTypeValue = preferredType;
+                QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, useGeneratedPrefixes);
+                if (subjectRdfTypeQName != null) {
+                    enclosingElementIRI = (IRI) subjectRdfTypeValue;
+                    enclosingElementQName = subjectRdfTypeQName;
+                    break;
+                }
             }
-        } else if ((subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
+        }
+        if ((rdfDescription.equals(enclosingElementIRI)) && (subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) { // if no preferred type, use the type for the XML element tag, if there is only a single rdf:type
             Value subjectRdfTypeValue = subjectRdfTypes.first();
             if (subjectRdfTypeValue instanceof IRI) {
                 QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, useGeneratedPrefixes);
@@ -275,11 +280,27 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
             if (poMap.containsKey(predicate)) {
                 SortedTurtleObjectList values = poMap.get(predicate);
                 if (values != null) { values = (SortedTurtleObjectList) values.clone(); } // make a copy so we don't delete anything from the original
+                ArrayList<Value> valuesList = new ArrayList<>();
                 if (predicate == rdfType) { // assumes that rdfType is one of the firstPredicates
                     values.remove(enclosingElementIRI); // no need to state type explicitly if it has been used as an enclosing element name
                 }
                 if (values.size() >= 1) {
-                    writePredicateAndObjectValues(out, predicate, values);
+                    if (predicate == rdfType) {
+                        for (IRI preferredType : preferredRdfTypes) {
+                            if (values.contains(preferredType)) {
+                                valuesList.add(preferredType);
+                                values.remove(preferredType);
+                            }
+                        }
+                    }
+                    if (values.size() >= 1) {
+                        for (Value value : values) {
+                            valuesList.add(value);
+                        }
+                    }
+                }
+                if (valuesList.size() >= 1) {
+                    writePredicateAndObjectValues(out, predicate, valuesList);
                 }
             }
         }
@@ -299,7 +320,7 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
         }
     }
 
-    protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception {
+    protected void writePredicateAndObjectValues(Writer out, IRI predicate, Collection<Value> values) throws Exception {
         // Get prefixes used for the XML
         rdfPrefix = reverseNamespaceTable.get(RDF_NS_URI);
         xmlPrefix = reverseNamespaceTable.get(XML_NS_URI);

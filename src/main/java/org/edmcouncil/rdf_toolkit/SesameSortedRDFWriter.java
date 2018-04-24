@@ -207,6 +207,12 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** owl:Thing URL */
     protected static final IRI owlThing = valueFactory.createIRI(OWL_NS_URI + "Thing");
 
+    /** owl:DatatypeProperty URL */
+    protected static final IRI owlDatatypeProperty = valueFactory.createIRI(OWL_NS_URI + "DatatypeProperty");
+
+    /** owl:ObjectProperty URL */
+    protected static final IRI owlObjectProperty = valueFactory.createIRI(OWL_NS_URI + "ObjectProperty");
+
     /** owl:onProperty URL */
     protected static final IRI owlOnProperty = valueFactory.createIRI(OWL_NS_URI + "onProperty");
 
@@ -218,6 +224,11 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     /** rdf:langString URL */
     protected static final IRI rdfLangString = valueFactory.createIRI(RDF_NS_URI + "langString");
+
+    /** Preferred rdf:type values when rendering RDF. */
+    protected static final List<IRI> preferredRdfTypes = Arrays.asList(new IRI[] {
+            owlNamedIndividual, owlDatatypeProperty, owlObjectProperty
+    });
 
     /** Comparator for TurtleObjectList objects. */
     protected class TurtleObjectListComparator implements Comparator<SortedTurtleObjectList> {
@@ -1461,7 +1472,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
 
     abstract protected void writeSubjectSeparator(Writer out) throws Exception;
 
-    abstract protected void writePredicateAndObjectValues(Writer out, IRI predicate, SortedTurtleObjectList values) throws Exception;
+    abstract protected void writePredicateAndObjectValues(Writer out, IRI predicate, Collection<Value> values) throws Exception;
 
     abstract protected void writeFooter(Writer out, String[] trailingComments) throws Exception;
 
