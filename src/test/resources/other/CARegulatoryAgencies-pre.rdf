@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY dct "http://purl.org/dc/terms/" >
+    <!ENTITY skos "http://www.w3.org/2004/02/skos/core#" >
+    <!ENTITY sm "http://www.omg.org/techprocess/ab/SpecificationMetadata/" >
+	
+	<!ENTITY lcc-lr "http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/">    
+    <!ENTITY lcc-639-1 "http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/">
+    <!ENTITY lcc-639-2 "http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/">
+    <!ENTITY lcc-cr "http://www.omg.org/spec/LCC/Countries/CountryRepresentation/" >
+    <!ENTITY lcc-3166-1 "http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/" >
+    <!ENTITY lcc-3166-2 "http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/" >
+	<!ENTITY lcc-3166-2-ca "http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-CA/" >
+	<!ENTITY lcc-3166-2-us "http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-US/" >
+
+    <!ENTITY fibo-fnd-utl-av "http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/AnnotationVocabulary/" >
+    <!ENTITY fibo-fnd-aap-agt "http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/Agents/" >
+    <!ENTITY fibo-fnd-rel-rel "http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/" >
+
+    <!ENTITY fibo-be-ge-ge "http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/GovernmentEntities/" >
+    <!ENTITY fibo-be-ge-caj "http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/NorthAmericanJurisdiction/CAGovernmentEntitiesAndJurisdictions/" >
+    <!ENTITY fibo-be-le-fbo "http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/FormalBusinessOrganizations/" >
+	<!ENTITY fibo-be-le-lei "http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/LEIEntities/" >    
+	
+    <!ENTITY fibo-fbc-fct-breg "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/BusinessRegistries/" >
+    <!ENTITY fibo-fbc-fct-fse "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/FinancialServicesEntities/" >
+    <!ENTITY fibo-fbc-fct-ra "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegistrationAuthorities/" >
+    <!ENTITY fibo-fbc-fct-rga "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegulatoryAgencies/" >
+    <!ENTITY fibo-fbc-fct-cafse "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CAFinancialServicesEntities/" >
+    <!ENTITY fibo-fbc-fct-cajrga "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/" >
+	<!ENTITY fibo-fbc-fct-usfsind "http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/" >
+]>
+
+<rdf:RDF xml:base="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:dct="http://purl.org/dc/terms/"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:sm="http://www.omg.org/techprocess/ab/SpecificationMetadata/"
+	 
+	 xmlns:lcc-lr="http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/"    
+     xmlns:lcc-639-1="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"
+     xmlns:lcc-639-2="http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"
+     xmlns:lcc-cr="http://www.omg.org/spec/LCC/Countries/CountryRepresentation/"
+     xmlns:lcc-3166-1="http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/"
+     xmlns:lcc-3166-2="http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/"
+	 xmlns:lcc-3166-2-ca="http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-CA/"
+	 xmlns:lcc-3166-2-us="http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-US/"
+
+     xmlns:fibo-fnd-utl-av="http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/AnnotationVocabulary/"
+	 xmlns:fibo-fnd-aap-agt="http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/Agents/"
+     xmlns:fibo-fnd-rel-rel="http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/"
+
+	 xmlns:fibo-be-ge-ge="http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/GovernmentEntities/"
+     xmlns:fibo-be-ge-caj="http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/NorthAmericanJurisdiction/CAGovernmentEntitiesAndJurisdictions/"
+     xmlns:fibo-be-le-fbo="http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/FormalBusinessOrganizations/"
+	 xmlns:fibo-be-le-lei="http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/LEIEntities/" 
+	 
+     xmlns:fibo-fbc-fct-breg="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/BusinessRegistries/"
+     xmlns:fibo-fbc-fct-fse="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/FinancialServicesEntities/"
+     xmlns:fibo-fbc-fct-ra="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegistrationAuthorities/"
+     xmlns:fibo-fbc-fct-rga="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegulatoryAgencies/"
+     xmlns:fibo-fbc-fct-usfsind="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/"
+     xmlns:fibo-fbc-fct-cafse="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CAFinancialServicesEntities/"
+     xmlns:fibo-fbc-fct-cajrga="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/">
+
+
+    <owl:Ontology rdf:about="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/">
+        <rdfs:label>Canadian Regulatory Agencies Ontology</rdfs:label>
+
+
+    <!-- Curation and Rights Metadata for the FIBO FBC Canadian Regulatory Agencies Ontology -->
+
+        <sm:copyright rdf:datatype="&xsd;string">Copyright (c) 2016-2018 EDM Council, Inc.
+Copyright (c) 2016-2018 Object Management Group, Inc.</sm:copyright>
+        <dct:license rdf:datatype="&xsd;anyURI">http://www.omg.org/techprocess/ab/SpecificationMetadata/MITLicense</dct:license>
+
+
+    <!-- Ontology/File-Level Metadata for the FIBO FBC Canadian Regulatory Agencies Ontology -->
+
+        <sm:filename rdf:datatype="&xsd;string">CARegulatoryAgencies.rdf</sm:filename>
+        <sm:fileAbbreviation rdf:datatype="&xsd;string">fibo-fbc-fct-cajrga</sm:fileAbbreviation>
+        <owl:versionIRI rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/20160801/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/"/>
+        <sm:fileAbstract rdf:datatype="&xsd;string">This ontology extends the primary regulatory agencies ontology in FBC with additional regulators that are specific to the United States and augments certain U.S. financial services entities based on who regulates them.</sm:fileAbstract>
+
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/LCC/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FND/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/BE/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/FinancialServicesEntities/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegistrationAuthorities/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegulatoryAgencies/</sm:dependsOn>
+        <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CAFinancialServicesEntities/</sm:dependsOn>
+
+        <sm:contentLanguage rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/ODM/</sm:contentLanguage>
+        <sm:contentLanguage rdf:datatype="&xsd;anyURI">http://www.w3.org/standards/techs/owl#w3c_all</sm:contentLanguage>
+
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/AboutTheEDMC-FIBOFamily/</rdfs:seeAlso>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/AboutFBC/</rdfs:seeAlso>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/AboutFBCFunctionalEntities/</rdfs:seeAlso>
+
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/LanguageRepresentation/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/ISO639-1-LanguageCodes/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Languages/ISO639-2-LanguageCodes/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/CountryRepresentation/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/ISO3166-1-CountryCodes/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/ISO3166-2-SubdivisionCodes/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-CA/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/LCC/Countries/Regions/ISO3166-2-SubdivisionCodes-US/"/>
+
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/AnnotationVocabulary/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/Agents/"/>
+
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/GovernmentEntities/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/BE/GovernmentEntities/NorthAmericanJurisdiction/CAGovernmentEntitiesAndJurisdictions/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/FormalBusinessOrganizations/"/>
+		<owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/BE/LegalEntities/LEIEntities/"/>
+		
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/BusinessRegistries/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/FinancialServicesEntities/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegistrationAuthorities/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/RegulatoryAgencies/"/>
+
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/USFinancialServicesEntitiesIndividuals/"/>
+        <owl:imports rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/FunctionalEntities/NorthAmericanEntities/CAFinancialServicesEntities/"/>
+
+    </owl:Ontology>
+    
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+        
+    <owl:NamedIndividual rdf:about="&fibo-fbc-fct-cajrga;BankOfCanada">
+        <rdfs:label>Bank of Canada</rdfs:label>
+        <rdf:type rdf:resource="&fibo-be-ge-ge;GovernmentAgency"/>
+        <fibo-fnd-rel-rel:isPartOf rdf:resource="&fibo-be-ge-caj;GovernmentOfCanada"/>
+        <skos:definition rdf:datatype="&xsd;string">individual representing the central bank of Canada</skos:definition>
+        <fibo-fnd-utl-av:explanatoryNote rdf:datatype="&xsd;string">The Bank of Canada's overall goal is to promote a stable and efficient financial system in Canada. The focus on the financial system as a whole parallels the
+Bank's approach to monetary policy, which focuses on the entire economy.
+
+The Bank provides liquidity to the financial system, gives policy advice to the federal government on the design and development of the system, oversees major clearing and settlement systems, and provides banking services to these systems and their participants.</fibo-fnd-utl-av:explanatoryNote>
+        <fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/wp-content/uploads/2010/11/regulation_canadian_financial.pdf</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-rel-rel:hasLegalName rdf:datatype="&xsd;string" xml:lang="en">Bank of Canada</fibo-fnd-rel-rel:hasLegalName>
+		<fibo-fnd-rel-rel:hasLegalName rdf:datatype="&xsd;string" xml:lang="fr">Banque du Canada</fibo-fnd-rel-rel:hasLegalName>
+        <fibo-be-ge-ge:hasJurisdiction rdf:resource="&fibo-be-ge-caj;CanadianJurisdiction"/>
+        <fibo-fbc-fct-breg:hasHeadquartersAddress rdf:resource="&fibo-fbc-fct-cajrga;BankOfCanadaHeadOfficeAddress"/>
+		<fibo-fbc-fct-breg:hasWebsite rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/</fibo-fbc-fct-breg:hasWebsite>
+        <rdfs:isDefinedBy rdf:resource="&fibo-fbc-fct-cajrga;"/>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&fibo-fbc-fct-cajrga;BankOfCanadaHeadOfficeAddress">
+        <rdf:type rdf:resource="&fibo-be-le-fbo;RegisteredAddress"/>
+        <rdfs:label>Bank of Canada head office address</rdfs:label>
+        <skos:definition rdf:datatype="&xsd;string">individual representing the head office address for the Bank of Canada</skos:definition>
+        <fibo-fbc-fct-breg:hasAddressLine1 rdf:datatype="&xsd;string">234 Wellington Street</fibo-fbc-fct-breg:hasAddressLine1>
+        <fibo-fbc-fct-breg:hasCity rdf:datatype="&xsd;string">Ottawa</fibo-fbc-fct-breg:hasCity>
+        <fibo-fbc-fct-breg:hasSubdivision rdf:resource="&lcc-3166-2-ca;Ontario"/>
+        <fibo-fbc-fct-breg:hasCountry rdf:resource="&lcc-3166-1;Canada"/>
+        <fibo-fbc-fct-breg:hasPostalCode rdf:datatype="&xsd;string">K1A 0G9</fibo-fbc-fct-breg:hasPostalCode>
+        <rdfs:isDefinedBy rdf:resource="&fibo-fbc-fct-cajrga;"/>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="https://www.gleif.org/lei/549300PN6MKI0CLP4T28">
+        <rdf:type rdf:resource="&fibo-be-le-lei;LegalEntityIdentifier"/>
+        <rdfs:label>Bank of Canada legal entity identifier</rdfs:label>
+        <skos:definition rdf:datatype="&xsd;string">individual representing the legal entity identifier for the Federal Reserve Bank of New York</skos:definition>
+        <fibo-fnd-rel-rel:hasTag rdf:datatype="&xsd;string">549300PN6MKI0CLP4T28</fibo-fnd-rel-rel:hasTag>
+		<fibo-fnd-aap-agt:identifies rdf:resource="&fibo-fbc-fct-cajrga;BankOfCanada"/>
+		<fibo-fbc-fct-ra:isRegisteredIn rdf:resource="&fibo-fbc-fct-usfsind;GlobalMarketsEntityIdentifierRegistry"/>
+        <rdfs:isDefinedBy rdf:resource="&fibo-fbc-fct-cajrga;"/>
+	</owl:NamedIndividual>
+	
+	<owl:NamedIndividual rdf:about="&fibo-fbc-fct-cajrga;BankOfCanadaLegalEntityIdentifierRegistryEntry">
+        <rdf:type rdf:resource="&fibo-fbc-fct-breg;LegalEntityIdentifierRegistryEntry"/>
+        <rdfs:label>Bank of Canada legal entity identifier registry entry</rdfs:label>
+        <skos:definition rdf:datatype="&xsd;string">individual representing the legal entity identifier for the Bank of Canada</skos:definition>
+		<fibo-fnd-rel-rel:comprises rdf:resource="https://www.gleif.org/lei/549300PN6MKI0CLP4T28"/>
+		<fibo-fbc-fct-breg:hasRegistrationStatus rdf:resource="&fibo-fbc-fct-breg;IssuedStatus"/>
+		<fibo-fbc-fct-breg:hasInitialRegistrationDate rdf:datatype="&xsd;dateTime">2014-03-28T01:39:55.808</fibo-fbc-fct-breg:hasInitialRegistrationDate>
+	    <fibo-fbc-fct-breg:hasRegistrationStatusRevisionDate rdf:datatype="&xsd;dateTime">2017-03-02T01:50:48.095</fibo-fbc-fct-breg:hasRegistrationStatusRevisionDate>
+	    <fibo-fbc-fct-breg:hasRenewalDate rdf:datatype="&xsd;dateTime">2018-02-21T18:10:41.132</fibo-fbc-fct-breg:hasRenewalDate>
+	    <fibo-fbc-fct-breg:hasValidationLevel rdf:datatype="&xsd;string">FULLY_CORROBORATED</fibo-fbc-fct-breg:hasValidationLevel>
+		<fibo-fnd-rel-rel:isPartOf rdf:resource="&fibo-fbc-fct-usfsind;GlobalMarketsEntityIdentifierRegistry"/>
+        <rdfs:isDefinedBy rdf:resource="&fibo-fbc-fct-cajrga;"/>
+	</owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="&fibo-fbc-fct-cajrga;CanadianBankingRegulatoryAgencyAndCentralBank">
+        <rdfs:label>Canadian banking regulatory agency and central bank</rdfs:label>
+        <rdf:type rdf:resource="&fibo-fbc-fct-fse;CentralBank"/>
+        <rdf:type rdf:resource="&fibo-fbc-fct-ra;RegistrationAuthority"/>
+        <rdf:type rdf:resource="&fibo-fbc-fct-rga;RegulatoryAgency"/>
+        <fibo-fnd-rel-rel:hasIdentity rdf:resource="&fibo-fbc-fct-cajrga;BankOfCanada"/>
+        <skos:definition rdf:datatype="&xsd;string">individual representing the regulatory agency, registration authority and central banking role of the Bank of Canada</skos:definition>
+        <fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/</fibo-fnd-utl-av:adaptedFrom>
+        <rdfs:isDefinedBy rdf:resource="&fibo-fbc-fct-cajrga;"/>
+	</owl:NamedIndividual>
+
+</rdf:RDF>
