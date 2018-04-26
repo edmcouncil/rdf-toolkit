@@ -152,8 +152,8 @@ Bank's approach to monetary policy, which focuses on the entire economy.
 
 The Bank provides liquidity to the financial system, gives policy advice to the federal government on the design and development of the system, oversees major clearing and settlement systems, and provides banking services to these systems and their participants.</fibo-fnd-utl-av:explanatoryNote>
         <fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/wp-content/uploads/2010/11/regulation_canadian_financial.pdf</fibo-fnd-utl-av:adaptedFrom>
-		<fibo-fnd-rel-rel:hasLegalName rdf:datatype="&xsd;string" xml:lang="en">Bank of Canada</fibo-fnd-rel-rel:hasLegalName>
-		<fibo-fnd-rel-rel:hasLegalName rdf:datatype="&xsd;string" xml:lang="fr">Banque du Canada</fibo-fnd-rel-rel:hasLegalName>
+		<fibo-fnd-rel-rel:hasLegalName xml:lang="en">Bank of Canada</fibo-fnd-rel-rel:hasLegalName>
+		<fibo-fnd-rel-rel:hasLegalName xml:lang="fr">Banque du Canada</fibo-fnd-rel-rel:hasLegalName>
         <fibo-be-ge-ge:hasJurisdiction rdf:resource="&fibo-be-ge-caj;CanadianJurisdiction"/>
         <fibo-fbc-fct-breg:hasHeadquartersAddress rdf:resource="&fibo-fbc-fct-cajrga;BankOfCanadaHeadOfficeAddress"/>
 		<fibo-fbc-fct-breg:hasWebsite rdf:datatype="&xsd;anyURI">http://www.bankofcanada.ca/</fibo-fbc-fct-breg:hasWebsite>
