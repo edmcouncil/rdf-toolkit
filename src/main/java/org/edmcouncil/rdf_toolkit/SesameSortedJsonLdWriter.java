@@ -661,11 +661,26 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
     }
 
     private String escapeString(String str) { // JSON does not support multi-line strings, different to Turtle
+        final char SPACE = ' ';
+        final char UNESCAPED_BACKSLASH = '\\';
         if (str == null) { return null; }
-        return str.replaceAll("\n", "\\\\n").
-                    replaceAll("\r", "\\\\r").
-                    replaceAll("\"", "\\\\\"").
-                    replaceAll("\\\\", "\\\\");
+        StringBuilder sb = new StringBuilder();
+        for (char ch : str.toCharArray()) {
+            if (ch < SPACE) {
+                sb.append(UNESCAPED_BACKSLASH);
+                sb.append('u');
+                sb.append(String.format("%04x", (short)ch));
+            } else {
+                switch (ch) {
+                    case '\n': sb.append(UNESCAPED_BACKSLASH); sb.append('n'); break;
+                    case '\r': sb.append(UNESCAPED_BACKSLASH); sb.append('r'); break;
+                    case '"': sb.append(UNESCAPED_BACKSLASH); sb.append('"'); break;
+                    case '\\': sb.append(UNESCAPED_BACKSLASH); sb.append(UNESCAPED_BACKSLASH); break;
+                    default: sb.append(ch);
+                }
+            }
+        }
+        return sb.toString();
     }
 
 }

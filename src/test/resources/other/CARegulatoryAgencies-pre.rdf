@@ -88,6 +88,7 @@ Copyright (c) 2016-2018 Object Management Group, Inc.</sm:copyright>
         <sm:filename rdf:datatype="&xsd;string">CARegulatoryAgencies.rdf</sm:filename>
         <sm:fileAbbreviation rdf:datatype="&xsd;string">fibo-fbc-fct-cajrga</sm:fileAbbreviation>
         <owl:versionIRI rdf:resource="http://www.omg.org/spec/EDMC-FIBO/FBC/20160801/FunctionalEntities/NorthAmericanEntities/CARegulatoryAgencies/"/>
+        <owl:versionInfo rdf:datatype="&xsd;string">Created with e6Tools Graphical OWL Editor from C:\Users\nobody\Documents\SemanticWeb\eqr1.20\eqr1.20.vsdx Page:eqrBusAct</owl:versionInfo>
         <sm:fileAbstract rdf:datatype="&xsd;string">This ontology extends the primary regulatory agencies ontology in FBC with additional regulators that are specific to the United States and augments certain U.S. financial services entities based on who regulates them.</sm:fileAbstract>
 
         <sm:dependsOn rdf:datatype="&xsd;anyURI">http://www.omg.org/spec/LCC/</sm:dependsOn>
