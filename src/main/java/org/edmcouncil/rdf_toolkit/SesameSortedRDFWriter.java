@@ -35,6 +35,7 @@ import javax.xml.namespace.QName;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -1111,10 +1112,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     protected QName convertIriToQName(IRI iri, boolean useGeneratedPrefixes) {
         String iriString = iri.stringValue();
         for (String iriStem : reverseNamespaceTable.keySet()) {
+            String prefix = reverseNamespaceTable.get(iriStem);
             if ((iriString.length() > iriStem.length()) && iriString.startsWith(iriStem)) {
                 String localPart = iriString.substring(iriStem.length());
                 if (isPrefixedNameLocalPart(localPart)) { // to be a value QName, the 'local part' has to be valid
-                    String prefix = reverseNamespaceTable.get(iriStem);
                     if (useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) {
                         return new QName(iriStem, localPart, prefix);
                     } else {
@@ -1123,26 +1124,33 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
                 } else {
                     return null;
                 }
+            } else if (iriString.startsWith(String.format("%s:", prefix))) {
+                return new QName(iriStem, iriString.substring(iriString.indexOf(':')+1), prefix);
             }
         }
         // Failed to find a match, return null.
         return null;
     }
 
-    protected String convertIriToRelativeIri(IRI iri, boolean useTurtleQuoting) {
+    protected String convertIriToRelativeIri(IRI iri, boolean useTurtleQuoting) throws Exception {
         // Note: does not check that the baseIri doesn't terminate in the middle of some IRI of which it really isn't the base.
         if (baseIri != null) {
             String iriString = iri.stringValue();
             String baseIriString = baseIri.stringValue();
-            if ((iriString.length() > baseIriString.length()) && iriString.startsWith(baseIriString)) {
-                String result = (useTurtleQuoting ? "<" : "") +
-                        iriString.substring(baseIriString.length()) +
-                        (useTurtleQuoting ? ">" : "");
-                return result;
-            }
+            String relativeIriString = (new URI(baseIriString)).relativize(new URI(iriString)).toString();
+            String result = String.format("%s%s%s",
+                    useTurtleQuoting ? "<" : "",
+                    relativeIriString.length() >= 1 ? relativeIriString : iriString, // avoid zero-length relative IRIs
+                    useTurtleQuoting ? ">" : ""
+            );
+            return result;
         }
         // Failed to find a match, return null.
-        return null;
+        return String.format("%s%s%s",
+                useTurtleQuoting ? "<" : "",
+                iri.stringValue(),
+                useTurtleQuoting ? ">" : ""
+        );
     }
 
     /**
@@ -1414,7 +1422,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
     }
 
-    protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting, boolean useJsonLdQuoting) {
+    protected String convertIriToString(IRI iri, boolean useGeneratedPrefixes, boolean useTurtleQuoting, boolean useJsonLdQuoting) throws Exception {
         if (rdfType.equals(iri)) {
             if (useTurtleQuoting) { return "a"; }
             if (useJsonLdQuoting) { return "@type"; }
@@ -1424,34 +1432,31 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
             if (qname != null) {
                 return convertQNameToString(qname, useTurtleQuoting);
             } else { // return the IRI relative to the base IRI, if possible.
-                String relativeIri = convertIriToRelativeIri(iri, useTurtleQuoting);
-                if (relativeIri != null) {
-                    return relativeIri;
-                } else { // return the absolute IRI
-                    return (useTurtleQuoting ? "<" : "") +
-                            iri.stringValue() +
-                            (useTurtleQuoting ? ">" : "");
-                }
+                return convertIriToRelativeIri(iri, useTurtleQuoting);
             }
         }
         if (ShortIriPreferences.base_iri.equals(shortIriPreference)) {
             String relativeIri = convertIriToRelativeIri(iri, useTurtleQuoting); // return the IRI relative to the base URI, if possible.
-            if (relativeIri != null) {
+            if (!relativeIri.contains(iri.stringValue())) { // check if the relative URI is shortened, or not
                 return relativeIri;
             } else {
                 QName qname = convertIriToQName(iri, useGeneratedPrefixes); // return the IRI out as a QName if possible.
                 if (qname != null) {
                     return convertQNameToString(qname, useTurtleQuoting);
                 } else { // return the absolute IRI
-                    return (useTurtleQuoting ? "<" : "") +
-                            iri.stringValue() +
-                            (useTurtleQuoting ? ">" : "");
+                    return String.format("%s%s%s",
+                            useTurtleQuoting ? "<" : "",
+                            iri.stringValue(),
+                            useTurtleQuoting ? ">" : ""
+                    );
                 }
             }
         }
-        return (useTurtleQuoting ? "<" : "") +
-                iri.stringValue() +
-                (useTurtleQuoting ? ">" : ""); // if nothing else, do this
+        return String.format("%s%s%s",
+                useTurtleQuoting ? "<" : "",
+                iri.stringValue(),
+                useTurtleQuoting ? ">" : ""
+        ); // if nothing else, do this
     }
 
     /** Compares a sorted triple map to the unsorted triple map from which it was created,

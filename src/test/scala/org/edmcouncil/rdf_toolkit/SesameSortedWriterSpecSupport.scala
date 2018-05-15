@@ -47,6 +47,9 @@ trait SesameSortedWriterSpecSupport {
 
   val resourceDir = new File("src/test/resources")
 
+  /** Exclusion list for tests related to inferring the base IRI of an ontology. */
+  val ibiExclusionList = List("food.rdf", "wine.rdf")
+
   /** Case class used to enable/disable debugging via a method parameter. */
   case class DebugState(val isDebug: Boolean, val debugPrefix: Option[String] = None) {}
   val DEBUG = DebugState(true)
@@ -284,6 +287,21 @@ trait SesameSortedWriterSpecSupport {
       }
     }
     assert(unmatchedTriples1to2.isEmpty && unmatchedTriples2to1.isEmpty, s"found unmatched triples: [${unmatchedTriples1to2.size}/${model1.size}], [${unmatchedTriples2to1.size}/${model2.size}]")
+  }
+
+  /** Returns the base IRI if the line appears to contain a base IRI declaration. */
+  def getBaseIri(line: String): Option[String] = {
+    if (line.startsWith("# baseURI: ")) { // Turtle - TopBraid Composer
+      Some(line.substring("# baseURI: ".length))
+    } else if (line.startsWith("@base ")) { // Turtle
+      Some(line.replaceAll("@base\\s+<([^>]+)>.*", "$1"))
+    } else if (line.contains("xml:base")) { // RDF/XML
+      Some(line.replaceAll(".*xml:base\\s*=\\s*[\"']([^\"']+)[\"'].*", "$1"))
+    } else if (line.contains("\"@base\"")) { // JSON-LD
+      Some(line.replaceAll(".*\"@base\"\\s*:\\s*\"([^\"]+)\".*", "$1"))
+    } else {
+      None
+    }
   }
 
 }

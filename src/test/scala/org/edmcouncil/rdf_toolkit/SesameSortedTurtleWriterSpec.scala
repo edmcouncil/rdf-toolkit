@@ -25,12 +25,13 @@ package org.edmcouncil.rdf_toolkit
 
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.eclipse.rdf4j.rio.turtle.{ TurtleWriter, TurtleWriterFactory }
-import org.slf4j.LoggerFactory
+import org.slf4j.{ Logger, LoggerFactory }
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
 import java.io._
 
+import org.clapper.avsl.{ LogLevel, StandardLogger }
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 import org.eclipse.rdf4j.rio.{ RDFFormat, Rio }
 import org.scalatest.{ FlatSpec, Matchers }
@@ -90,6 +91,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
       outWriter flush ()
       outWriter close ()
     }
+    logger info s"A TurtleWriter should be able to read various RDF documents and write them in Turtle format: $fileCount source files"
   }
 
   "A SortedTurtleWriter" should "be able to produce a sorted Turtle file" in {
@@ -300,6 +302,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
         "-t", targetFile getAbsolutePath
       )
     }
+    logger info s"A SortedTurtleWriter should be able to read various RDF documents and write them in sorted Turtle format: $fileCount source files"
   }
 
   it should "be able to sort RDF triples consistently when writing in Turtle format" in {
@@ -319,6 +322,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
         "-t", targetFile getAbsolutePath
       )
     }
+    logger info s"A SortedTurtleWriter should be able to sort RDF triples consistently when writing in Turtle format: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
@@ -341,7 +345,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
-  it should "should not add/lose RDF triples when writing in Turtle format without inline blank nodes" in {
+  it should "not add/lose RDF triples when writing in Turtle format without inline blank nodes" in {
     val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
@@ -358,6 +362,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
         "-t", targetFile getAbsolutePath
       )
     }
+    logger info s"A SortedTurtleWriter should not add/lose RDF triples when writing in Turtle format without inline blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
@@ -437,6 +442,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
         "-ibn"
       )
     }
+    logger info s"A SortedTurtleWriter should be able to sort RDF triples consistently when writing in Turtle format with inline blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted Turtle.
     fileCount = 0
@@ -460,205 +466,253 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
-  //  it should "should not add/lose RDF triples when writing in Turtle format with inline blank nodes" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted Turtle
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.ttl"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted Turtle.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".ttl"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the Turtle files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //
-  //    // Check that the re-serialised Turtle file have the same triple count as the matching raw files
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.ttl"))
-  //      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-  //      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
-  //      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.TURTLE)
-  //      assertTriplesMatch(inputModel1, inputModel2)
-  //    }
-  //  }
-  //
-  //  it should "be able to read various RDF documents and write them in sorted Turtle format with an inferred base IRI" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if sourceFile.getName.endsWith(".ttl")) {
-  //      fileCount += 1
-  //
-  //      val sourceReader = new BufferedReader(new FileReader(sourceFile))
-  //      var baseLine1: String = null
-  //      var unfinished = true
-  //      var hasOntologyIri = false
-  //      while (unfinished) {
-  //        val line = sourceReader.readLine()
-  //        if (line == null) {
-  //          unfinished = false
-  //        } else if (line.contains("owl:Ontology")) {
-  //          hasOntologyIri = true
-  //        } else if (baseLine1 == null) {
-  //          if (line.startsWith("# baseURI:")) {
-  //            baseLine1 = line
-  //          } else if (line.startsWith("@base")) {
-  //            baseLine1 = line
-  //          }
-  //        }
-  //      }
-  //
-  //      if (hasOntologyIri && (baseLine1 != null)) {
-  //        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.ttl"))
-  //        SesameRdfFormatter run Array[String](
-  //          "-s", sourceFile getAbsolutePath,
-  //          "-t", targetFile getAbsolutePath,
-  //          "-ibi"
-  //        )
-  //
-  //        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
-  //        var baseLine2: String = null
-  //        unfinished = true
-  //        while (unfinished) {
-  //          val line = targetReader.readLine()
-  //          if (line == null) {
-  //            unfinished = false
-  //          } else if (baseLine2 == null) {
-  //            if (line.startsWith("# baseURI:")) {
-  //              baseLine2 = line
-  //            } else if (line.startsWith("@base")) {
-  //              baseLine2 = line
-  //            }
-  //          }
-  //        }
-  //
-  //        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
-  //      }
-  //    }
-  //  }
-  //
-  //  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.ttl"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-ip", "^http://topbraid.org/countries",
-  //      "-ir", "http://replaced.example.org/countries"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("@prefix countries: <http://replaced.example.org/countries#> ."), "IRI replacement seems to have failed")
-  //  }
-  //
-  //  it should "be able to add single-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.ttl"))
-  //    val linePrefix = "## "
-  //    val leadingComment = "Start of: My New Ontology."
-  //    val trailingComment = "End of: My New Ontology."
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-lc", leadingComment,
-  //      "-tc", trailingComment
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains(linePrefix + leadingComment), "leading comment insertion seems to have failed")
-  //    assert(content.contains(linePrefix + trailingComment), "trailing comment insertion seems to have failed")
-  //  }
-  //
-  //  it should "be able to add multi-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.ttl"))
-  //    val linePrefix = "## "
-  //    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
-  //    val trailingComments = List("End of: My New Ontology.", "Version 1.")
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-lc", leadingComments(0), "-lc", leadingComments(1),
-  //      "-tc", trailingComments(0), "-tc", trailingComments(1)
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    for (comment ← leadingComments) {
-  //      assert(content.contains(linePrefix + comment), "leading comment insertion seems to have failed")
-  //    }
-  //    for (comment ← trailingComments) {
-  //      assert(content.contains(linePrefix + comment), "trailing comment insertion seems to have failed")
-  //    }
-  //  }
-  //
-  //  it should "be able to use explicit data typing for strings" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt-explicit.ttl"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-sdt", "explicit"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("^^xsd:string"), "explicit string data typing seems to have failed")
-  //  }
-  //
-  //  it should "be able to use set the indent string" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.ttl"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-i", "  "
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
-  //    assert(singleIndentLineCount >= 1, "double-space indent has failed")
-  //
-  //    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.ttl"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile2 getAbsolutePath,
-  //      "-i", "\t\t"
-  //    )
-  //    val content2 = getFileContents(outputFile2, "UTF-8")
-  //    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
-  //    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
-  //  }
+  it should "not add/lose RDF triples when writing in Turtle format with inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+
+    // Serialise sample files as sorted Turtle
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.ttl"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-ibn"
+      )
+    }
+    logger info s"A SortedTurtleWriter should not add/lose RDF triples when writing in Turtle format with inline blank nodes: $fileCount source files"
+
+    // Re-serialise the sorted files, again as sorted Turtle.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".ttl"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-ibn"
+      )
+    }
+
+    // Check that re-serialising the Turtle files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+
+    // Check that the re-serialised Turtle file have the same triple count as the matching raw files
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(turtleInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.ttl"))
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.TURTLE)
+      assertTriplesMatch(inputModel1, inputModel2)
+    }
+  }
+
+  it should "be able to read various RDF documents and write them in sorted Turtle format with an inferred base IRI" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(ibiExclusionList contains (sourceFile getName))) {
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseIri1: Option[String] = None
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
+        }
+      }
+
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi.ttl"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "turtle",
+          "-ibi"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseIri2: Option[String] = None
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
+          }
+        }
+
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+    logger info s"A SortedTurtleWriter should be able to read various RDF documents and write them in sorted Turtle format with an inferred base IRI: $fileCount source files"
+  }
+
+  it should "be able to read various RDF documents and write them in sorted Turtle format with an inferred base IRI and inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(ibiExclusionList contains (sourceFile getName))) {
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseIri1: Option[String] = None
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
+        }
+      }
+
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi_ibn.ttl"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "turtle",
+          "-ibi",
+          "-ibn"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseIri2: Option[String] = None
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
+          }
+        }
+
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+    logger info s"A SortedTurtleWriter should be able to read various RDF documents and write them in sorted Turtle format with an inferred base IRI and inline blank nodes: $fileCount source files"
+  }
+
+  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.ttl"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-ip", "^http://topbraid.org/countries",
+      "-ir", "http://replaced.example.org/countries"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("@prefix countries: <http://replaced.example.org/countries#> ."), "IRI replacement seems to have failed")
+  }
+
+  it should "be able to add single-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.ttl"))
+    val linePrefix = "## "
+    val leadingComment = "Start of: My New Ontology."
+    val trailingComment = "End of: My New Ontology."
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-lc", leadingComment,
+      "-tc", trailingComment
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains(linePrefix + leadingComment), "leading comment insertion seems to have failed")
+    assert(content.contains(linePrefix + trailingComment), "trailing comment insertion seems to have failed")
+  }
+
+  it should "be able to add multi-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.ttl"))
+    val linePrefix = "## "
+    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
+    val trailingComments = List("End of: My New Ontology.", "Version 1.")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-lc", leadingComments(0), "-lc", leadingComments(1),
+      "-tc", trailingComments(0), "-tc", trailingComments(1)
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    for (comment ← leadingComments) {
+      assert(content.contains(linePrefix + comment), "leading comment insertion seems to have failed")
+    }
+    for (comment ← trailingComments) {
+      assert(content.contains(linePrefix + comment), "trailing comment insertion seems to have failed")
+    }
+  }
+
+  it should "be able to use explicit data typing for strings" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt-explicit.ttl"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-sdt", "explicit"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("^^xsd:string"), "explicit string data typing seems to have failed")
+  }
+
+  it should "be able to use set the indent string" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.ttl"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-i", "  "
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
+    assert(singleIndentLineCount >= 1, "double-space indent has failed")
+
+    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.ttl"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile2 getAbsolutePath,
+      "-i", "\t\t"
+    )
+    val content2 = getFileContents(outputFile2, "UTF-8")
+    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
+    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
+  }
 
 }

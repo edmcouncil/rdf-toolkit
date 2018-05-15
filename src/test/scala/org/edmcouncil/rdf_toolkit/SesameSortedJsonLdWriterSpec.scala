@@ -91,6 +91,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
       outWriter flush ()
       outWriter close ()
     }
+    logger info s"A JSONLDWriter should be able to read various RDF documents and write them in JSON-LD format: $fileCount source files"
   }
 
   "A SortedJsonLdWriter" should "be able to produce a sorted JSON-LD file" in {
@@ -302,6 +303,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
         "-tfmt", "json-ld"
       )
     }
+    logger info s"A SortedJsonLdWriter should be able to read various RDF documents and write them in sorted JSON-LD format: $fileCount source files"
   }
 
   it should "be able to sort RDF triples consistently when writing in JSON-LD format" in {
@@ -323,6 +325,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
         "-tfmt", "json-ld"
       )
     }
+    logger info s"A SortedJsonLdWriter should be able to sort RDF triples consistently when writing in JSON-LD format: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
@@ -358,7 +361,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
-  it should "should not add/lose RDF triples when writing in JSON-LD format without inline blank nodes" in {
+  it should "not add/lose RDF triples when writing in JSON-LD format without inline blank nodes" in {
     val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
@@ -376,6 +379,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
         "-tfmt", "json-ld"
       )
     }
+    logger info s"A SortedJsonLdWriter should not add/lose RDF triples when writing in JSON-LD format without inline blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
@@ -458,6 +462,7 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
         "-ibn"
       )
     }
+    logger info s"A SortedJsonLdWriter should be able to sort RDF triples consistently when writing in JSON-LD format with inline blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted JSON-LD.
     fileCount = 0
@@ -483,213 +488,266 @@ class SesameSortedJsonLdWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
-  //  it should "should not add/lose RDF triples when writing in JSON-LD format with inline blank nodes" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
-  //
-  //    // Serialise sample files as sorted JSON-LD
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.jsonld"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "json-ld",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Re-serialise the sorted files, again as sorted JSON-LD.
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
-  //      SesameRdfFormatter run Array[String](
-  //        "-s", sourceFile getAbsolutePath,
-  //        "-sfmt", "json-ld",
-  //        "-t", targetFile getAbsolutePath,
-  //        "-tfmt", "json-ld",
-  //        "-ibn"
-  //      )
-  //    }
-  //
-  //    // Check that re-serialising the JSON-LD files has changed nothing.
-  //    fileCount = 0
-  //    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
-  //      fileCount += 1
-  //      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
-  //      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
-  //      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
-  //    }
-  //
-  //    // Check that the re-serialised JSON-LD file have the same triple count as the matching raw files
-  //    fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
-  //      fileCount += 1
-  //      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.jsonld"))
-  //      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
-  //      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
-  //      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.JSONLD)
-  //      assertTriplesMatch(inputModel1, inputModel2)
-  //    }
-  //  }
-  //
-  //  it should "be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI" in {
-  //    val rawRdfDirectory = resourceDir
-  //    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
-  //    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //
-  //    val baseSignature = "\"@base\""
-  //
-  //    var fileCount = 0
-  //    for (sourceFile ← listDirTreeFiles(rawRdfDirectory)) {
-  //      fileCount += 1
-  //
-  //      val sourceReader = new BufferedReader(new FileReader(sourceFile))
-  //      var baseLine1: String = null
-  //      var unfinished = true
-  //      var hasOntologyIri = false
-  //      while (unfinished) {
-  //        val line = sourceReader.readLine()
-  //        if (line == null) {
-  //          unfinished = false
-  //        } else if (line.contains("owl:Ontology")) {
-  //          hasOntologyIri = true
-  //        } else if (baseLine1 == null) {
-  //          if (line contains baseSignature) {
-  //            baseLine1 = (line substring (line indexOf baseSignature)).trim
-  //          }
-  //        }
-  //      }
-  //
-  //      if (hasOntologyIri && (baseLine1 != null)) {
-  //        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.ttl"))
-  //        SesameRdfFormatter run Array[String](
-  //          "-s", sourceFile getAbsolutePath,
-  //          "-t", targetFile getAbsolutePath,
-  //          "-tfmt", "json-ld",
-  //          "-ibi"
-  //        )
-  //
-  //        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
-  //        var baseLine2: String = null
-  //        unfinished = true
-  //        while (unfinished) {
-  //          val line = targetReader.readLine()
-  //          if (line == null) {
-  //            unfinished = false
-  //          } else if (baseLine2 == null) {
-  //            if (line contains baseSignature) {
-  //              baseLine2 = (line substring (line indexOf baseSignature)).trim
-  //            }
-  //          }
-  //        }
-  //
-  //        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
-  //      }
-  //    }
-  //  }
-  //
-  //  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.jsonld"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-ip", "^http://topbraid.org/countries",
-  //      "-ir", "http://replaced.example.org/countries"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("\"countries\" : \"http://replaced.example.org/countries#\""), "IRI replacement seems to have failed")
-  //  }
-  //
-  //  it should "*not* add single-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.jsonld"))
-  //    val leadingComment = "Start of: My New Ontology."
-  //    val trailingComment = "End of: My New Ontology."
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-lc", leadingComment,
-  //      "-tc", trailingComment
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    // JSON doesn't support comments, so we don't expect these comments to be added.
-  //    assert(!content.contains(leadingComment), "leading comment insertion was not suppressed!")
-  //    assert(!content.contains(trailingComment), "trailing comment insertion was not suppressed!")
-  //  }
-  //
-  //  it should "*not* add multi-line leading and trailing comments" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.jsonld"))
-  //    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
-  //    val trailingComments = List("End of: My New Ontology.", "Version 1.")
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-lc", leadingComments(0), "-lc", leadingComments(1),
-  //      "-tc", trailingComments(0), "-tc", trailingComments(1)
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    // JSON doesn't support comments, so we don't expect these comments to be added.
-  //    for (comment ← leadingComments) {
-  //      assert(!content.contains(comment), "leading comment insertion was not suppressed")
-  //    }
-  //    for (comment ← trailingComments) {
-  //      assert(!content.contains(comment), "trailing comment insertion was not suppressed")
-  //    }
-  //  }
-  //
-  //  it should "be able to use explicit data typing for strings" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt-explicit.jsonld"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-sdt", "explicit"
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    assert(content.contains("\"@type\" : \"xsd:string\""), "explicit string data typing seems to have failed")
-  //  }
-  //
-  //  it should "be able to use set the indent string" in {
-  //    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
-  //    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
-  //    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.jsonld"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-i", "  "
-  //    )
-  //    val content = getFileContents(outputFile, "UTF-8")
-  //    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
-  //    assert(singleIndentLineCount >= 1, "double-space indent has failed")
-  //
-  //    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.jsonld"))
-  //    SesameRdfFormatter run Array[String](
-  //      "-s", inputFile getAbsolutePath,
-  //      "-t", outputFile2 getAbsolutePath,
-  //      "-tfmt", "json-ld",
-  //      "-i", "\t\t"
-  //    )
-  //    val content2 = getFileContents(outputFile2, "UTF-8")
-  //    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
-  //    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
-  //  }
+  it should "not add/lose RDF triples when writing in JSON-LD format with inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val outputDir2 = createDir(rootOutputDir2, outputDir1 getName)
+
+    // Serialise sample files as sorted JSON-LD
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.jsonld"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "json-ld",
+        "-ibn"
+      )
+    }
+    logger info s"A SortedJsonLdWriter should not add/lose RDF triples when writing in JSON-LD format with inline blank nodes: $fileCount source files"
+
+    // Re-serialise the sorted files, again as sorted JSON-LD.
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".jsonld"))
+      SesameRdfFormatter run Array[String](
+        "-s", sourceFile getAbsolutePath,
+        "-sfmt", "json-ld",
+        "-t", targetFile getAbsolutePath,
+        "-tfmt", "json-ld",
+        "-ibn"
+      )
+    }
+
+    // Check that re-serialising the JSON-LD files has changed nothing.
+    fileCount = 0
+    for (file1 ← listDirTreeFiles(outputDir1) if file1.getName.contains("_ibn2")) {
+      fileCount += 1
+      val file2 = constructTargetFile(file1, outputDir1, outputDir2)
+      assert(file2 exists, s"file missing in outputDir2: ${file2.getAbsolutePath}")
+      assert(compareFiles(file1, file2, "UTF-8"), s"file mismatch between outputDir1 and outputDir2: ${file1.getName}")
+    }
+
+    // Check that the re-serialised JSON-LD file have the same triple count as the matching raw files
+    fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(jsonldInlineBlankNodesExclusionList contains sourceFile.getName)) {
+      fileCount += 1
+      val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir2, Some("_ibn2.jsonld"))
+      val rdfFormat1 = (Rio getParserFormatForFileName (sourceFile getName)).get()
+      val inputModel1 = Rio parse (new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"), "", rdfFormat1)
+      val inputModel2 = Rio parse (new InputStreamReader(new FileInputStream(targetFile), "UTF-8"), "", RDFFormat.JSONLD)
+      assertTriplesMatch(inputModel1, inputModel2)
+    }
+  }
+
+  it should "be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+
+    val baseSignature = "\"@base\"" // TODO: set this properlyfor JSON-LD
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(ibiExclusionList contains (sourceFile getName))) {
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseIri1: Option[String] = None
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
+        }
+      }
+
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi.jsonld"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "json-ld",
+          "-ibi"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseIri2: Option[String] = None
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
+          }
+        }
+
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+    logger info s"A SortedJsonLdWriter should be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI: $fileCount source files"
+  }
+
+  it should "be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI and inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+
+    val baseSignature = "\"@base\"" // TODO: set this properlyfor JSON-LD
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(ibiExclusionList contains (sourceFile getName))) {
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseIri1: Option[String] = None
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
+        }
+      }
+
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi_ibn.jsonld"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "json-ld",
+          "-ibi",
+          "-ibn"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseIri2: Option[String] = None
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
+          }
+        }
+
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+    logger info s"A SortedJsonLdWriter should be able to read various RDF documents and write them in sorted JSON-LD format with an inferred base IRI and inline blank nodes: $fileCount source files"
+  }
+
+  "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.jsonld"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-ip", "^http://topbraid.org/countries",
+      "-ir", "http://replaced.example.org/countries"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("\"countries\" : \"http://replaced.example.org/countries#\""), "IRI replacement seems to have failed")
+  }
+
+  it should "*not* add single-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_single-comments.jsonld"))
+    val leadingComment = "Start of: My New Ontology."
+    val trailingComment = "End of: My New Ontology."
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-lc", leadingComment,
+      "-tc", trailingComment
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    // JSON doesn't support comments, so we don't expect these comments to be added.
+    assert(!content.contains(leadingComment), "leading comment insertion was not suppressed!")
+    assert(!content.contains(trailingComment), "trailing comment insertion was not suppressed!")
+  }
+
+  it should "*not* add multi-line leading and trailing comments" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_multiple-comments.jsonld"))
+    val leadingComments = List("Start of: My New Ontology.", "Version 1.")
+    val trailingComments = List("End of: My New Ontology.", "Version 1.")
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-lc", leadingComments(0), "-lc", leadingComments(1),
+      "-tc", trailingComments(0), "-tc", trailingComments(1)
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    // JSON doesn't support comments, so we don't expect these comments to be added.
+    for (comment ← leadingComments) {
+      assert(!content.contains(comment), "leading comment insertion was not suppressed")
+    }
+    for (comment ← trailingComments) {
+      assert(!content.contains(comment), "trailing comment insertion was not suppressed")
+    }
+  }
+
+  it should "be able to use explicit data typing for strings" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt-explicit.jsonld"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-sdt", "explicit"
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    assert(content.contains("\"@type\" : \"xsd:string\""), "explicit string data typing seems to have failed")
+  }
+
+  it should "be able to use set the indent string" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "jsonld")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.jsonld"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-i", "  "
+    )
+    val content = getFileContents(outputFile, "UTF-8")
+    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
+    assert(singleIndentLineCount >= 1, "double-space indent has failed")
+
+    val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.jsonld"))
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile2 getAbsolutePath,
+      "-tfmt", "json-ld",
+      "-i", "\t\t"
+    )
+    val content2 = getFileContents(outputFile2, "UTF-8")
+    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
+    assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
+  }
 
 }

@@ -355,7 +355,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
         }
     }
 
-    private String convertIriToString(IRI iri) {
+    private String convertIriToString(IRI iri) throws Exception {
         return convertIriToString(iri, useGeneratedPrefixes, /*useTurtleQuoting*/false, /*useJsonLdQuoting*/true);
     }
 

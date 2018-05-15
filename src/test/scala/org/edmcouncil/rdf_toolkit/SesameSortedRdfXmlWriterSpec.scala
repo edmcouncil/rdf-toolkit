@@ -111,6 +111,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       outWriter flush ()
       outWriter close ()
     }
+    logger info s"An RDFWriter should be able to read various RDF documents and write them in RDF/XML format: $fileCount source files"
   }
 
   "A SortedRdfXmlWriter" should "be able to produce a sorted RDF/XML file" in {
@@ -311,6 +312,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         "-dtd"
       )
     }
+    logger info s"A SortedRdfXmlWriter should be able to read various RDF documents and write them in sorted RDF/XML format: $fileCount source files"
   }
 
   it should "be able to sort RDF triples consistently when writing in RDF/XML format" in {
@@ -332,6 +334,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         "-dtd"
       )
     }
+    logger info s"A SortedRdfXmlWriter should be able to sort RDF triples consistently when writing in RDF/XML format: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
@@ -356,7 +359,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     }
   }
 
-  it should "should not add/lose RDF triples when writing in RDF/XML format without blank nodes" in {
+  it should "not add/lose RDF triples when writing in RDF/XML format without blank nodes" in {
     val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
@@ -375,6 +378,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         "-dtd"
       )
     }
+    logger info s"A SortedRdfXmlWriter should not add/lose RDF triples when writing in RDF/XML format without blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
@@ -465,6 +469,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         "-ibn"
       )
     }
+    logger info s"A SortedRdfXmlWriter should be able to sort RDF triples consistently when writing in RDF/XML format with inline blank nodes: $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
@@ -533,7 +538,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assertTriplesMatch(inputModel1a, inputModel2a, DebugState(true, Some("single")))
   }
 
-  it should "should not add/lose RDF triples when writing in RDF/XML format with blank nodes (multiple files)" in {
+  it should "not add/lose RDF triples when writing in RDF/XML format with blank nodes (multiple files)" in {
     val rawRdfDirectory = resourceDir
     assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
     assert(rawRdfDirectory exists, "raw RDF directory does not exist")
@@ -553,6 +558,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         "-ibn"
       )
     }
+    logger info s"A SortedRdfXmlWriter should not add/lose RDF triples when writing in RDF/XML format with blank nodes (multiple files): $fileCount source files"
 
     // Re-serialise the sorted files, again as sorted RDF/XML.
     fileCount = 0
@@ -598,11 +604,9 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
 
     var fileCount = 0
-    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInferredBaseIriExclusionList contains sourceFile.getName)) {
-      fileCount += 1
-
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains (sourceFile getName)) && !(rdfXmlInferredBaseIriExclusionList contains (sourceFile getName)) && !(ibiExclusionList contains (sourceFile getName))) {
       val sourceReader = new BufferedReader(new FileReader(sourceFile))
-      var baseLine1: String = null
+      var baseIri1: Option[String] = None
       var unfinished = true
       var hasOntologyIri = false
       while (unfinished) {
@@ -611,14 +615,15 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
           unfinished = false
         } else if (line.contains("owl:Ontology")) {
           hasOntologyIri = true
-          if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
-            baseLine1 = line.trim.replaceAll("\\s*=\\s*", "=")
-          }
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
         }
       }
 
-      if (hasOntologyIri && (baseLine1 != null)) {
-        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibu.rdf"))
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi.rdf"))
         SesameRdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,
@@ -628,22 +633,75 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         )
 
         val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
-        var baseLine2: String = null
+        var baseIri2: Option[String] = None
         unfinished = true
         while (unfinished) {
           val line = targetReader.readLine()
           if (line == null) {
             unfinished = false
-          } else if (line.contains("owl:Ontology")) {
-            if (substringAfter(line, "owl:Ontology").trim.startsWith("xml:base")) {
-              baseLine2 = line.trim.replaceAll("\\s*=\\s*", "=")
-            }
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
           }
         }
 
-        assert(baseLine1 === baseLine2, "base IRI changed - was ontology IRI different to the base IRI?")
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
       }
     }
+    logger info s"A SortedRdfXmlWriter should be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI: $fileCount source files"
+  }
+
+  it should "be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI and inline blank nodes" in {
+    val rawRdfDirectory = resourceDir
+    assert(rawRdfDirectory isDirectory, "raw RDF directory is not a directory")
+    assert(rawRdfDirectory exists, "raw RDF directory does not exist")
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+
+    var fileCount = 0
+    for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains (sourceFile getName)) && !(rdfXmlInferredBaseIriExclusionList contains (sourceFile getName)) && !(ibiExclusionList contains (sourceFile getName))) {
+      val sourceReader = new BufferedReader(new FileReader(sourceFile))
+      var baseIri1: Option[String] = None
+      var unfinished = true
+      var hasOntologyIri = false
+      while (unfinished) {
+        val line = sourceReader.readLine()
+        if (line == null) {
+          unfinished = false
+        } else if (line.contains("owl:Ontology")) {
+          hasOntologyIri = true
+        } else if (baseIri1.isEmpty) {
+          baseIri1 = getBaseIri(line)
+        }
+      }
+
+      if (hasOntologyIri && baseIri1.isDefined) {
+        fileCount += 1
+
+        val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi_ibn.rdf"))
+        SesameRdfFormatter run Array[String](
+          "-s", sourceFile getAbsolutePath,
+          "-t", targetFile getAbsolutePath,
+          "-tfmt", "rdf-xml",
+          "-dtd",
+          "-ibi",
+          "-ibn"
+        )
+
+        val targetReader = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"))
+        var baseIri2: Option[String] = None
+        unfinished = true
+        while (unfinished) {
+          val line = targetReader.readLine()
+          if (line == null) {
+            unfinished = false
+          } else if (baseIri2.isEmpty) {
+            baseIri2 = getBaseIri(line)
+          }
+        }
+
+        assert(baseIri1 === baseIri2, "base IRI changed - was ontology IRI different to the base IRI?")
+      }
+    }
+    logger info s"A SortedRdfXmlWriter should be able to read various RDF documents and write them in sorted RDF/XML format with an inferred base IRI and inline blank nodes: $fileCount source files"
   }
 
   "A SesameRdfFormatter" should "be able to do pattern-based IRI replacements" in {
