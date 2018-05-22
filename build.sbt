@@ -6,7 +6,7 @@ organizationName := "Enterprise Data Management Council"
 
 name := "rdf-toolkit"
 
-version := "1.8.0"
+version := "1.9.0"
 
 startYear := Some(2015)
 
@@ -125,6 +125,14 @@ libraryDependencies += "org.eclipse.jgit" % "org.eclipse.jgit" % "4.9.0.20171007
 // https://github.com/jsuereth/scala-arm
 //
 libraryDependencies += "com.jsuereth" %% "scala-arm" % "2.0"
+
+//
+// Java manifest library
+//
+// https://mvnrepository.com/artifact/com.jcabi/jcabi-manifests
+//
+libraryDependencies += "com.jcabi" % "jcabi-manifests" % "1.1"
+
 
 //
 // Generate booter.properties, see class org.edmcouncil.main.BooterProperties

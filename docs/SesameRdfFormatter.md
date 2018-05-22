@@ -39,14 +39,15 @@
                                    (RDF/XML), trig (TriG), trix (TriX),
                                    turtle (Turtle)
  -sip,--short-iri-priority <arg>   set what takes priority when shortening
-                                   IRIs: prefix [default], base-uri
+                                   IRIs: prefix [default], base-iri
  -t,--target <arg>                 target (output) RDF file
  -tc,--trailing-comment <arg>      sets the text of the trailing comment
                                    in the ontology.  Can be repeated for a
                                    multi-line comment
  -tfmt,--target-format <arg>       target (output) RDF format: one of:
-                                   rdf-xml (RDF/XML), turtle (Turtle)
-                                   [default]
+                                   json-ld (JSON-LD), rdf-xml (RDF/XML),
+                                   turtle (Turtle) [default]
+ -v,--version                      print out version details
 ```
 
 # Examples:
