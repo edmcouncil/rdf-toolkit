@@ -95,4 +95,4 @@
 21. Format an RDF/XML file (`input.rdf`) as sorted RDF/XML (`output.rdf`), using entity references for URL shortening and with two spaces as the indent string
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.rdf --source-format rdf-xml --target output.rdf --target-format rdf-xml --use-dtd-subset --indent "  "`
 22. Format a RDF/XML file (`input.rdf`) as sorted JSON-LD (`output.jsonld`), using the standard input & standard output
-  * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source-format rdfxml --target-format jsonlld < input.rdf > output.jsonld`
+  * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source-format rdf-xml --target-format json-ld < input.rdf > output.jsonld`
