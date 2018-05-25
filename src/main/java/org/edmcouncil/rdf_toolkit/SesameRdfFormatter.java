@@ -169,43 +169,62 @@ public class SesameRdfFormatter {
         }
 
         // Check if source files exists.
-        String sourceFilePath = line.getOptionValue("s");
-        File sourceFile = new File(sourceFilePath);
-        if (!sourceFile.exists()) {
-            logger.error("Source file does not exist: " + sourceFilePath);
-            return;
-        }
-        if (!sourceFile.isFile()) {
-            logger.error("Source file is not a file: " + sourceFilePath);
-            return;
-        }
-        if (!sourceFile.canRead()) {
-            logger.error("Source file is not readable: " + sourceFilePath);
-            return;
+        File sourceFile = null;
+        InputStream sourceInputStream = null;
+        if (line.hasOption("s")) {
+            String sourceFilePath = line.getOptionValue("s");
+            sourceFile = new File(sourceFilePath);
+            if (!sourceFile.exists()) {
+                logger.error("Source file does not exist: " + sourceFilePath);
+                return;
+            }
+            if (!sourceFile.isFile()) {
+                logger.error("Source file is not a file: " + sourceFilePath);
+                return;
+            }
+            if (!sourceFile.canRead()) {
+                logger.error("Source file is not readable: " + sourceFilePath);
+                return;
+            }
+            sourceInputStream = new FileInputStream(sourceFile);
+        } else {
+            if (!line.hasOption("sfmt")) {
+                logger.error("The source format must be specified using --source-format when reading from the standard input.");
+                return;
+            }
+            sourceInputStream = System.in; // default to reading the standard input
         }
 
         // Check if target file can be written.
-        String targetFilePath = line.getOptionValue("t");
-        File targetFile = new File(targetFilePath);
-        if (targetFile.exists()) {
-            if (!targetFile.isFile()) {
-                logger.error("Target file is not a file: " + targetFilePath);
-                return;
+        OutputStream targetOutputStream = null;
+        File targetFile = null;
+        if (line.hasOption("t")) {
+            String targetFilePath = line.getOptionValue("t");
+            targetFile = new File(targetFilePath);
+            if (targetFile.exists()) {
+                if (!targetFile.isFile()) {
+                    logger.error("Target file is not a file: " + targetFilePath);
+                    return;
+                }
+                if (!targetFile.canWrite()) {
+                    logger.error("Target file is not writable: " + targetFilePath);
+                    return;
+                }
             }
-            if (!targetFile.canWrite()) {
-                logger.error("Target file is not writable: " + targetFilePath);
-                return;
-            }
-        }
 
-        // Create directory for target file, if required.
-        File targetFileDir = targetFile.getParentFile();
-        if (targetFileDir != null) {
-            targetFileDir.mkdirs();
-            if (!targetFileDir.exists()) {
-                logger.error("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
-                return;
+            // Create directory for target file, if required.
+            File targetFileDir = targetFile.getParentFile();
+            if (targetFileDir != null) {
+                targetFileDir.mkdirs();
+                if (!targetFileDir.exists()) {
+                    logger.error("Target file directory could not be created: " + targetFileDir.getAbsolutePath());
+                    return;
+                }
             }
+
+            targetOutputStream = new FileOutputStream(targetFile);
+        } else {
+            targetOutputStream = System.out; // default to the standard output
         }
 
         // Check if a base URI was provided
@@ -288,9 +307,13 @@ public class SesameRdfFormatter {
             logger.error("Unsupported or unrecognised source format: " + line.getOptionValue("sfmt"));
             return;
         }
+        if ((sourceFile == null) && (sourceFormat == SesameSortedRDFWriterFactory.SourceFormats.auto)) {
+            logger.error("The source format (--source-format or -sfmt) cannot be 'auto' when reading fromn the standard input.");
+            return;
+        }
         RDFFormat sesameSourceFormat = null;
         if (SesameSortedRDFWriterFactory.SourceFormats.auto.equals(sourceFormat)) {
-            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFilePath).orElse(sourceFormat.getRDFFormat());
+            sesameSourceFormat = Rio.getParserFormatForFileName(sourceFile.getName()).orElse(sourceFormat.getRDFFormat());
         } else {
             sesameSourceFormat = sourceFormat.getRDFFormat();
         }
@@ -300,7 +323,7 @@ public class SesameRdfFormatter {
 
         Model sourceModel = null;
         try {
-            sourceModel = Rio.parse(new FileInputStream(sourceFile), baseIriString, sesameSourceFormat);
+            sourceModel = Rio.parse(sourceInputStream, baseIriString, sesameSourceFormat);
         } catch (Throwable t) {
             logger.error(SesameRdfFormatter.class.getSimpleName() + ": stopped by unexpected exception:");
             logger.error("Unable to parse input file: " + sourceFile.getAbsolutePath());
@@ -370,7 +393,7 @@ public class SesameRdfFormatter {
         if (line.hasOption("tfmt")) {
             targetFormat = SesameSortedRDFWriterFactory.TargetFormats.getByOptionValue(line.getOptionValue("tfmt"));
         } else {
-            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.turtle;
+            targetFormat = SesameSortedRDFWriterFactory.TargetFormats.turtle; // default to Turtle
         }
         if (targetFormat == null) {
             logger.error("Unsupported or unrecognised target format: " + line.getOptionValue("tfmt"));
@@ -387,7 +410,7 @@ public class SesameRdfFormatter {
             return;
         }
 
-        Writer targetWriter = new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8");
+        Writer targetWriter = new OutputStreamWriter(targetOutputStream, "UTF-8");
         SesameSortedRDFWriterFactory factory = new SesameSortedRDFWriterFactory(targetFormat);
         Map<String, Object> writerOptions = new HashMap<String, Object>();
         if (baseIri != null) {
