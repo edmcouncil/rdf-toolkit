@@ -36,8 +36,11 @@ import org.slf4j.LoggerFactory;
 
 import com.jcabi.manifests.Manifests;
 
+import javax.annotation.Nonnull;
+import javax.io.DirectoryWalker;
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
 /**
  * RDF formatter that formats in a consistent order, friendly for version control systems.
@@ -59,10 +62,22 @@ public class SesameRdfFormatter {
                 "s", "source", true, "source (input) RDF file to format"
         );
         options.addOption(
+                "sd", "source-directory", true, "source (input) directory of RDF files to format.  This is a directory processing option"
+        );
+        options.addOption(
+                "sdp", "source-directory-pattern", true, "relative file path pattern (regular expression) used to select files to format in the source directory.  This is a directory processing option"
+        );
+        options.addOption(
                 "sfmt", "source-format", true, "source (input) RDF format; one of: " + SesameSortedRDFWriterFactory.SourceFormats.summarise()
         );
         options.addOption(
                 "t", "target", true, "target (output) RDF file"
+        );
+        options.addOption(
+                "td", "target-directory", true, "target (output) directory for formatted RDF files.  This is a directory processing option"
+        );
+        options.addOption(
+                "tdp", "target-directory-pattern", true, "relative file path pattern (regular expression) used to construct file paths within the target directory.  This is a directory processing option"
         );
         options.addOption(
                 "tfmt", "target-format", true, "target (output) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
@@ -155,6 +170,29 @@ public class SesameRdfFormatter {
         // Print out help, if requested.
         if (line.hasOption("h")) {
             usage(options);
+            return;
+        }
+
+        // Check if the command-line options suggest that a directory of files is to be formatted
+        if (line.hasOption("sd") || line.hasOption("sdp") || line.hasOption("td") || line.hasOption("tdp")) {
+            // Assume user wants to process a directory of files.
+            if (!line.hasOption("sd") || !line.hasOption("sdp") || !line.hasOption("td") || !line.hasOption("tdp")) {
+                logger.error("Directory processing options must all be used together: -sd (--source-directory), -sdp (--source-directory-pattern), -td (--target-directory), -tdp (--target-directory-pattern)");
+                usage(options);
+                return;
+            }
+            if (line.hasOption("s") || line.hasOption("t")) {
+                logger.error("Source (-s or --source) and target (-t or --target) options cannot be used together with directory processing options.");
+                usage(options);
+                return;
+            }
+            if (!line.hasOption("sfmt") || !line.hasOption("tfmt")) {
+                logger.error("Source format (-sfmt or --source-format) and target format (-tfmt or --target-format) options must be provided when using directory processing options.");
+                usage(options);
+                return;
+            }
+
+            runOnDirectory(line); // run the serializer over a directory of files
             return;
         }
 
@@ -419,6 +457,68 @@ public class SesameRdfFormatter {
         Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();
         targetWriter.close();
+    }
+
+    public static void runOnDirectory(@Nonnull CommandLine line) throws Exception {
+        // Construct list of common arguments passed on to every invocation of 'run'
+        ArrayList<String> commonArgsList = new ArrayList<>();
+        final List<String> noPassArgs = Arrays.asList(new String[] {
+                "sd", "sdp", "td", "tdp"
+        });
+        for (Option opt : line.getOptions()) {
+            if (noPassArgs.contains(opt.getOpt())) { continue; }
+            commonArgsList.add(String.format("-%s", opt.getOpt()));
+            if (opt.hasArg()) {
+                commonArgsList.add(opt.getValue());
+            }
+        }
+
+        // Check the input & output directories
+        final File sourceDir = new File(line.getOptionValue("sd"));
+        if (!sourceDir.exists()) {
+            logger.error("Source directory does not exist: " + sourceDir.getAbsolutePath());
+            return;
+        }
+        if (!sourceDir.canRead()) {
+            logger.error("Source directory is not readable: " + sourceDir.getAbsolutePath());
+            return;
+        }
+        final Pattern sourceDirPattern = Pattern.compile(line.getOptionValue("sdp"));
+
+        final File targetDir = new File(line.getOptionValue("td"));
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+        if (!targetDir.exists()) {
+            logger.error("Target directory could not be created: " + targetDir.getAbsolutePath());
+            return;
+        }
+        if (!targetDir.canWrite()) {
+            logger.error("Target directory is not writable: " + targetDir.getAbsolutePath());
+            return;
+        }
+        final String targetDirPatternString = line.getOptionValue("tdp");
+
+        // Iterate through matching files.
+        final DirectoryWalker dw = new DirectoryWalker(sourceDir, sourceDirPattern);
+        final String[] stringArray = new String[]{};
+        for (DirectoryWalker.DirectoryWalkerResult sourceResult : dw.pathMatches()) {
+            // Construct output path.
+            final Matcher sourceMatcher = sourceDirPattern.matcher(sourceResult.getRelativePath());
+            final String targetRelativePath = sourceMatcher.replaceFirst(targetDirPatternString);
+            final File targetFile = new File(targetDir, targetRelativePath);
+
+            // Run serializer
+            ArrayList<String> runArgs = new ArrayList<>();
+            runArgs.addAll(commonArgsList);
+            runArgs.add("-s");
+            runArgs.add(sourceResult.getFile().getAbsolutePath());
+            runArgs.add("-t");
+            runArgs.add(targetFile.getAbsolutePath());
+            logger.info(String.format("... formatting '%s' to '%s' ...", sourceResult.getRelativePath(), targetRelativePath));
+
+            run(runArgs.toArray(stringArray));
+        }
     }
 
     public static void usage(Options options) {
