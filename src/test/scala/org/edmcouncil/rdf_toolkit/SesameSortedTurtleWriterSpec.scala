@@ -731,8 +731,6 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
 
       assert(outputFile exists, s"file missing in outputDir: ${outputFile.getAbsolutePath}")
       assert(compareFiles(inputFile, outputFile, "UTF-8"), s"file mismatch between inputFile and outputFile: ${inputFile.getName} | ${outputFile.getName}")
-    } catch {
-      case t: Throwable ⇒ throw t
     } finally {
       System setIn originalIn
       System setOut originalOut
@@ -744,8 +742,8 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputDir = createTempDir(rootOutputDir1, "turtle")
 
     serializeStandardInputToStandardOutput(outputDir, inputFile, "turtle", "turtle", ".ttl")
-    serializeStandardInputToStandardOutput(outputDir, inputFile, "turtle", "rdf-xml", ".rdf")
-    serializeStandardInputToStandardOutput(outputDir, inputFile, "turtle", "json-ld", ".jsonld")
+    serializeStandardInputToStandardOutput(outputDir, inputFile, "turtle", "rdfxml", ".rdf")
+    serializeStandardInputToStandardOutput(outputDir, inputFile, "turtle", "jsonld", ".jsonld")
   }
 
 }

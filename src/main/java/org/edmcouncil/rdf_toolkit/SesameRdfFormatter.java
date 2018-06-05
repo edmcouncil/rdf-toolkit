@@ -158,6 +158,16 @@ public class SesameRdfFormatter {
             return;
         }
 
+        // Check if required arguments provided.
+        if (!line.hasOption("s")) {
+            logger.error("No source (input) file specified, nothing to format.  Use --help for help.");
+            return;
+        }
+        if (!line.hasOption("t")) {
+            logger.error("No target (target) file specified, cannot format source.  Use --help for help.");
+            return;
+        }
+
         // Check if source files exists.
         File sourceFile = null;
         InputStream sourceInputStream = null;
