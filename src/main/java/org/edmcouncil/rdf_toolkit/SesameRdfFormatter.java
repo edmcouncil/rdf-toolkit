@@ -34,8 +34,6 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcabi.manifests.Manifests;
-
 import java.io.*;
 import java.util.*;
 
@@ -66,9 +64,6 @@ public class SesameRdfFormatter {
         );
         options.addOption(
                 "tfmt", "target-format", true, "target (output) RDF format: one of: " + SesameSortedRDFWriterFactory.TargetFormats.summarise()
-        );
-        options.addOption(
-                "v", "version", false, "print out version details"
         );
         options.addOption(
                 "h", "help", false, "print out details of the command-line arguments for the program"
@@ -144,13 +139,6 @@ public class SesameRdfFormatter {
         // Parse the command line options.
         CommandLineParser parser = new DefaultParser();
         CommandLine line = parser.parse( options, args );
-
-        // Print out version, if requested.
-        if (line.hasOption("v")) {
-            System.out.println(getVersion());
-            System.out.flush();
-            return;
-        }
 
         // Print out help, if requested.
         if (line.hasOption("h")) {
@@ -410,13 +398,7 @@ public class SesameRdfFormatter {
 
     public static void usage(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp( getVersion(), options );
-    }
-
-    private static String getVersion() {
-        String implementationTitle = Manifests.read("Implementation-Title");
-        String implementationVersion = Manifests.read("Implementation-Version");
-        return String.format("%s (%s version %s)", SesameRdfFormatter.class.getSimpleName(), implementationTitle, implementationVersion);
+        formatter.printHelp( "SesameRdfFormatter", options );
     }
 
 }
