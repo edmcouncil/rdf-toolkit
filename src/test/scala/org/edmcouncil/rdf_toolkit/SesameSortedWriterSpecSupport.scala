@@ -50,6 +50,12 @@ trait SesameSortedWriterSpecSupport {
   /** Exclusion list for tests related to inferring the base IRI of an ontology. */
   val ibiExclusionList = List("food.rdf", "wine.rdf")
 
+  /** XML Schema namespace URI. */
+  val XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema#"
+
+  /** xs:string IRI */
+  val xsString = XML_SCHEMA_NS_URI + "string"
+
   /** Case class used to enable/disable debugging via a method parameter. */
   case class DebugState(val isDebug: Boolean, val debugPrefix: Option[String] = None) {}
   val DEBUG = DebugState(true)

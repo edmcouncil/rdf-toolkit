@@ -32,6 +32,7 @@ import scala.language.postfixOps
 import java.io._
 
 import org.clapper.avsl.{ LogLevel, StandardLogger }
+import org.eclipse.rdf4j.model.{ Literal, Statement }
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 import org.eclipse.rdf4j.rio.{ RDFFormat, Rio }
 import org.scalatest.{ FlatSpec, Matchers }
@@ -689,6 +690,33 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
     )
     val content = getFileContents(outputFile, "UTF-8")
     assert(content.contains("^^xsd:string"), "explicit string data typing seems to have failed")
+  }
+
+  it should "be able to override the language for all strings" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "turtle")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_override_language.ttl"))
+    val overrideLanguage = "en-us"
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-osl", overrideLanguage
+    )
+
+    // Read in output file & test that all strings have the override language
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputModel = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.TURTLE)
+    for (statement: Statement ← outputModel.iterator.asScala) {
+      val obj = statement.getObject;
+      if (obj.isInstanceOf[Literal]) {
+        val lit = obj.asInstanceOf[Literal]
+        if (lit.getLanguage.isPresent) {
+          assert(lit.getLanguage.get == overrideLanguage, s"literal language should have been forced to '$overrideLanguage' but was: 'lit.getLanguage.get'")
+        } else if (lit.getDatatype.stringValue == xsString) {
+          assert(false, s"string literal did not have any language set: ${lit.stringValue}")
+        }
+      }
+    }
   }
 
   it should "be able to use set the indent string" in {

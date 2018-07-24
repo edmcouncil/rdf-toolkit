@@ -428,9 +428,10 @@ public class SesameSortedTurtleWriter extends SesameSortedRDFWriter {
     protected void writeObject(Writer out, Literal literal) throws Exception {
         if (literal == null) {
             out.write("null<Literal>");
-        } else if (literal.getLanguage().isPresent()) {
+        } else if (literal.getLanguage().isPresent() || ((overrideStringLanguage != null) && (literal.getDatatype().stringValue().equals(xsString.stringValue())))) {
             writeString(out, literal.stringValue());
-            out.write("@" + literal.getLanguage().get());
+            String lang = overrideStringLanguage == null ? literal.getLanguage().get() : overrideStringLanguage;
+            out.write("@" + lang);
         } else if (literal.getDatatype() != null) {
             boolean useExplicit = (stringDataTypeOption == SesameSortedRDFWriterFactory.StringDataTypeOptions.explicit) || !(xsString.equals(literal.getDatatype()) || rdfLangString.equals(literal.getDatatype()));
             writeString(out, literal.stringValue());

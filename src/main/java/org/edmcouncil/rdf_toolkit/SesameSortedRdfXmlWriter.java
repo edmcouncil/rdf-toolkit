@@ -369,8 +369,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                                         output.endAttribute();
                                     }
                                 }
-                                if (((Literal)member).getLanguage().isPresent()) {
-                                    output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)member).getLanguage().get());
+                                if (((Literal)member).getLanguage().isPresent() || ((overrideStringLanguage != null) && (((Literal)member).getDatatype().stringValue().equals(xsString.stringValue())))) {
+                                    String lang = overrideStringLanguage == null ? ((Literal)member).getLanguage().get() : overrideStringLanguage;
+                                    output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", lang);
                                 }
                                 output.writeCharacters(member.stringValue());
                             } else {
@@ -422,8 +423,9 @@ public class SesameSortedRdfXmlWriter extends SesameSortedRDFWriter {
                             output.endAttribute();
                         }
                     }
-                    if (((Literal)value).getLanguage().isPresent()) {
-                        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", ((Literal)value).getLanguage().get());
+                    if (((Literal)value).getLanguage().isPresent() || ((overrideStringLanguage != null) && (((Literal)value).getDatatype().stringValue().equals(xsString.stringValue())))) {
+                        String lang = overrideStringLanguage == null ? ((Literal)value).getLanguage().get() : overrideStringLanguage;
+                        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", lang);
                     }
                     output.writeCharacters(value.stringValue().trim()); // trim the value, because leading/closing spaces will be lost on subsequent parses/serialisations.
                 } else {

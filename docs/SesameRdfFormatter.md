@@ -32,6 +32,8 @@
  -lc,--leading-comment <arg>             sets the text of the leading
                                          comment in the ontology.  Can be
                                          repeated for a multi-line comment
+ -osl,--override-string-language <arg>   sets an override language that is
+                                         applied to all strings
  -s,--source <arg>                       source (input) RDF file to format
  -sd,--source-directory <arg>            source (input) directory of RDF
                                          files to format.  This is a
@@ -123,3 +125,5 @@
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source-format rdf-xml --target-format json-ld < input.rdf > output.jsonld`
 23. Format all of the Turtle files in a directory tree into RDF/XML, preserving the relative directory structure.
   * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source-directory src/test/resources --source-directory-pattern '^(.*)\.ttl$' --source-format turtle --target-directory target/temp --target-directory-pattern '$1.rdf' --target-format rdf-xml`
+24. Format a Turtle file (`input.ttl`) as sorted Turtle (`output.ttl`) with all strings given the nominated language.
+  * `java -cp rdf-toolkit.jar org.edmcouncil.rdf_toolkit.SesameRdfFormatter --source input.ttl --source-format turtle --target output.ttl --target-format turtle --override-string-language en-us`

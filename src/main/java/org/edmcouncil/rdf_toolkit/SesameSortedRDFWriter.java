@@ -879,6 +879,9 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     /** String data type option */
     protected SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
 
+    /** Override string language */
+    protected String overrideStringLanguage = null;
+
     /** Unsorted list of subjects which are OWL ontologies, as they are rendered before other subjects. */
     protected UnsortedTurtleResourceList unsortedOntologies = null;
 
@@ -1040,27 +1043,7 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     public SesameSortedRDFWriter(OutputStream out, Map<String, Object> options) {
         assert out != null : "output stream cannot be null";
         this.out = new OutputStreamWriter(out);
-        if (options.containsKey("baseIri")) {
-            this.baseIri = (IRI) options.get("baseIri");
-        }
-        if (options.containsKey("shortIriPref")) {
-            this.shortIriPreference = (ShortIriPreferences) options.get("shortIriPref");
-        }
-        if (options.containsKey("useDtdSubset")) {
-            this.useDtdSubset = (Boolean) options.get("useDtdSubset");
-        }
-        if (options.containsKey("inlineBlankNodes")) {
-            this.inlineBlankNodes = (Boolean) options.get("inlineBlankNodes");
-        }
-        if (options.containsKey("leadingComments")) {
-            this.leadingComments = (String[]) options.get("leadingComments");
-        }
-        if (options.containsKey("trailingComments")) {
-            this.trailingComments = (String[]) options.get("trailingComments");
-        }
-        if (options.containsKey("stringDataTypeOption")) {
-            this.stringDataTypeOption = (SesameSortedRDFWriterFactory.StringDataTypeOptions) options.get("stringDataTypeOption");
-        }
+        processOptions(options);
     }
 
     /**
@@ -1072,6 +1055,10 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
     public SesameSortedRDFWriter(Writer writer, Map<String, Object> options) {
         assert writer != null : "output writer cannot be null";
         this.out = writer;
+        processOptions(options);
+    }
+
+    private void processOptions(Map<String, Object> options) {
         if (options.containsKey("baseIri")) {
             this.baseIri = (IRI) options.get("baseIri");
         }
@@ -1092,6 +1079,9 @@ public abstract class SesameSortedRDFWriter extends AbstractRDFWriter {
         }
         if (options.containsKey("stringDataTypeOption")) {
             this.stringDataTypeOption = (SesameSortedRDFWriterFactory.StringDataTypeOptions) options.get("stringDataTypeOption");
+        }
+        if (options.containsKey("overrideStringLanguage")) {
+            this.overrideStringLanguage = (String) options.get("overrideStringLanguage");
         }
     }
 

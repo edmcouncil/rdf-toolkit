@@ -564,7 +564,7 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
     protected void writeObject(Writer out, Literal literal) throws Exception {
         if (literal == null) {
             out.write("null<Literal>");
-        } else if (literal.getLanguage().isPresent()) {
+        } else if (literal.getLanguage().isPresent() || ((overrideStringLanguage != null) && (literal.getDatatype().stringValue().equals(xsString.stringValue())))) {
             out.write("{");
             if (out instanceof IndentingWriter) {
                 IndentingWriter output = (IndentingWriter)out;
@@ -574,7 +574,8 @@ public class SesameSortedJsonLdWriter extends SesameSortedRDFWriter {
                 out.write("\n");
             }
 
-            out.write("\"@language\" : \"" + literal.getLanguage().get() + "\",");
+            String lang = overrideStringLanguage == null ? literal.getLanguage().get() : overrideStringLanguage;
+            out.write("\"@language\" : \"" + lang + "\",");
             if (out instanceof IndentingWriter) {
                 IndentingWriter output = (IndentingWriter)out;
                 output.writeEOL();

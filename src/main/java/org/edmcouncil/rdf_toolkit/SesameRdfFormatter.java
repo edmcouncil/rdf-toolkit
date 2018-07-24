@@ -119,6 +119,9 @@ public class SesameRdfFormatter {
                 "sdt", "string-data-typing", true, "sets whether string data values have explicit data types, or not; one of: " + SesameSortedRDFWriterFactory.StringDataTypeOptions.summarise()
         );
         options.addOption(
+                "osl", "override-string-language", true, "sets an override language that is applied to all strings"
+        );
+        options.addOption(
                 "i", "indent", true, "sets the indent string.  Default is a single tab character"
         );
     }
@@ -155,6 +158,7 @@ public class SesameRdfFormatter {
         String[] trailingComments = null;
         String indent = "\t";
         SesameSortedRDFWriterFactory.StringDataTypeOptions stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.implicit;
+        String overrideStringLanguage = null;
 
         // Parse the command line options.
         CommandLineParser parser = new DefaultParser();
@@ -319,6 +323,11 @@ public class SesameRdfFormatter {
             stringDataTypeOption = SesameSortedRDFWriterFactory.StringDataTypeOptions.getByOptionValue(line.getOptionValue("sdt"));
         }
 
+        // Check if there is an override language setting for all strings
+        if (line.hasOption("osl")) {
+            overrideStringLanguage = line.getOptionValue("osl");
+        }
+
         // Check if an explicit indent string has been provided
         if (line.hasOption("i")) {
             indent = "ABC".replaceFirst("ABC", line.getOptionValue("i")); // use 'replaceFirst' to get cheap support for escaped characters like tabs
@@ -453,6 +462,7 @@ public class SesameRdfFormatter {
         writerOptions.put("leadingComments", leadingComments);
         writerOptions.put("trailingComments", trailingComments);
         writerOptions.put("stringDataTypeOption", stringDataTypeOption);
+        writerOptions.put("overrideStringLanguage", overrideStringLanguage);
         RDFWriter rdfWriter = factory.getWriter(targetWriter, writerOptions);
         Rio.write(sourceModel, rdfWriter);
         targetWriter.flush();

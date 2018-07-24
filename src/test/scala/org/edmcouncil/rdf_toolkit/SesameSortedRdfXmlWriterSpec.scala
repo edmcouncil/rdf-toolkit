@@ -28,16 +28,15 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
-
 import java.io._
 import java.util
 
+import org.eclipse.rdf4j.model.{ Literal, Statement }
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
-import org.eclipse.rdf4j.rio.{ RDFWriter, RDFFormat, Rio }
+import org.eclipse.rdf4j.rio.{ RDFFormat, RDFWriter, Rio }
 import org.eclipse.rdf4j.rio.rdfxml.util.RDFXMLPrettyWriterFactory
 import org.slf4j.LoggerFactory
-
-import org.scalatest.{ Matchers, FlatSpec }
+import org.scalatest.{ FlatSpec, Matchers }
 
 /**
  * ScalaTest tests for the SesameSortedRdfXmlWriter and SesameSortedRDFWriterFactory.
@@ -781,6 +780,35 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     )
     val content = getFileContents(outputFile, "UTF-8")
     assert(content.contains("rdf:datatype=\"&xsd;string\""), "explicit string data typing seems to have failed")
+  }
+
+  it should "be able to override the language for all strings" in {
+    val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
+    val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
+    val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_override_language.rdf"))
+    val overrideLanguage = "en-us"
+    SesameRdfFormatter run Array[String](
+      "-s", inputFile getAbsolutePath,
+      "-t", outputFile getAbsolutePath,
+      "-tfmt", "rdf-xml",
+      "-dtd",
+      "-osl", overrideLanguage
+    )
+
+    // Read in output file & test that all strings have the override language
+    val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
+    val outputModel = Rio parse (new FileReader(outputFile), baseIri stringValue, RDFFormat.RDFXML)
+    for (statement: Statement ← outputModel.iterator.asScala) {
+      val obj = statement.getObject;
+      if (obj.isInstanceOf[Literal]) {
+        val lit = obj.asInstanceOf[Literal]
+        if (lit.getLanguage.isPresent) {
+          assert(lit.getLanguage.get == overrideLanguage, s"literal language should have been forced to '$overrideLanguage' but was: 'lit.getLanguage.get'")
+        } else if (lit.getDatatype.stringValue == xsString) {
+          assert(false, s"string literal did not have any language set: ${lit.stringValue}")
+        }
+      }
+    }
   }
 
   it should "be able to use set the indent string" in {
