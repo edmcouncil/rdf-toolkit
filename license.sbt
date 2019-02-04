@@ -1,7 +1,9 @@
 
-val license = scala.io.Source.fromFile("LICENSE.md").getLines mkString ("/*\n * ", "\n * ", "\n */\n")
+headerLicense := Some(HeaderLicense.Custom(
+  scala.io.Source.fromFile("LICENSE.md").getLines mkString ("\n")
+))
 
-headers := Map(
-  "scala" -> (de.heikoseeberger.sbtheader.HeaderPattern.cStyleBlockComment, license),
-  "java" -> (de.heikoseeberger.sbtheader.HeaderPattern.cStyleBlockComment, license)
+headerMappings := Map(
+  HeaderFileType.scala -> HeaderCommentStyle.cStyleBlockComment,
+  HeaderFileType.java -> HeaderCommentStyle.cStyleBlockComment
 )

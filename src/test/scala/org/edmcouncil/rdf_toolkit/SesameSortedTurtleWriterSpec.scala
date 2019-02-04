@@ -1,18 +1,18 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Enterprise Data Management Council
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.edmcouncil.rdf_toolkit
 
 import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
@@ -729,7 +730,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
       "-i", "  "
     )
     val content = getFileContents(outputFile, "UTF-8")
-    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).size
+    val singleIndentLineCount = content.lines.filter(_.matches("^  \\S.*$")).toArray.size
     assert(singleIndentLineCount >= 1, "double-space indent has failed")
 
     val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.ttl"))
@@ -739,7 +740,7 @@ class SesameSortedTurtleWriterSpec extends FlatSpec with Matchers with SesameSor
       "-i", "\t\t"
     )
     val content2 = getFileContents(outputFile2, "UTF-8")
-    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).size
+    val singleIndentLineCount2 = content2.lines.filter(_.matches("^\t\t\\S.*$")).toArray.size
     assert(singleIndentLineCount2 >= 1, "double-tab indent has failed")
   }
 

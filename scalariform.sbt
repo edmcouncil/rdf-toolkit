@@ -1,9 +1,9 @@
 import scalariform.formatter.preferences._
 
-scalariformSettings
+// scalariformSettings _
 
-ScalariformKeys.preferences := ScalariformKeys.preferences.value
+scalariformPreferences := scalariformPreferences.value
   .setPreference(AlignSingleLineCaseStatements, true)
-  .setPreference(DoubleIndentClassDeclaration, true)
-  .setPreference(PreserveDanglingCloseParenthesis, true)
+  .setPreference(DoubleIndentConstructorArguments, true)
+  .setPreference(DanglingCloseParenthesis, Preserve)
   .setPreference(RewriteArrowSymbols, true)

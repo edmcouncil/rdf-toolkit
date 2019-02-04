@@ -23,7 +23,7 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 javacOptions ++= Seq("-Xlint:unchecked")
 
-Seq(bintrayResolverSettings:_*)
+// Seq(bintrayResolverSettings:_*)
 
 libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value
 

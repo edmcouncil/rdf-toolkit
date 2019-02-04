@@ -1,6 +1,8 @@
 import sbt._
 import sbt.Keys._
 import scala.util.Try
+import scala.io.Source
+import scala.sys.process.Process
 
 /**
  * Add to build.sbt:
@@ -66,7 +68,7 @@ object BooterPropertiesGenerator {
      */
     def writeIfChanged(file: File, content: String) {
 
-      val currentFileContent = Try(io.Source.fromFile(file).mkString).getOrElse("")
+      val currentFileContent = Try(Source.fromFile(file).mkString).getOrElse("")
 
       if (stripContent(currentFileContent) != stripContent(content)) {
         IO.write(file, content)
