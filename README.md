@@ -41,7 +41,7 @@ Please add your issues, bugs, feature requests, requirements or questions as iss
 
 # download
 
-Download the RDF Toolkit [here](https://jenkins.edmcouncil.org/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/scala-2.11/rdf-toolkit.jar)
+Download the RDF Toolkit [here](https://jenkins.edmcouncil.org/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/scala-2.12/rdf-toolkit.jar)
 
 # usage
 
