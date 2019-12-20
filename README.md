@@ -1,4 +1,4 @@
-![EDM Council Logo](etc/image/edmc-logo.jpg)
+<img src="https://spec.edmcouncil.org/fibo/htmlpages/master/latest/img/logo.66a988fe.png" width="150" align="right"/>
 
 TODO: Update this document, it does not include the builder documentation!
 
