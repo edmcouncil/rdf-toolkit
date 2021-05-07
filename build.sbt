@@ -6,7 +6,7 @@ organizationName := "Enterprise Data Management Council"
 
 name := "rdf-toolkit"
 
-version := "1.10.0"
+version := "1.10.1"
 
 startYear := Some(2015)
 
