@@ -24,14 +24,13 @@
 
 package org.edmcouncil.rdf_toolkit
 
-import java.io.{ File, FileInputStream, FileOutputStream, PrintStream }
-import java.util.regex.{ Matcher, Pattern }
-import javax.io.DirectoryWalker
+import org.edmcouncil.rdf_toolkit.io.DirectoryWalker
 
+import java.io.{File, FileInputStream, FileOutputStream, PrintStream}
+import java.util.regex.{Matcher, Pattern}
 import scala.language.postfixOps
 import scala.collection.JavaConverters._
-
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 import org.slf4j.LoggerFactory
 
 class SesameRdfFormatterSpec extends FlatSpec with Matchers with SesameSortedWriterSpecSupport /*with OutputSuppressor*/ {
@@ -49,7 +48,7 @@ class SesameRdfFormatterSpec extends FlatSpec with Matchers with SesameSortedWri
       System setIn (new FileInputStream(inputFile))
       System setOut (new PrintStream(new FileOutputStream(outputFile)))
 
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-sfmt", inputFormat,
         "-tfmt", outputFormat
       )
@@ -79,7 +78,7 @@ class SesameRdfFormatterSpec extends FlatSpec with Matchers with SesameSortedWri
     val sourcePattern = Pattern.compile(sourcePatternString)
     val targetPatternString = s"$$1.fmt.$fileExt"
 
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-sd", sourceDirPath,
       "-sdp", sourcePatternString,
       "-sfmt", format,

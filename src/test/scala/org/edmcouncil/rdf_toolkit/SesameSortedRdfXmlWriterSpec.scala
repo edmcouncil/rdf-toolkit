@@ -24,20 +24,18 @@
 
 package org.edmcouncil.rdf_toolkit
 
-import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriter.ShortIriPreferences
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 
-import scala.collection.JavaConverters._
-import scala.language.postfixOps
 import java.io._
 import java.util
-
-import org.eclipse.rdf4j.model.{ Literal, Statement }
-import org.edmcouncil.rdf_toolkit.SesameSortedRDFWriterFactory.TargetFormats
-import org.eclipse.rdf4j.rio.{ RDFFormat, RDFWriter, Rio }
+import org.eclipse.rdf4j.model.{Literal, Statement}
+import org.eclipse.rdf4j.rio.{RDFFormat, RDFWriter, Rio}
 import org.eclipse.rdf4j.rio.rdfxml.util.RDFXMLPrettyWriterFactory
+import org.edmcouncil.rdf_toolkit.io.format.TargetFormats
+import org.edmcouncil.rdf_toolkit.util.ShortIriPreferences
+import org.edmcouncil.rdf_toolkit.writer.{SortedRdfWriterFactory, SortedRdfXmlWriter}
 import org.slf4j.LoggerFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  * ScalaTest tests for the SesameSortedRdfXmlWriter and SesameSortedRDFWriterFactory.
@@ -74,20 +72,20 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
 
   "A SortedRDFWriterFactory" should "be able to create a SortedRdfXmlWriter" in {
     val outWriter = new OutputStreamWriter(System.out)
-    val factory = new SesameSortedRDFWriterFactory(TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML)
 
-    val writer1 = new SesameSortedRdfXmlWriter(System.out)
+    val writer1 = new SortedRdfXmlWriter(System.out)
     assert(writer1 != null, "failed to create default SortedTurtleWriter from OutputStream")
 
-    val writer2 = new SesameSortedRdfXmlWriter(outWriter)
+    val writer2 = new SortedRdfXmlWriter(outWriter)
     assert(writer2 != null, "failed to create default SortedTurtleWriter from Writer")
 
-    val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.prefix)
-    val writer3 = new SesameSortedRdfXmlWriter(System.out, mapAsJavaMap[String, Object](writer3Options))
+    val writer3Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.PREFIX)
+    val writer3 = new SortedRdfXmlWriter(System.out, mapAsJavaMap[String, Object](writer3Options))
     assert(writer3 != null, "failed to create default SortedTurtleWriter from OutputStream with parameters")
 
-    val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.base_iri)
-    val writer4 = new SesameSortedRdfXmlWriter(outWriter, mapAsJavaMap[String, Object](writer4Options))
+    val writer4Options = Map("baseIri" -> valueFactory.createIRI("http://example.com#"), "indent" -> "\t\t", "shortIriPref" -> ShortIriPreferences.BASE_IRI)
+    val writer4 = new SortedRdfXmlWriter(outWriter, mapAsJavaMap[String, Object](writer4Options))
     assert(writer4 != null, "failed to create default SortedTurtleWriter from Writer")
   }
 
@@ -121,7 +119,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("baseIri", baseIri)
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
@@ -151,7 +149,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val inputFile = new File("src/test/resources/other/topquadrant-extended-turtle-example.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
@@ -179,7 +177,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-14.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
@@ -207,7 +205,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val inputFile = new File("src/test/resources/rdf_turtle_spec/turtle-example-26.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some(".rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
@@ -236,7 +234,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_prefix.rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
@@ -269,7 +267,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val baseIri = valueFactory.createIRI("http://topbraid.org/countries")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_base_iri.rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     val rdfXmlWriter = factory getWriter (outWriter, rdfXmlWriterOptions)
@@ -305,7 +303,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -327,7 +325,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -341,7 +339,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -371,7 +369,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -385,7 +383,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(outputDir1) if !sourceFile.getName.contains("_prefix") && !sourceFile.getName.contains("_base_iri")) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -423,7 +421,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_inline_blank_nodes.rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("baseIri", baseIri)
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
@@ -461,7 +459,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlExclusionList contains sourceFile.getName) && !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn.rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -476,7 +474,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn")) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -502,7 +500,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val inputFile = new File("src/test/resources/other/ControlParties.rdf")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_ibn2s.rdf"))
     val outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8")
-    val factory = new SesameSortedRDFWriterFactory(SesameSortedRDFWriterFactory.TargetFormats.rdf_xml)
+    val factory = new SortedRdfWriterFactory(format.TargetFormats.RDF_XML)
     val rdfXmlWriterOptions = new util.HashMap[String, Object]()
     rdfXmlWriterOptions.put("useDtdSubset", java.lang.Boolean.TRUE)
     rdfXmlWriterOptions.put("inlineBlankNodes", java.lang.Boolean.TRUE)
@@ -550,7 +548,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(rawRdfDirectory) if !(rdfXmlInlineBlankNodesExclusionList contains sourceFile.getName)) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibn2.rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -565,7 +563,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     for (sourceFile ← listDirTreeFiles(outputDir1) if sourceFile.getName.contains("_ibn2")) {
       fileCount += 1
       val targetFile = constructTargetFile(sourceFile, outputDir1, outputDir2, Some(".rdf"))
-      SesameRdfFormatter run Array[String](
+      RdfFormatter run Array[String](
         "-s", sourceFile getAbsolutePath,
         "-t", targetFile getAbsolutePath,
         "-tfmt", "rdf-xml",
@@ -624,7 +622,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         fileCount += 1
 
         val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi.rdf"))
-        SesameRdfFormatter run Array[String](
+        RdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,
           "-tfmt", "rdf-xml",
@@ -677,7 +675,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
         fileCount += 1
 
         val targetFile = constructTargetFile(sourceFile, rawRdfDirectory, outputDir1, Some("_ibi_ibn.rdf"))
-        SesameRdfFormatter run Array[String](
+        RdfFormatter run Array[String](
           "-s", sourceFile getAbsolutePath,
           "-t", targetFile getAbsolutePath,
           "-tfmt", "rdf-xml",
@@ -708,7 +706,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_replaced.rdf"))
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -727,7 +725,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val linePrefix = "## "
     val leadingComment = "Start of --> My New Ontology."
     val trailingComment = "End of --> My New Ontology."
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -736,9 +734,9 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
       "-tc", trailingComment
     )
     val content = getFileContents(outputFile, "UTF-8")
-    val escapedLeadingComment = SesameSortedRdfXmlWriter.escapeCommentText(leadingComment)
+    val escapedLeadingComment = SortedRdfXmlWriter.escapeCommentText(leadingComment)
     assert(content.contains(linePrefix + escapedLeadingComment), "leading comment insertion seems to have failed")
-    val escapedTrailingComment = SesameSortedRdfXmlWriter.escapeCommentText(trailingComment)
+    val escapedTrailingComment = SortedRdfXmlWriter.escapeCommentText(trailingComment)
     assert(content.contains(linePrefix + escapedTrailingComment), "trailing comment insertion seems to have failed")
   }
 
@@ -749,7 +747,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val linePrefix = "## "
     val leadingComments = List("Start of: My New Ontology.", "Version 1.")
     val trailingComments = List("End of: My New Ontology.", "Version 1.")
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -759,11 +757,11 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     )
     val content = getFileContents(outputFile, "UTF-8")
     for (comment ← leadingComments) {
-      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      val escapedComment = SortedRdfXmlWriter.escapeCommentText(comment)
       assert(content.contains(linePrefix + escapedComment), "leading comment insertion seems to have failed")
     }
     for (comment ← trailingComments) {
-      val escapedComment = SesameSortedRdfXmlWriter.escapeCommentText(comment)
+      val escapedComment = SortedRdfXmlWriter.escapeCommentText(comment)
       assert(content.contains(linePrefix + escapedComment), "trailing comment insertion seems to have failed")
     }
   }
@@ -772,7 +770,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_sdt_explicit.rdf"))
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -788,7 +786,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_override_language.rdf"))
     val overrideLanguage = "en-us"
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -816,7 +814,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     val outputDir1 = createTempDir(rootOutputDir1, "rdfxml")
     val inputFile = new File("src/test/resources/other/topbraid-countries-ontology.ttl")
     val outputFile = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_spaces.rdf"))
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile getAbsolutePath,
       "-tfmt", "rdf-xml",
@@ -828,7 +826,7 @@ class SesameSortedRdfXmlWriterSpec extends FlatSpec with Matchers with SesameSor
     assert(singleIndentLineCount >= 1, "double-space indent has failed")
 
     val outputFile2 = constructTargetFile(inputFile, resourceDir, outputDir1, Some("_indent_tabs.rdf"))
-    SesameRdfFormatter run Array[String](
+    RdfFormatter run Array[String](
       "-s", inputFile getAbsolutePath,
       "-t", outputFile2 getAbsolutePath,
       "-tfmt", "rdf-xml",
