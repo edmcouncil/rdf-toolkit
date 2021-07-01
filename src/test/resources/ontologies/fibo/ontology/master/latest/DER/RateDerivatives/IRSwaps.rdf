@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+	<!ENTITY dct "http://purl.org/dc/terms/">
+	<!ENTITY fibo-der-drc-bsc "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/">
+	<!ENTITY fibo-der-drc-swp "https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/">
+	<!ENTITY fibo-der-rtd-irswp "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/">
+	<!ENTITY fibo-der-rtd-rtd "https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/RateDerivatives/">
+	<!ENTITY fibo-fbc-dae-dbt "https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/">
+	<!ENTITY fibo-fbc-fct-ra "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/RegistrationAuthorities/">
+	<!ENTITY fibo-fbc-pas-fpas "https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/FinancialProductsAndServices/">
+	<!ENTITY fibo-fnd-acc-cur "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/">
+	<!ENTITY fibo-fnd-agr-ctr "https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/">
+	<!ENTITY fibo-fnd-dt-bd "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/">
+	<!ENTITY fibo-fnd-dt-fd "https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/">
+	<!ENTITY fibo-fnd-pas-psch "https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/">
+	<!ENTITY fibo-fnd-qt-qtu "https://spec.edmcouncil.org/fibo/ontology/FND/Quantities/QuantitiesAndUnits/">
+	<!ENTITY fibo-fnd-rel-rel "https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/">
+	<!ENTITY fibo-fnd-utl-alx "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/">
+	<!ENTITY fibo-fnd-utl-av "https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/">
+	<!ENTITY fibo-ind-ei-ei "https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/">
+	<!ENTITY fibo-ind-ir-ir "https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/">
+	<!ENTITY fibo-sec-sec-sch "https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/ParametricSchedules/">
+	<!ENTITY owl "http://www.w3.org/2002/07/owl#">
+	<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+	<!ENTITY skos "http://www.w3.org/2004/02/skos/core#">
+	<!ENTITY sm "http://www.omg.org/techprocess/ab/SpecificationMetadata/">
+	<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/"
+	xmlns:dct="http://purl.org/dc/terms/"
+	xmlns:fibo-der-drc-bsc="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/"
+	xmlns:fibo-der-drc-swp="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/"
+	xmlns:fibo-der-rtd-irswp="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/"
+	xmlns:fibo-der-rtd-rtd="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/RateDerivatives/"
+	xmlns:fibo-fbc-dae-dbt="https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/"
+	xmlns:fibo-fbc-fct-ra="https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/RegistrationAuthorities/"
+	xmlns:fibo-fbc-pas-fpas="https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/FinancialProductsAndServices/"
+	xmlns:fibo-fnd-acc-cur="https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/"
+	xmlns:fibo-fnd-agr-ctr="https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/"
+	xmlns:fibo-fnd-dt-bd="https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/"
+	xmlns:fibo-fnd-dt-fd="https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/"
+	xmlns:fibo-fnd-pas-psch="https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/"
+	xmlns:fibo-fnd-qt-qtu="https://spec.edmcouncil.org/fibo/ontology/FND/Quantities/QuantitiesAndUnits/"
+	xmlns:fibo-fnd-rel-rel="https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/"
+	xmlns:fibo-fnd-utl-alx="https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/"
+	xmlns:fibo-fnd-utl-av="https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/"
+	xmlns:fibo-ind-ei-ei="https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/"
+	xmlns:fibo-ind-ir-ir="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/"
+	xmlns:fibo-sec-sec-sch="https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/ParametricSchedules/"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:sm="http://www.omg.org/techprocess/ab/SpecificationMetadata/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+	
+	<owl:Ontology rdf:about="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/IRSwaps/">
+		<rdfs:label>Interest Rate Swaps Ontology</rdfs:label>
+		<dct:abstract>This ontology defines concepts specific to interest rate swap contracts, including but not limited to fixed and floating rate combinations, single and cross-currency contracts, etc.</dct:abstract>
+		<dct:license rdf:datatype="&xsd;anyURI">http://opensource.org/licenses/MIT</dct:license>
+		<sm:contentLanguage rdf:resource="https://www.w3.org/TR/owl2-quick-reference/"/>
+		<sm:copyright>Copyright (c) 2016-2021 EDM Council, Inc.</sm:copyright>
+		<sm:copyright>Copyright (c) 2016-2021 Object Management Group, Inc.</sm:copyright>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/RateDerivatives/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FBC/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/"/>
+		<sm:dependsOn rdf:resource="https://spec.edmcouncil.org/fibo/ontology/SEC/"/>
+		<sm:fileAbbreviation>fibo-der-rtd-irswp</sm:fileAbbreviation>
+		<sm:filename>IRSwaps.rdf</sm:filename>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/DerivativesBasics/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/DerivativesContracts/Swaps/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/RateDerivatives/RateDerivatives/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/RegistrationAuthorities/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FBC/ProductsAndServices/FinancialProductsAndServices/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Agreements/Contracts/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/BusinessDates/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/DatesAndTimes/FinancialDates/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/ProductsAndServices/PaymentsAndSchedules/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Quantities/QuantitiesAndUnits/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Relations/Relations/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/Analytics/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/FND/Utilities/AnnotationVocabulary/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/EconomicIndicators/EconomicIndicators/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/IND/InterestRates/InterestRates/"/>
+		<owl:imports rdf:resource="https://spec.edmcouncil.org/fibo/ontology/SEC/Securities/ParametricSchedules/"/>
+		<owl:versionIRI rdf:resource="https://spec.edmcouncil.org/fibo/ontology/DER/20210101/RateDerivatives/IRSwaps/"/>
+		<skos:changeNote>The https://spec.edmcouncil.org/fibo/ontology/DER/20180801/RateDerivatives/IRSwaps.rdf version of this ontology was modified to use the generic statistical measures and measurements now in FND.</skos:changeNote>
+		<skos:changeNote>The https://spec.edmcouncil.org/fibo/ontology/DER/20190501/RateDerivatives/IRSwaps/ version of this ontology was modified to eliminate the property &apos;hasPaymentSchedule&apos; from the Swaps ontology in favor of the equivalent property with the same name from FND.</skos:changeNote>
+		<skos:changeNote>The https://spec.edmcouncil.org/fibo/ontology/DER/20200701/RateDerivatives/IRSwaps/ version of this ontology was modified take advantage of basic fixed and floating legs as higher level concepts common to many swaps, and to refine definitions to eliminate ambiguity and conform with ISO 704.</skos:changeNote>
+		<skos:changeNote>The https://spec.edmcouncil.org/fibo/ontology/DER/20201201/RateDerivatives/IRSwaps/ version of this ontology was modified to move the property &apos;exchanges&apos; to FND given that it could be applied more generally than with respect to swaps only.</skos:changeNote>
+		<fibo-fnd-utl-av:hasMaturityLevel rdf:resource="&fibo-fnd-utl-av;Release"/>
+	</owl:Ontology>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;CrossCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwap"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:onClass rdf:resource="&fibo-fnd-acc-cur;Currency"/>
+				<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>cross-currency interest rate swap</rdfs:label>
+		<skos:definition>interest rate swap in which the two streams of interest payments are in different currencies</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;ExplicitInterestAmountCalculationEvent">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateStreamEvent"/>
+		<rdfs:subClassOf rdf:resource="&fibo-sec-sec-sch;ScheduledCalculationPeriodEndEvent"/>
+		<rdfs:label>explicit interest amount calculation event</rdfs:label>
+		<skos:definition>the explicit representation of the calculation event in a given period, in which an interest payment is calculated based on the rate (fixed or floating) and the notional amount (in the payment currency, and factored for Fx if necessary), on a given date</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FixedFloatCrossCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;CrossCurrencyInterestRateSwap"/>
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;FixedFloatInterestRateSwap"/>
+		<rdfs:label>fixed float cross-currency interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;CrossCurrencyInterestRateSwap">
+					</rdf:Description>
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;FixedFloatInterestRateSwap">
+					</rdf:Description>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap in which fixed interest payments on the notional are exchanged for floating interest payments and the two streams of interest payments are in different currencies</skos:definition>
+		<fibo-fnd-utl-av:synonym>fixed float cross currency interest rate swap</fibo-fnd-utl-av:synonym>
+		<fibo-fnd-utl-av:synonym>fixed-float cross-currency interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FixedFloatInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwap"/>
+		<rdfs:subClassOf>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;exchanges"/>
+						<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;FixedInterestRateLeg"/>
+					</owl:Restriction>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;exchanges"/>
+						<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;FloatingInterestRateLeg"/>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</rdfs:subClassOf>
+		<rdfs:label>fixed float interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;InterestRateSwap">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-der-drc-swp;hasLeg"/>
+						<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;FixedInterestRateLeg"/>
+					</owl:Restriction>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-der-drc-swp;hasLeg"/>
+						<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;FloatingInterestRateLeg"/>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap in which fixed interest payments on the notional are exchanged for floating interest payments</skos:definition>
+		<fibo-fnd-utl-av:synonym>fixed-float interest rate swap</fibo-fnd-utl-av:synonym>
+		<fibo-fnd-utl-av:synonym>vanilla interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FixedFloatSingleCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;FixedFloatInterestRateSwap"/>
+		<rdfs:label>fixed float single currency interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;FixedFloatInterestRateSwap">
+					</rdf:Description>
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;SingleCurrencyInterestRateSwap">
+					</rdf:Description>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap in which fixed interest payments on the notional are exchanged for floating interest payments and where both payment streams are expressed in terms of the same currency</skos:definition>
+		<fibo-fnd-utl-av:synonym>fixed-float single-currency interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FixedInterestRateLeg">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;FixedLeg"/>
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwapLeg"/>
+		<rdfs:label>fixed interest rate leg</rdfs:label>
+		<owl:disjointWith rdf:resource="&fibo-der-rtd-irswp;FloatingInterestRateLeg"/>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;InterestRateSwapLeg">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fbc-dae-dbt;hasInterestRate"/>
+						<owl:someValuesFrom rdf:resource="&fibo-fbc-dae-dbt;FixedInterestRate"/>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>fixed leg that specifies fixed interest amounts and terms for the payment of that interest</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>This may be the funding leg of some swaps (i.e. one party agrees to pay fixed interest amounts in exchange for whatever is the other leg) or it may be one or both sides of an interest rate swap, where the two parties exchange different interest streams.</fibo-fnd-utl-av:explanatoryNote>
+		<fibo-fnd-utl-av:synonym>fixed interest rate swap stream</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FloatFloatCrossCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;FloatFloatInterestRateSwap"/>
+		<rdfs:label>float float cross-currency interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;CrossCurrencyInterestRateSwap">
+					</rdf:Description>
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;FloatFloatInterestRateSwap">
+					</rdf:Description>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap that exchanges cashflows based on two different interest rates in different currencies</skos:definition>
+		<fibo-fnd-utl-av:synonym>float-float cross-currency interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FloatFloatInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;BasisSwap"/>
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwap"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;exchanges"/>
+				<owl:onClass rdf:resource="&fibo-der-rtd-irswp;FloatingInterestRateLeg"/>
+				<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>float float interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;InterestRateSwap">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-der-drc-swp;hasLeg"/>
+						<owl:onClass rdf:resource="&fibo-der-rtd-irswp;FloatingInterestRateLeg"/>
+						<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap that exchanges cashflows based on two different floating interest rates</skos:definition>
+		<fibo-fnd-utl-av:adaptedFrom rdf:datatype="&xsd;anyURI">http://www.investopedia.com/terms/b/basisrateswap.asp</fibo-fnd-utl-av:adaptedFrom>
+		<fibo-fnd-utl-av:explanatoryNote>This is a swap in which two parties swap variable interest rates based on different money markets, and this is usually done to limit interest-rate risk that a company faces as a result of having differing lending and borrowing rates.</fibo-fnd-utl-av:explanatoryNote>
+		<fibo-fnd-utl-av:synonym>basis rate swap</fibo-fnd-utl-av:synonym>
+		<fibo-fnd-utl-av:synonym>float-float interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FloatFloatSingleCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;FloatFloatInterestRateSwap"/>
+		<rdfs:label>float float single currency interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;FloatFloatInterestRateSwap">
+					</rdf:Description>
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;SingleCurrencyInterestRateSwap">
+					</rdf:Description>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>interest rate swap that exchanges cashflows based on two different floating interest rates in the same currency</skos:definition>
+		<fibo-fnd-utl-av:synonym>float-float single-currency interest rate swap</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;FloatingInterestRateLeg">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;FloatingLeg"/>
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwapLeg"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-der-rtd-irswp;hasInterestCalculationSchedule"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestCalculationSchedule"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-der-rtd-irswp;hasInterestRateResetSchedule"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestRateResetSchedule"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestRateReset"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestRateSettingEvent"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>floating interest rate leg</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-rtd-irswp;InterestRateSwapLeg">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fbc-dae-dbt;hasInterestRate"/>
+						<owl:someValuesFrom rdf:resource="&fibo-fbc-dae-dbt;FloatingInterestRate"/>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>floating leg in which variable interest is paid on some notional amount, linked to some underlying interest reference rate</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>Instead of an absolute rate you have either a variable reference rate or fixed reference rate and an offset that varies in some way, called a spread (same as margin in floating rate notes).</fibo-fnd-utl-av:explanatoryNote>
+		<fibo-fnd-utl-av:synonym>floating interest rate swap stream</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;InterestRateStreamEvent">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;SwapStreamEvent"/>
+		<rdfs:label>interest rate stream event</rdfs:label>
+		<skos:definition>interest-rate specific event occurring with respect to one leg of a swap</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;InterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;Swap"/>
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-rtd;InterestRateDerivativeInstrument"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;exchanges"/>
+				<owl:onClass rdf:resource="&fibo-der-rtd-irswp;InterestRateSwapLeg"/>
+				<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>interest rate swap</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-drc-swp;Swap">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-der-drc-swp;hasLeg"/>
+						<owl:onClass rdf:resource="&fibo-der-rtd-irswp;InterestRateSwapLeg"/>
+						<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>swap in which the reference (underlier) for at least one leg is an interest rate</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;InterestRateSwapLeg">
+		<rdfs:subClassOf rdf:resource="&fibo-der-drc-swp;SwapLeg"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:onClass rdf:resource="&fibo-der-rtd-irswp;NotionalStepChangeEvent"/>
+				<owl:minQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">0</owl:minQualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-der-rtd-irswp;hasNotionalStepSchedule"/>
+				<owl:onClass rdf:resource="&fibo-der-rtd-irswp;NotionalStepSchedule"/>
+				<owl:minQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">0</owl:minQualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:onClass rdf:resource="&fibo-fnd-acc-cur;Currency"/>
+				<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;InterestRateStreamEvent"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestCalculation"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestPayment"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-dt-bd;hasBusinessRecurrenceIntervalConvention"/>
+				<owl:someValuesFrom rdf:resource="&fibo-fbc-dae-dbt;DayCountConvention"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-pas-psch;hasPaymentSchedule"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestPaymentSchedule"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>interest rate swap leg</rdfs:label>
+		<owl:equivalentClass>
+			<owl:Class>
+				<owl:intersectionOf rdf:parseType="Collection">
+					<rdf:Description rdf:about="&fibo-der-drc-swp;SwapLeg">
+					</rdf:Description>
+					<owl:Restriction>
+						<owl:onProperty rdf:resource="&fibo-fbc-dae-dbt;hasInterestRate"/>
+						<owl:someValuesFrom rdf:resource="&fibo-fnd-acc-cur;InterestRate"/>
+					</owl:Restriction>
+				</owl:intersectionOf>
+			</owl:Class>
+		</owl:equivalentClass>
+		<skos:definition>swap leg specifiying an interest rate stream, including both a parametric and cashflow representation for the stream of payments</skos:definition>
+		<fibo-fnd-utl-av:synonym>interest rate swap stream</fibo-fnd-utl-av:synonym>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;NotionalStepAmount">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-qt-qtu;QuantityValue"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-acc-cur;hasNotionalAmount"/>
+				<owl:someValuesFrom>
+					<owl:Class>
+						<owl:unionOf rdf:parseType="Collection">
+							<rdf:Description rdf:about="&fibo-fnd-acc-cur;MonetaryAmount">
+							</rdf:Description>
+							<rdf:Description rdf:about="&fibo-fnd-acc-cur;PercentageMonetaryAmount">
+							</rdf:Description>
+						</owl:unionOf>
+					</owl:Class>
+				</owl:someValuesFrom>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>notional step amount</rdfs:label>
+		<skos:definition>the amount of money that is subtracted from the notional on each step date</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>Note that this is an actual concrete sum of money, which may be specified either as a monetary amount (e.g. dollars and cents) or as a percentage of either the original notional amount or the previous notional amount.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;NotionalStepChangeEvent">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateStreamEvent"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-dt-fd;hasDate"/>
+				<owl:someValuesFrom rdf:resource="&fibo-fnd-dt-fd;CalculatedDate"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>notional step change event</rdfs:label>
+		<skos:definition>event in which a step change in the notional amount of the swap stream occurs</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>This always occurs on a calculation date (that is, one of the calculation period end dates). Therefore the frequency / period length of the steps in the step schedule is a multiple of the calculation period or frequency. For example, if the notional is recalculated on every calculation date, applying a new interest rate to the new notional amount, then the two frequencies are the same. If notional is updated every second calculation period, then the step schedule specifies periods that are twice as long, and so on.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;NotionalStepPercentageAmount">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-acc-cur;PercentageMonetaryAmount"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-qt-qtu;hasQuantityKind"/>
+				<owl:allValuesFrom rdf:resource="&fibo-fnd-acc-cur;MonetaryMeasure"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>notional step percentage amount</rdfs:label>
+		<skos:definition>the percentage amount by which the notional changes on each step date</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>The percentage is either a percentage applied to the initial notional amount or the previous outstanding notional, and may be positive or negative.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;NotionalStepPeriodLength">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-dt-fd;RecurrenceInterval"/>
+		<rdfs:label>notional step period length</rdfs:label>
+		<skos:definition>recurrence interval indicating the frequency with which step changes occur, which is a multiple of the calculation period in the calculation schedule</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;NotionalStepSchedule">
+		<rdfs:subClassOf rdf:resource="&fibo-sec-sec-sch;ParametricSchedule"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;NotionalStepAmount"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-rel-rel;refersTo"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestCalculationSchedule"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>notional step schedule</rdfs:label>
+		<skos:definition>schedule of changes in the notional amount on which interest is paid, comprising the regular sequence of step events</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SingleCurrencyInterestRateSwap">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateSwap"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fbc-fct-ra;specifies"/>
+				<owl:onClass rdf:resource="&fibo-fnd-acc-cur;Currency"/>
+				<owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>single currency interest rate swap</rdfs:label>
+		<skos:definition>interest rate swap in which the two streams of interest payments are in the same currency</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamCalculationRelativeDate">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-dt-fd;RelativeDate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-dt-fd;isRelativeTo"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestRateResetSchedule"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>swap stream calculation relative date</rdfs:label>
+		<skos:definition>calculation date that is relative to the rate reset schedule</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestCalculation">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-utl-alx;Expression"/>
+		<rdfs:label>swapstream interest calculation</rdfs:label>
+		<skos:definition>expression that specifies the formula for calculation of interest</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestCalculationSchedule">
+		<rdfs:subClassOf rdf:resource="&fibo-sec-sec-sch;ParametricSchedule"/>
+		<rdfs:label>swap stream interest calculation schedule</rdfs:label>
+		<skos:definition>parametric schedule that represents the dates on which interest is calculated</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestPayment">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-pas-psch;Payment"/>
+		<rdfs:label>swap stream interest payment</rdfs:label>
+		<skos:definition>event involving the payment of interest for a given swap leg</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestPaymentSchedule">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-pas-psch;PaymentSchedule"/>
+		<rdfs:subClassOf rdf:resource="&fibo-sec-sec-sch;ParametricSchedule"/>
+		<rdfs:label>swap stream interest payment schedule</rdfs:label>
+		<skos:definition>parametric schedule that represents the dates on which interest is due to be paid</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>These may more commonly be expressed as an offset of the calculation dates, however the creation of a schedule specifically for payment dates is allowed for.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestRateReset">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateStreamEvent"/>
+		<rdfs:label>swap stream interest rate reset</rdfs:label>
+		<skos:definition>event in which an interest rate for a given swap stream changes (resets)</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestRateResetSchedule">
+		<rdfs:subClassOf rdf:resource="&fibo-sec-sec-sch;ParametricSchedule"/>
+		<rdfs:label>swapstream interest rate reset schedule</rdfs:label>
+		<skos:definition>parametric schedule of reset dates</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>These may more commonly be expressed as an offset of the calculation dates, however the creation of a schedule specifically for reset dates is allowed for.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestRateSettingEvent">
+		<rdfs:subClassOf rdf:resource="&fibo-der-rtd-irswp;InterestRateStreamEvent"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-dt-fd;hasDate"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestSettingRelativeDate"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>swap stream interest rate setting event</rdfs:label>
+		<skos:definition>event in which an interest rate for a given swap stream is determined</skos:definition>
+	</owl:Class>
+	
+	<owl:Class rdf:about="&fibo-der-rtd-irswp;SwapStreamInterestSettingRelativeDate">
+		<rdfs:subClassOf rdf:resource="&fibo-fnd-dt-fd;RelativeDate"/>
+		<rdfs:subClassOf>
+			<owl:Restriction>
+				<owl:onProperty rdf:resource="&fibo-fnd-dt-fd;isRelativeTo"/>
+				<owl:someValuesFrom rdf:resource="&fibo-der-rtd-irswp;SwapStreamInterestRateReset"/>
+			</owl:Restriction>
+		</rdfs:subClassOf>
+		<rdfs:label>swap stream interest setting relative date</rdfs:label>
+		<skos:definition>date on which an interest rate is revised if that date is relative to a rate reset event</skos:definition>
+	</owl:Class>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasFirstNotionalStepDate">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-dt-fd;hasStartDate"/>
+		<rdfs:label>has first notional step date</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fnd-dt-fd;ExplicitDate"/>
+		<skos:definition>indicates the initial date in a notional step schedule</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasFloatingRateCap">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fbc-dae-dbt;hasInterestRate"/>
+		<rdfs:label>has floating rate cap</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fbc-dae-dbt;FloatingInterestRate"/>
+		<skos:definition>indicates an optional ceiling (cap) on interest rates on floating rate debts</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>Rate caps can be viewed as insurance, ensuring that the maximum borrowing rate never exceeds the specified cap level.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:ObjectProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasFloatingRateFloor">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fbc-dae-dbt;hasInterestRate"/>
+		<rdfs:label>has floating rate floor</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fbc-dae-dbt;FloatingInterestRate"/>
+		<skos:definition>indicates an optional lower bound on interest rates on floating rate debts</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:DatatypeProperty rdf:about="&fibo-der-rtd-irswp;hasFloatingRateSpread">
+		<rdfs:label>has floating rate spread</rdfs:label>
+		<rdfs:range rdf:resource="&xsd;decimal"/>
+		<skos:definition>defines the spread rate that can optionally be used to adjust the floating rate</skos:definition>
+		<fibo-fnd-utl-av:explanatoryNote>Such adjustments may be added to or subtracted from the floating rate.</fibo-fnd-utl-av:explanatoryNote>
+	</owl:DatatypeProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasInterestCalculationSchedule">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-dt-fd;hasSchedule"/>
+		<rdfs:label>has interest calculation schedule</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fnd-dt-fd;RegularSchedule"/>
+		<skos:definition>links a set of terms to a corresponding schedule for calculating interest</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasInterestRateResetSchedule">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-dt-fd;hasSchedule"/>
+		<rdfs:label>has interest rate reset schedule</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fnd-dt-fd;Schedule"/>
+		<skos:definition>links a set of terms to a corresponding schedule for resetting the interest rate</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasLastNotionalStepDate">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-dt-fd;hasEndDate"/>
+		<rdfs:label>has last notional step date</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fnd-dt-fd;ExplicitDate"/>
+		<skos:definition>indicates the final date in a notional step schedule</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:ObjectProperty rdf:about="&fibo-der-rtd-irswp;hasNotionalStepSchedule">
+		<rdfs:subPropertyOf rdf:resource="&fibo-fnd-dt-fd;hasSchedule"/>
+		<rdfs:label>has notional step schedule</rdfs:label>
+		<rdfs:range rdf:resource="&fibo-fnd-dt-fd;Schedule"/>
+		<skos:definition>links a set of terms to a corresponding notional step schedule</skos:definition>
+	</owl:ObjectProperty>
+	
+	<owl:DatatypeProperty rdf:about="&fibo-der-rtd-irswp;hasRateMultiplier">
+		<rdfs:label>has rate multiplier</rdfs:label>
+		<rdfs:range rdf:resource="&xsd;decimal"/>
+		<skos:definition>indicates a multiplier applied to the coupon before adding the floating rate spread</skos:definition>
+	</owl:DatatypeProperty>
+
+</rdf:RDF>

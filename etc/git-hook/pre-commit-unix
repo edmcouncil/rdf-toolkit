@@ -66,7 +66,7 @@ function findJava() {
 
 function findToolkitJar() {
 
-  toolkit_jar="$(cd -P ~/git/rdf-toolkit ; pwd)/target/scala-2.11/rdf-toolkit.jar"
+  toolkit_jar="$(cd -P ~/git/rdf-toolkit ; pwd)/target/rdf-toolkit.jar"
 
   if [ -f "${toolkit_jar}" ] ; then
   	log "Found toolkit: ${toolkit_jar}"

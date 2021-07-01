@@ -165,7 +165,7 @@ __log_config__
     log "Launching the sesame-serializer with --source ${file}"
 
     set -x
-    "${java_exe}" -Xmx1g "-Dorg.clapper.avsl.config=${logcfg}" -cp "${RDF_TOOLKIT_JAR}" org.edmcouncil.rdf_toolkit.SesameRdfFormatter \
+    "${java_exe}" -Xmx1g "-Dorg.clapper.avsl.config=${logcfg}" -cp "${RDF_TOOLKIT_JAR}" org.edmcouncil.rdf_toolkit.RdfFormatter \
       --source "${file}" \
       --target "${file}X" \
       --target-format rdf-xml \
