@@ -568,7 +568,7 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
         }
     }
 
-    protected String convertIriToString(IRI iri,
+    protected String convertVerbIriToString(IRI iri,
                                         boolean useGeneratedPrefixes,
                                         boolean useTurtleQuoting,
                                         boolean useJsonLdQuoting) throws Exception {
@@ -576,6 +576,14 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
             if (useTurtleQuoting) { return "a"; }
             if (useJsonLdQuoting) { return "@type"; }
         }
+        return convertIriToString(iri, useGeneratedPrefixes,
+                                  useTurtleQuoting, useJsonLdQuoting);
+    }
+
+    protected String convertIriToString(IRI iri,
+                                        boolean useGeneratedPrefixes,
+                                        boolean useTurtleQuoting,
+                                        boolean useJsonLdQuoting) throws Exception {
         if (ShortIriPreferences.PREFIX.equals(shortIriPreference)) {
             // return the IRI out as a QName if possible.
             QName qname = convertIriToQName(iri, useGeneratedPrefixes);
