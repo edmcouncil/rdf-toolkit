@@ -436,7 +436,8 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
     }
 
     protected void writePredicate(Writer out, IRI predicate) throws Exception {
-        writeIri(out, predicate);
+        out.write(convertVerbIriToString(predicate, useGeneratedPrefixes,
+                                         false, true));
     }
 
     protected void writeIri(Writer out, IRI iri) throws Exception {

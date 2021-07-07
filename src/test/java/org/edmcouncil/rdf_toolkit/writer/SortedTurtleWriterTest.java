@@ -61,12 +61,14 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -355,6 +357,28 @@ class SortedTurtleWriterTest extends AbstractSortedWriterTest {
     assertTrue(contents2.contains("countries:AD"), "prefix preference has failed (2a)");
     assertFalse(contents2.contains("#AD"), "prefix preference has failed (2b)");
     assertTrue(contents2.contains("Åland"), "prefix preference file has encoding problem (2)");
+  }
+
+  @Test
+  void shouldOnlyUseRdfTypeContractionForPredicate() throws Exception {
+    var outBuffer = new ByteArrayOutputStream();
+    var outWriter = new OutputStreamWriter(outBuffer, StandardCharsets.UTF_8);
+    var factory = new SortedRdfWriterFactory(TargetFormats.TURTLE);
+    var turtleWriter = factory.getWriter(outWriter);
+
+    var inputModel = Rio.parse(
+        new StringReader(
+            "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."
+            + "rdf:type rdf:type rdf:Property ."
+            + "<prop:list> a rdf:List; rdf:first rdf:type; rdf:rest rdf:nil ."
+        ), RDFFormat.TURTLE);
+    Rio.write(inputModel, turtleWriter);
+    outWriter.flush();
+    outWriter.close();
+
+    var contents1 = outBuffer.toString();
+    assertTrue(contents1.contains("rdf:type\n\ta rdf:Property"), "Contraction applied to predicate, not subject");
+    assertTrue(contents1.contains("rdf:first rdf:type"), "Contraction not applied to object");
   }
 
   @Test
