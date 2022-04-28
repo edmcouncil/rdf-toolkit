@@ -159,6 +159,7 @@ public class RdfToolkitRunner {
     optionHandler.handleSourceFormat(sourceFile);
     optionHandler.handleTargetFormat();
     optionHandler.handleShortUriPref();
+    optionHandler.handleLineEnd();
 
     rdfToolkitOptions.setRunningMode(RUN_ON_FILE);
 

@@ -44,15 +44,15 @@ import javax.xml.stream.XMLStreamWriter;
 public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     private class NamespaceContextImpl implements NamespaceContext {
-        private HashMap<String, String> prefixToUriMap = new HashMap<String, String>();
-        private HashMap<String, List<String>> uriToPrefixMap = new HashMap<String, List<String>>();
+        private HashMap<String, String> prefixToUriMap = new HashMap<>();
+        private HashMap<String, List<String>> uriToPrefixMap = new HashMap<>();
         private String defaultNamespaceUri = null;
         private NamespaceContext suppliedContext = null;
 
         public void setPrefix(String prefix, String uri) {
             prefixToUriMap.put(prefix, uri);
             if (!uriToPrefixMap.containsKey(uri)) {
-                uriToPrefixMap.put(uri, new ArrayList<String>());
+                uriToPrefixMap.put(uri, new ArrayList<>());
             }
             uriToPrefixMap.get(uri).add(prefix);
         }
@@ -101,9 +101,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 return prefixes.iterator();
             }
         }
-
     }
-
 
     private OutputStream out = null;
     private Writer writer = null;
@@ -115,14 +113,15 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private boolean inStartElement = false;
     private boolean inEmptyStartElement = false;
     private boolean isAfterText = false;
-    private Stack<String> elementNameStack = new Stack<String>();
+    private Stack<String> elementNameStack = new Stack<>();
     private NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
 
-    public IndentingXMLStreamWriter(OutputStream out) throws Exception {
-        this(out, "UTF-8", null, false);
+    public IndentingXMLStreamWriter(OutputStream out, String lineEnd) throws Exception {
+        this(out, "UTF-8", null, false, lineEnd);
     }
 
-    public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent, boolean useCompactAttributes) throws Exception {
+    public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent, boolean useCompactAttributes,
+                                    String lineEnd) {
         this.out = out;
         if (encoding != null) { this.encoding = encoding; }
         if (indent != null) { this.indent = indent; }
@@ -132,13 +131,14 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         writer = new OutputStreamWriter(this.out, Charset.forName(this.encoding));
         output = new IndentingWriter(writer);
         output.setIndentationString(this.indent);
+        output.setLineEnd(lineEnd);
     }
 
-    public IndentingXMLStreamWriter(Writer writer) throws Exception {
-        this(writer, null, true);
+    public IndentingXMLStreamWriter(Writer writer, String lineEnd) throws Exception {
+        this(writer, null, true, lineEnd);
     }
 
-    public IndentingXMLStreamWriter(Writer writer, String indent, boolean useCompactAttributes) throws Exception {
+    public IndentingXMLStreamWriter(Writer writer, String indent, boolean useCompactAttributes, String lineEnd) {
         this.out = null;
         this.writer = writer;
         if (writer instanceof OutputStreamWriter) {
@@ -152,6 +152,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         // Set up output writers
         output = new IndentingWriter(this.writer);
         output.setIndentationString(this.indent);
+        output.setLineEnd(lineEnd);
     }
 
     public String getXmlEncoding() { return encoding; }

@@ -89,6 +89,8 @@ usage: RdfFormatter (rdf-toolkit version 1.11.0)
                                          all IRIs (used together with --iri-pattern)
  -lc,--leading-comment <arg>             sets the text of the leading comment in the ontology.  Can
                                          be repeated for a multi-line comment
+ -ln,--line-end <arg>                    sets the end-line character(s); supported characters: \n
+                                         (LF), \r (CR). Default is the LF character
  -osl,--override-string-language <arg>   sets an override language that is applied to all strings
  -s,--source <arg>                       source (input) RDF file to format
  -sd,--source-directory <arg>            source (input) directory of RDF files to format.  This is a
