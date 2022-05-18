@@ -27,6 +27,7 @@ package org.edmcouncil.rdf_toolkit.writer;
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.getCollectionMembers;
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
+import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -72,6 +73,7 @@ public class SortedTurtleWriter extends SortedRdfWriter {
     public SortedTurtleWriter(OutputStream out) {
         super(out);
         this.output = new IndentingWriter(new OutputStreamWriter(out));
+        this.output.setLineEnd(DEFAULT_LINE_END);
         this.out = this.output;
     }
 
@@ -83,6 +85,7 @@ public class SortedTurtleWriter extends SortedRdfWriter {
     public SortedTurtleWriter(Writer writer) {
         super(writer);
         this.output = new IndentingWriter(writer);
+        this.output.setLineEnd(DEFAULT_LINE_END);
         this.out = this.output;
     }
 
@@ -99,6 +102,8 @@ public class SortedTurtleWriter extends SortedRdfWriter {
         if (options.containsKey(INDENT)) {
             this.output.setIndentationString((String) options.get(INDENT));
         }
+        String lineEnd = options.containsKey(LINE_END) ? options.get(LINE_END).toString() : DEFAULT_LINE_END;
+        this.output.setLineEnd(lineEnd);
     }
 
     /**
@@ -114,6 +119,8 @@ public class SortedTurtleWriter extends SortedRdfWriter {
         if (options.containsKey(INDENT)) {
             this.output.setIndentationString((String) options.get(INDENT));
         }
+        String lineEnd = options.containsKey(LINE_END) ? options.get(LINE_END).toString() : DEFAULT_LINE_END;
+        this.output.setLineEnd(lineEnd);
     }
 
     /**

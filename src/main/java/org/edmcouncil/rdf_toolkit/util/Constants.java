@@ -39,6 +39,7 @@ public class Constants {
   public static final String TRAILING_COMMENTS = "trailingComments";
   public static final String STRING_DATA_TYPE_OPTION = "stringDataTypeOption";
   public static final String OVERRIDE_STRING_LANGUAGE = "overrideStringLanguage";
+  public static final String LINE_END = "lineEnd";
 
   /**
    * Factory for generating literal values.

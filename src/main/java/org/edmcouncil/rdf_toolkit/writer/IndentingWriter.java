@@ -28,12 +28,11 @@ import java.io.Writer;
 
 public class IndentingWriter extends Writer {
 
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
   protected Writer out;
   protected int indentationLevel = 0;
   private String indentationString = "\t";
   private boolean indentationWritten = false;
+  private String lineEnd;
 
   public IndentingWriter(Writer out) {
     this.out = out;
@@ -63,8 +62,16 @@ public class IndentingWriter extends Writer {
     --this.indentationLevel;
   }
 
+  public String getLineEnd() {
+    return this.lineEnd;
+  }
+
+  public void setLineEnd(String lineEnd) {
+    this.lineEnd = lineEnd;
+  }
+
   public void writeEOL() throws IOException {
-    this.write(LINE_SEPARATOR);
+    this.write(getLineEnd());
     this.indentationWritten = false;
   }
 

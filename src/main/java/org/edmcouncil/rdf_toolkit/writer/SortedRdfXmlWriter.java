@@ -27,6 +27,7 @@ package org.edmcouncil.rdf_toolkit.writer;
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.getCollectionMembers;
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
+import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
 import static org.edmcouncil.rdf_toolkit.util.Constants.RDF_NS_URI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.RDF_TYPE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.XML_NS_URI;
@@ -86,7 +87,7 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
      */
     public SortedRdfXmlWriter(OutputStream out) throws Exception {
         super(out);
-        this.output = new IndentingXMLStreamWriter(out);
+        this.output = new IndentingXMLStreamWriter(out, DEFAULT_LINE_END);
     }
 
     /**
@@ -96,7 +97,7 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
      */
     public SortedRdfXmlWriter(Writer writer) throws Exception {
         super(writer);
-        this.output = new IndentingXMLStreamWriter(writer);
+        this.output = new IndentingXMLStreamWriter(writer, DEFAULT_LINE_END);
     }
 
     /**
@@ -108,7 +109,8 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
     public SortedRdfXmlWriter(OutputStream out, Map<String, Object> options) throws Exception {
         super(out, options);
         String indent = options.containsKey(INDENT) ? ((String) options.get(INDENT)) : null;
-        this.output = new IndentingXMLStreamWriter(out, StandardCharsets.UTF_8.name(), indent, true);
+        String lineEnd = options.containsKey(LINE_END) ? options.get(LINE_END).toString() : DEFAULT_LINE_END;
+        this.output = new IndentingXMLStreamWriter(out, StandardCharsets.UTF_8.name(), indent, true, lineEnd);
     }
 
     /**
@@ -120,7 +122,8 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
     public SortedRdfXmlWriter(Writer writer, Map<String, Object> options) throws Exception {
         super(writer, options);
         String indent = options.containsKey(INDENT) ? ((String) options.get(INDENT)) : null;
-        this.output = new IndentingXMLStreamWriter(writer, indent, true);
+        String lineEnd = options.containsKey(LINE_END) ? options.get(LINE_END).toString() : DEFAULT_LINE_END;
+        this.output = new IndentingXMLStreamWriter(writer, indent, true, lineEnd);
     }
 
     /**

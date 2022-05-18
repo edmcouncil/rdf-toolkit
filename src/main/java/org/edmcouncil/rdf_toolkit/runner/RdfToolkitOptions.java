@@ -28,6 +28,7 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.BASE_IRI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INLINE_BLANK_NODES;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LEADING_COMMENTS;
+import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
 import static org.edmcouncil.rdf_toolkit.util.Constants.OVERRIDE_STRING_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
@@ -69,6 +70,7 @@ public class RdfToolkitOptions {
   private String[] leadingComments;
   private String[] trailingComments;
   private String overrideStringLanguage;
+  private String lineEnd;
 
   public RdfToolkitOptions(String[] args) {
     this.args = args;
@@ -97,6 +99,7 @@ public class RdfToolkitOptions {
     options.put(TRAILING_COMMENTS, getTrailingComments());
     options.put(STRING_DATA_TYPE_OPTION, getStringDataTypeOption());
     options.put(OVERRIDE_STRING_LANGUAGE, getOverrideStringLanguage());
+    options.put(LINE_END, getLineEnd());
     return options;
   }
 
@@ -258,5 +261,13 @@ public class RdfToolkitOptions {
 
   public void setOverrideStringLanguage(String overrideStringLanguage) {
     this.overrideStringLanguage = overrideStringLanguage;
+  }
+
+  public String getLineEnd() {
+    return lineEnd;
+  }
+
+  public void setLineEnd(String lineEnd) {
+    this.lineEnd = lineEnd;
   }
 }

@@ -78,6 +78,8 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
     // TODO: add common methods for "eol and increase indent", "eol and decrease indent" and "eol with same indent" and
     //  refactor using these
 
+    public static final String DEFAULT_LINE_END = "\n";
+
     /** Preferred rdf:type values when rendering RDF. */
     protected static final List<IRI> preferredRdfTypes = Arrays.asList(
         Constants.owlNamedIndividual,
