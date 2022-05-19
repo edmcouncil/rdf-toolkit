@@ -63,6 +63,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -93,7 +96,9 @@ public class RdfToolkitRunner {
     var rdfToolkitOptions = handleArguments(args);
 
     switch (rdfToolkitOptions.getRunningMode()) {
+      case PRINT_USAGE_AND_EXIT:
       case EXIT:
+        // Usage was already printed, so we don't need to do it now
         return;
       case PRINT_AND_EXIT:
         System.out.println(rdfToolkitOptions.getOutput());
@@ -249,8 +254,13 @@ public class RdfToolkitRunner {
       rdfToolkitOptions.setBaseIri(inferredBaseIri);
     }
 
+    OutputStream outputStream = System.out;
+    if (!rdfToolkitOptions.isShouldUseStandardOutputStream()) {
+      outputStream = new FileOutputStream(rdfToolkitOptions.getTargetFile());
+    }
+
     Writer targetWriter = new OutputStreamWriter(
-        rdfToolkitOptions.getTargetOutputStream(),
+        outputStream,
         StandardCharsets.UTF_8.name());
     SortedRdfWriterFactory factory = new SortedRdfWriterFactory(rdfToolkitOptions.getTargetFormat());
     RDFWriter rdfWriter = factory.getWriter(targetWriter, rdfToolkitOptions.getOptions());
