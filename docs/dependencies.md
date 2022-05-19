@@ -2,11 +2,6 @@
 
 The rdf-toolkit works with the following major libraries:
 
-# [OWLAPI](https://github.com/owlcs/owlapi)
-
-- Sources - https://github.com/owlcs/owlapi
-- Docs - http://owlapi.sourceforge.net/documentation.html
-
 # [RDF4J](http://rdf4j.org/)
 
 - Sources - https://github.com/eclipse/rdf4j
