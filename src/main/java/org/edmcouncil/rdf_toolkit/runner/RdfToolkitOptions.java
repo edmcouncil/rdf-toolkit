@@ -37,12 +37,11 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.USE_DTD_SUBSET;
 import org.apache.commons.cli.CommandLine;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.edmcouncil.rdf_toolkit.io.format.TargetFormats;
 import org.edmcouncil.rdf_toolkit.util.ShortIriPreferences;
 import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
-import org.edmcouncil.rdf_toolkit.io.format.TargetFormats;
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +54,8 @@ public class RdfToolkitOptions {
   private String iriPattern;
   private String iriReplacement;
   private TargetFormats targetFormat;
-  private OutputStream targetOutputStream;
+  private File targetFile;
+  private boolean shouldUseStandardOutputStream;
   private String baseIriString;
   private IRI baseIri;
   private File sourceFile;
@@ -119,12 +119,20 @@ public class RdfToolkitOptions {
     this.commandLine = commandLine;
   }
 
-  public OutputStream getTargetOutputStream() {
-    return targetOutputStream;
+  public File getTargetFile() {
+    return targetFile;
   }
 
-  public void setTargetOutputStream(OutputStream targetOutputStream) {
-    this.targetOutputStream = targetOutputStream;
+  public void setTargetFile(File targetFile) {
+    this.targetFile = targetFile;
+  }
+
+  public boolean isShouldUseStandardOutputStream() {
+    return shouldUseStandardOutputStream;
+  }
+
+  public void setShouldUseStandardOutputStream(boolean shouldUseStandardOutputStream) {
+    this.shouldUseStandardOutputStream = shouldUseStandardOutputStream;
   }
 
   public TargetFormats getTargetFormat() {

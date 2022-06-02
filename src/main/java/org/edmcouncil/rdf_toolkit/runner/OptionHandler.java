@@ -184,7 +184,9 @@ public class OptionHandler {
         rdfToolkitOptions.setRunningMode(PRINT_USAGE_AND_EXIT);
       }
 
-      rdfToolkitOptions.setRunningMode(RUN_ON_DIRECTORY);
+      if (rdfToolkitOptions.getRunningMode() == null) {
+        rdfToolkitOptions.setRunningMode(RUN_ON_DIRECTORY);
+      }
     }
   }
 
@@ -223,10 +225,10 @@ public class OptionHandler {
    * Check if target file can be written.
    */
   public void handleTargetFile() throws RdfToolkitOptionHandlingException, FileNotFoundException {
-    OutputStream targetOutputStream;
+    File targetFile;
     if (commandLine.hasOption(TARGET.getShortOpt())) {
       String targetFilePath = commandLine.getOptionValue(TARGET.getShortOpt());
-      var targetFile = new File(targetFilePath);
+      targetFile = new File(targetFilePath);
       if (targetFile.exists()) {
         if (!targetFile.isFile()) {
           throw new RdfToolkitOptionHandlingException(String.format("Target file is not a file: %s", targetFilePath));
@@ -246,11 +248,11 @@ public class OptionHandler {
         }
       }
 
-      targetOutputStream = new FileOutputStream(targetFile);
+      rdfToolkitOptions.setTargetFile(targetFile);
+      rdfToolkitOptions.setShouldUseStandardOutputStream(false);
     } else {
-      targetOutputStream = System.out; // default to the standard output
+      rdfToolkitOptions.setShouldUseStandardOutputStream(true);
     }
-    rdfToolkitOptions.setTargetOutputStream(targetOutputStream);
   }
 
   /**
