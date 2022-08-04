@@ -107,10 +107,8 @@ java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --source C:/
 
 You can use `RDF Toolkit` as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
 
-#### Setup RDF Toolkit
+#### Setup
 Actually, in order to use this `RDF Toolkit` in this capacity you will need also a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
-
-##### Copy files
 
 You need to copy these two files:
 * [pre-commit](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit) (no file extension)
@@ -118,15 +116,33 @@ You need to copy these two files:
 
 to the .git/hooks/ folder inside your local Git repository. The example below shows the location of this folder in a local Git repository for FIBO:
 
-![image](https://user-images.githubusercontent.com/11171688/182847941-f4ab97ee-a7bf-447f-8515-f9feac68c471.png)
+<img src="https://user-images.githubusercontent.com/11171688/182847941-f4ab97ee-a7bf-447f-8515-f9feac68c471.png" width="250"/>
 
-Make sure that
-* name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
-* you update these files from time to time since they both may be changed.
+Make sure that:
+- you have set the environment variable JAVA_HOME to the location of your Java
+  - if you have not because you don't know how to do it, ask the uncle Google, e.g., visit https://www.baeldung.com/java-home-on-windows-7-8-10-mac-os-x-linux
+  - if you want to point the `RDF Toolkit` to a different Java version, uncomment the following line in the pre-commit file pointing to the required path: `# export RDF_TOOLKIT_JAVA_HOME=<path_to_java>`
+- name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
+- you update these files from time to time since they both may be changed.
 
-##### Adapt files
+#### Run 
 
-Edit the pre-commit file to point to your Java JRE/JDK. To do this, open the pre-commit file in a text editor and search for "JAVA\_HOME". Edit the directory after JAVA\_HOME= to point to the location of your Java 11 or higher JRE/JDK, and save it. 
+You don't have to do anything to run `RDF Toolkit` in this mode because every commit in Git will start it for you.
+When it runs properly, you should be able to see in your git console messages that look like the ones below:
+
+```
+rdf-toolkit: sesame-serializer: This is the pre-commit hook
+rdf-toolkit: sesame-serializer: java_home = /Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home/
+rdf-toolkit: sesame-serializer: whichJava = /Library/Java/JavaVirtualMachines/jdk-16.0.1.jdk/Contents/Home//bin/java
+rdf-toolkit: sesame-serializer: Found rdf-toolkit: /***/.git/hooks/rdf-toolkit.jar
+rdf-toolkit: sesame-serializer: Launching the sesame-serializer with --source DE/CarControl.rdf
+...
++ rc=0
++ set +x
+rdf-toolkit: sesame-serializer: Re-adding potentially re-serialized file to git staging area: VC/VehicleParts.rdf
+[auto-83_missing_definitions d6f582e] more changes after review of definitions
+ 3 files changed, 17 insertions(+), 17 deletions(-)
+```
 
 # Serialisation Algorithm Explained
 
