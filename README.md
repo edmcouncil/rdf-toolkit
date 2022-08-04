@@ -55,7 +55,7 @@ $ java -jar rdf-toolkit.jar --help
 ##### Windows
 
 1. Open a Command Shell by going to the Start menu and type `cmd.exe`.
-2. Ensure that Java is installed by typing `java -version` on the command line. The Java version should be at least 1.7 (i.e. Java 7).
+2. Ensure that Java is installed by typing `java -version` on the command line. The Java version should be at least 11.
 3. Then launch the rdf-toolkit's help function as follows:
 ```
 java -jar rdf-toolkit.jar --help
@@ -64,7 +64,7 @@ java -jar rdf-toolkit.jar --help
 #### RDF Toolkit options
 
 ```
-usage: RdfFormatter (rdf-toolkit version 1.11.0)
+usage: RdfFormatter (rdf-toolkit version 1.12.0)
  -bi,--base-iri <arg>                    set IRI to use as base URI
  -dtd,--use-dtd-subset                   for XML, use a DTD subset in order to allow prefix-based
                                          IRI shortening
@@ -138,7 +138,7 @@ Make sure that
 
 ##### Adapt files
 
-Edit the pre-commit file to point to your Java JRE/JDK. To do this, open the pre-commit file in a text editor and search for "JAVA\_HOME". Edit the directory after JAVA\_HOME= to point to the location of your Java 8 (a.k.a version 1.8) or higher JRE/JDK, and save it. 
+Edit the pre-commit file to point to your Java JRE/JDK. To do this, open the pre-commit file in a text editor and search for "JAVA\_HOME". Edit the directory after JAVA\_HOME= to point to the location of your Java 11 or higher JRE/JDK, and save it. 
 
 # Serialisation Algorithm Explained
 
