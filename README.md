@@ -41,30 +41,18 @@ One can use `RDF Toolkit` as a standalone application, which can be run from the
 
 ### Standalone RDF Toolkit Application
 
-#### Operating Systems
-
-##### Linux or Mac OS X
-On Linux or Mac OS X you can execute the `RDF Toolkit` as follows:
-
-1. Open a Terminal
-2. Type the name of the `rdf-toolkit.jar` file on the command prompt and supply the `--help` option:
-```
-$ java -jar rdf-toolkit.jar --help
-```
-
-##### Windows
-
-1. Open a Command Shell by going to the Start menu and type `cmd.exe`.
-2. Ensure that Java is installed by typing `java -version` on the command line. The Java version should be at least 11.
-3. Then launch the rdf-toolkit's help function as follows:
+You can use `RDF Toolkit` to serialise any RDF file to a required formay whether it is inside a version controlled folder or not. To find its current options with run this command in your operating system's command-line interface (e.g., Terminal in Linux and Mac OS, Command Shell in Windows, etc.):
 ```
 java -jar rdf-toolkit.jar --help
+```
+For instance if you want to serialise an RDF/XML file 'example.rdf', which is located in C:/source_ontologies/ folder into a Turtle file 'example.ttl' in C:/serialised_ontologies/ folder, you may use the following command:
+```
+java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --source C:/serialised_ontologies/example.ttl  --infer-base-iri 
 ```
 
 #### RDF Toolkit options
 
 ```
-usage: RdfFormatter (rdf-toolkit version 1.12.0)
  -bi,--base-iri <arg>                    set IRI to use as base URI
  -dtd,--use-dtd-subset                   for XML, use a DTD subset in order to allow prefix-based
                                          IRI shortening
@@ -117,7 +105,7 @@ usage: RdfFormatter (rdf-toolkit version 1.12.0)
 
 ### RDF Toolkit For Git
 
-You can use  as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
+You can use `RDF Toolkit` as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
 
 #### Setup RDF Toolkit
 Actually, in order to use this `RDF Toolkit` in this capacity you will need also a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
