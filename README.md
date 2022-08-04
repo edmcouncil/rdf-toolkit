@@ -111,8 +111,28 @@ usage: RdfFormatter (rdf-toolkit version 1.11.0)
 
 ### RDF Toolkit For Git
 
-TBA
-(For now, see:https://github.com/edmcouncil/fibo/blob/master/CONTRIBUTING.md#fibo-serialization-tools)
+You can use  as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
+
+#### Setup
+Actually, in order to use this `RDF Toolkit` in this capacity you will need also a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
+
+##### Copy files
+
+You need to copy these two files:
+* [pre-commit](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit) (no file extension)
+* [rdf-toolkit.jar](https://jenkins.edmcouncil.org/view/rdf-toolkit/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/rdf-toolkit.jar)
+
+to the .git/hooks/ folder inside your local Git repository. The example below shows the location of this folder in a local Git repository for FIBO:
+
+![image](https://user-images.githubusercontent.com/11171688/182847941-f4ab97ee-a7bf-447f-8515-f9feac68c471.png)
+
+Make sure that
+* name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
+* you update these files from time to time since they both may be changed.
+
+##### Adapt files
+
+Edit the pre-commit file to point to your Java JRE/JDK. To do this, open the pre-commit file in a text editor and search for "JAVA\_HOME". Edit the directory after JAVA\_HOME= to point to the location of your Java 8 (a.k.a version 1.8) or higher JRE/JDK, and save it. 
 
 # Serialisation Algorithm
 
