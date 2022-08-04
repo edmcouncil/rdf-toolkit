@@ -1,12 +1,18 @@
 <img src="https://spec.edmcouncil.org/fibo/htmlpages/develop/latest/img/logo.66a988fe.png" width="150" align="right"/>
 
+# Table of Contents
+1. [Introduction](#introduction)
+2. [Rationale](#rationale)
+3. [Usage](#usage)
+4. [Serialisation Algorithm Explained](#serialisation-algorithm-explained)
+
 # Introduction
 
 The `RDF Toolkit` is a 'swiss army knife' tool for reading and writing RDF files in multiple formats.
 
 The primary reason for creating this tool was to have a reference serializer for the FIBO ontologies as they are stored in [Github FIBO repository](https://github.com/edmcouncil/fibo). However, the tool is not in any way specific to FIBO and it can be used with any ontology or RDF file. In this capacity it can be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
 
-# Requirements
+# Rationale
 
 ## Minimize the ontology review effort 
 
@@ -19,26 +25,26 @@ We want to be albe to include actionable information as part of IRIs, e.g., git 
 
 ## Recommended output format
 
-The recommended output format at this time is RDF/XML because that is the format that the OMG requires for submissions. 
-The EDM Council develops the FIBO Ontologies and submits them as RDF/XML, serialized by the `rdf-toolkit` to the OMG. 
+The recommended output format at this time is RDF/XML because that is the format that the [OMG](https://www.omg.org) requires for submissions. 
+The EDM Council develops the FIBO Ontologies and submits them as RDF/XML, serialized by the `RDF Toolkit` to the [OMG](https://www.omg.org). 
 So that is why we also use RDF/XML in Github itself. 
 
 # Usage
 
-## Download
+## Download RDF Toolkit
 
-Download the RDF Toolkit binary from [here](https://jenkins.edmcouncil.org/view/rdf-toolkit/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/rdf-toolkit.jar).
+Download the `RDF Toolkit` binary from [here](https://jenkins.edmcouncil.org/view/rdf-toolkit/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/rdf-toolkit.jar).
 
-## Run
+## Run RDF Toolkit
 
-One can use RDF Toolkit as a standalong application, which can be run from the command line or as a part of the git commit mechanism.
+One can use `RDF Toolkit` as a standalone application, which can be run from the command line, or as a part of the git commit mechanism.
 
 ### Standalone RDF Toolkit Application
 
 #### Operating Systems
 
 ##### Linux or Mac OS X
-On Linux or Mac OS X you can execute the rdf-toolkit as follows:
+On Linux or Mac OS X you can execute the `RDF Toolkit` as follows:
 
 1. Open a Terminal
 2. Type the name of the `rdf-toolkit.jar` file on the command prompt and supply the `--help` option:
@@ -55,7 +61,7 @@ $ java -jar rdf-toolkit.jar --help
 java -jar rdf-toolkit.jar --help
 ```
 
-#### Options
+#### RDF Toolkit options
 
 ```
 usage: RdfFormatter (rdf-toolkit version 1.11.0)
@@ -113,7 +119,7 @@ usage: RdfFormatter (rdf-toolkit version 1.11.0)
 
 You can use  as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
 
-#### Setup
+#### Setup RDF Toolkit
 Actually, in order to use this `RDF Toolkit` in this capacity you will need also a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
 
 ##### Copy files
@@ -134,6 +140,6 @@ Make sure that
 
 Edit the pre-commit file to point to your Java JRE/JDK. To do this, open the pre-commit file in a text editor and search for "JAVA\_HOME". Edit the directory after JAVA\_HOME= to point to the location of your Java 8 (a.k.a version 1.8) or higher JRE/JDK, and save it. 
 
-# Serialisation Algorithm
+# Serialisation Algorithm Explained
 
 TBA
