@@ -10,18 +10,18 @@
 
 The `RDF Toolkit` is a 'swiss army knife' tool for reading and writing RDF files in multiple formats.
 
-The primary reason for creating this tool was to have a reference serializer for the FIBO ontologies as they are stored in [Github FIBO repository](https://github.com/edmcouncil/fibo). However, the tool is not in any way specific to FIBO and it can be used with any ontology or RDF file. In this capacity it can be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
+The primary reason for creating this tool was to have a reference serializer for the FIBO ontologies as they are stored in [Github FIBO repository](https://github.com/edmcouncil/fibo). However, the tool is not in any way specific to FIBO, and it can be used with any ontology or RDF file. In this capacity it can be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
 
 # Rationale
 
 ## Minimize the ontology review effort 
 
-For the purposes of git-based version control of ontology files we want to have as few differences between commits as possible.
+For the purposes of git-based version control of ontology files, we want to have as few differences between commits as possible.
 Most ontology editors can encode RDF graphs, including OWL ontologies, in several formats, including the W3C normative RDF exchange formats (syntaxes): RDF/XML and Turtle. However, even these normative formats are not canonical. Therefore, an editor tool may change many aspects of how ontology entities are serialized every time the ontology is saved (such as adding/changing comments or changing the order and organization of statements) leading to difficulties in analyzing actual changes in the underlying semantics.
 
 ## Handle intelligent IRIs
 
-We want to be albe to include actionable information as part of IRIs, e.g., git tags, and then deference them from ontology tools like Protege.
+We want to be able to include actionable information as part of IRIs, e.g., git tags, and then deference them from ontology tools like Protege.
 
 ## Recommended output format
 
@@ -41,7 +41,7 @@ One can use `RDF Toolkit` as a standalone application, which can be run from the
 
 ### Standalone RDF Toolkit Application
 
-You can use `RDF Toolkit` to serialise any RDF file to a required formay whether it is inside a version controlled folder or not. To find its current options with run this command in your operating system's command-line interface (e.g., Terminal in Linux and Mac OS, Command Shell in Windows, etc.):
+You can use `RDF Toolkit` to serialize any RDF file to a required format whether it is inside a version controlled folder or not. To find its current options, run this command in your operating system's command-line interface (e.g., Terminal in Linux and Mac OS, Command Shell in Windows, etc.):
 ```
 java -jar rdf-toolkit.jar --help
 ```
@@ -105,10 +105,10 @@ java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --source C:/
 
 ### RDF Toolkit For Git
 
-You can use `RDF Toolkit` as a built-in serialisation tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
+You can use `RDF Toolkit` as a built-in serialization tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
 
 #### Setup
-Actually, in order to use this `RDF Toolkit` in this capacity you will need also a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
+Actually, in order to use this `RDF Toolkit` in this capacity, you will also need a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
 
 You need to copy these two files:
 * [pre-commit](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit) (no file extension)
@@ -120,7 +120,7 @@ to the .git/hooks/ folder inside your local Git repository. The example below sh
 
 Make sure that:
 - you have set the environment variable JAVA_HOME to the location of your Java
-  - if you have not because you don't know how to do it, ask the uncle Google, e.g., visit https://www.baeldung.com/java-home-on-windows-7-8-10-mac-os-x-linux
+  - if you have not because you don't know how to do it, ask uncle Google, e.g., by visiting https://www.baeldung.com/java-home-on-windows-7-8-10-mac-os-x-linux
   - if you want to point the `RDF Toolkit` to a different Java version, uncomment the following line in the pre-commit file pointing to the required path: `# export RDF_TOOLKIT_JAVA_HOME=<path_to_java>`
 - name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
 - you update these files from time to time since they both may be changed.
