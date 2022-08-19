@@ -181,5 +181,6 @@ This sorting of triples presupposes that all resources within an ontology are so
 
 ## Footer
 
-This is usually one line:
+This part depends on the serialisation used, e.g., in the case of RDF/XML it is one line:
+
 ```</rdf:RDF>```
