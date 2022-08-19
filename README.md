@@ -144,6 +144,54 @@ rdf-toolkit: sesame-serializer: Re-adding potentially re-serialized file to git 
  3 files changed, 17 insertions(+), 17 deletions(-)
 ```
 
+
 # Serialisation Algorithm Explained
 
-TBA
+To make sure that an ontology is always serialized in the same manner, the serialization algorithm has been implemented in the RDF Toolkit.  The following description is an attempt to give a short overview of this algorithm.
+
+1. Ontology imports, triples that don't contain blank nodes, and triples containing blank nodes are sorted using the following rules:  
+  * Two resources that reference to the same memory location are considered equal (i.e. resource1 == resource2)  
+  * Two `null` or excluded resources are considered equal  
+  * `null` and excluded resources come before non-`null` and non-excluded resources  
+  * Blank nodes come after other types of resources  
+  * If both resources are blank nodes, they are compared using the following rules:  
+    * Two resources that reference to the same spot in the memory are equal (i.e. resource1 == resource2)
+    * Two `null` or excluded blank nodes are considered equal  
+    * `null`/excluded blank nodes come before non-`null`/excluded blank nodes  
+    * An RDF collection comes before any other blank node  
+    * If both blank nodes are resources forming a collection or neither of them is such a resource, compare them using the following rules:  
+      * `null`/excluded resources are considered equal  
+      * If the first resource is non-`null`/excluded, and the second one is, the first resource is considered as being prior; and the vice versa
+      * If none of the previous rules can be applied, the resources are treated as strings and compared alphanumerically
+  * If both resources are IRIs, compare them using the following rules:
+    * `null`/excluded IRI comes before non-`null`/excluded IRI
+    * If both IRIs are non-`null`/excluded, they are compared alphanumerically
+
+2. Serialisation names for blank nodes are prepared using the pattern `blankXXX`, where `XXX` represents the ordinal number of the given blank node, e.g. `001`, `010`, `999`.  The number of `X`s in this pattern is based on the number of blank nodes.
+
+3. Prepare namespaces
+
+4. Write header information:
+  * Writing the start of the document - this depends on the type of the serialization format, e.g. in the case of RDF/XML, the XML starting tag is used followed by the DTD declaration (if it is enabled)  
+  * Namespaces  
+  * Optionally, leading comments  
+
+6. Write sorted ontology imports
+
+7. Write sorted triples of resources that don't contain neither ontology imports nor blank nodes
+
+8. Write triples containing sorted blank nodes
+
+9. Write footer
+
+
+
+
+
+
+
+
+
+
+
+
