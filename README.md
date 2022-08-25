@@ -47,7 +47,7 @@ java -jar rdf-toolkit.jar --help
 ```
 For instance if you want to serialise an RDF/XML file 'example.rdf', which is located in C:/source_ontologies/ folder into a Turtle file 'example.ttl' in C:/serialised_ontologies/ folder, you may use the following command:
 ```
-java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --source C:/serialised_ontologies/example.ttl  --infer-base-iri 
+java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --target C:/serialised_ontologies/example.ttl  --infer-base-iri 
 ```
 
 #### RDF Toolkit options
