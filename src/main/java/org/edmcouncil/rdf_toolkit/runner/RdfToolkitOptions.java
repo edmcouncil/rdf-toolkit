@@ -29,6 +29,7 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INLINE_BLANK_NODES;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LEADING_COMMENTS;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
+import static org.edmcouncil.rdf_toolkit.util.Constants.OMIT_XMLNS_NAMESPACE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.OVERRIDE_STRING_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
@@ -71,6 +72,7 @@ public class RdfToolkitOptions {
   private String[] trailingComments;
   private String overrideStringLanguage;
   private String lineEnd;
+  private boolean omitXmlnsNamespace;
 
   public RdfToolkitOptions(String[] args) {
     this.args = args;
@@ -100,6 +102,7 @@ public class RdfToolkitOptions {
     options.put(STRING_DATA_TYPE_OPTION, getStringDataTypeOption());
     options.put(OVERRIDE_STRING_LANGUAGE, getOverrideStringLanguage());
     options.put(LINE_END, getLineEnd());
+    options.put(OMIT_XMLNS_NAMESPACE, getOmitXmlnsNamespace());
     return options;
   }
 
@@ -277,5 +280,13 @@ public class RdfToolkitOptions {
 
   public void setLineEnd(String lineEnd) {
     this.lineEnd = lineEnd;
+  }
+
+  public boolean getOmitXmlnsNamespace() {
+    return this.omitXmlnsNamespace;
+  }
+
+  public void setOmitXmlnsNamespace(boolean omitXmlnsNamespace) {
+    this.omitXmlnsNamespace = omitXmlnsNamespace;
   }
 }

@@ -165,6 +165,7 @@ public class RdfToolkitRunner {
     optionHandler.handleTargetFormat();
     optionHandler.handleShortUriPref();
     optionHandler.handleLineEnd();
+    optionHandler.handleOmitXmlnsNamespace();
 
     rdfToolkitOptions.setRunningMode(RUN_ON_FILE);
 

@@ -28,6 +28,7 @@ import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.getCollectio
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
+import static org.edmcouncil.rdf_toolkit.util.Constants.OMIT_XMLNS_NAMESPACE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.RDF_NS_URI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.RDF_TYPE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.XML_NS_URI;
@@ -214,6 +215,9 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
         // Write the namespace declarations into the root element.
         if (namespaceTable.size() > 0) {
             for (String prefix : prefixes) {
+                if (prefix.equals("") && omitXmlnsNamespace) {
+                    continue;
+                }
                 if ((useGeneratedPrefixes || !generatedNamespaceTable.containsKey(prefix)) && !"xml".equals(prefix)) {
                     if (prefix.length() >= 1) {
                         output.writeNamespace(prefix, namespaceTable.get(prefix));

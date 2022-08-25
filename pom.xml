@@ -6,7 +6,7 @@
 
   <groupId>org.edmcouncil</groupId>
   <artifactId>rdf-toolkit</artifactId>
-  <version>1.12.0</version>
+  <version>1.13.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

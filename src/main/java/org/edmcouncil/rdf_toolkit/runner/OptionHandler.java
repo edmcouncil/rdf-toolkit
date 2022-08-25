@@ -29,6 +29,7 @@ import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.INFER_BASE_IRI
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.INLINE_BLANK_NODES;
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.LEADING_COMMENT;
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.LINE_END;
+import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.OMIT_XMLNS_NAMESPACE;
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.OVERRIDE_STRING_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SHORT_IRI_PRIORITY;
 import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE;
@@ -379,5 +380,10 @@ public class OptionHandler {
           .replace("\\n", "\n");
     }
     rdfToolkitOptions.setLineEnd(lineEnd);
+  }
+
+  public void handleOmitXmlnsNamespace() {
+    boolean omitXmlnsNamespace = commandLine.hasOption(OMIT_XMLNS_NAMESPACE.getShortOpt());
+    rdfToolkitOptions.setOmitXmlnsNamespace(omitXmlnsNamespace);
   }
 }

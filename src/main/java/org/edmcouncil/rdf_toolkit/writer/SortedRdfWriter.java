@@ -27,6 +27,7 @@ package org.edmcouncil.rdf_toolkit.writer;
 import static org.edmcouncil.rdf_toolkit.util.Constants.BASE_IRI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INLINE_BLANK_NODES;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LEADING_COMMENTS;
+import static org.edmcouncil.rdf_toolkit.util.Constants.OMIT_XMLNS_NAMESPACE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.OVERRIDE_STRING_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
@@ -153,6 +154,9 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
     /** Reverse namespace table used to map IRIs to prefixes.  Key is IRI string, value is prefix string. */
     protected ReverseNamespaceTable reverseNamespaceTable = null;
 
+    /** If set to true, xmlns namespace is ignored */
+    protected boolean omitXmlnsNamespace = false;
+
     /** Output stream for this RDF writer. */
     protected Writer out;
 
@@ -222,6 +226,10 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
         }
         if (options.containsKey(OVERRIDE_STRING_LANGUAGE)) {
             this.overrideStringLanguage = (String) options.get(OVERRIDE_STRING_LANGUAGE);
+        }
+        if (options.containsKey(OMIT_XMLNS_NAMESPACE)) {
+            this.omitXmlnsNamespace = options.containsKey(OMIT_XMLNS_NAMESPACE)
+                && Boolean.parseBoolean(options.get(OMIT_XMLNS_NAMESPACE).toString());
         }
     }
 

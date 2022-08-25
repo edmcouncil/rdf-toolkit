@@ -53,7 +53,8 @@ public enum CommandLineOption {
   STRING_DATA_TYPING("sdt", "string-data-typing", true, "sets whether string data values have explicit data types, or not; one of: " + StringDataTypeOptions.summarise()),
   OVERRIDE_STRING_LANGUAGE("osl", "override-string-language", true, "sets an override language that is applied to all strings"),
   INDENT("i", "indent", true, "sets the indent string.  Default is a single tab character"),
-  LINE_END("ln", "line-end", true, "sets the end-line character(s); supported characters: \\n (LF), \\r (CR). Default is the LF character");
+  LINE_END("ln", "line-end", true, "sets the end-line character(s); supported characters: \\n (LF), \\r (CR). Default is the LF character"),
+  OMIT_XMLNS_NAMESPACE("oxn", "omit-xmlns-namespace", false, "omits xmlns namespace");
 
   private final String shortOpt;
   private final String longOpt;
