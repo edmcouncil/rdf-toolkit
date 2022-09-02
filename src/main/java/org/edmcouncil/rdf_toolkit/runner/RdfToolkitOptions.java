@@ -35,16 +35,17 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
 import static org.edmcouncil.rdf_toolkit.util.Constants.TRAILING_COMMENTS;
 import static org.edmcouncil.rdf_toolkit.util.Constants.USE_DTD_SUBSET;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.edmcouncil.rdf_toolkit.io.format.TargetFormats;
 import org.edmcouncil.rdf_toolkit.util.ShortIriPreferences;
 import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
-import java.io.File;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RdfToolkitOptions {
 

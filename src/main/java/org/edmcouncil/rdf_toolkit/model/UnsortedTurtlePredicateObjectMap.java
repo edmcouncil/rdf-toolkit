@@ -25,7 +25,6 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
 import java.util.HashMap;
@@ -35,9 +34,8 @@ import java.util.HashMap;
  */
 public class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtleObjectList> {
 
-  public SortedTurtleObjectList getSorted(IRI predicate,
-                                          Class<Value> collectionClass,
-                                          ComparisonContext comparisonContext) {
+  public SortedTurtleObjectList getSorted(IRI predicate, Class<Value> collectionClass,
+      ComparisonContext comparisonContext) {
     if (containsKey(predicate)) {
       return get(predicate).toSorted(collectionClass, comparisonContext);
     } else {
@@ -45,8 +43,7 @@ public class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtl
     }
   }
 
-  public SortedTurtlePredicateObjectMap toSorted(Class<Value> collectionClass,
-                                                 ComparisonContext comparisonContext) {
+  public SortedTurtlePredicateObjectMap toSorted(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     SortedTurtlePredicateObjectMap sortedPOMap = new SortedTurtlePredicateObjectMap();
     for (IRI predicate : keySet()) {
       sortedPOMap.put(predicate, getSorted(predicate, collectionClass, comparisonContext));
@@ -55,19 +52,10 @@ public class UnsortedTurtlePredicateObjectMap extends HashMap<IRI, UnsortedTurtl
   }
 
   public int fullSize() {
-    int result = 0;
-    for (Resource pred : keySet()) {
-      result += get(pred).size();
-    }
-    return result;
+    return keySet().stream().mapToInt(pred -> get(pred).size()).sum();
   }
 
   public boolean checkValid() {
-    for (IRI predicate : keySet()) {
-      if (get(predicate) == null) {
-        return false;
-      }
-    }
-    return true;
+    return keySet().stream().noneMatch(predicate -> get(predicate) == null);
   }
 }

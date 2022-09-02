@@ -26,6 +26,7 @@ package org.edmcouncil.rdf_toolkit.comparator;
 
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.getCollectionMembers;
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection;
+
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
@@ -54,8 +55,7 @@ public class BNodeComparator implements Comparator<BNode> {
   private final UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap;
   private final boolean inlineBlankNodes;
 
-  public BNodeComparator(Class<Value> collectionClass,
-                         ComparisonContext comparisonContext) {
+  public BNodeComparator(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     this.collectionClass = collectionClass;
     this.comparisonContext = comparisonContext;
     this.unsortedTripleMap = comparisonContext.getUnsortedTripleMap();

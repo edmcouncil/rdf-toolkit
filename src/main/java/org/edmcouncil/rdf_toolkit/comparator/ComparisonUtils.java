@@ -37,7 +37,8 @@ import java.util.Set;
 
 public class ComparisonUtils {
 
-  private ComparisonUtils() {}
+  private ComparisonUtils() {
+  }
 
   public static int compareSimpleValue(Literal literal1, Literal literal2) {
     // TODO: support natural ordering of non-string literals
@@ -57,25 +58,18 @@ public class ComparisonUtils {
       } else { // !literal1.getLanguage().isPresent()
         if (literal2.getLanguage().isPresent()) {
           return 1; // literal1 without language comes after literal2 with language
-        } else { // !literal2.getLanguage().isPresent()
-          // neither literal has a language to compare
-        }
+        } // !literal2.getLanguage().isPresent(); neither literal has a language to compare
       }
       if (literal1.getDatatype() != null) {
         if (literal2.getDatatype() != null) {
-          int cmp2 = literal1.getDatatype().stringValue().compareTo(literal2.getDatatype().stringValue());
-          if (cmp2 != 0) {
-            return cmp2;
-          }
+          return literal1.getDatatype().stringValue().compareTo(literal2.getDatatype().stringValue());
         } else { // literal2.getDatatype() == null
           return -1; // literal1 with data type comes before literal2 without data type
         }
       } else { // literal1.getDatatype() == null
         if (literal2.getDatatype() != null) {
           return 1; // literal1 without data type comes after literal2 with data type
-        } else { // literal2.getDatatype().isPresent() == null
-          // neither literal has a data type to compare
-        }
+        } // literal2.getDatatype().isPresent() == null; neither literal has a data type to compare
       }
       return 0; // no difference in value, language nor datatype
     }
@@ -88,14 +82,15 @@ public class ComparisonUtils {
 
   /**
    * If the given blank node is an RDF collection, returns the members of the collection.
-   * @param bnode blank node which is an RDF collection
+   *
+   * @param bnode           blank node which is an RDF collection
    * @param collectionClass all collection members must be instances of this class
    * @return the members of the RDF collection
    */
   public static List<Value> getCollectionMembers(UnsortedTurtleSubjectPredicateObjectMap unsortedTripleMap,
-                                                 BNode bnode,
-                                                 Class<Value> collectionClass,
-                                                 ComparisonContext comparisonContext) {
+      BNode bnode,
+      Class<Value> collectionClass,
+      ComparisonContext comparisonContext) {
     // An ArrayList is used here, as collection members should be retained in their original order, not sorted.
     List<Value> members = new ArrayList<>();
     if (isCollection(comparisonContext, bnode, collectionClass)) {
@@ -123,13 +118,14 @@ public class ComparisonUtils {
 
   /**
    * Whether the given blank node represents an RDF collection, or not.
-   * @param bnode blank node to test as an RDF collection
+   *
+   * @param bnode           blank node to test as an RDF collection
    * @param collectionClass all collection members must be instances of this class
    * @return whether the blank node is an RDF collection
    */
   public static boolean isCollection(ComparisonContext comparisonContext,
-                                     BNode bnode,
-                                     Class<Value> collectionClass) {
+      BNode bnode,
+      Class<Value> collectionClass) {
     var unsortedTripleMap = comparisonContext.getUnsortedTripleMap();
     var poMap = unsortedTripleMap.getSorted(bnode, collectionClass, comparisonContext);
     if (poMap != null) {
@@ -141,7 +137,9 @@ public class ComparisonUtils {
         SortedTurtleObjectList firstValues = poMap.get(Constants.rdfFirst);
         for (Value value : firstValues) {
           // all collection members must match the collection class type
-          if (!collectionClass.isInstance(value)) { return false; }
+          if (!collectionClass.isInstance(value)) {
+            return false;
+          }
         }
         if (restCount >= 1) {
           SortedTurtleObjectList rest = poMap.get(Constants.rdfRest);

@@ -225,7 +225,7 @@ public class OptionHandler {
   /**
    * Check if target file can be written.
    */
-  public void handleTargetFile() throws RdfToolkitOptionHandlingException, FileNotFoundException {
+  public void handleTargetFile() throws RdfToolkitOptionHandlingException {
     File targetFile;
     if (commandLine.hasOption(TARGET.getShortOpt())) {
       String targetFilePath = commandLine.getOptionValue(TARGET.getShortOpt());

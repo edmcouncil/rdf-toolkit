@@ -24,6 +24,7 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
 import java.util.HashSet;
 
@@ -33,8 +34,7 @@ import java.util.HashSet;
 // TODO: why is this not a subclass of UnsortedTurtleResourceList?
 public class UnsortedTurtleBNodeList extends HashSet<BNode> {
 
-  public SortedTurtleBNodeList toSorted(Class collectionClass, // TODO
-                                        ComparisonContext comparisonContext) {
+  public SortedTurtleBNodeList toSorted(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     SortedTurtleBNodeList sortedBNList = new SortedTurtleBNodeList(collectionClass, comparisonContext);
     sortedBNList.addAll(this);
     return sortedBNList;

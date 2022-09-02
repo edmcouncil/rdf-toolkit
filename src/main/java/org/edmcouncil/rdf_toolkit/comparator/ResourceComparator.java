@@ -24,13 +24,13 @@
 
 package org.edmcouncil.rdf_toolkit.comparator;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Comparator for Resource objects that follows these rules:

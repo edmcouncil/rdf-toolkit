@@ -24,19 +24,18 @@
 
 package org.edmcouncil.rdf_toolkit.comparator;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 /**
- * Comparator for TurtlePredicateObjectMap objects.
- * This comparator uses the following ordering rules:
+ * Comparator for TurtlePredicateObjectMap objects. This comparator uses the following ordering rules:
  * <ul>
  *   <li>if both maps reference to the same spot in the memory, they are equal,</li>
  *   <li>null/excluded map comes before non-null/excluded map,</li>
@@ -64,9 +63,8 @@ public class TurtlePredicateObjectMapComparator implements Comparator<SortedTurt
     return compare(map1, map2, new ArrayList<>());
   }
 
-  public int compare(SortedTurtlePredicateObjectMap map1,
-                     SortedTurtlePredicateObjectMap map2,
-                     List<Object> excludedList) {
+  public int compare(SortedTurtlePredicateObjectMap map1, SortedTurtlePredicateObjectMap map2,
+      List<Object> excludedList) {
     if (map1 == map2) {
       return 0;
     }
@@ -88,9 +86,9 @@ public class TurtlePredicateObjectMapComparator implements Comparator<SortedTurt
     }
   }
 
-  private int compare(SortedTurtlePredicateObjectMap map1, Iterator<IRI> iter1,
-                      SortedTurtlePredicateObjectMap map2, Iterator<IRI> iter2,
-                      List<Object> excludedList) {
+  private int compare(SortedTurtlePredicateObjectMap map1, Iterator<IRI> iter1, SortedTurtlePredicateObjectMap map2,
+      Iterator<IRI> iter2,
+      List<Object> excludedList) {
     if (iter1.hasNext()) {
       if (iter2.hasNext()) {
         IRI key1 = iter1.next();

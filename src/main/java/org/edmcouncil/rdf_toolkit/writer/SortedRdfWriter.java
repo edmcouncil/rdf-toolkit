@@ -276,12 +276,11 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
             String iriString = iri.stringValue();
             String baseIriString = baseIri.stringValue();
             String relativeIriString = (new URI(baseIriString)).relativize(new URI(iriString)).toString();
-            String result = String.format("%s%s%s",
+            return String.format("%s%s%s",
                     useTurtleQuoting ? "<" : "",
                     relativeIriString.length() >= 1 ? relativeIriString : iriString, // avoid zero-length relative IRIs
                     useTurtleQuoting ? ">" : ""
             );
-            return result;
         }
         // Failed to find a match, return null.
         return String.format("%s%s%s",
@@ -402,9 +401,7 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
                     SortedTurtlePredicateObjectMap poMap = sortedTripleMap.get(subject);
                     if (poMap.containsKey(Constants.OWL_IMPORTS)) {
                         SortedTurtleObjectList importsOList = poMap.get(Constants.OWL_IMPORTS);
-                        for (Value value : importsOList) {
-                            importList.add(value);
-                        }
+                        importList.addAll(importsOList);
                     }
                 }
             }

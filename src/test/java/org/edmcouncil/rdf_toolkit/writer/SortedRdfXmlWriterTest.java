@@ -95,7 +95,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
   }
 
   @Test
-  void shouldBeAbleToCreateSortedRdfXmlWriter() throws Exception {
+  void shouldBeAbleToCreateSortedRdfXmlWriter() {
     var outWriter = new OutputStreamWriter(System.out);
 
     var writer1 = new SortedRdfXmlWriter(System.out);

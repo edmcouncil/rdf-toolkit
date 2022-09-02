@@ -24,7 +24,6 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
 import org.edmcouncil.rdf_toolkit.comparator.IRIComparator;
 
 /**
@@ -37,10 +36,6 @@ public class SortedTurtlePredicateObjectMap extends SortedHashMap<IRI, SortedTur
   }
 
   public int fullSize() {
-    int result = 0;
-    for (Resource pred : keySet()) {
-      result += get(pred).size();
-    }
-    return result;
+    return keySet().stream().mapToInt(pred -> get(pred).size()).sum();
   }
 }

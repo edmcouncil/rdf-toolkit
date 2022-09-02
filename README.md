@@ -1,4 +1,4 @@
-<img src="https://spec.edmcouncil.org/fibo/htmlpages/develop/latest/img/logo.66a988fe.png" width="150" align="right"/>
+<img src="https://spec.edmcouncil.org/fibo/htmlpages/develop/latest/img/logo.66a988fe.png" width="150" style="float: right" alt="EDMC log"/>
 
 # rdf-toolkit
 

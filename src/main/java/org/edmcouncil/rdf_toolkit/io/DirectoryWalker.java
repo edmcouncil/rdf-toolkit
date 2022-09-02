@@ -38,7 +38,7 @@ public class DirectoryWalker {
   private final File rootDir;
   private final Pattern relativePathPattern;
 
-  static public class DirectoryWalkerResult {
+  public static class DirectoryWalkerResult {
     private final File file;
     private final String relativePath;
 

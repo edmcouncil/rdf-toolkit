@@ -24,13 +24,13 @@
 
 package org.edmcouncil.rdf_toolkit.comparator;
 
-import org.eclipse.rdf4j.model.Value;
-import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.rdf4j.model.Value;
+import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
 
 /**
  * Comparator for TurtleObjectList objects.
