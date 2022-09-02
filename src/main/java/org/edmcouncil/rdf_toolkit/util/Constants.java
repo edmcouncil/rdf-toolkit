@@ -40,6 +40,7 @@ public class Constants {
   public static final String STRING_DATA_TYPE_OPTION = "stringDataTypeOption";
   public static final String OVERRIDE_STRING_LANGUAGE = "overrideStringLanguage";
   public static final String LINE_END = "lineEnd";
+  public static final String OMIT_XMLNS_NAMESPACE = "omitXmlnsNamespace";
 
   /**
    * Factory for generating literal values.

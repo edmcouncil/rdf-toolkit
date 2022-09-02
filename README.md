@@ -92,6 +92,7 @@ usage: RdfFormatter (rdf-toolkit version 1.11.0)
  -ln,--line-end <arg>                    sets the end-line character(s); supported characters: \n
                                          (LF), \r (CR). Default is the LF character
  -osl,--override-string-language <arg>   sets an override language that is applied to all strings
+ -oxn,--omit-xmlns-namespace             omits xmlns namespace
  -s,--source <arg>                       source (input) RDF file to format
  -sd,--source-directory <arg>            source (input) directory of RDF files to format.  This is a
                                          directory processing option
