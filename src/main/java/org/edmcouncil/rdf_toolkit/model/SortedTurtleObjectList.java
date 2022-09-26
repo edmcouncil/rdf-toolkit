@@ -38,8 +38,7 @@ public class SortedTurtleObjectList extends TreeSet<Value> {
     super(new ValueComparator(comparisonContext));
   }
 
-  public SortedTurtleObjectList(Class<Value> collectionClass,
-                                ComparisonContext comparisonContext) {
+  public SortedTurtleObjectList(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     super(new ValueComparator(collectionClass, comparisonContext));
   }
 }

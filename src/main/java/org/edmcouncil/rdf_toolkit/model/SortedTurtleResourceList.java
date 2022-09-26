@@ -24,6 +24,7 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
 import org.edmcouncil.rdf_toolkit.comparator.ResourceComparator;
 import java.util.TreeSet;
@@ -33,7 +34,7 @@ import java.util.TreeSet;
  */
 public class SortedTurtleResourceList extends TreeSet<Resource> {
 
-  public SortedTurtleResourceList(Class collectionClass, ComparisonContext comparisonContext) { // TODO
+  public SortedTurtleResourceList(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     super(new ResourceComparator(collectionClass, comparisonContext));
   }
 }

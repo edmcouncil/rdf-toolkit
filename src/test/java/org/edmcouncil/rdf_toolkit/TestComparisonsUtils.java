@@ -26,6 +26,7 @@ package org.edmcouncil.rdf_toolkit;
 
 import static org.edmcouncil.rdf_toolkit.FileSystemUtils.readFileLines;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -95,11 +96,15 @@ public class TestComparisonsUtils {
             if ((st1.getSubject() == st2Alt.getSubject()) ||
                 (st1.getSubject() instanceof BNode && st2Alt.getSubject() instanceof BNode) ||
                 (st1.getSubject() instanceof IRI && st2Alt.getSubject() instanceof IRI &&
-                    (expandQNameToFullIriString(asInstanceOf(st1.getSubject(), IRI.class), model1.getNamespaces()))
-                        .equals(expandQNameToFullIriString(asInstanceOf(st2Alt.getSubject(), IRI.class), model2.getNamespaces())))) {
+                    (expandQNameToFullIriString(asInstanceOf(st1.getSubject(), IRI.class),
+                        model1.getNamespaces()))
+                        .equals(
+                            expandQNameToFullIriString(asInstanceOf(st2Alt.getSubject(), IRI.class),
+                                model2.getNamespaces())))) {
               if ((st1.getPredicate() == st2Alt.getPredicate() ||
                   (expandQNameToFullIriString(st1.getPredicate(), model1.getNamespaces())
-                      .equals(expandQNameToFullIriString(st2Alt.getPredicate(), model2.getNamespaces()))))) {
+                      .equals(expandQNameToFullIriString(st2Alt.getPredicate(),
+                          model2.getNamespaces()))))) {
                 LOGGER.info("Possible object match: {}", st2Alt.getObject().stringValue());
               }
             }
@@ -122,7 +127,8 @@ public class TestComparisonsUtils {
       if (!triplesMatch2to1) {
         unmatchedTriples2to1.add(st2);
         if (unmatchedTriples2to1.size() <= maxWarnings) {
-          System.out.println("unmatched triple 2 to 1 [" + unmatchedTriples2to1.size() + ": " + st2 + "]");
+          System.out.println(
+              "unmatched triple 2 to 1 [" + unmatchedTriples2to1.size() + ": " + st2 + "]");
         }
       }
     }
@@ -139,7 +145,8 @@ public class TestComparisonsUtils {
     return instanceType.cast(resource);
   }
 
-  private static boolean compareStringIterators(Iterator<String> iter1, Iterator<String> iter2, File file1, File file2) {
+  private static boolean compareStringIterators(Iterator<String> iter1, Iterator<String> iter2,
+      File file1, File file2) {
     var lineCount = 0;
     while (iter1.hasNext() || iter2.hasNext()) {
       lineCount += 1;
@@ -156,14 +163,16 @@ public class TestComparisonsUtils {
       var line1 = iter1.next();
       var line2 = iter2.next();
       if (!compareStrings(line1, line2, lineCount, file1, file2)) {
-        LOGGER.error("line1 ({}): {}\nline2 ({}): {}", file1.getName(), line1, file2.getName(), line2);
+        LOGGER.error("line1 ({}): {}\nline2 ({}): {}", file1.getName(), line1, file2.getName(),
+            line2);
         return false;
       }
     }
     return true;
   }
 
-  private static boolean compareStrings(String str1, String str2, int lineCount, File file1, File file2) {
+  private static boolean compareStrings(String str1, String str2, int lineCount, File file1,
+      File file2) {
     if (str1.length() >= 1 || str2.length() >= 1) {
       var index = 0;
       while (str1.length() > index || str2.length() > index) {
@@ -190,22 +199,26 @@ public class TestComparisonsUtils {
     return true;
   }
 
-  private static boolean triplesMatch(Statement st1, Statement st2, Set<Namespace> nsset1, Set<Namespace> nsset2) {
+  private static boolean triplesMatch(Statement st1, Statement st2, Set<Namespace> nsset1,
+      Set<Namespace> nsset2) {
     if ((st1.getSubject().equals(st2.getSubject())) ||
         (st1.getSubject() instanceof BNode && st2.getSubject() instanceof BNode) ||
         (st1.getSubject() instanceof IRI && st2.getSubject() instanceof IRI &&
-            (expandQNameToFullIriString(asInstanceOf(st1.getSubject(), IRI.class), nsset1).equals(expandQNameToFullIriString(asInstanceOf(st2.getSubject(), IRI.class), nsset2))))) {
+            (expandQNameToFullIriString(asInstanceOf(st1.getSubject(), IRI.class), nsset1).equals(
+                expandQNameToFullIriString(asInstanceOf(st2.getSubject(), IRI.class), nsset2))))) {
       if ((st1.getPredicate() == st2.getPredicate()) ||
-          (expandQNameToFullIriString(st1.getPredicate(), nsset1).equals(expandQNameToFullIriString(st2.getPredicate(), nsset2)))) {
+          (expandQNameToFullIriString(st1.getPredicate(), nsset1).equals(
+              expandQNameToFullIriString(st2.getPredicate(), nsset2)))) {
         if (st1.getObject() instanceof Literal && st2.getObject() instanceof Literal) {
           return st1.getObject().stringValue().replaceAll("\\s+", " ").trim()
               .equals(st2.getObject().stringValue().replaceAll("\\s+", " ").trim());
         } else if (st1.getObject() instanceof IRI && st2.getObject() instanceof IRI) {
-          return expandQNameToFullIriString(asInstanceOf(st1.getObject(), IRI.class), nsset1).equals(expandQNameToFullIriString(asInstanceOf(st2.getObject(), IRI.class), nsset2));
-        } else if ((st1.getObject() == st2.getObject()) || (st1.getObject() instanceof BNode && st2.getObject() instanceof BNode)) {
-          return true;
+          return expandQNameToFullIriString(asInstanceOf(st1.getObject(), IRI.class),
+              nsset1).equals(
+              expandQNameToFullIriString(asInstanceOf(st2.getObject(), IRI.class), nsset2));
         } else {
-          return false;
+          return (st1.getObject() == st2.getObject()) || (st1.getObject() instanceof BNode
+              && st2.getObject() instanceof BNode);
         }
       } else {
         return false;

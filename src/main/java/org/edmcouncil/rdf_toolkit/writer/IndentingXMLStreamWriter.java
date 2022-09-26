@@ -24,16 +24,17 @@
 
 package org.edmcouncil.rdf_toolkit.writer;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -43,14 +44,17 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
-    private class NamespaceContextImpl implements NamespaceContext {
-        private HashMap<String, String> prefixToUriMap = new HashMap<>();
-        private HashMap<String, List<String>> uriToPrefixMap = new HashMap<>();
+    private static final String UTF8_ENCODING = "UTF-8";
+
+    private static class NamespaceContextImpl implements NamespaceContext {
+        private final HashMap<String, String> prefixToUriMap = new HashMap<>();
+        private final HashMap<String, List<String>> uriToPrefixMap = new HashMap<>();
         private String defaultNamespaceUri = null;
         private NamespaceContext suppliedContext = null;
 
         public void setPrefix(String prefix, String uri) {
             prefixToUriMap.put(prefix, uri);
+            uriToPrefixMap.computeIfAbsent(uri, s -> new ArrayList<>());
             if (!uriToPrefixMap.containsKey(uri)) {
                 uriToPrefixMap.put(uri, new ArrayList<>());
             }
@@ -89,13 +93,13 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         }
 
         @Override
-        public Iterator getPrefixes(String uri) {
+        public Iterator<String> getPrefixes(String uri) {
             if (suppliedContext != null) {
-                Iterator prefixes = suppliedContext.getPrefixes(uri);
+                Iterator<String> prefixes = suppliedContext.getPrefixes(uri);
                 if (prefixes != null) { return prefixes; }
             }
             List<String> prefixes = uriToPrefixMap.get(uri);
-            if (prefixes.size() < 1) {
+            if (prefixes.isEmpty()) {
                 return null;
             } else {
                 return prefixes.iterator();
@@ -105,7 +109,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
 
     private OutputStream out = null;
     private Writer writer = null;
-    private String encoding = "UTF-8";
+    private String encoding = UTF8_ENCODING;
     private String indent = "\t";
     private boolean useCompactAttributes = false;
     private IndentingWriter output = null;
@@ -113,11 +117,12 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     private boolean inStartElement = false;
     private boolean inEmptyStartElement = false;
     private boolean isAfterText = false;
-    private Stack<String> elementNameStack = new Stack<>();
-    private NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
 
-    public IndentingXMLStreamWriter(OutputStream out, String lineEnd) throws Exception {
-        this(out, "UTF-8", null, false, lineEnd);
+    private final Deque<String> elementNameStack = new ArrayDeque<>();
+    private final NamespaceContextImpl namespaceContext = new NamespaceContextImpl();
+
+    public IndentingXMLStreamWriter(OutputStream out, String lineEnd) {
+        this(out, UTF8_ENCODING, null, false, lineEnd);
     }
 
     public IndentingXMLStreamWriter(OutputStream out, String encoding, String indent, boolean useCompactAttributes,
@@ -134,7 +139,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         output.setLineEnd(lineEnd);
     }
 
-    public IndentingXMLStreamWriter(Writer writer, String lineEnd) throws Exception {
+    public IndentingXMLStreamWriter(Writer writer, String lineEnd) {
         this(writer, null, true, lineEnd);
     }
 
@@ -181,8 +186,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         try {
             output.writeEOL();
             isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -198,8 +203,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(localName);
             increaseIndentation();
             isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -215,8 +220,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(localName);
             increaseIndentation();
             isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -233,8 +238,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(elementName);
             increaseIndentation();
             isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -249,8 +254,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 }
                 inStartElement = false;
             }
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -286,8 +291,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 output.write(">");
             }
             isAfterText = false;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -298,9 +303,9 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             inEmptyStartElement = false;
             inStartElement = false;
             isAfterText = false;
-            assert(elementNameStack.empty());
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+            assert(elementNameStack.isEmpty());
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -310,8 +315,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.flush();
             output.close();
             if (out != null) { writer.close(); }
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -321,8 +326,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.flush();
             writer.flush();
             if (out != null) { out.flush(); }
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -331,18 +336,18 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             if (useCompactAttributes) { output.write(' '); } else { writeEOL(); }
             output.write(localName);
             output.write("=\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
     public void writeStartAttribute(String namespaceURI, String localName) throws XMLStreamException {
         try {
-            if (useCompactAttributes) { output.write(' ');; } else { writeEOL(); }
+            if (useCompactAttributes) { output.write(' '); } else { writeEOL(); }
             output.write(localName);
             output.write("=\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -355,8 +360,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             }
             output.write(localName);
             output.write("=\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -364,8 +369,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         try {
             String escapedText = StringEscapeUtils.escapeXml10(text);
             output.write(escapedText.replaceAll("\\s+"," ").trim()); // do attribute whitespace normalisation
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -376,16 +381,16 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 output.write(entityName);
                 output.write(";");
             }
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
     public void endAttribute() throws XMLStreamException {
         try {
             output.write("\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -420,8 +425,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write("=\"");
             output.write(escapedNamespaceURI);
             output.write("\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -433,8 +438,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write("xmlns=\"");
             output.write(escapedNamespaceURI);
             output.write("\"");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -445,8 +450,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write("<!--");
             output.write(data);
             output.write("-->");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -457,8 +462,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write("<?");
             output.write(target);
             output.write("?>");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -470,8 +475,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(" ");
             output.write(data);
             output.write("?>");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -483,8 +488,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(data);
             output.write("]]>");
             isAfterText = true;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -492,8 +497,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
     public void writeDTD(String dtd) throws XMLStreamException {
         try {
             output.write(dtd);
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -503,8 +508,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(rootElementName);
             output.write(" [");
             increaseIndentation();
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -513,8 +518,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             decreaseIndentation();
             writeEOL();
             output.write("]>");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -526,8 +531,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             output.write(" \"");
             output.write(StringEscapeUtils.escapeXml10(value));
             output.write("\">");
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -541,8 +546,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
                 output.write(";");
             }
             isAfterText = true;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -563,7 +568,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
         // Note: more encoding translations may be appropriate here.
         setIndentationLevel(0);
         String xmlEncoding = encoding;
-        if ("UTF8".equals(encoding)) { xmlEncoding = "UTF-8"; }
+        if ("UTF8".equals(encoding)) { xmlEncoding = UTF8_ENCODING; }
         if ("UTF16".equals(encoding)) { xmlEncoding = "UTF-16"; }
         writeProcessingInstruction("xml", "version=\"" + version + (xmlEncoding == null ? "" : ("\" encoding=\"" + xmlEncoding)) + "\"");
     }
@@ -574,8 +579,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             finishStartElement();
             output.write(StringEscapeUtils.escapeXml10(text));
             isAfterText = true;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
@@ -585,28 +590,28 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter {
             finishStartElement();
             output.write(StringEscapeUtils.escapeXml10(String.copyValueOf(text, start, len)));
             isAfterText = true;
-        } catch (Throwable t) {
-            throw new XMLStreamException(t);
+        } catch (Exception ex) {
+            throw new XMLStreamException(ex);
         }
     }
 
     @Override
-    public String getPrefix(String uri) throws XMLStreamException {
+    public String getPrefix(String uri) {
         return namespaceContext.getPrefix(uri);
     }
 
     @Override
-    public void setPrefix(String prefix, String uri) throws XMLStreamException {
+    public void setPrefix(String prefix, String uri) {
         namespaceContext.setPrefix(prefix, uri);
     }
 
     @Override
-    public void setDefaultNamespace(String uri) throws XMLStreamException {
+    public void setDefaultNamespace(String uri) {
         namespaceContext.setDefaultNamespace(uri);
     }
 
     @Override
-    public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
+    public void setNamespaceContext(NamespaceContext context) {
         namespaceContext.setNamespaceContext(context);
     }
 

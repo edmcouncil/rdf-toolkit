@@ -24,6 +24,7 @@
 
 package org.edmcouncil.rdf_toolkit.writer;
 
+import java.util.Collections;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.RDFWriterFactory;
@@ -77,15 +78,7 @@ public class SortedRdfWriterFactory implements RDFWriterFactory {
   @Override
   public RDFWriter getWriter(OutputStream out) {
     try {
-      switch (targetFormat) {
-        case JSON_LD:
-          return new SortedJsonLdWriter(out);
-        case RDF_XML:
-          return new SortedRdfXmlWriter(out);
-        case TURTLE:
-          return new SortedTurtleWriter(out);
-      }
-      return new SortedTurtleWriter(out); // Turtle by default
+      return getOutputStreamByFormat(out, Collections.emptyMap());
     } catch (Exception ex) {
       LOGGER.warn(
           String.format(
@@ -109,15 +102,7 @@ public class SortedRdfWriterFactory implements RDFWriterFactory {
   @Override
   public RDFWriter getWriter(Writer writer) {
     try {
-      switch (targetFormat) {
-        case JSON_LD:
-          return new SortedJsonLdWriter(writer);
-        case RDF_XML:
-          return new SortedRdfXmlWriter(writer);
-        case TURTLE:
-          return new SortedTurtleWriter(writer);
-      }
-      return new SortedTurtleWriter(writer); // Turtle by default
+      return getWriterByFormat(writer, Collections.emptyMap());
     } catch (Exception ex) {
       LOGGER.warn(
           String.format(
@@ -139,16 +124,8 @@ public class SortedRdfWriterFactory implements RDFWriterFactory {
    * @param out     The OutputStream to write the RDF to.
    * @param options options for the RDF writer.
    */
-  public RDFWriter getWriter(OutputStream out, Map<String, Object> options) throws Exception {
-    switch (targetFormat) {
-      case JSON_LD:
-        return new SortedJsonLdWriter(out, options);
-      case RDF_XML:
-        return new SortedRdfXmlWriter(out, options);
-      case TURTLE:
-        return new SortedTurtleWriter(out, options);
-    }
-    return new SortedTurtleWriter(out, options); // Turtle by default
+  public RDFWriter getWriter(OutputStream out, Map<String, Object> options) {
+    return getOutputStreamByFormat(out, options);
   }
 
   /**
@@ -157,7 +134,11 @@ public class SortedRdfWriterFactory implements RDFWriterFactory {
    * @param writer  The Writer to write the RDF to.
    * @param options options for the RDF writer.
    */
-  public RDFWriter getWriter(Writer writer, Map<String, Object> options) throws Exception {
+  public RDFWriter getWriter(Writer writer, Map<String, Object> options) {
+    return getWriterByFormat(writer, options);
+  }
+
+  private RDFWriter getWriterByFormat(Writer writer, Map<String, Object> options) {
     switch (targetFormat) {
       case JSON_LD:
         return new SortedJsonLdWriter(writer, options);
@@ -167,5 +148,17 @@ public class SortedRdfWriterFactory implements RDFWriterFactory {
         return new SortedTurtleWriter(writer, options);
     }
     return new SortedTurtleWriter(writer, options); // Turtle by default
+  }
+
+  private RDFWriter getOutputStreamByFormat(OutputStream out, Map<String, Object> options) {
+    switch (targetFormat) {
+      case JSON_LD:
+        return new SortedJsonLdWriter(out, options);
+      case RDF_XML:
+        return new SortedRdfXmlWriter(out, options);
+      case TURTLE:
+        return new SortedTurtleWriter(out, options);
+    }
+    return new SortedTurtleWriter(out, options); // Turtle by default
   }
 }

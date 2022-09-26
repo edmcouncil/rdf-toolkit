@@ -25,6 +25,7 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
 import java.util.HashSet;
 
@@ -33,8 +34,7 @@ import java.util.HashSet;
  */
 public class UnsortedTurtleResourceList extends HashSet<Resource> {
 
-  public SortedTurtleResourceList toSorted(Class collectionClass, // TODO
-                                           ComparisonContext comparisonContext) {
+  public SortedTurtleResourceList toSorted(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     var sortedResourceList = new SortedTurtleResourceList(
         collectionClass,
         comparisonContext);

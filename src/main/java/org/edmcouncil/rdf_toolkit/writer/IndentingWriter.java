@@ -28,7 +28,7 @@ import java.io.Writer;
 
 public class IndentingWriter extends Writer {
 
-  protected Writer out;
+  protected final Writer out;
   protected int indentationLevel = 0;
   private String indentationString = "\t";
   private boolean indentationWritten = false;

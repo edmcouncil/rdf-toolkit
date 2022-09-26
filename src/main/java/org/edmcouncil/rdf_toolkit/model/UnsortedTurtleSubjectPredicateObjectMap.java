@@ -34,9 +34,8 @@ import java.util.HashMap;
  */
 public class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, UnsortedTurtlePredicateObjectMap> {
 
-  public SortedTurtlePredicateObjectMap getSorted(Resource subject,
-                                                  Class<Value> collectionClass,
-                                                  ComparisonContext comparisonContext) {
+  public SortedTurtlePredicateObjectMap getSorted(Resource subject, Class<Value> collectionClass,
+      ComparisonContext comparisonContext) {
     if (containsKey(subject)) {
       return get(subject).toSorted(collectionClass, comparisonContext);
     } else {
@@ -45,7 +44,7 @@ public class UnsortedTurtleSubjectPredicateObjectMap extends HashMap<Resource, U
   }
 
   public SortedTurtleSubjectPredicateObjectMap toSorted(Class<Value> collectionClass,
-                                                        ComparisonContext comparisonContext) {
+      ComparisonContext comparisonContext) {
     var sortedSPOMap = new SortedTurtleSubjectPredicateObjectMap(collectionClass, comparisonContext);
     for (Resource subject : keySet()) {
       sortedSPOMap.put(subject, getSorted(subject, collectionClass, comparisonContext));

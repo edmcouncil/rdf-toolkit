@@ -33,7 +33,7 @@ public enum StringDataTypeOptions {
 
   public static final StringDataTypeOptions DEFAULT_STRING_DATA_TYPE = IMPLICIT;
 
-  private String optionValue;
+  private final String optionValue;
 
   StringDataTypeOptions(String optionValue) {
     this.optionValue = optionValue;

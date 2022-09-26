@@ -29,13 +29,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Like java.util.HashMap, but able to return the keys in sorted order.
  */
 public class SortedHashMap<K, V> extends HashMap<K, V> {
-  private Comparator<K> comparator;
-  private List<K> sortedKeys = new ArrayList<>();
+
+  private final transient Comparator<K> comparator;
+  private transient List<K> sortedKeys = new ArrayList<>();
 
   public SortedHashMap(Comparator<K> comparator) {
     this.comparator = comparator;
@@ -63,5 +65,25 @@ public class SortedHashMap<K, V> extends HashMap<K, V> {
 
   public Iterable<K> sortedKeys() {
     return new LinkedList<>(sortedKeys);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof SortedHashMap)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    SortedHashMap<?, ?> that = (SortedHashMap<?, ?>) o;
+    return Objects.equals(comparator, that.comparator) && Objects.equals(sortedKeys, that.sortedKeys);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), comparator, sortedKeys);
   }
 }

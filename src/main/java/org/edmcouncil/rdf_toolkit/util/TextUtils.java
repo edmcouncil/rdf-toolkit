@@ -98,6 +98,10 @@ public class TextUtils {
     return ('\u203F' <= ch) && (ch <= '\u2040');
   }
 
+  public static boolean isNotNameChar(char ch) {
+    return !isNameChar(ch);
+  }
+
   public static boolean isMultilineString(String str) {
     if (str == null) {
       return false;
@@ -125,11 +129,11 @@ public class TextUtils {
     if (str.length() < 1) {
       return false;
     }
-    if ((':' != str.charAt(0)) && !isNameChar(str.charAt(0))) {
+    if ((':' != str.charAt(0)) && isNotNameChar(str.charAt(0))) {
       return false; // cannot start with a colon
     }
     for (var idx = 2; idx < str.length(); idx++) {
-      if (!isNameChar(str.charAt(idx))) {
+      if (isNotNameChar(str.charAt(idx))) {
         return false;
       }
     }

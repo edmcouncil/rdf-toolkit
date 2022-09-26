@@ -25,6 +25,7 @@
 package org.edmcouncil.rdf_toolkit.model;
 
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 import org.edmcouncil.rdf_toolkit.comparator.CachedResourceComparator;
 import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
 
@@ -33,7 +34,7 @@ import org.edmcouncil.rdf_toolkit.comparator.ComparisonContext;
  */
 public class SortedTurtleSubjectPredicateObjectMap extends SortedHashMap<Resource, SortedTurtlePredicateObjectMap> {
 
-  public SortedTurtleSubjectPredicateObjectMap(Class collectionClass, ComparisonContext comparisonContext) { // TODO
+  public SortedTurtleSubjectPredicateObjectMap(Class<Value> collectionClass, ComparisonContext comparisonContext) {
     super(new CachedResourceComparator(collectionClass, comparisonContext));
   }
 
