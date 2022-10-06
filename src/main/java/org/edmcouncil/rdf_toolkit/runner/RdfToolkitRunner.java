@@ -43,13 +43,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Namespace;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.TreeModel;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
@@ -61,6 +55,8 @@ import org.edmcouncil.rdf_toolkit.util.Constants;
 import org.edmcouncil.rdf_toolkit.writer.SortedRdfWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -70,12 +66,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -232,7 +223,31 @@ public class RdfToolkitRunner {
         rdfToolkitOptions.setBaseIri(valueFactory.createIRI(newBaseIriString));
       }
     }
-
+    //Replaced language serialization
+    Model replaceModel = new TreeModel();
+    for (Statement st : sourceModel) {
+      Value modelObject = st.getObject();
+      if (modelObject instanceof Literal) {
+        var predicate = st.getPredicate();
+        var subject = st.getSubject();
+        Optional<String> lang = ((Literal) modelObject).getLanguage();
+        if (lang.isPresent()) {
+          String langString = lang.get();
+          String[] langTab = langString.split("-");
+          langTab[1] = langTab[1].toUpperCase();
+          langString = String.join("-", langTab);
+          String label = ((Literal) modelObject).getLabel();
+          Value replaceObject = valueFactory.createLiteral(label, langString);
+          Statement statement = valueFactory.createStatement(subject, predicate, replaceObject);
+          replaceModel.add(statement);
+        } else {
+          replaceModel.add(st);
+        }
+      } else {
+        replaceModel.add(st);
+      }
+    }
+    sourceModel = replaceModel;
     // Infer the base URI, if requested
     IRI inferredBaseIri = null;
     if (rdfToolkitOptions.getInferBaseIri()) {
