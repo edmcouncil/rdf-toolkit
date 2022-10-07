@@ -55,8 +55,6 @@ import org.edmcouncil.rdf_toolkit.util.Constants;
 import org.edmcouncil.rdf_toolkit.writer.SortedRdfWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
