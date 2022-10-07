@@ -229,7 +229,7 @@ public class RdfToolkitRunner {
         var predicate = st.getPredicate();
         var subject = st.getSubject();
         Optional<String> lang = ((Literal) modelObject).getLanguage();
-        if (lang.isPresent()) {
+        if (lang.isPresent() && lang.get().contains("-")) {
           String langString = lang.get();
           String[] langTab = langString.split("-");
           langTab[1] = langTab[1].toUpperCase();
