@@ -38,6 +38,7 @@ public class SortedHashMap<K, V> extends HashMap<K, V> {
 
   private final transient Comparator<K> comparator;
   private transient List<K> sortedKeys = new ArrayList<>();
+  private transient boolean dirty = true;
 
   public SortedHashMap(Comparator<K> comparator) {
     this.comparator = comparator;
@@ -52,18 +53,21 @@ public class SortedHashMap<K, V> extends HashMap<K, V> {
   @Override
   public V put(K key, V value) {
     V result = super.put(key, value);
-    updateSortedKeys();
+    dirty = true;
     return result;
   }
 
   @Override
   public boolean remove(Object key, Object value) {
     boolean result = super.remove(key, value);
-    updateSortedKeys();
+    dirty = true;
     return result;
   }
 
   public Iterable<K> sortedKeys() {
+    if (dirty) {
+      updateSortedKeys();
+    }
     return new LinkedList<>(sortedKeys);
   }
 
@@ -79,11 +83,11 @@ public class SortedHashMap<K, V> extends HashMap<K, V> {
       return false;
     }
     SortedHashMap<?, ?> that = (SortedHashMap<?, ?>) o;
-    return Objects.equals(comparator, that.comparator) && Objects.equals(sortedKeys, that.sortedKeys);
+    return Objects.equals(comparator, that.comparator) && Objects.equals(sortedKeys(), that.sortedKeys());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), comparator, sortedKeys);
+    return Objects.hash(super.hashCode(), comparator, sortedKeys());
   }
 }
