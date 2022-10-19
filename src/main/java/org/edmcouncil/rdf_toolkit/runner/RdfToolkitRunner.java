@@ -187,9 +187,15 @@ public class RdfToolkitRunner {
 
   private void runOnFile(RdfToolkitOptions rdfToolkitOptions) throws Exception {
     var sourceModel = readModel(rdfToolkitOptions);
-    Boolean isIriPatternAndIriReplacementNotNull = (rdfToolkitOptions.getIriPattern() != null) &&
+    boolean isIriPatternAndIriReplacementNotNull = (rdfToolkitOptions.getIriPattern() != null) &&
         (rdfToolkitOptions.getIriReplacement() != null);
+
     Model replaceModel = new TreeModel();
+    Set<Namespace> sourceNamespaces = sourceModel.getNamespaces();
+    for (Namespace sourceNamespace : sourceNamespaces) {
+      replaceModel.setNamespace(sourceNamespace.getPrefix(), sourceNamespace.getName());
+    }
+
     for (Statement st : sourceModel) {
       Value modelObject = st.getObject();
       Resource replacedSubject = st.getSubject();
