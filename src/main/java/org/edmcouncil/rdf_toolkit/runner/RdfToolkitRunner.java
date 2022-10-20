@@ -35,7 +35,9 @@ import static org.edmcouncil.rdf_toolkit.runner.RunningMode.PRINT_AND_EXIT;
 import static org.edmcouncil.rdf_toolkit.runner.RunningMode.PRINT_USAGE_AND_EXIT;
 import static org.edmcouncil.rdf_toolkit.runner.RunningMode.RUN_ON_DIRECTORY;
 import static org.edmcouncil.rdf_toolkit.runner.RunningMode.RUN_ON_FILE;
+
 import com.jcabi.manifests.Manifests;
+import java.util.Optional;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -44,6 +46,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.Resource;
@@ -110,7 +113,8 @@ public class RdfToolkitRunner {
         runOnFile(rdfToolkitOptions);
         break;
       default:
-        throw new RdfToolkitOptionHandlingException("Unknown running mode: " + rdfToolkitOptions.getRunningMode());
+        throw new RdfToolkitOptionHandlingException(
+            "Unknown running mode: " + rdfToolkitOptions.getRunningMode());
     }
   }
 
@@ -183,46 +187,69 @@ public class RdfToolkitRunner {
 
   private void runOnFile(RdfToolkitOptions rdfToolkitOptions) throws Exception {
     var sourceModel = readModel(rdfToolkitOptions);
+    boolean isIriPatternAndIriReplacementNotNull = (rdfToolkitOptions.getIriPattern() != null) &&
+        (rdfToolkitOptions.getIriReplacement() != null);
 
-    // Do any URI replacements
-    if ((rdfToolkitOptions.getIriPattern() != null) && (rdfToolkitOptions.getIriReplacement() != null)) {
-      Model replacedModel = new TreeModel();
-      for (Statement st : sourceModel) {
-        Resource replacedSubject = st.getSubject();
+    Model replaceModel = new TreeModel();
+    Set<Namespace> sourceNamespaces = sourceModel.getNamespaces();
+    for (Namespace sourceNamespace : sourceNamespaces) {
+      replaceModel.setNamespace(sourceNamespace.getPrefix(), sourceNamespace.getName());
+    }
+
+    for (Statement st : sourceModel) {
+      Value modelObject = st.getObject();
+      Resource replacedSubject = st.getSubject();
+      IRI replacedPredicate = st.getPredicate();
+      //Replaced language serialization
+      if (modelObject instanceof Literal) {
+        Optional<String> lang = ((Literal) modelObject).getLanguage();
+        if (lang.isPresent() && lang.get().contains("-")) {
+          String langString = lang.get();
+          String[] langTab = langString.split("-");
+          langTab[1] = langTab[1].toUpperCase();
+          langString = String.join("-", langTab);
+          String label = ((Literal) modelObject).getLabel();
+          modelObject = valueFactory.createLiteral(label, langString);
+        }
+      }
+      // Do any URI replacements
+      if (isIriPatternAndIriReplacementNotNull) {
         if (replacedSubject instanceof IRI) {
           replacedSubject = valueFactory.createIRI(
               replacedSubject.stringValue().replaceFirst(
                   rdfToolkitOptions.getIriPattern(),
                   rdfToolkitOptions.getIriReplacement()));
         }
-
-        IRI replacedPredicate = st.getPredicate();
         replacedPredicate = valueFactory.createIRI(
             replacedPredicate.stringValue().replaceFirst(
                 rdfToolkitOptions.getIriPattern(),
                 rdfToolkitOptions.getIriReplacement()));
 
-        Value replacedObject = st.getObject();
-        if (replacedObject instanceof IRI) {
-          replacedObject = valueFactory.createIRI(
-              replacedObject.stringValue().replaceFirst(
+        if (modelObject instanceof IRI) {
+          modelObject = valueFactory.createIRI(
+              modelObject.stringValue().replaceFirst(
                   rdfToolkitOptions.getIriPattern(),
                   rdfToolkitOptions.getIriReplacement()));
         }
-
-        Statement replacedStatement = valueFactory.createStatement(replacedSubject, replacedPredicate, replacedObject);
-        replacedModel.add(replacedStatement);
       }
+      Statement statement = valueFactory.createStatement(replacedSubject, replacedPredicate,
+          modelObject);
+      replaceModel.add(statement);
+    }
+
+    if (isIriPatternAndIriReplacementNotNull) {
       // Do IRI replacements in namespaces as well.
       Set<Namespace> namespaces = sourceModel.getNamespaces();
       for (Namespace namespace : namespaces) {
-        replacedModel.setNamespace(
+        replaceModel.setNamespace(
             namespace.getPrefix(),
             namespace.getName().replaceFirst(
                 rdfToolkitOptions.getIriPattern(),
                 rdfToolkitOptions.getIriReplacement()));
       }
-      sourceModel = replacedModel;
+    }
+    sourceModel = replaceModel;
+    if (isIriPatternAndIriReplacementNotNull) {
       // This is also the right time to do IRI replacement in the base URI, if appropriate
       if (rdfToolkitOptions.getBaseIri() != null) {
         String newBaseIriString = rdfToolkitOptions.getBaseIriString().replaceFirst(
@@ -232,7 +259,6 @@ public class RdfToolkitRunner {
         rdfToolkitOptions.setBaseIri(valueFactory.createIRI(newBaseIriString));
       }
     }
-
     // Infer the base URI, if requested
     IRI inferredBaseIri = null;
     if (rdfToolkitOptions.getInferBaseIri()) {
@@ -241,7 +267,7 @@ public class RdfToolkitRunner {
         if ((Constants.RDF_TYPE.equals(st.getPredicate())) &&
             (Constants.owlOntology.equals(st.getObject())) &&
             (st.getSubject() instanceof IRI)) {
-          owlOntologyIris.add((IRI)st.getSubject());
+          owlOntologyIris.add((IRI) st.getSubject());
         }
       }
       if (!owlOntologyIris.isEmpty()) {
@@ -262,7 +288,8 @@ public class RdfToolkitRunner {
     Writer targetWriter = new OutputStreamWriter(
         outputStream,
         StandardCharsets.UTF_8.name());
-    SortedRdfWriterFactory factory = new SortedRdfWriterFactory(rdfToolkitOptions.getTargetFormat());
+    SortedRdfWriterFactory factory = new SortedRdfWriterFactory(
+        rdfToolkitOptions.getTargetFormat());
     RDFWriter rdfWriter = factory.getWriter(targetWriter, rdfToolkitOptions.getOptions());
     Rio.write(sourceModel, rdfWriter);
     targetWriter.flush();
@@ -278,7 +305,8 @@ public class RdfToolkitRunner {
           rdfToolkitOptions.getRdf4jSourceFormat());
     } catch (Exception t) {
       LOGGER.error("{}: stopped by unexpected exception:", RdfFormatter.class.getSimpleName());
-      LOGGER.error("Unable to parse input file: {}", rdfToolkitOptions.getSourceFile().getAbsolutePath());
+      LOGGER.error("Unable to parse input file: {}",
+          rdfToolkitOptions.getSourceFile().getAbsolutePath());
       LOGGER.error("Command line arguments: {}", Arrays.toString(rdfToolkitOptions.getArgs()));
       LOGGER.error("{}: {}", t.getClass().getSimpleName(), t.getMessage());
       StringWriter stackTraceWriter = new StringWriter();
@@ -300,7 +328,9 @@ public class RdfToolkitRunner {
         TARGET_DIRECTORY_PATTERN.getShortOpt());
 
     for (Option option : line.getOptions()) {
-      if (noPassArgs.contains(option.getOpt())) { continue; }
+      if (noPassArgs.contains(option.getOpt())) {
+        continue;
+      }
       commonArgsList.add(String.format("-%s", option.getOpt()));
       if (option.hasArg()) {
         commonArgsList.add(option.getValue());
@@ -349,7 +379,8 @@ public class RdfToolkitRunner {
       runArgs.add(sourceResult.getFile().getAbsolutePath());
       runArgs.add("-t");
       runArgs.add(targetFile.getAbsolutePath());
-      LOGGER.info("... formatting '{}' to '{}' ...", sourceResult.getRelativePath(), targetRelativePath);
+      LOGGER.info("... formatting '{}' to '{}' ...", sourceResult.getRelativePath(),
+          targetRelativePath);
 
       run(runArgs.toArray(stringArray));
     }
