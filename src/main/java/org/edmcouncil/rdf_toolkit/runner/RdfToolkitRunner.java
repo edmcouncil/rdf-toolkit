@@ -210,7 +210,6 @@ public class RdfToolkitRunner {
           langString = String.join("-", langTab);
           String label = ((Literal) modelObject).getLabel();
           modelObject = valueFactory.createLiteral(label, langString);
-          // modelObject = valueFactory.createLiteral(label);
         }
       }
       // Do any URI replacements
