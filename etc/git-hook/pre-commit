@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # pre-commit hook script that activates the Sesame serializer to serialize any OWL files in a standard format just before
 # they are committed to the (local) Github repository.
