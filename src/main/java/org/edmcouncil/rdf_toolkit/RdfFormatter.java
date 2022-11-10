@@ -24,11 +24,11 @@
 
 package org.edmcouncil.rdf_toolkit;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.edmcouncil.rdf_toolkit.runner.RdfToolkitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 /**
  * RDF formatter that formats in a consistent order, friendly for version control systems.

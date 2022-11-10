@@ -42,6 +42,7 @@ public class Constants {
   public static final String OVERRIDE_STRING_LANGUAGE = "overrideStringLanguage";
   public static final String LINE_END = "lineEnd";
   public static final String OMIT_XMLNS_NAMESPACE = "omitXmlnsNamespace";
+  public static final String SUPPRESS_NAMED_INDIVIDUALS = "suppressNamedIndividuals";
 
   /**
    * Factory for generating literal values.

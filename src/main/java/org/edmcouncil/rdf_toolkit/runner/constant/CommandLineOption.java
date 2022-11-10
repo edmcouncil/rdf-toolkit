@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_toolkit.runner;
+package org.edmcouncil.rdf_toolkit.runner.constant;
 
 import org.apache.commons.cli.Options;
 import org.edmcouncil.rdf_toolkit.io.format.SourceFormats;
@@ -54,7 +54,8 @@ public enum CommandLineOption {
   OVERRIDE_STRING_LANGUAGE("osl", "override-string-language", true, "sets an override language that is applied to all strings"),
   INDENT("i", "indent", true, "sets the indent string.  Default is a single tab character"),
   LINE_END("ln", "line-end", true, "sets the end-line character(s); supported characters: \\n (LF), \\r (CR). Default is the LF character"),
-  OMIT_XMLNS_NAMESPACE("oxn", "omit-xmlns-namespace", false, "omits xmlns namespace");
+  OMIT_XMLNS_NAMESPACE("oxn", "omit-xmlns-namespace", false, "omits xmlns namespace"),
+  SUPPRESS_NAMED_INDIVIDUALS("sni", "suppress-named-individuals", false, "suppresses all instances of owl:NamedIndividual");
 
   private final String shortOpt;
   private final String longOpt;
