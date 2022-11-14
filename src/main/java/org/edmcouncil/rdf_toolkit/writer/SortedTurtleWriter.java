@@ -254,7 +254,7 @@ public class SortedTurtleWriter extends SortedRdfWriter {
                 List<Value> valuesList = new ArrayList<>();
                 if (values != null && !values.isEmpty()) {
                     if (predicate == Constants.RDF_TYPE) {
-                        for (IRI preferredType : preferredRdfTypes) {
+                        for (IRI preferredType : PREFERRED_RDF_TYPES) {
                             if (values.contains(preferredType)) {
                                 valuesList.add(preferredType);
                                 values.remove(preferredType);

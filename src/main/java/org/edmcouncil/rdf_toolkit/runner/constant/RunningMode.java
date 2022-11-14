@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.edmcouncil.rdf_toolkit.runner;
+package org.edmcouncil.rdf_toolkit.runner.constant;
 
 public enum RunningMode {
   EXIT,

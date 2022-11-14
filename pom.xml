@@ -6,12 +6,16 @@
 
   <groupId>org.edmcouncil</groupId>
   <artifactId>rdf-toolkit</artifactId>
-  <version>1.13.0</version>
+  <version>1.14.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+
+    <!-- Versions -->
+    <logback.version>1.4.4</logback.version>
+    <junit.jupiter.version>5.9.0</junit.jupiter.version>
   </properties>
 
   <repositories>
@@ -82,19 +86,25 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.11</version>
+      <version>${logback.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.0</version>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.0</version>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -252,7 +262,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 </project>

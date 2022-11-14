@@ -33,6 +33,7 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.OMIT_XMLNS_NAMESPACE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.OVERRIDE_STRING_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
+import static org.edmcouncil.rdf_toolkit.util.Constants.SUPPRESS_NAMED_INDIVIDUALS;
 import static org.edmcouncil.rdf_toolkit.util.Constants.TRAILING_COMMENTS;
 import static org.edmcouncil.rdf_toolkit.util.Constants.USE_DTD_SUBSET;
 
@@ -44,6 +45,7 @@ import org.apache.commons.cli.CommandLine;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.edmcouncil.rdf_toolkit.io.format.TargetFormats;
+import org.edmcouncil.rdf_toolkit.runner.constant.RunningMode;
 import org.edmcouncil.rdf_toolkit.util.ShortIriPreferences;
 import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 
@@ -74,6 +76,7 @@ public class RdfToolkitOptions {
   private String overrideStringLanguage;
   private String lineEnd;
   private boolean omitXmlnsNamespace;
+  private boolean suppressNamedIndividuals;
 
   public RdfToolkitOptions(String[] args) {
     this.args = args;
@@ -104,6 +107,7 @@ public class RdfToolkitOptions {
     options.put(OVERRIDE_STRING_LANGUAGE, getOverrideStringLanguage());
     options.put(LINE_END, getLineEnd());
     options.put(OMIT_XMLNS_NAMESPACE, getOmitXmlnsNamespace());
+    options.put(SUPPRESS_NAMED_INDIVIDUALS, getSuppressNamedIndividuals());
     return options;
   }
 
@@ -289,5 +293,13 @@ public class RdfToolkitOptions {
 
   public void setOmitXmlnsNamespace(boolean omitXmlnsNamespace) {
     this.omitXmlnsNamespace = omitXmlnsNamespace;
+  }
+
+  public boolean getSuppressNamedIndividuals() {
+    return suppressNamedIndividuals;
+  }
+
+  public void setSuppressNamedIndividuals(boolean suppressNamedIndividuals) {
+    this.suppressNamedIndividuals = suppressNamedIndividuals;
   }
 }

@@ -21,30 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.edmcouncil.rdf_toolkit.runner;
 
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.BASE_IRI;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.INDENT;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.INFER_BASE_IRI;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.INLINE_BLANK_NODES;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.LEADING_COMMENT;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.LINE_END;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.OMIT_XMLNS_NAMESPACE;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.OVERRIDE_STRING_LANGUAGE;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SHORT_IRI_PRIORITY;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE_DIRECTORY;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE_DIRECTORY_PATTERN;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE_FORMAT;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.STRING_DATA_TYPING;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET_DIRECTORY;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET_DIRECTORY_PATTERN;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET_FORMAT;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TRAILING_COMMENT;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.USE_DTD_SUBSET;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.PRINT_USAGE_AND_EXIT;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.RUN_ON_DIRECTORY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.BASE_IRI;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.INDENT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.INFER_BASE_IRI;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.INLINE_BLANK_NODES;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.LEADING_COMMENT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.LINE_END;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.OMIT_XMLNS_NAMESPACE;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.OVERRIDE_STRING_LANGUAGE;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SHORT_IRI_PRIORITY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE_DIRECTORY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE_DIRECTORY_PATTERN;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE_FORMAT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.STRING_DATA_TYPING;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SUPPRESS_NAMED_INDIVIDUALS;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_DIRECTORY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_DIRECTORY_PATTERN;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_FORMAT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TRAILING_COMMENT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.USE_DTD_SUBSET;
+import static org.edmcouncil.rdf_toolkit.runner.constant.RunningMode.PRINT_USAGE_AND_EXIT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.RunningMode.RUN_ON_DIRECTORY;
 import org.apache.commons.cli.CommandLine;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -60,9 +62,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class OptionHandler {
 
@@ -159,29 +159,29 @@ public class OptionHandler {
 
   public void handleRunningOnDirectory(CommandLine commandLine, RdfToolkitOptions rdfToolkitOptions) {
     // Check if the command-line options suggest that a directory of files is to be formatted
-    if (commandLine.hasOption(SOURCE_DIRECTORY.getShortOpt()) ||
-        commandLine.hasOption(SOURCE_DIRECTORY_PATTERN.getShortOpt()) ||
-        commandLine.hasOption(TARGET_DIRECTORY.getShortOpt()) ||
-        commandLine.hasOption(TARGET_DIRECTORY_PATTERN.getShortOpt())) {
+    if (commandLine.hasOption(SOURCE_DIRECTORY.getShortOpt())
+        || commandLine.hasOption(SOURCE_DIRECTORY_PATTERN.getShortOpt())
+        || commandLine.hasOption(TARGET_DIRECTORY.getShortOpt())
+        || commandLine.hasOption(TARGET_DIRECTORY_PATTERN.getShortOpt())) {
       // Assume user wants to process a directory of files.
-      if (!commandLine.hasOption(SOURCE_DIRECTORY.getShortOpt()) ||
-          !commandLine.hasOption(SOURCE_DIRECTORY_PATTERN.getShortOpt()) ||
-          !commandLine.hasOption(TARGET_DIRECTORY.getShortOpt()) ||
-          !commandLine.hasOption(TARGET_DIRECTORY_PATTERN.getShortOpt())) {
-        LOGGER.error("Directory processing options must all be used together: -sd (--source-directory), " +
-            "-sdp (--source-directory-pattern), -td (--target-directory), -tdp (--target-directory-pattern)");
+      if (!commandLine.hasOption(SOURCE_DIRECTORY.getShortOpt())
+          || !commandLine.hasOption(SOURCE_DIRECTORY_PATTERN.getShortOpt())
+          || !commandLine.hasOption(TARGET_DIRECTORY.getShortOpt())
+          || !commandLine.hasOption(TARGET_DIRECTORY_PATTERN.getShortOpt())) {
+        LOGGER.error("Directory processing options must all be used together: -sd (--source-directory), "
+            + "-sdp (--source-directory-pattern), -td (--target-directory), -tdp (--target-directory-pattern)");
         rdfToolkitOptions.setRunningMode(PRINT_USAGE_AND_EXIT);
       }
-      if (commandLine.hasOption(SOURCE.getShortOpt()) ||
-          commandLine.hasOption(TARGET.getShortOpt())) {
-        LOGGER.error("Source (-s or --source) and target (-t or --target) options cannot be used together with " +
-            "directory processing options.");
+      if (commandLine.hasOption(SOURCE.getShortOpt())
+          || commandLine.hasOption(TARGET.getShortOpt())) {
+        LOGGER.error("Source (-s or --source) and target (-t or --target) options cannot be used together with "
+            + "directory processing options.");
         rdfToolkitOptions.setRunningMode(PRINT_USAGE_AND_EXIT);
       }
-      if (!commandLine.hasOption(SOURCE_FORMAT.getShortOpt()) ||
-          !commandLine.hasOption(TARGET_FORMAT.getShortOpt())) {
-        LOGGER.error("Source format (-sfmt or --source-format) and target format (-tfmt or --target-format) options " +
-            "must be provided when using directory processing options.");
+      if (!commandLine.hasOption(SOURCE_FORMAT.getShortOpt())
+          || !commandLine.hasOption(TARGET_FORMAT.getShortOpt())) {
+        LOGGER.error("Source format (-sfmt or --source-format) and target format (-tfmt or --target-format) options "
+            + "must be provided when using directory processing options.");
         rdfToolkitOptions.setRunningMode(PRINT_USAGE_AND_EXIT);
       }
 
@@ -385,5 +385,10 @@ public class OptionHandler {
   public void handleOmitXmlnsNamespace() {
     boolean omitXmlnsNamespace = commandLine.hasOption(OMIT_XMLNS_NAMESPACE.getShortOpt());
     rdfToolkitOptions.setOmitXmlnsNamespace(omitXmlnsNamespace);
+  }
+
+  public void handleSuppressNamedIndividuals() {
+    boolean suppressNamedIndividuals = commandLine.hasOption(SUPPRESS_NAMED_INDIVIDUALS.getShortOpt());
+    rdfToolkitOptions.setSuppressNamedIndividuals(suppressNamedIndividuals);
   }
 }

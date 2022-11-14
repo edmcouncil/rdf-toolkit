@@ -47,13 +47,13 @@ public class TextUtils {
     if (':' == ch) {
       return true;
     }
-    if (('0' <= ch) && (ch <= '9')) {
+    if (isDigit(ch)) {
       return true;
     }
-    if (('A' <= ch) && (ch <= 'Z')) {
+    if (isUpperCaseLetter(ch)) {
       return true;
     }
-    if (('a' <= ch) && (ch <= 'z')) {
+    if (isLowerCaseLetter(ch)) {
       return true;
     }
     if (('\u00C0' <= ch) && (ch <= '\u00D6')) {
@@ -113,6 +113,8 @@ public class TextUtils {
         case 0xC:
         case 0xD:
           return true;
+        default:
+          // Do nothing
       }
     }
     return false;
@@ -138,5 +140,17 @@ public class TextUtils {
       }
     }
     return true;
+  }
+
+  private static boolean isDigit(char ch) {
+    return '0' <= ch && ch <= '9';
+  }
+
+  private static boolean isUpperCaseLetter(char ch) {
+    return 'A' <= ch && ch <= 'Z';
+  }
+
+  private static boolean isLowerCaseLetter(char ch) {
+    return 'a' <= ch && ch <= 'z';
   }
 }

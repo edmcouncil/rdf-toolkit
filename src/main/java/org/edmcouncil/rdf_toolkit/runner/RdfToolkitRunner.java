@@ -24,27 +24,33 @@
 
 package org.edmcouncil.rdf_toolkit.runner;
 
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.HELP;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE_DIRECTORY;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.SOURCE_DIRECTORY_PATTERN;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET_DIRECTORY;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.TARGET_DIRECTORY_PATTERN;
-import static org.edmcouncil.rdf_toolkit.runner.CommandLineOption.VERSION;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.EXIT;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.PRINT_AND_EXIT;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.PRINT_USAGE_AND_EXIT;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.RUN_ON_DIRECTORY;
-import static org.edmcouncil.rdf_toolkit.runner.RunningMode.RUN_ON_FILE;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE_DIRECTORY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.SOURCE_DIRECTORY_PATTERN;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_DIRECTORY;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_DIRECTORY_PATTERN;
 
 import com.jcabi.manifests.Manifests;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
@@ -59,28 +65,12 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.sail.memory.model.MemValueFactory;
 import org.edmcouncil.rdf_toolkit.RdfFormatter;
 import org.edmcouncil.rdf_toolkit.io.DirectoryWalker;
+import org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption;
 import org.edmcouncil.rdf_toolkit.runner.exception.RdfToolkitOptionHandlingException;
 import org.edmcouncil.rdf_toolkit.util.Constants;
 import org.edmcouncil.rdf_toolkit.writer.SortedRdfWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RdfToolkitRunner {
 
@@ -95,7 +85,8 @@ public class RdfToolkitRunner {
   }
 
   public void run(String[] args) throws Exception {
-    var rdfToolkitOptions = handleArguments(args);
+    var commandLineArgumentsHandler = new CommandLineArgumentsHandler();
+    var rdfToolkitOptions = commandLineArgumentsHandler.handleArguments(args);
 
     switch (rdfToolkitOptions.getRunningMode()) {
       case PRINT_USAGE_AND_EXIT:
@@ -118,77 +109,10 @@ public class RdfToolkitRunner {
     }
   }
 
-  private RdfToolkitOptions handleArguments(String[] args)
-      throws ParseException, FileNotFoundException, RdfToolkitOptionHandlingException {
-    var rdfToolkitOptions = new RdfToolkitOptions(args);
-
-    // Parse the command line options.
-    CommandLineParser parser = new DefaultParser();
-    CommandLine line = parser.parse(options, args);
-    rdfToolkitOptions.setCommandLine(line);
-
-    var optionHandler = new OptionHandler(rdfToolkitOptions);
-
-    // Print out version, if requested.
-    if (line.hasOption(VERSION.getShortOpt())) {
-      rdfToolkitOptions.setOutput(getVersion());
-      rdfToolkitOptions.setRunningMode(PRINT_AND_EXIT);
-      return rdfToolkitOptions;
-    }
-
-    // Print out help, if requested.
-    if (line.hasOption(HELP.getShortOpt())) {
-      usage(options);
-      rdfToolkitOptions.setRunningMode(EXIT);
-      return rdfToolkitOptions;
-    }
-
-    optionHandler.handleRunningOnDirectory(line, rdfToolkitOptions);
-    if (rdfToolkitOptions.getRunningMode() == PRINT_USAGE_AND_EXIT) {
-      usage(options);
-      return rdfToolkitOptions;
-    }
-    if (rdfToolkitOptions.getRunningMode() == RUN_ON_DIRECTORY) {
-      return rdfToolkitOptions;
-    }
-
-    var sourceFile = optionHandler.handleSourceFile();
-    optionHandler.handleTargetFile();
-    optionHandler.handleBaseIri(valueFactory);
-    optionHandler.handleIriReplacementOptions();
-    optionHandler.handleUseDtdSubset();
-    optionHandler.handleInlineBlankNodes();
-    optionHandler.handleInferBaseIri();
-    optionHandler.handleLeadingComments();
-    optionHandler.handleTrailingComments();
-    optionHandler.handleStringDataTyping();
-    optionHandler.handleOverrideStringLanguage();
-    optionHandler.handleIndent();
-    optionHandler.handleSourceFormat(sourceFile);
-    optionHandler.handleTargetFormat();
-    optionHandler.handleShortUriPref();
-    optionHandler.handleLineEnd();
-    optionHandler.handleOmitXmlnsNamespace();
-
-    rdfToolkitOptions.setRunningMode(RUN_ON_FILE);
-
-    return rdfToolkitOptions;
-  }
-
-  private String getVersion() {
-    String implementationTitle = Manifests.read("Implementation-Title");
-    String implementationVersion = Manifests.read("Implementation-Version");
-    return String.format(
-        "%s (%s version %s)",
-        RdfFormatter.class.getSimpleName(),
-        implementationTitle,
-        implementationVersion);
-  }
-
   private void runOnFile(RdfToolkitOptions rdfToolkitOptions) throws Exception {
     var sourceModel = readModel(rdfToolkitOptions);
-    boolean isIriPatternAndIriReplacementNotNull = (rdfToolkitOptions.getIriPattern() != null) &&
-        (rdfToolkitOptions.getIriReplacement() != null);
+    boolean isIriPatternAndIriReplacementNotNull = (rdfToolkitOptions.getIriPattern() != null)
+        && (rdfToolkitOptions.getIriReplacement() != null);
 
     Model replaceModel = new TreeModel();
     Set<Namespace> sourceNamespaces = sourceModel.getNamespaces();
@@ -264,9 +188,9 @@ public class RdfToolkitRunner {
     if (rdfToolkitOptions.getInferBaseIri()) {
       LinkedList<IRI> owlOntologyIris = new LinkedList<>();
       for (Statement st : sourceModel) {
-        if ((Constants.RDF_TYPE.equals(st.getPredicate())) &&
-            (Constants.owlOntology.equals(st.getObject())) &&
-            (st.getSubject() instanceof IRI)) {
+        if ((Constants.RDF_TYPE.equals(st.getPredicate()))
+            && (Constants.owlOntology.equals(st.getObject()))
+            && (st.getSubject() instanceof IRI)) {
           owlOntologyIris.add((IRI) st.getSubject());
         }
       }
@@ -287,7 +211,7 @@ public class RdfToolkitRunner {
 
     Writer targetWriter = new OutputStreamWriter(
         outputStream,
-        StandardCharsets.UTF_8.name());
+        StandardCharsets.UTF_8);
     SortedRdfWriterFactory factory = new SortedRdfWriterFactory(
         rdfToolkitOptions.getTargetFormat());
     RDFWriter rdfWriter = factory.getWriter(targetWriter, rdfToolkitOptions.getOptions());
@@ -390,5 +314,15 @@ public class RdfToolkitRunner {
     HelpFormatter formatter = new HelpFormatter();
     formatter.setWidth(100);
     formatter.printHelp(getVersion(), options);
+  }
+
+  private String getVersion() {
+    String implementationTitle = Manifests.read("Implementation-Title");
+    String implementationVersion = Manifests.read("Implementation-Version");
+    return String.format(
+        "%s (%s version %s)",
+        RdfFormatter.class.getSimpleName(),
+        implementationTitle,
+        implementationVersion);
   }
 }

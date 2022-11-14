@@ -37,6 +37,7 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.rdfDescription;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfLangString;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfParseType;
 import static org.edmcouncil.rdf_toolkit.util.Constants.xsString;
+
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -45,6 +46,7 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
+import org.edmcouncil.rdf_toolkit.util.Constants;
 import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -72,6 +74,11 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
     // RDF/XML only allows "resources" in RDF collections
     private static final Class COLLECTION_CLASS = Resource.class;
 
+    /**
+     * RDF Types that are preferred to be used first.
+     */
+    private final List<IRI> preferredRdfTypes = new ArrayList<>(PREFERRED_RDF_TYPES);
+
     /** Output stream for this RDF/XML writer. */
     // Note: this is an internal Java class, not part of the published API.  But easier than writing our own indenter
     // here.
@@ -79,6 +86,7 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
 
     /** Namespace prefix for the RDF namespace. */
     private String rdfPrefix = "rdf";
+
 
     /**
      * Creates an RDFWriter instance that will write sorted RDF/XML to the supplied output stream.
@@ -134,6 +142,10 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
      */
     @Override
     public void endRDF() throws RDFHandlerException {
+        if (suppressNamedIndividuals) {
+            preferredRdfTypes.remove(Constants.owlNamedIndividual);
+        }
+
         try {
             // Sort triples, etc.
             sortedOntologies = unsortedOntologies.toSorted(COLLECTION_CLASS, comparisonContext);
@@ -255,11 +267,13 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
         }
 
         // Try to determine whether to use <rdf:Description> or an element based on rdf:type value.
-        SortedTurtleObjectList subjectRdfTypes = poMap.get(RDF_TYPE); // needed to determine if a type can be used as the XML element name
+        // Needed to determine if a type can be used as the XML element name:
+        SortedTurtleObjectList subjectRdfTypes = poMap.get(RDF_TYPE);
         if (subjectRdfTypes != null) { // make a copy so we can remove values safely
             subjectRdfTypes = (SortedTurtleObjectList) subjectRdfTypes.clone();
         }
-        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2) && subjectRdfTypes.contains(owlThing)) { // ignore owl:Thing for the purposes of determining what type to use an an element name in RDF/XML
+        // ignore owl:Thing for the purposes of determining what type to use an element name in RDF/XML
+        if ((subjectRdfTypes != null) && (subjectRdfTypes.size() >= 2)) {
             subjectRdfTypes.remove(owlThing);
         }
         IRI enclosingElementIRI = rdfDescription; // default value
@@ -274,7 +288,9 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
                 }
             }
         }
-        if ((rdfDescription.equals(enclosingElementIRI)) && (subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) { // if no preferred type, use the type for the XML element tag, if there is only a single rdf:type
+
+        // If no preferred type, use the type for the XML element tag, if there is only a single rdf:type
+        if ((rdfDescription.equals(enclosingElementIRI)) && (subjectRdfTypes != null) && (subjectRdfTypes.size() == 1)) {
             Value subjectRdfTypeValue = subjectRdfTypes.first();
             if (subjectRdfTypeValue instanceof IRI) {
                 QName subjectRdfTypeQName = convertIriToQName((IRI) subjectRdfTypeValue, USE_GENERATED_PREFIXES);
