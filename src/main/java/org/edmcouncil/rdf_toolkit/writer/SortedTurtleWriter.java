@@ -62,6 +62,11 @@ public class SortedTurtleWriter extends SortedRdfWriter {
     // Turtle allows "values" in RDF collections
     private static final Class<Value> COLLECTION_CLASS = Value.class;
 
+    /**
+     * RDF Types that are preferred to be used first.
+     */
+    private final List<IRI> preferredRdfTypes = new ArrayList<>(PREFERRED_RDF_TYPES);
+
     /** Output stream for this Turtle writer. */
     private final IndentingWriter output;
 
@@ -143,6 +148,10 @@ public class SortedTurtleWriter extends SortedRdfWriter {
      */
     @Override
     public void endRDF() throws RDFHandlerException {
+        if (suppressNamedIndividuals) {
+            preferredRdfTypes.remove(Constants.owlNamedIndividual);
+        }
+
         try {
             // Sort triples, etc.
             sortedOntologies = unsortedOntologies.toSorted(COLLECTION_CLASS, comparisonContext);
@@ -254,7 +263,7 @@ public class SortedTurtleWriter extends SortedRdfWriter {
                 List<Value> valuesList = new ArrayList<>();
                 if (values != null && !values.isEmpty()) {
                     if (predicate == Constants.RDF_TYPE) {
-                        for (IRI preferredType : PREFERRED_RDF_TYPES) {
+                        for (IRI preferredType : preferredRdfTypes) {
                             if (values.contains(preferredType)) {
                                 valuesList.add(preferredType);
                                 values.remove(preferredType);
