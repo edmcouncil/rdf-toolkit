@@ -38,16 +38,6 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.rdfLangString;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfParseType;
 import static org.edmcouncil.rdf_toolkit.util.Constants.xsString;
 
-import org.eclipse.rdf4j.model.BNode;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
-import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
-import org.edmcouncil.rdf_toolkit.util.Constants;
-import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +48,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.xml.namespace.QName;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
+import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
+import org.edmcouncil.rdf_toolkit.util.Constants;
+import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 
 /**
  * Equivalent to Sesame's built-in RDF/XML writer, but the triples are sorted into a consistent order. In order to do

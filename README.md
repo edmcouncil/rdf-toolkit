@@ -2,9 +2,10 @@
 
 # Table of Contents
 1. [Introduction](#introduction)
-2. [Rationale](#rationale)
-3. [Usage](#usage)
-4. [Serialisation Algorithm Explained](#serialisation-algorithm-explained)
+1. [Rationale](#rationale)
+1. [Requirements](#requirements)
+1. [Usage](#usage)
+1. [Serialisation Algorithm Explained](#serialisation-algorithm-explained)
 
 # Introduction
 
@@ -28,6 +29,9 @@ We want to be able to include actionable information as part of IRIs, e.g., git 
 The recommended output format at this time is RDF/XML because that is the format that the [OMG](https://www.omg.org) requires for submissions. 
 The EDM Council develops the FIBO Ontologies and submits them as RDF/XML, serialized by the `RDF Toolkit` to the [OMG](https://www.omg.org). 
 So that is why we also use RDF/XML in Github itself. 
+
+# Requirements
+To run `RDF Toolkit` one needs JAVA JRE installed version 11+.
 
 # Usage
 

@@ -29,6 +29,15 @@ import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -40,15 +49,6 @@ import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
 import org.edmcouncil.rdf_toolkit.util.Constants;
 import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 import org.edmcouncil.rdf_toolkit.util.TextUtils;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Equivalent to Sesame's built-in Turtle writer, but the triples are sorted into a consistent order. In order to do the
