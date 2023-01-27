@@ -355,6 +355,9 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
                 valuesList.add(preferredType);
                 values.remove(preferredType);
               }
+              if (suppressNamedIndividuals) {
+                values.remove(Constants.owlNamedIndividual);
+              }
             }
           }
           if (!values.isEmpty()) {
