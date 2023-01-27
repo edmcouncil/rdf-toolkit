@@ -66,6 +66,11 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
   // Turtle allows "values" in RDF collections
   private static final Class<Value> collectionClass = Value.class;
 
+    /**
+   * RDF Types that are preferred to be used first.
+   */
+  private final List<IRI> preferredRdfTypes = new ArrayList<>(PREFERRED_RDF_TYPES);
+
   /**
    * Output stream for this JSON-LD writer.
    */
@@ -147,6 +152,10 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
    */
   @Override
   public void endRDF() throws RDFHandlerException {
+    if (suppressNamedIndividuals) {
+      preferredRdfTypes.remove(Constants.owlNamedIndividual);
+    }
+
     try {
       // Sort triples, etc.
       sortedOntologies = unsortedOntologies.toSorted(collectionClass, comparisonContext);
@@ -297,10 +306,13 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
         List<Value> valuesList = new ArrayList<>();
         if (!values.isEmpty()) {
           if (predicate == Constants.RDF_TYPE) {
-            for (IRI preferredType : PREFERRED_RDF_TYPES) {
+            for (IRI preferredType : preferredRdfTypes) {
               if (values.contains(preferredType)) {
                 valuesList.add(preferredType);
                 values.remove(preferredType);
+              }
+              if (suppressNamedIndividuals) {
+                values.remove(Constants.owlNamedIndividual);
               }
             }
           }
