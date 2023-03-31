@@ -135,6 +135,11 @@ public class ComparisonUtils {
       int typeCount = predicates.contains(Constants.RDF_TYPE) ? 1 : 0;
       if (predicates.size() == firstCount + restCount + typeCount) {
         SortedTurtleObjectList firstValues = poMap.get(Constants.rdfFirst);
+        if (firstValues == null) {
+          for (Object poMapKey : poMap.keySet()) {
+            firstValues = poMap.get(poMapKey);
+          }
+        }
         for (Value value : firstValues) {
           // all collection members must match the collection class type
           if (!collectionClass.isInstance(value)) {
