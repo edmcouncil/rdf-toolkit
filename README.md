@@ -1,4 +1,4 @@
-<img src="https://spec.edmcouncil.org/fibo/htmlpages/develop/latest/img/logo.66a988fe.png" width="150" style="float: right" alt="EDMC log"/>
+<img src="https://avatars0.githubusercontent.com/u/6618425?s=400&u=3ed327f38a1d043252af3177e5d6f48eef609e6a&v=4" width="150" style="float: right" alt="EDMC logo/>
 
 # Table of Contents
 1. [Introduction](#introduction)
