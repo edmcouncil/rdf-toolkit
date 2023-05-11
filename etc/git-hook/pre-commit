@@ -124,6 +124,16 @@ function serialize() {
         local logcfg="/tmp/sesame-serializer-log"
       fi
     fi
+    
+    case ${extension} in
+    	rdf)
+     	  ;;
+	ttl)
+	  ;;
+      *)
+        log "Skipping unsupported file $file"
+        return 0
+    esac
 
     if [[ $file =~ .*About.* ]] ;  then 
         log "Skipping unsupported file $file"
