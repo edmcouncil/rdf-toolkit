@@ -134,15 +134,6 @@ function serialize() {
       fi
     fi
 
-
-    case ${extension} in
-    	rdf)
-     	  ;;
-      *)
-        log "Skipping unsupported file $file"
-        return 0
-    esac
-
     if [[ $file =~ .*About.* ]] ;  then 
         log "Skipping unsupported file $file"
         return 0
