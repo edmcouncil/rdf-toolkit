@@ -126,6 +126,7 @@ function serialize() {
   local file="$1"
   if [ -f "$file" ] ; then
     local extension="${file##*.}"
+    local target_format="rdf-xml"
     if [ -d "$TEMP" ] ; then
       local logcfg="$TEMP/sesame-serializer-log"
     else
@@ -136,8 +137,10 @@ function serialize() {
     
     case ${extension} in
     	rdf)
+    	    target_format="rdf-xml"
      	  ;;
 	ttl)
+    	    target_format="turtle"
 	  ;;
       *)
         log "Skipping unsupported file $file"
@@ -178,7 +181,7 @@ __log_config__
     "${java_exe}" -Xmx1g "-Dorg.clapper.avsl.config=${logcfg}" -cp "${RDF_TOOLKIT_JAR}" org.edmcouncil.rdf_toolkit.RdfFormatter \
       --source "${file}" \
       --target "${file}" \
-      --target-format rdf-xml \
+      --target-format ${target_format} \
       --use-dtd-subset -ibn -ibu \
       -sdt implicit 
     rc=$?
