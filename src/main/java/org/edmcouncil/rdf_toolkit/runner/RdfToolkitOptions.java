@@ -25,6 +25,7 @@
 package org.edmcouncil.rdf_toolkit.runner;
 
 import static org.edmcouncil.rdf_toolkit.util.Constants.BASE_IRI;
+import static org.edmcouncil.rdf_toolkit.util.Constants.DEFAULT_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INLINE_BLANK_NODES;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LEADING_COMMENTS;
@@ -77,6 +78,7 @@ public class RdfToolkitOptions {
   private String lineEnd;
   private boolean omitXmlnsNamespace;
   private boolean suppressNamedIndividuals;
+  private String defaultLanguage;
 
   public RdfToolkitOptions(String[] args) {
     this.args = args;
@@ -108,6 +110,7 @@ public class RdfToolkitOptions {
     options.put(LINE_END, getLineEnd());
     options.put(OMIT_XMLNS_NAMESPACE, getOmitXmlnsNamespace());
     options.put(SUPPRESS_NAMED_INDIVIDUALS, getSuppressNamedIndividuals());
+    options.put(DEFAULT_LANGUAGE, getDefaultLanguage());
     return options;
   }
 
@@ -301,5 +304,13 @@ public class RdfToolkitOptions {
 
   public void setSuppressNamedIndividuals(boolean suppressNamedIndividuals) {
     this.suppressNamedIndividuals = suppressNamedIndividuals;
+  }
+
+  public String getDefaultLanguage() {
+    return defaultLanguage;
+  }
+
+  public void setDefaultLanguage(String defaultLanguage) {
+    this.defaultLanguage = defaultLanguage;
   }
 }

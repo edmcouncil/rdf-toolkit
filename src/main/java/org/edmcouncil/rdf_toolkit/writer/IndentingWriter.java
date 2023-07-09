@@ -33,6 +33,7 @@ public class IndentingWriter extends Writer {
   private String indentationString = "\t";
   private boolean indentationWritten = false;
   private String lineEnd;
+  private String defaultLanguage; // TODO remove
 
   public IndentingWriter(Writer out) {
     this.out = out;
@@ -68,6 +69,14 @@ public class IndentingWriter extends Writer {
 
   public void setLineEnd(String lineEnd) {
     this.lineEnd = lineEnd;
+  }
+
+  public String getDefaultLanguage() {
+    return this.defaultLanguage;
+  }
+
+  public void setDefaultLanguage(String defaultLanguage) {
+    this.defaultLanguage = defaultLanguage;
   }
 
   public void writeEOL() throws IOException {

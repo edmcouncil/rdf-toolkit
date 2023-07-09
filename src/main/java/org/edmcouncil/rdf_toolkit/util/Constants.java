@@ -43,6 +43,7 @@ public class Constants {
   public static final String LINE_END = "lineEnd";
   public static final String OMIT_XMLNS_NAMESPACE = "omitXmlnsNamespace";
   public static final String SUPPRESS_NAMED_INDIVIDUALS = "suppressNamedIndividuals";
+  public static final String DEFAULT_LANGUAGE = "defaultLanguage";
 
   /**
    * Factory for generating literal values.
