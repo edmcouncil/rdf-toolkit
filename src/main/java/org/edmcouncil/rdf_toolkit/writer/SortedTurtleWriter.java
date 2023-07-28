@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import org.eclipse.rdf4j.model.BNode;
@@ -183,7 +184,7 @@ public class SortedTurtleWriter extends SortedRdfWriter {
   protected void writeHeader(Writer out, SortedTurtleObjectList importList, String[] leadingComments)
       throws Exception {
     // Write TopBraid-specific special comments, if any.
-    if ((baseIri != null) || (importList.size() >= 1)) {
+    if ((baseIri != null) || (!importList.isEmpty())) {
       // Write the base IRI, if any.
       if (baseIri != null) {
         output.write("# baseURI: " + baseIri);
@@ -496,19 +497,29 @@ public class SortedTurtleWriter extends SortedRdfWriter {
   protected void writeObject(Writer out, Literal literal) throws Exception {
     if (literal == null) {
       out.write("null<Literal>");
-    } else if (literal.getLanguage().isPresent() || ((overrideStringLanguage != null) && (literal.getDatatype()
-        .stringValue().equals(Constants.xsString.stringValue())))) {
+      return;
+    }
+
+    IRI literalDatatype = literal.getDatatype();
+    Optional<String> languageOptional = literal.getLanguage();
+
+    if (overrideStringLanguage != null && (literalDatatype.equals(Constants.xsString) || languageOptional.isPresent())) {
       writeString(out, literal.stringValue());
-      String lang = overrideStringLanguage == null ? literal.getLanguage().get() : overrideStringLanguage;
-      out.write("@" + lang);
-    } else if (literal.getDatatype() != null) {
+      out.write("@" + overrideStringLanguage);
+    } else if (languageOptional.isPresent()) {
+      writeString(out, literal.stringValue());
+      out.write("@" + languageOptional.get());
+    } else if (useDefaultLanguage != null && literalDatatype.equals(Constants.xsString)) {
+      writeString(out, literal.stringValue());
+      out.write("@" + useDefaultLanguage);
+    } else if (literalDatatype != null) {
       boolean useExplicit =
-          (stringDataTypeOption == StringDataTypeOptions.EXPLICIT) || !(Constants.xsString.equals(literal.getDatatype())
-              || Constants.rdfLangString.equals(literal.getDatatype()));
+          stringDataTypeOption == StringDataTypeOptions.EXPLICIT ||
+              !(Constants.xsString.equals(literalDatatype) || Constants.rdfLangString.equals(literalDatatype));
       writeString(out, literal.stringValue());
       if (useExplicit) {
         out.write("^^");
-        writeIri(out, literal.getDatatype());
+        writeIri(out, literalDatatype);
       }
     } else {
       writeString(out, literal.stringValue());

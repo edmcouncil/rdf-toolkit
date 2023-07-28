@@ -1032,4 +1032,74 @@ class SortedTurtleWriterTest extends AbstractSortedWriterTest {
     var singleIndentLineCount2 = content2.lines().filter(line -> line.matches("^\t\t\\S.*$")).count();
     assertTrue(singleIndentLineCount2 >= 1, "double-tab indent has failed");
   }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenAdditionalSettingsAreNotSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, TURTLE_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.ttl");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.ttl");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "turtle",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("\"label1\" ,", label1Line);
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenOverrideLanguageSettingIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, TURTLE_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.ttl");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.rdf");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "turtle",
+            "-osl", "fr",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("\"label1\"@fr ,", label1Line);
+    String label2Line = getTrimmedLineContainingString(content, "label2");
+    assertEquals("\"label2\"@fr ,", label2Line);
+    String label5Line = getTrimmedLineContainingString(content, "label5");
+    assertEquals("\"label5\"^^xsd:token ,", label5Line);
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenUseDefaultLanguageIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, TURTLE_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.ttl");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.ttl");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "turtle",
+            "-udl", "de",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("\"label1\"@de ,", label1Line);
+    String label2Line = getTrimmedLineContainingString(content, "label2");
+    assertEquals("\"label2\"@en ,", label2Line);
+    String label5Line = getTrimmedLineContainingString(content, "label5");
+    assertEquals("\"label5\"^^xsd:token ,", label5Line);
+  }
 }

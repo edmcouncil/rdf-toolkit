@@ -35,9 +35,9 @@ import static org.edmcouncil.rdf_toolkit.TestUtils.doesNotContains;
 import static org.edmcouncil.rdf_toolkit.util.Constants.BASE_IRI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.ShortIriPreferences.PREFIX;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -592,5 +592,75 @@ class SortedJsonLdWriterTest extends AbstractSortedWriterTest {
             "File mismatch between outputDir2 and outputDir3: " + targetFile.getName());
       }
     }
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenAdditionalSettingsAreNotSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, JSONLD_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.jsonld");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.jsonld");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "json-ld",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    JsonNode label1Object = getJsonObjectForLabel(content, "label1");
+    assertFalse(label1Object.has(JSONLD_LANGUAGE));
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenOverrideLanguageIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, JSONLD_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.jsonld");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.jsonld");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "json-ld",
+            "-osl", "fr",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    JsonNode label1Object = getJsonObjectForLabel(content, "label1");
+    assertEquals("fr", label1Object.get(JSONLD_LANGUAGE).asText());
+    JsonNode label2Object = getJsonObjectForLabel(content, "label2");
+    assertEquals("fr", label2Object.get(JSONLD_LANGUAGE).asText());
+    JsonNode label5Line = getJsonObjectForLabel(content, "label5");
+    assertFalse(label5Line.has(JSONLD_LANGUAGE));
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenUseDefaultIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, JSONLD_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.jsonld");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.jsonld");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "json-ld",
+            "-udl", "de",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    JsonNode label1Object = getJsonObjectForLabel(content, "label1");
+    assertEquals("de", label1Object.get(JSONLD_LANGUAGE).asText());
+    JsonNode label2Object = getJsonObjectForLabel(content, "label2");
+    assertEquals("en", label2Object.get(JSONLD_LANGUAGE).asText());
+    JsonNode label5Line = getJsonObjectForLabel(content, "label5");
+    assertFalse(label5Line.has(JSONLD_LANGUAGE));
   }
 }

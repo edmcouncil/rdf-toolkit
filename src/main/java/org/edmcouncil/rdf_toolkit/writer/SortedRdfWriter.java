@@ -33,6 +33,7 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.SHORT_URI_PREF;
 import static org.edmcouncil.rdf_toolkit.util.Constants.STRING_DATA_TYPE_OPTION;
 import static org.edmcouncil.rdf_toolkit.util.Constants.SUPPRESS_NAMED_INDIVIDUALS;
 import static org.edmcouncil.rdf_toolkit.util.Constants.TRAILING_COMMENTS;
+import static org.edmcouncil.rdf_toolkit.util.Constants.USE_DEFAULT_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.util.Constants.USE_DTD_SUBSET;
 
 import org.eclipse.rdf4j.model.BNode;
@@ -208,6 +209,12 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
   protected boolean suppressNamedIndividuals = false;
 
   /**
+   * If set, it's used to add a default language for literals with xsd:string datatype (explicit or implicit) and
+   * without language already specified. By default, <code>null</code>.
+   */
+  protected String useDefaultLanguage = null;
+
+  /**
    * Output stream for this RDF writer.
    */
   protected Writer out;
@@ -285,6 +292,9 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
     }
     if (options.containsKey(SUPPRESS_NAMED_INDIVIDUALS)) {
       this.suppressNamedIndividuals = Boolean.parseBoolean(options.get(SUPPRESS_NAMED_INDIVIDUALS).toString());
+    }
+    if (options.containsKey(USE_DEFAULT_LANGUAGE)) {
+      this.useDefaultLanguage = (String) options.get(USE_DEFAULT_LANGUAGE);
     }
   }
 
@@ -720,4 +730,9 @@ public abstract class SortedRdfWriter extends AbstractRDFWriter {
       throws Exception;
 
   protected abstract void writeFooter(Writer out, String[] trailingComments) throws Exception;
+
+  protected boolean shouldUseExplicitDatatypes(IRI literalDatatype) {
+    return stringDataTypeOption == StringDataTypeOptions.EXPLICIT ||
+        !(Constants.xsString.equals(literalDatatype) || Constants.rdfLangString.equals(literalDatatype));
+  }
 }
