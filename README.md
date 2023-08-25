@@ -9,7 +9,7 @@
 
 The `RDF Toolkit` is a 'swiss army knife' tool for reading and writing RDF files in multiple formats.
 
-The primary reason for creating this tool was to have a reference serializer for the FIBO ontologies as they are stored in [Github FIBO repository](https://github.com/edmcouncil/fibo). However, the tool is not in any way specific to FIBO, and it can be used with any ontology or RDF file. In this capacity it can be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
+The primary reason for creating this tool was to have a reference serializer for the FIBO ontologies as they are stored in [Github FIBO repository](https://github.com/edmcouncil/fibo). However, the tool is not in any way specific to FIBO, and it can be used with any ontology or RDF file. In this capacity, it can be used in a commit-hook to make sure that all RDF files in the repo are stored in the same way.
 
 # Rationale
 
@@ -47,7 +47,7 @@ You can use `RDF Toolkit` to serialize any RDF file to a required format whether
 ```
 java -jar rdf-toolkit.jar --help
 ```
-For instance if you want to serialise an RDF/XML file 'example.rdf', which is located in C:/source_ontologies/ folder into a Turtle file 'example.ttl' in C:/serialised_ontologies/ folder, you may use the following command:
+For instance, if you want to serialise an RDF/XML file 'example.rdf', which is located in C:/source_ontologies/ folder into a Turtle file 'example.ttl' in C:/serialised_ontologies/ folder, you may use the following command:
 ```
 java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --target C:/serialised_ontologies/example.ttl  --infer-base-iri 
 ```
@@ -127,7 +127,9 @@ Make sure that:
   - if you have not because you don't know how to do it, ask uncle Google, e.g., by visiting https://www.baeldung.com/java-home-on-windows-7-8-10-mac-os-x-linux
   - if you want to point the `RDF Toolkit` to a different Java version, uncomment the following line in the pre-commit file pointing to the required path: `# export RDF_TOOLKIT_JAVA_HOME=<path_to_java>`
 - name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
-- you update these files from time to time since they both may be changed.
+- you update these files from time to time since they both may be changed
+- in an *nix-similar system (e.g., Linux, macOS, etc.) you may need to make the pre-commit file executable - see, for example, https://www.warp.dev/terminus/chmod-x.
+ - if the file gets quarantined, you may need to follow this hint https://stackoverflow.com/a/60082378/2596664.
 
 #### Run 
 
