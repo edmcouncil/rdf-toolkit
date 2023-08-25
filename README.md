@@ -129,7 +129,7 @@ Make sure that:
 - name of the pre-commit file is just 'pre-commit' - your file browser might want to append a suffix like .txt to it
 - you update these files from time to time since they both may be changed
 - in an *nix-similar system (e.g., Linux, macOS, etc.) you may need to make the pre-commit file executable - see, for example, https://www.warp.dev/terminus/chmod-x.
- - if the file gets quarantined, you may need to follow this hint https://stackoverflow.com/a/60082378/2596664.
+  - if the file gets quarantined, you may need to follow this hint https://stackoverflow.com/a/60082378/2596664.
 
 #### Run 
 
