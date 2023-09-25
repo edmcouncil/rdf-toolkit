@@ -112,10 +112,10 @@ java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --target C:/
 You can use `RDF Toolkit` as a built-in serialization tool that is launched each time you add a commit to your local Git repository. This will guarantee that every commit you do will re-write your RDF/OWL files in a consistent way that can be compared and merged with work done by other FIBO collaborators. 
 
 #### Setup
-Actually, in order to use this `RDF Toolkit` in this capacity, you will also need a [pre-commit file](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit).
+Actually, in order to use this `RDF Toolkit` in this capacity, you will also need a [pre-commit file](https://raw.githubusercontent.com/edmcouncil/rdf-toolkit/develop/etc/git-hook/pre-commit).
 
 You need to copy these two files:
-* [pre-commit](https://github.com/edmcouncil/rdf-toolkit/raw/master/etc/git-hook/pre-commit) (no file extension)
+* [pre-commit](https://raw.githubusercontent.com/edmcouncil/rdf-toolkit/develop/etc/git-hook/pre-commit) (no file extension)
 * [rdf-toolkit.jar](https://jenkins.edmcouncil.org/view/rdf-toolkit/job/rdf-toolkit-build/lastSuccessfulBuild/artifact/target/rdf-toolkit.jar)
 
 to the .git/hooks/ folder inside your local Git repository. The example below shows the location of this folder in a local Git repository for FIBO:
