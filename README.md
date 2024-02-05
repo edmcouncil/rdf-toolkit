@@ -104,6 +104,7 @@ java -jar rdf-toolkit.jar --source C:/source_ontologies/example.rdf --target C:/
                                          a directory processing option
  -tfmt,--target-format <arg>             target (output) RDF format: one of: json-ld (JSON-LD),
                                          rdf-xml (RDF/XML), turtle (Turtle) [default]
+ -udl, --use-default-language            default language tag for untyped, untagged strings
  -v,--version                            print out version details
 ```
 
