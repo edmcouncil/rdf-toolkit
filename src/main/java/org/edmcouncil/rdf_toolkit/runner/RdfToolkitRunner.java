@@ -130,7 +130,7 @@ public class RdfToolkitRunner {
         if (lang.isPresent() && lang.get().contains("-")) {
           String langString = lang.get();
           String[] langTab = langString.split("-");
-          langTab[1] = langTab[1].toUpperCase();
+          if (!"x".equals(langTab[1])) {langTab[1] = langTab[1].toUpperCase();}
           langString = String.join("-", langTab);
           String label = ((Literal) modelObject).getLabel();
           modelObject = valueFactory.createLiteral(label, langString);
