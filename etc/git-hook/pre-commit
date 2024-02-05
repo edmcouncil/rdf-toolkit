@@ -175,7 +175,8 @@ __log_config__
       --target-format ${target_format} \
       --use-dtd-subset \
       --inline-blank-nodes \
-      --infer-base-iri
+      --infer-base-iri \
+      --omit-xmlns-namespace
     rc=$?
     set +x
 

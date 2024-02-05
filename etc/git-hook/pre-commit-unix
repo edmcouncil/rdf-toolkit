@@ -133,15 +133,17 @@ __log_config__
 
   log "Launching the rdf-toolkit with --input-file ${file}"
 
-  #set -x
-  ${java_exe} -Xmx1g -Dorg.clapper.avsl.config=${logcfg} -jar ${toolkit_jar}  \
-  	--input-file ${file} \
-  	--output-file ${file} \
-  	--force \
-  	--base-dir ${base_dir} \
-  	--base-url "http://www.omg.org/spec/EDMC-FIBO/"
+  set -x
+      "${java_exe}" -Xmx1g "-Dorg.clapper.avsl.config=${logcfg}" -cp "${RDF_TOOLKIT_JAR}" org.edmcouncil.rdf_toolkit.RdfFormatter \
+        --source "${file}" \
+        --target "${file}X" \
+        --target-format ${target_format} \
+        --use-dtd-subset \
+        --inline-blank-nodes \
+        --infer-base-iri \
+        --omit-xmlns-namespace
   rc=$?
-  #set +x
+  set +x
 
   rm -f "${logcfg}" >/dev/null 2>&1
 
