@@ -126,15 +126,7 @@ public class RdfToolkitRunner {
       IRI replacedPredicate = st.getPredicate();
       //Replaced language serialization
       if (modelObject instanceof Literal) {
-        Optional<String> lang = ((Literal) modelObject).getLanguage();
-        if (lang.isPresent() && lang.get().contains("-")) {
-          String langString = lang.get();
-          String[] langTab = langString.split("-");
-          langTab[1] = langTab[1].toUpperCase();
-          langString = String.join("-", langTab);
-          String label = ((Literal) modelObject).getLabel();
-          modelObject = valueFactory.createLiteral(label, langString);
-        }
+        modelObject = secondPartOfLangToUpperCaseIfNotX(modelObject);
       }
       // Do any URI replacements
       if (isIriPatternAndIriReplacementNotNull) {
@@ -218,6 +210,20 @@ public class RdfToolkitRunner {
     Rio.write(sourceModel, rdfWriter);
     targetWriter.flush();
     targetWriter.close();
+  }
+
+  private Value secondPartOfLangToUpperCaseIfNotX(Value modelObject) {
+    Optional<String> lang = ((Literal) modelObject).getLanguage();
+    if (lang.isPresent() && lang.get().contains("-")) {
+      String langString = lang.get();
+      String[] langTab = langString.split("-");
+      // Convert the second part of the language string to uppercase, except if the entire second part is 'x'
+      if (!langTab[1].equals("x")) { langTab[1] = langTab[1].toUpperCase(); }
+      langString = String.join("-", langTab);
+      String label = ((Literal) modelObject).getLabel();
+      modelObject = valueFactory.createLiteral(label, langString);
+    }
+    return modelObject;
   }
 
   private Model readModel(RdfToolkitOptions rdfToolkitOptions) {
