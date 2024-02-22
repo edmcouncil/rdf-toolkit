@@ -44,6 +44,7 @@ import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGE
 import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_DIRECTORY_PATTERN;
 import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TARGET_FORMAT;
 import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.TRAILING_COMMENT;
+import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.USE_DEFAULT_LANGUAGE;
 import static org.edmcouncil.rdf_toolkit.runner.constant.CommandLineOption.USE_DTD_SUBSET;
 import static org.edmcouncil.rdf_toolkit.runner.constant.RunningMode.PRINT_USAGE_AND_EXIT;
 import static org.edmcouncil.rdf_toolkit.runner.constant.RunningMode.RUN_ON_DIRECTORY;
@@ -390,5 +391,13 @@ public class OptionHandler {
   public void handleSuppressNamedIndividuals() {
     boolean suppressNamedIndividuals = commandLine.hasOption(SUPPRESS_NAMED_INDIVIDUALS.getShortOpt());
     rdfToolkitOptions.setSuppressNamedIndividuals(suppressNamedIndividuals);
+  }
+
+  public void handleUseDefaultLanguage() {
+    String defaultLanguage = null;
+    if (commandLine.hasOption(USE_DEFAULT_LANGUAGE.getShortOpt())) {
+      defaultLanguage = commandLine.getOptionValue(USE_DEFAULT_LANGUAGE.getShortOpt());
+    }
+    rdfToolkitOptions.setDefaultLanguage(defaultLanguage);
   }
 }

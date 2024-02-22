@@ -28,7 +28,10 @@ import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.getCollectio
 import static org.edmcouncil.rdf_toolkit.comparator.ComparisonUtils.isCollection;
 import static org.edmcouncil.rdf_toolkit.util.Constants.INDENT;
 import static org.edmcouncil.rdf_toolkit.util.Constants.LINE_END;
+import static org.edmcouncil.rdf_toolkit.util.Constants.xsString;
 
+import java.io.IOException;
+import java.util.Optional;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -40,7 +43,6 @@ import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
 import org.edmcouncil.rdf_toolkit.model.UnsortedTurtleObjectList;
 import org.edmcouncil.rdf_toolkit.model.UnsortedTurtlePredicateObjectMap;
 import org.edmcouncil.rdf_toolkit.util.Constants;
-import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -624,8 +626,19 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
   protected void writeObject(Writer out, Literal literal) throws Exception {
     if (literal == null) {
       out.write("null<Literal>");
-    } else if (literal.getLanguage().isPresent() || ((overrideStringLanguage != null)
-        && (literal.getDatatype().stringValue().equals(Constants.xsString.stringValue())))) {
+      return;
+    }
+
+    IRI datatype = literal.getDatatype();
+    Optional<String> languageOptional = literal.getLanguage();
+
+    if (overrideStringLanguage != null && (xsString.equals(datatype) || languageOptional.isPresent())) {
+      writeLanguage(literal, overrideStringLanguage);
+    } else if (languageOptional.isPresent()) {
+      writeLanguage(literal, languageOptional.get());
+    } else if (useDefaultLanguage != null && xsString.equals(datatype)) {
+      writeLanguage(literal, useDefaultLanguage);
+    } else if (datatype != null) {
       out.write("{");
       if (out instanceof IndentingWriter) {
         var indentingWriter = (IndentingWriter) out;
@@ -635,47 +648,7 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
         out.write("\n");
       }
 
-      String lang = overrideStringLanguage == null ?
-          literal.getLanguage().orElse(overrideStringLanguage) :
-          overrideStringLanguage;
-
-      out.write("\"@language\" : \"" + lang + "\",");
-      if (out instanceof IndentingWriter) {
-        var output = (IndentingWriter) out;
-        output.writeEOL();
-      } else {
-        out.write("\n");
-      }
-
-      out.write("\"@value\" : \"" + escapeString(literal.stringValue()) + "\"");
-      if (out instanceof IndentingWriter) {
-        var indentingWriter = (IndentingWriter) out;
-        indentingWriter.writeEOL();
-      } else {
-        out.write("\n");
-      }
-
-      if (out instanceof IndentingWriter) {
-        var indentingWriter = (IndentingWriter) out;
-        indentingWriter.decreaseIndentation();
-        out.write("}");
-      } else {
-        out.write("}");
-      }
-    } else if (literal.getDatatype() != null) {
-      boolean useExplicit = (stringDataTypeOption == StringDataTypeOptions.EXPLICIT)
-          || !(Constants.xsString.equals(literal.getDatatype())
-          || Constants.rdfLangString.equals(literal.getDatatype()));
-      if (useExplicit) {
-        out.write("{");
-        if (out instanceof IndentingWriter) {
-          var indentingWriter = (IndentingWriter) out;
-          indentingWriter.writeEOL();
-          indentingWriter.increaseIndentation();
-        } else {
-          out.write("\n");
-        }
-
+      if (shouldUseExplicitDatatypes(datatype)) {
         out.write("\"@type\" : \"");
         writeIri(out, literal.getDatatype());
         out.write("\",");
@@ -685,23 +658,56 @@ public class SortedJsonLdWriter extends SortedRdfWriter {
         } else {
           out.write("\n");
         }
+      }
 
-        out.write("\"@value\" : ");
-        writeString(out, literal.stringValue());
+      out.write("\"@value\" : ");
+      writeString(out, literal.stringValue());
 
-        if (out instanceof IndentingWriter) {
-          var indentingWriter = (IndentingWriter) out;
-          indentingWriter.decreaseIndentation();
-          indentingWriter.writeEOL();
-          out.write("}");
-        } else {
-          out.write("\n}");
-        }
+      if (out instanceof IndentingWriter) {
+        var indentingWriter = (IndentingWriter) out;
+        indentingWriter.decreaseIndentation();
+        indentingWriter.writeEOL();
+        out.write("}");
       } else {
-        writeString(out, literal.stringValue());
+        out.write("\n}");
       }
     } else {
       writeString(out, literal.stringValue());
+    }
+  }
+
+  private void writeLanguage(Literal literal, String lang) throws IOException {
+    out.write("{");
+    if (out instanceof IndentingWriter) {
+      var indentingWriter = (IndentingWriter) out;
+      indentingWriter.writeEOL();
+      indentingWriter.increaseIndentation();
+    } else {
+      out.write("\n");
+    }
+
+    out.write("\"@language\" : \"" + lang + "\",");
+    if (out instanceof IndentingWriter) {
+      var output = (IndentingWriter) out;
+      output.writeEOL();
+    } else {
+      out.write("\n");
+    }
+
+    out.write("\"@value\" : \"" + escapeString(literal.stringValue()) + "\"");
+    if (out instanceof IndentingWriter) {
+      var indentingWriter = (IndentingWriter) out;
+      indentingWriter.writeEOL();
+    } else {
+      out.write("\n");
+    }
+
+    if (out instanceof IndentingWriter) {
+      var indentingWriter = (IndentingWriter) out;
+      indentingWriter.decreaseIndentation();
+        out.write("}");
+    } else {
+      out.write("}");
     }
   }
 

@@ -51,13 +51,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.rdfxml.util.RDFXMLPrettyWriterFactory;
-import org.edmcouncil.rdf_toolkit.FileSystemUtils;
 import org.edmcouncil.rdf_toolkit.RdfFormatter;
 import org.edmcouncil.rdf_toolkit.io.format.TargetFormats;
 import org.edmcouncil.rdf_toolkit.util.ShortIriPreferences;
@@ -129,7 +129,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var fileCount = 0;
     for (File sourceFile : listDirTreeFiles(rawRdfDirectory)) {
       fileCount += 1;
-      var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir, RDFXML_STEM);
+      var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir, RDFXML_STEM);
       var outWriter = new OutputStreamWriter(new FileOutputStream(targetFile), StandardCharsets.UTF_8.name());
       var factory = new RDFXMLPrettyWriterFactory();
       var rdfXmlWriter = factory.getWriter(outWriter);
@@ -153,7 +153,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(getRawRdfDirectory().getPath() + "/other/topbraid-countries-ontology.ttl");
     var baseIri = valueFactory.createIRI("http://topbraid.org/countries");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
+    var outputFile = constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8);
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object>  rdfXmlWriterOptions = Map.of(
@@ -194,7 +194,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(getRawRdfDirectory().getPath() + "/other/topquadrant-extended-turtle-example.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
+        constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8);
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(
@@ -232,7 +232,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(getRawRdfDirectory().getPath() + "/rdf_turtle_spec/turtle-example-14.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
+        constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, RDFXML_STEM);
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(USE_DTD_SUBSET, true);
@@ -266,7 +266,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(rawRdfDirectory.getPath() + "/rdf_turtle_spec/turtle-example-26.ttl");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(USE_DTD_SUBSET, true);
@@ -303,7 +303,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(getRawRdfDirectory().getPath() + "/other/topbraid-countries-ontology.ttl");
     var baseIri = valueFactory.createIRI("http://topbraid.org/countries");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, "_prefix.rdf");
+    var outputFile = constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, "_prefix.rdf");
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(USE_DTD_SUBSET, true);
@@ -338,7 +338,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createTempDir(rootOutputDir2, outputDir1.getName());
     var inputFile = new File(getRawRdfDirectory().getPath() + "/other/topbraid-countries-ontology.ttl");
     var baseIri = valueFactory.createIRI("http://topbraid.org/countries");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, "_base_iri.rdf");
+    var outputFile = constructTargetPath(inputFile, getRawRdfDirectory(), outputDir1, "_base_iri.rdf");
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(USE_DTD_SUBSET, true);
@@ -376,7 +376,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(rawRdfDirectory)) {
       if (!RDFXML_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, rootOutputDir, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, rootOutputDir, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -405,7 +405,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var sourceFile = new File(
         rawRdfXmlDirectory.getPath() + "/fibo/ontology/master/latest/DER/RateDerivatives/IRSwaps.rdf");
 
-    var targetFile1 = FileSystemUtils.constructTargetPath(sourceFile, rawRdfXmlDirectory, outputDir1, RDFXML_STEM);
+    var targetFile1 = constructTargetPath(sourceFile, rawRdfXmlDirectory, outputDir1, RDFXML_STEM);
     RdfFormatter.run(
         new String[] {
             "-s", sourceFile.getAbsolutePath(),
@@ -415,7 +415,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
         }
     );
 
-    var targetFile2 = FileSystemUtils.constructTargetPath(sourceFile, rawRdfXmlDirectory, outputDir2, RDFXML_STEM);
+    var targetFile2 = constructTargetPath(sourceFile, rawRdfXmlDirectory, outputDir2, RDFXML_STEM);
     RdfFormatter.run(
         new String[] {
             "-s", sourceFile.getAbsolutePath(),
@@ -443,7 +443,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(rawRdfDirectory)) {
       if (!RDFXML_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -463,7 +463,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(outputDir1)) {
       if (!sourceFile.getName().contains("_prefix") && !sourceFile.getName().contains("_base_iri")) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -502,7 +502,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
       if (!RDFXML_EXCLUSION_SET.contains(sourceFile.getName()) &&
           !JSON_LD_INLINE_BLANK_NODES_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -522,7 +522,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(outputDir1)) {
       if (!sourceFile.getName().contains("_prefix") && !sourceFile.getName().contains("_base_iri")) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -554,7 +554,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
       if (!RDFXML_EXCLUSION_SET.contains(sourceFile.getName()) &&
           !INLINE_BLANK_NODES_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir2, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir2, RDFXML_STEM);
         var rdfFormat1 = Rio.getParserFormatForFileName(sourceFile.getName()).orElseThrow();
         var rdfFormat2 = Rio.getParserFormatForFileName(targetFile.getName()).orElseThrow();
         var inputModel1 = Rio.parse(prepareInputStream(sourceFile), "", rdfFormat1);
@@ -573,7 +573,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var inputFile = new File(rawRdfDirectory + "/fibo/ontology/master/latest/FND/Accounting/AccountingEquity.rdf");
     var baseIri = valueFactory.createIRI("https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/AccountingEquity/");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_inline_blank_nodes.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_inline_blank_nodes.rdf");
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
     Map<String, Object> rdfXmlWriterOptions = Map.of(
@@ -621,7 +621,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
       if (!RDFXML_EXCLUSION_SET.contains(sourceFile.getName()) &&
           !INLINE_BLANK_NODES_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibn.rdf");
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibn.rdf");
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -643,7 +643,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(outputDir1)) {
       if (sourceFile.getName().contains("_ibn")) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -678,7 +678,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir2 = createDir(rootOutputDir2, outputDir1.getName());
 
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/ControlParties.rdf");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_ibn2s.rdf");
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_ibn2s.rdf");
 
     var outWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8.name());
     var factory = new SortedRdfWriterFactory(TargetFormats.RDF_XML);
@@ -733,7 +733,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(rawRdfDirectory)) {
       if (!INLINE_BLANK_NODES_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibn2.rdf");
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibn2.rdf");
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -755,7 +755,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (File sourceFile : listDirTreeFiles(outputDir1)) {
       if (sourceFile.getName().contains("_ibn2")) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
+        var targetFile = constructTargetPath(sourceFile, outputDir1, outputDir2, RDFXML_STEM);
         RdfFormatter.run(
             new String[] {
                 "-s", sourceFile.getAbsolutePath(),
@@ -786,7 +786,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     for (var sourceFile : listDirTreeFiles(rawRdfDirectory)) {
       if (!INLINE_BLANK_NODES_EXCLUSION_SET.contains(sourceFile.getName())) {
         fileCount += 1;
-        var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir2, "_ibn2.rdf");
+        var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir2, "_ibn2.rdf");
         var rdfFormat1 = Rio.getParserFormatForFileName(sourceFile.getName()).orElseThrow();
         var rdfFormat2 = Rio.getParserFormatForFileName(targetFile.getName()).orElseThrow();
         var inputModel1 = Rio.parse(prepareInputStream(sourceFile), "", rdfFormat1);
@@ -824,7 +824,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
         if (hasOntologyIri && baseIri1.isPresent()) {
           fileCount += 1;
 
-          var targetFile = FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibi.rdf");
+          var targetFile = constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibi.rdf");
           RdfFormatter.run(
               new String[] {
                   "-s", sourceFile.getAbsolutePath(),
@@ -887,7 +887,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
           fileCount += 1;
 
           var targetFile =
-              FileSystemUtils.constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibi_ibn.rdf");
+              constructTargetPath(sourceFile, rawRdfDirectory, outputDir1, "_ibi_ibn.rdf");
           RdfFormatter.run(
               new String[] {
                   "-s", sourceFile.getAbsolutePath(),
@@ -926,7 +926,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var rawRdfDirectory = getRawRdfDirectory();
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
-    var outputFile = FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_replaced.rdf");
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_replaced.rdf");
     RdfFormatter.run(
         new String[] {
             "-s", inputFile.getAbsolutePath(),
@@ -949,7 +949,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, RESOURCE_DIR, outputDir1, "_single-comments.rdf");
+        constructTargetPath(inputFile, RESOURCE_DIR, outputDir1, "_single-comments.rdf");
     var linePrefix = "## ";
     var leadingComment = "Start of --> My New Ontology.";
     var trailingComment = "End of --> My New Ontology.";
@@ -981,7 +981,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_multiple-comments.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_multiple-comments.rdf");
     var linePrefix = "## ";
     var leadingComments = List.of("Start of: My New Ontology.", "Version 1.");
     var trailingComments = List.of("End of: My New Ontology.", "Version 1.");
@@ -1016,7 +1016,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory , outputDir1, "_sdt_explicit.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory , outputDir1, "_sdt_explicit.rdf");
     RdfFormatter.run(
         new String[] {
             "-s", inputFile.getAbsolutePath(),
@@ -1038,7 +1038,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_override_language.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_override_language.rdf");
     var overrideLanguage = "en-us";
     RdfFormatter.run(
         new String[] {
@@ -1079,7 +1079,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     var inputFile = new File(rawRdfDirectory.getPath() + "/other/topbraid-countries-ontology.ttl");
 
     var outputFile =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_indent_spaces.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_indent_spaces.rdf");
     RdfFormatter.run(
         new String[] {
             "-s", inputFile.getAbsolutePath(),
@@ -1094,7 +1094,7 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     assertTrue(singleIndentLineCount >= 1, "double-space indent has failed");
 
     var outputFile2 =
-        FileSystemUtils.constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_indent_tabs.rdf");
+        constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_indent_tabs.rdf");
     RdfFormatter.run(
         new String[] {
             "-s", inputFile.getAbsolutePath(),
@@ -1107,5 +1107,75 @@ class SortedRdfXmlWriterTest extends AbstractSortedWriterTest {
     content = getFileContents(outputFile2, StandardCharsets.UTF_8.name());
     singleIndentLineCount = content.lines().filter(line -> line.matches("^\t\t\\S.*$")).count();
     assertTrue(singleIndentLineCount >= 1, "double-tab indent has failed");
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenAdditionalSettingsAreNotSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.rdf");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.rdf");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "rdf-xml",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("<rdfs:label>label1</rdfs:label>", label1Line);
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenOverrideLanguageSettingIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.rdf");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.rdf");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "rdf-xml",
+            "-osl", "fr",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("<rdfs:label xml:lang=\"fr\">label1</rdfs:label>", label1Line);
+    String label2Line = getTrimmedLineContainingString(content, "label2");
+    assertEquals("<rdfs:label xml:lang=\"fr\">label2</rdfs:label>", label2Line);
+    String label5Line = getTrimmedLineContainingString(content, "label5");
+    assertEquals("<rdfs:label rdf:datatype=\"&xsd;token\">label5</rdfs:label>", label5Line);
+  }
+
+  @Test
+  void shouldUseDefaultSettingsForSerializationOfLiteralsWhenUseDefaultLanguageIsSet() throws Exception {
+    var rawRdfDirectory = getRawRdfDirectory();
+    var outputDir1 = createTempDir(rootOutputDir1, RDFXML_PREFIX);
+    var inputFile = new File(rawRdfDirectory.getPath() + "/literal/test1.rdf");
+
+    var outputFile = constructTargetPath(inputFile, rawRdfDirectory, outputDir1, "_output.rdf");
+    RdfFormatter.run(
+        new String[] {
+            "-s", inputFile.getAbsolutePath(),
+            "-t", outputFile.getAbsolutePath(),
+            "-tfmt", "rdf-xml",
+            "-udl", "de",
+        }
+    );
+
+    String content = getFileContents(outputFile, StandardCharsets.UTF_8.name());
+    String label1Line = getTrimmedLineContainingString(content, "label1");
+    assertEquals("<rdfs:label xml:lang=\"de\">label1</rdfs:label>", label1Line);
+    String label2Line = getTrimmedLineContainingString(content, "label2");
+    assertEquals("<rdfs:label xml:lang=\"en\">label2</rdfs:label>", label2Line);
+    String label5Line = getTrimmedLineContainingString(content, "label5");
+    assertEquals("<rdfs:label rdf:datatype=\"&xsd;token\">label5</rdfs:label>", label5Line);
   }
 }

@@ -34,7 +34,6 @@ import static org.edmcouncil.rdf_toolkit.util.Constants.XML_NS_URI;
 import static org.edmcouncil.rdf_toolkit.util.Constants.owlThing;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfAbout;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfDescription;
-import static org.edmcouncil.rdf_toolkit.util.Constants.rdfLangString;
 import static org.edmcouncil.rdf_toolkit.util.Constants.rdfParseType;
 import static org.edmcouncil.rdf_toolkit.util.Constants.xsString;
 
@@ -45,9 +44,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -57,7 +59,6 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtleObjectList;
 import org.edmcouncil.rdf_toolkit.model.SortedTurtlePredicateObjectMap;
 import org.edmcouncil.rdf_toolkit.util.Constants;
-import org.edmcouncil.rdf_toolkit.util.StringDataTypeOptions;
 
 /**
  * Equivalent to Sesame's built-in RDF/XML writer, but the triples are sorted into a consistent order. In order to do
@@ -424,34 +425,11 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
               output.writeEndElement();
             } else {
               QName rdfDescriptionQName = convertIriToQName(rdfDescription, USE_GENERATED_PREFIXES);
-              output.writeStartElement(rdfDescriptionQName.getPrefix(), rdfDescriptionQName.getLocalPart(),
+              output.writeStartElement(rdfDescriptionQName.getPrefix(),
+                  rdfDescriptionQName.getLocalPart(),
                   rdfDescriptionQName.getNamespaceURI());
               if (member instanceof Literal) {
-                if (((Literal) member).getDatatype() != null) {
-                  boolean useExplicit = (stringDataTypeOption == StringDataTypeOptions.EXPLICIT) || !(
-                      xsString.equals(((Literal) member).getDatatype()) || rdfLangString.equals(
-                          ((Literal) member).getDatatype()));
-                  if (useExplicit) {
-                    output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
-                    QName datatypeQName = convertIriToQName(((Literal) member).getDatatype(),
-                        USE_GENERATED_PREFIXES);
-                    if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (
-                        datatypeQName.getPrefix().length() < 1)) {
-                      output.writeAttributeCharacters(((Literal) member).getDatatype().stringValue());
-                    } else {
-                      output.writeAttributeEntityRef(datatypeQName.getPrefix());
-                      output.writeAttributeCharacters(datatypeQName.getLocalPart());
-                    }
-                    output.endAttribute();
-                  }
-                }
-                if (((Literal) member).getLanguage().isPresent() || ((overrideStringLanguage != null)
-                    && (((Literal) member).getDatatype().stringValue().equals(xsString.stringValue())))) {
-                  String lang =
-                      overrideStringLanguage == null ? ((Literal) member).getLanguage().get() : overrideStringLanguage;
-                  output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", lang);
-                }
-                output.writeCharacters(member.stringValue());
+                handleMemberLiteral(xmlPrefix, member);
               } else {
                 output.writeCharacters(member.stringValue());
               }
@@ -490,40 +468,71 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
           }
           output.endAttribute();
         } else if (value instanceof Literal) {
-          if (((Literal) value).getDatatype() != null) {
-            boolean useExplicit = (stringDataTypeOption == StringDataTypeOptions.EXPLICIT) || !(
-                xsString.equals(((Literal) value).getDatatype()) || rdfLangString.equals(
-                    ((Literal) value).getDatatype()));
-            if (useExplicit) {
-              output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
-              QName datatypeQName = convertIriToQName(((Literal) value).getDatatype(),
-                  USE_GENERATED_PREFIXES);
-              if ((datatypeQName == null) || (datatypeQName.getPrefix() == null) || (datatypeQName.getPrefix().length()
-                  < 1)) {
-                output.writeAttributeCharacters(((Literal) value).getDatatype().stringValue());
-              } else {
-                output.writeAttributeEntityRef(datatypeQName.getPrefix());
-                output.writeAttributeCharacters(datatypeQName.getLocalPart());
-              }
-              output.endAttribute();
-            }
-          }
-          if (((Literal) value).getLanguage().isPresent() || ((overrideStringLanguage != null)
-              && (((Literal) value).getDatatype().stringValue().equals(xsString.stringValue())))) {
-            String lang = overrideStringLanguage == null ?
-                ((Literal) value).getLanguage().orElse(overrideStringLanguage) :
-                overrideStringLanguage;
-            output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", lang);
-          }
-          output.writeCharacters(value.stringValue()
-              .trim()); // trim the value, because leading/closing spaces will be lost on subsequent parses/serialisations.
+          handleLiteral(xmlPrefix, value);
         } else {
-          output.writeCharacters(value.stringValue()
-              .trim()); // trim the value, because leading/closing spaces will be lost on subsequent parses/serialisations.
+          // trim the value, because leading/closing spaces will be lost on subsequent parses/serialisations.
+          output.writeCharacters(value.stringValue().trim());
         }
         output.writeEndElement();
       }
     }
+  }
+
+  private void handleMemberLiteral(String xmlPrefix, Value member) throws XMLStreamException {
+      Literal literal = (Literal) member;
+      IRI datatype = literal.getDatatype();
+      Optional<String> languageOptional = literal.getLanguage();
+
+      if (overrideStringLanguage != null && (datatype.equals(xsString) || languageOptional.isPresent())) {
+        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", overrideStringLanguage);
+      } else if (languageOptional.isPresent()) {
+        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", languageOptional.get());
+      } else if (useDefaultLanguage != null && datatype.equals(xsString)) {
+        output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", useDefaultLanguage);
+      } else if (datatype != null) {
+        if (shouldUseExplicitDatatypes(datatype)) {
+          output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+          QName datatypeQName = convertIriToQName(datatype, USE_GENERATED_PREFIXES);
+          if (datatypeQName == null || datatypeQName.getPrefix() == null || datatypeQName.getPrefix().length() < 1) {
+            output.writeAttributeCharacters(datatype.stringValue());
+          } else {
+            output.writeAttributeEntityRef(datatypeQName.getPrefix());
+            output.writeAttributeCharacters(datatypeQName.getLocalPart());
+          }
+          output.endAttribute();
+        }
+      }
+
+      output.writeCharacters(member.stringValue());
+  }
+
+  private void handleLiteral(String xmlPrefix, Value value) throws XMLStreamException {
+    Literal literal = (Literal) value;
+    IRI datatype = literal.getDatatype();
+
+    Optional<String> languageOptional = literal.getLanguage();
+    if (overrideStringLanguage != null && (Objects.equals(datatype, xsString) || languageOptional.isPresent())) {
+      output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", overrideStringLanguage);
+    } else if (languageOptional.isPresent()) {
+      output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", languageOptional.get());
+    } else if (useDefaultLanguage != null && xsString.equals(datatype)) {
+      output.writeAttribute(xmlPrefix, XML_NS_URI, "lang", useDefaultLanguage);
+    } else if (datatype != null) {
+      if (shouldUseExplicitDatatypes(datatype)) {
+        output.writeStartAttribute(rdfPrefix, RDF_NS_URI, "datatype");
+        QName datatypeQName = convertIriToQName(datatype, USE_GENERATED_PREFIXES);
+        if (datatypeQName == null || datatypeQName.getPrefix() == null || datatypeQName.getPrefix().length() < 1) {
+          output.writeAttributeCharacters(datatype.stringValue());
+        } else {
+          output.writeAttributeEntityRef(datatypeQName.getPrefix());
+          output.writeAttributeCharacters(datatypeQName.getLocalPart());
+        }
+        output.endAttribute();
+      }
+    }
+
+    // trim the value, because leading/closing spaces will be lost on subsequent parses/serialisations.
+    output.writeCharacters(value.stringValue().trim());
   }
 
   protected void writeFooter(Writer out, String[] trailingComments) throws Exception {

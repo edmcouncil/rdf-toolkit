@@ -1,0 +1,23 @@
+[ {
+  "@id" : "https://example.com/test1",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Ontology" ]
+}, {
+  "@id" : "https://example.com/test1#ClassA",
+  "@type" : [ "http://www.w3.org/2002/07/owl#Class" ],
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@value" : "label1"
+  }, {
+    "@language" : "en",
+    "@value" : "label2"
+  }, {
+    "@language" : "pl",
+    "@value" : "label3"
+  }, {
+    "@value" : "label4"
+  }, {
+    "@type" : "http://www.w3.org/2001/XMLSchema#token",
+    "@value" : "label5"
+  }, {
+    "@value" : "label6"
+  } ]
+} ]

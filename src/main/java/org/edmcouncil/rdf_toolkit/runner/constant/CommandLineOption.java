@@ -55,7 +55,8 @@ public enum CommandLineOption {
   INDENT("i", "indent", true, "sets the indent string.  Default is a single tab character"),
   LINE_END("ln", "line-end", true, "sets the end-line character(s); supported characters: \\n (LF), \\r (CR). Default is the LF character"),
   OMIT_XMLNS_NAMESPACE("oxn", "omit-xmlns-namespace", false, "omits xmlns namespace"),
-  SUPPRESS_NAMED_INDIVIDUALS("sni", "suppress-named-individuals", false, "suppresses all instances of owl:NamedIndividual");
+  SUPPRESS_NAMED_INDIVIDUALS("sni", "suppress-named-individuals", false, "suppresses all instances of owl:NamedIndividual"),
+  USE_DEFAULT_LANGUAGE("udl", "use-default-language", true, "uses default language when a string is untyped and untagged");
 
   private final String shortOpt;
   private final String longOpt;
