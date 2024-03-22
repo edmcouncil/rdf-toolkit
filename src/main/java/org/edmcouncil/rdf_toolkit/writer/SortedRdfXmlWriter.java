@@ -210,7 +210,7 @@ public class SortedRdfXmlWriter extends SortedRdfWriter {
       output.startDTD("rdf:RDF");
       if (namespaceTable.size() > 0) {
         for (String prefix : prefixes) {
-          if (USE_GENERATED_PREFIXES || !generatedNamespaceTable.containsKey(prefix)) {
+          if ((USE_GENERATED_PREFIXES || !generatedNamespaceTable.containsKey(prefix)) && !"xml".equals(prefix)) {
             if (prefix.length() >= 1) {
               output.writeDtdEntity(prefix, namespaceTable.get(prefix));
             }
