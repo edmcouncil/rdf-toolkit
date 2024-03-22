@@ -1,0 +1,37 @@
+name: upload-assets
+
+on:
+  push:
+    tags:
+      - "*"
+
+env:
+  ASSET: rdf-toolkit.jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      -
+        name: Run the Maven verify phase
+        run: mvn --batch-mode --update-snapshots verify
+      -
+        name: Get JAR filename
+        run: echo "FILENAME=$(mvn -q exec:exec -Dexec.executable='echo' -Dexec.args='${project.build.directory}/${project.build.finalName}.${project.packaging}' -DforceStdout)" >> "$GITHUB_ENV"
+      -
+        name: Copy JAR as "${{ env.ASSET }}"
+        run: cp -avf "${FILENAME}" "${{ env.ASSET }}"
+      -
+        name: Upload "${{ env.ASSET }}"
+        run: gh release upload "${{ github.ref_name }}" "${{ env.ASSET }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
