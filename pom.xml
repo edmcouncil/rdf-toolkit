@@ -15,7 +15,7 @@
 
     <!-- Versions -->
     <slf4j.version>2.0.4</slf4j.version>
-    <logback.version>1.4.12</logback.version>
+    <logback.version>1.5.13</logback.version>
     <junit.jupiter.version>5.9.0</junit.jupiter.version>
   </properties>
 
@@ -257,7 +257,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.11</version>
+        <version>0.8.12</version>
         <executions>
           <execution>
             <goals>
